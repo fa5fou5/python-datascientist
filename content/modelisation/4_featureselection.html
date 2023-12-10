@@ -599,23 +599,25 @@ traiter.">
 </p>
 <p></p>
 </div>
-<p>Pour illustrer le travail de données nécessaire pour faire de la sélection de variables,
-nous allons partir du même jeu de données que précédemment,
-c’est-à-dire les résultats des élections US 2020 présentés dans l’<a href="../../content/modelisation/index.html">introduction
+<p>Ce chapitre utilise toujours le même jeu de données, présenté dans l’<a href="../../content/modelisation/index.html">introduction
 de cette partie</a> : les données de vote aux élections présidentielles américaines
 croisées à des variables sociodémographiques.
 Le code
 est disponible <a href="https://github.com/linogaliana/python-datascientist/blob/master/content/modelisation/get_data.py">sur Github</a>.</p>
-<div class="python">
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py'</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">'getdata.py'</span>, <span class="st">'wb'</span>).write(r.content)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="python">
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">'getdata.py'</span>, <span class="st">'wb'</span>).write(r.content)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Jusqu’à présent, nous avons supposé que les variables utiles à la prévision du
@@ -675,26 +677,26 @@ où <span class="math inline">\(\lambda\)</span> est une réécriture de la rég
 <p>Avant de se lancer dans les exercices, on va éliminer quelques colonnes redondantes,
 celles qui concernent les votes des partis concurrents (forcément très
 corrélés au vote Républicain…) :</p>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> votes.loc[:,<span class="op">~</span>votes.columns.<span class="bu">str</span>.endswith(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'_democrat'</span>,<span class="st">'_green'</span>,<span class="st">'_other'</span>, <span class="st">'per_point_diff'</span>, <span class="st">'per_dem'</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  )]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> votes.loc[:,<span class="op">~</span>votes.columns.<span class="bu">str</span>.endswith(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'_democrat'</span>,<span class="st">'_green'</span>,<span class="st">'_other'</span>, <span class="st">'per_point_diff'</span>, <span class="st">'per_dem'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  )]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nous allons utiliser par la suite les fonctions ou
 packages suivants :</p>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> LinearSVC</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_selection <span class="im">import</span> SelectFromModel</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Lasso</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.metrics</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.cm <span class="im">as</span> cm</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> lasso_path</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> LinearSVC</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_selection <span class="im">import</span> SelectFromModel</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Lasso</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.metrics</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.cm <span class="im">as</span> cm</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> lasso_path</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
@@ -721,7 +723,7 @@ varie (parcourir <span class="math inline">\(\alpha \in [0.001,0.01,0.02,0.025,0
 </div>
 <p>A l’issue de la question 3,
 les variables sélectionnées sont :</p>
-<div class="cell" data-execution_count="7">
+<div class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>['ALAND',
  'FIPS_y',
@@ -754,1394 +756,1394 @@ les variables sélectionnées sont :</p>
 </div>
 <p>Certaines variables font sens, comme les variables d’éducation par exemple. Notamment, un des meilleurs prédicteurs pour le score des Républicains en 2020 est… le score des Républicains (et mécaniquement des démocrates) en 2016.</p>
 <p>Par ailleurs, on sélectionne des variables redondantes. Une phase plus approfondie de nettoyage des données serait en réalité nécessaire.</p>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display" data-execution_count="8">
 <style type="text/css">
-#T_8e5a6_row0_col0, #T_8e5a6_row1_col1, #T_8e5a6_row2_col2, #T_8e5a6_row3_col3, #T_8e5a6_row4_col4, #T_8e5a6_row5_col5, #T_8e5a6_row6_col6, #T_8e5a6_row7_col7, #T_8e5a6_row8_col8, #T_8e5a6_row9_col9, #T_8e5a6_row10_col10, #T_8e5a6_row11_col11, #T_8e5a6_row12_col12, #T_8e5a6_row13_col13, #T_8e5a6_row14_col14, #T_8e5a6_row15_col15, #T_8e5a6_row16_col16, #T_8e5a6_row16_col22, #T_8e5a6_row17_col17, #T_8e5a6_row18_col18, #T_8e5a6_row19_col19, #T_8e5a6_row20_col20, #T_8e5a6_row21_col21, #T_8e5a6_row22_col16, #T_8e5a6_row22_col22, #T_8e5a6_row23_col23, #T_8e5a6_row24_col24, #T_8e5a6_row25_col25, #T_8e5a6_row26_col26 {
+#T_cc33e_row0_col0, #T_cc33e_row1_col1, #T_cc33e_row2_col2, #T_cc33e_row3_col3, #T_cc33e_row4_col4, #T_cc33e_row5_col5, #T_cc33e_row6_col6, #T_cc33e_row7_col7, #T_cc33e_row8_col8, #T_cc33e_row9_col9, #T_cc33e_row10_col10, #T_cc33e_row11_col11, #T_cc33e_row12_col12, #T_cc33e_row13_col13, #T_cc33e_row14_col14, #T_cc33e_row15_col15, #T_cc33e_row16_col16, #T_cc33e_row16_col22, #T_cc33e_row17_col17, #T_cc33e_row18_col18, #T_cc33e_row19_col19, #T_cc33e_row20_col20, #T_cc33e_row21_col21, #T_cc33e_row22_col16, #T_cc33e_row22_col22, #T_cc33e_row23_col23, #T_cc33e_row24_col24, #T_cc33e_row25_col25, #T_cc33e_row26_col26 {
   background-color: #b40426;
   color: #f1f1f1;
 }
-#T_8e5a6_row0_col1, #T_8e5a6_row0_col15, #T_8e5a6_row1_col0, #T_8e5a6_row1_col10, #T_8e5a6_row1_col17, #T_8e5a6_row1_col19, #T_8e5a6_row2_col19, #T_8e5a6_row2_col23, #T_8e5a6_row5_col17, #T_8e5a6_row10_col1, #T_8e5a6_row15_col0, #T_8e5a6_row17_col1, #T_8e5a6_row17_col5, #T_8e5a6_row19_col1, #T_8e5a6_row19_col2, #T_8e5a6_row23_col2 {
+#T_cc33e_row0_col1, #T_cc33e_row0_col15, #T_cc33e_row1_col0, #T_cc33e_row1_col10, #T_cc33e_row1_col17, #T_cc33e_row1_col19, #T_cc33e_row2_col19, #T_cc33e_row2_col23, #T_cc33e_row5_col17, #T_cc33e_row10_col1, #T_cc33e_row15_col0, #T_cc33e_row17_col1, #T_cc33e_row17_col5, #T_cc33e_row19_col1, #T_cc33e_row19_col2, #T_cc33e_row23_col2 {
   background-color: #d3dbe7;
   color: #000000;
 }
-#T_8e5a6_row0_col2, #T_8e5a6_row0_col11, #T_8e5a6_row0_col25, #T_8e5a6_row1_col12, #T_8e5a6_row1_col14, #T_8e5a6_row2_col0, #T_8e5a6_row3_col14, #T_8e5a6_row5_col11, #T_8e5a6_row5_col23, #T_8e5a6_row6_col12, #T_8e5a6_row6_col14, #T_8e5a6_row6_col17, #T_8e5a6_row11_col0, #T_8e5a6_row11_col5, #T_8e5a6_row11_col26, #T_8e5a6_row12_col1, #T_8e5a6_row12_col6, #T_8e5a6_row14_col1, #T_8e5a6_row14_col3, #T_8e5a6_row14_col6, #T_8e5a6_row17_col6, #T_8e5a6_row23_col5, #T_8e5a6_row25_col0, #T_8e5a6_row26_col11 {
+#T_cc33e_row0_col2, #T_cc33e_row0_col11, #T_cc33e_row0_col25, #T_cc33e_row1_col12, #T_cc33e_row1_col14, #T_cc33e_row2_col0, #T_cc33e_row3_col14, #T_cc33e_row5_col11, #T_cc33e_row5_col23, #T_cc33e_row6_col12, #T_cc33e_row6_col14, #T_cc33e_row6_col17, #T_cc33e_row11_col0, #T_cc33e_row11_col5, #T_cc33e_row11_col26, #T_cc33e_row12_col1, #T_cc33e_row12_col6, #T_cc33e_row14_col1, #T_cc33e_row14_col3, #T_cc33e_row14_col6, #T_cc33e_row17_col6, #T_cc33e_row23_col5, #T_cc33e_row25_col0, #T_cc33e_row26_col11 {
   background-color: #d8dce2;
   color: #000000;
 }
-#T_8e5a6_row0_col3, #T_8e5a6_row1_col25, #T_8e5a6_row1_col26, #T_8e5a6_row2_col11, #T_8e5a6_row3_col0, #T_8e5a6_row4_col5, #T_8e5a6_row4_col13, #T_8e5a6_row5_col4, #T_8e5a6_row6_col9, #T_8e5a6_row9_col6, #T_8e5a6_row11_col2, #T_8e5a6_row13_col4, #T_8e5a6_row25_col1, #T_8e5a6_row26_col1 {
+#T_cc33e_row0_col3, #T_cc33e_row1_col25, #T_cc33e_row1_col26, #T_cc33e_row2_col11, #T_cc33e_row3_col0, #T_cc33e_row4_col5, #T_cc33e_row4_col13, #T_cc33e_row5_col4, #T_cc33e_row6_col9, #T_cc33e_row9_col6, #T_cc33e_row11_col2, #T_cc33e_row13_col4, #T_cc33e_row25_col1, #T_cc33e_row26_col1 {
   background-color: #dadce0;
   color: #000000;
 }
-#T_8e5a6_row0_col4, #T_8e5a6_row0_col18, #T_8e5a6_row0_col19, #T_8e5a6_row4_col0, #T_8e5a6_row16_col19, #T_8e5a6_row18_col0, #T_8e5a6_row19_col0, #T_8e5a6_row19_col16, #T_8e5a6_row19_col21, #T_8e5a6_row19_col22, #T_8e5a6_row21_col19, #T_8e5a6_row22_col19 {
+#T_cc33e_row0_col4, #T_cc33e_row0_col18, #T_cc33e_row0_col19, #T_cc33e_row4_col0, #T_cc33e_row16_col19, #T_cc33e_row18_col0, #T_cc33e_row19_col0, #T_cc33e_row19_col16, #T_cc33e_row19_col21, #T_cc33e_row19_col22, #T_cc33e_row21_col19, #T_cc33e_row22_col19 {
   background-color: #dbdcde;
   color: #000000;
 }
-#T_8e5a6_row0_col5, #T_8e5a6_row3_col7, #T_8e5a6_row3_col13, #T_8e5a6_row4_col15, #T_8e5a6_row5_col0, #T_8e5a6_row5_col13, #T_8e5a6_row5_col15, #T_8e5a6_row6_col21, #T_8e5a6_row7_col3, #T_8e5a6_row13_col3, #T_8e5a6_row13_col5, #T_8e5a6_row15_col4, #T_8e5a6_row15_col5, #T_8e5a6_row21_col6 {
+#T_cc33e_row0_col5, #T_cc33e_row3_col7, #T_cc33e_row3_col13, #T_cc33e_row4_col15, #T_cc33e_row5_col0, #T_cc33e_row5_col13, #T_cc33e_row5_col15, #T_cc33e_row6_col21, #T_cc33e_row7_col3, #T_cc33e_row13_col3, #T_cc33e_row13_col5, #T_cc33e_row15_col4, #T_cc33e_row15_col5, #T_cc33e_row21_col6 {
   background-color: #d1dae9;
   color: #000000;
 }
-#T_8e5a6_row0_col6, #T_8e5a6_row6_col0 {
+#T_cc33e_row0_col6, #T_cc33e_row6_col0 {
   background-color: #e4d9d2;
   color: #000000;
 }
-#T_8e5a6_row0_col7, #T_8e5a6_row7_col0, #T_8e5a6_row7_col11, #T_8e5a6_row11_col7, #T_8e5a6_row17_col18, #T_8e5a6_row18_col17 {
+#T_cc33e_row0_col7, #T_cc33e_row7_col0, #T_cc33e_row7_col11, #T_cc33e_row11_col7, #T_cc33e_row17_col18, #T_cc33e_row18_col17 {
   background-color: #c3d5f4;
   color: #000000;
 }
-#T_8e5a6_row0_col8, #T_8e5a6_row8_col0, #T_8e5a6_row8_col11, #T_8e5a6_row10_col18, #T_8e5a6_row11_col8, #T_8e5a6_row18_col10 {
+#T_cc33e_row0_col8, #T_cc33e_row8_col0, #T_cc33e_row8_col11, #T_cc33e_row10_col18, #T_cc33e_row11_col8, #T_cc33e_row18_col10 {
   background-color: #c0d4f5;
   color: #000000;
 }
-#T_8e5a6_row0_col9, #T_8e5a6_row3_col6, #T_8e5a6_row3_col26, #T_8e5a6_row4_col11, #T_8e5a6_row6_col3, #T_8e5a6_row9_col0, #T_8e5a6_row11_col4, #T_8e5a6_row26_col3 {
+#T_cc33e_row0_col9, #T_cc33e_row3_col6, #T_cc33e_row3_col26, #T_cc33e_row4_col11, #T_cc33e_row6_col3, #T_cc33e_row9_col0, #T_cc33e_row11_col4, #T_cc33e_row26_col3 {
   background-color: #e2dad5;
   color: #000000;
 }
-#T_8e5a6_row0_col10, #T_8e5a6_row1_col8, #T_8e5a6_row3_col8, #T_8e5a6_row3_col16, #T_8e5a6_row3_col21, #T_8e5a6_row3_col22, #T_8e5a6_row3_col24, #T_8e5a6_row4_col14, #T_8e5a6_row5_col12, #T_8e5a6_row5_col14, #T_8e5a6_row6_col16, #T_8e5a6_row6_col22, #T_8e5a6_row8_col1, #T_8e5a6_row8_col3, #T_8e5a6_row10_col0, #T_8e5a6_row12_col5, #T_8e5a6_row14_col4, #T_8e5a6_row14_col5, #T_8e5a6_row16_col3, #T_8e5a6_row16_col6, #T_8e5a6_row18_col24, #T_8e5a6_row21_col3, #T_8e5a6_row22_col3, #T_8e5a6_row22_col6, #T_8e5a6_row24_col3, #T_8e5a6_row24_col18 {
+#T_cc33e_row0_col10, #T_cc33e_row1_col8, #T_cc33e_row3_col8, #T_cc33e_row3_col16, #T_cc33e_row3_col21, #T_cc33e_row3_col22, #T_cc33e_row3_col24, #T_cc33e_row4_col14, #T_cc33e_row5_col12, #T_cc33e_row5_col14, #T_cc33e_row6_col16, #T_cc33e_row6_col22, #T_cc33e_row8_col1, #T_cc33e_row8_col3, #T_cc33e_row10_col0, #T_cc33e_row12_col5, #T_cc33e_row14_col4, #T_cc33e_row14_col5, #T_cc33e_row16_col3, #T_cc33e_row16_col6, #T_cc33e_row18_col24, #T_cc33e_row21_col3, #T_cc33e_row22_col3, #T_cc33e_row22_col6, #T_cc33e_row24_col3, #T_cc33e_row24_col18 {
   background-color: #cfdaea;
   color: #000000;
 }
-#T_8e5a6_row0_col12, #T_8e5a6_row8_col25, #T_8e5a6_row12_col0, #T_8e5a6_row25_col8 {
+#T_cc33e_row0_col12, #T_cc33e_row8_col25, #T_cc33e_row12_col0, #T_cc33e_row25_col8 {
   background-color: #dddcdc;
   color: #000000;
 }
-#T_8e5a6_row0_col13, #T_8e5a6_row2_col8, #T_8e5a6_row8_col2, #T_8e5a6_row13_col0, #T_8e5a6_row19_col26, #T_8e5a6_row26_col19 {
+#T_cc33e_row0_col13, #T_cc33e_row2_col8, #T_cc33e_row8_col2, #T_cc33e_row13_col0, #T_cc33e_row19_col26, #T_cc33e_row26_col19 {
   background-color: #b9d0f9;
   color: #000000;
 }
-#T_8e5a6_row0_col14, #T_8e5a6_row1_col15, #T_8e5a6_row3_col15, #T_8e5a6_row3_col17, #T_8e5a6_row14_col0, #T_8e5a6_row15_col1, #T_8e5a6_row15_col3, #T_8e5a6_row16_col18, #T_8e5a6_row17_col3, #T_8e5a6_row18_col16, #T_8e5a6_row18_col21, #T_8e5a6_row18_col22, #T_8e5a6_row21_col18, #T_8e5a6_row22_col18 {
+#T_cc33e_row0_col14, #T_cc33e_row1_col15, #T_cc33e_row3_col15, #T_cc33e_row3_col17, #T_cc33e_row14_col0, #T_cc33e_row15_col1, #T_cc33e_row15_col3, #T_cc33e_row16_col18, #T_cc33e_row17_col3, #T_cc33e_row18_col16, #T_cc33e_row18_col21, #T_cc33e_row18_col22, #T_cc33e_row21_col18, #T_cc33e_row22_col18 {
   background-color: #d9dce1;
   color: #000000;
 }
-#T_8e5a6_row0_col16, #T_8e5a6_row0_col22, #T_8e5a6_row6_col11, #T_8e5a6_row11_col6, #T_8e5a6_row16_col0, #T_8e5a6_row22_col0 {
+#T_cc33e_row0_col16, #T_cc33e_row0_col22, #T_cc33e_row6_col11, #T_cc33e_row11_col6, #T_cc33e_row16_col0, #T_cc33e_row22_col0 {
   background-color: #dedcdb;
   color: #000000;
 }
-#T_8e5a6_row0_col17, #T_8e5a6_row17_col0 {
+#T_cc33e_row0_col17, #T_cc33e_row17_col0 {
   background-color: #c7d7f0;
   color: #000000;
 }
-#T_8e5a6_row0_col20, #T_8e5a6_row1_col4, #T_8e5a6_row4_col1, #T_8e5a6_row4_col6, #T_8e5a6_row4_col8, #T_8e5a6_row5_col16, #T_8e5a6_row5_col18, #T_8e5a6_row5_col19, #T_8e5a6_row5_col20, #T_8e5a6_row5_col21, #T_8e5a6_row5_col22, #T_8e5a6_row5_col26, #T_8e5a6_row6_col4, #T_8e5a6_row6_col18, #T_8e5a6_row6_col25, #T_8e5a6_row8_col4, #T_8e5a6_row16_col5, #T_8e5a6_row18_col5, #T_8e5a6_row18_col6, #T_8e5a6_row19_col5, #T_8e5a6_row20_col0, #T_8e5a6_row20_col5, #T_8e5a6_row21_col5, #T_8e5a6_row22_col5, #T_8e5a6_row25_col6, #T_8e5a6_row26_col5 {
+#T_cc33e_row0_col20, #T_cc33e_row1_col4, #T_cc33e_row4_col1, #T_cc33e_row4_col6, #T_cc33e_row4_col8, #T_cc33e_row5_col16, #T_cc33e_row5_col18, #T_cc33e_row5_col19, #T_cc33e_row5_col20, #T_cc33e_row5_col21, #T_cc33e_row5_col22, #T_cc33e_row5_col26, #T_cc33e_row6_col4, #T_cc33e_row6_col18, #T_cc33e_row6_col25, #T_cc33e_row8_col4, #T_cc33e_row16_col5, #T_cc33e_row18_col5, #T_cc33e_row18_col6, #T_cc33e_row19_col5, #T_cc33e_row20_col0, #T_cc33e_row20_col5, #T_cc33e_row21_col5, #T_cc33e_row22_col5, #T_cc33e_row25_col6, #T_cc33e_row26_col5 {
   background-color: #d6dce4;
   color: #000000;
 }
-#T_8e5a6_row0_col21, #T_8e5a6_row6_col10, #T_8e5a6_row7_col20, #T_8e5a6_row10_col6, #T_8e5a6_row10_col11, #T_8e5a6_row11_col10, #T_8e5a6_row11_col25, #T_8e5a6_row20_col7, #T_8e5a6_row21_col0, #T_8e5a6_row25_col11 {
+#T_cc33e_row0_col21, #T_cc33e_row6_col10, #T_cc33e_row7_col20, #T_cc33e_row10_col6, #T_cc33e_row10_col11, #T_cc33e_row11_col10, #T_cc33e_row11_col25, #T_cc33e_row20_col7, #T_cc33e_row21_col0, #T_cc33e_row25_col11 {
   background-color: #dfdbd9;
   color: #000000;
 }
-#T_8e5a6_row0_col23, #T_8e5a6_row1_col3, #T_8e5a6_row1_col7, #T_8e5a6_row1_col9, #T_8e5a6_row1_col13, #T_8e5a6_row1_col16, #T_8e5a6_row1_col21, #T_8e5a6_row1_col22, #T_8e5a6_row2_col18, #T_8e5a6_row3_col1, #T_8e5a6_row3_col12, #T_8e5a6_row4_col17, #T_8e5a6_row6_col23, #T_8e5a6_row7_col1, #T_8e5a6_row9_col1, #T_8e5a6_row12_col3, #T_8e5a6_row13_col1, #T_8e5a6_row16_col1, #T_8e5a6_row17_col4, #T_8e5a6_row18_col2, #T_8e5a6_row21_col1, #T_8e5a6_row22_col1, #T_8e5a6_row23_col0, #T_8e5a6_row23_col6 {
+#T_cc33e_row0_col23, #T_cc33e_row1_col3, #T_cc33e_row1_col7, #T_cc33e_row1_col9, #T_cc33e_row1_col13, #T_cc33e_row1_col16, #T_cc33e_row1_col21, #T_cc33e_row1_col22, #T_cc33e_row2_col18, #T_cc33e_row3_col1, #T_cc33e_row3_col12, #T_cc33e_row4_col17, #T_cc33e_row6_col23, #T_cc33e_row7_col1, #T_cc33e_row9_col1, #T_cc33e_row12_col3, #T_cc33e_row13_col1, #T_cc33e_row16_col1, #T_cc33e_row17_col4, #T_cc33e_row18_col2, #T_cc33e_row21_col1, #T_cc33e_row22_col1, #T_cc33e_row23_col0, #T_cc33e_row23_col6 {
   background-color: #d5dbe5;
   color: #000000;
 }
-#T_8e5a6_row0_col24, #T_8e5a6_row1_col11, #T_8e5a6_row9_col11, #T_8e5a6_row11_col1, #T_8e5a6_row11_col9, #T_8e5a6_row24_col0 {
+#T_cc33e_row0_col24, #T_cc33e_row1_col11, #T_cc33e_row9_col11, #T_cc33e_row11_col1, #T_cc33e_row11_col9, #T_cc33e_row24_col0 {
   background-color: #e3d9d3;
   color: #000000;
 }
-#T_8e5a6_row0_col26, #T_8e5a6_row5_col10, #T_8e5a6_row9_col25, #T_8e5a6_row10_col5, #T_8e5a6_row19_col24, #T_8e5a6_row24_col19, #T_8e5a6_row25_col9, #T_8e5a6_row26_col0 {
+#T_cc33e_row0_col26, #T_cc33e_row5_col10, #T_cc33e_row9_col25, #T_cc33e_row10_col5, #T_cc33e_row19_col24, #T_cc33e_row24_col19, #T_cc33e_row25_col9, #T_cc33e_row26_col0 {
   background-color: #cedaeb;
   color: #000000;
 }
-#T_8e5a6_row1_col2, #T_8e5a6_row2_col1, #T_8e5a6_row4_col18, #T_8e5a6_row18_col4 {
+#T_cc33e_row1_col2, #T_cc33e_row2_col1, #T_cc33e_row4_col18, #T_cc33e_row18_col4 {
   background-color: #cdd9ec;
   color: #000000;
 }
-#T_8e5a6_row1_col5, #T_8e5a6_row2_col20, #T_8e5a6_row4_col16, #T_8e5a6_row4_col21, #T_8e5a6_row4_col22, #T_8e5a6_row5_col1, #T_8e5a6_row6_col19, #T_8e5a6_row16_col4, #T_8e5a6_row17_col20, #T_8e5a6_row19_col6, #T_8e5a6_row20_col2, #T_8e5a6_row20_col17, #T_8e5a6_row21_col4, #T_8e5a6_row22_col4 {
+#T_cc33e_row1_col5, #T_cc33e_row2_col20, #T_cc33e_row4_col16, #T_cc33e_row4_col21, #T_cc33e_row4_col22, #T_cc33e_row5_col1, #T_cc33e_row6_col19, #T_cc33e_row16_col4, #T_cc33e_row17_col20, #T_cc33e_row19_col6, #T_cc33e_row20_col2, #T_cc33e_row20_col17, #T_cc33e_row21_col4, #T_cc33e_row22_col4 {
   background-color: #d4dbe6;
   color: #000000;
 }
-#T_8e5a6_row1_col6, #T_8e5a6_row4_col9, #T_8e5a6_row4_col12, #T_8e5a6_row4_col19, #T_8e5a6_row6_col1, #T_8e5a6_row9_col4, #T_8e5a6_row12_col4, #T_8e5a6_row19_col4 {
+#T_cc33e_row1_col6, #T_cc33e_row4_col9, #T_cc33e_row4_col12, #T_cc33e_row4_col19, #T_cc33e_row6_col1, #T_cc33e_row9_col4, #T_cc33e_row12_col4, #T_cc33e_row19_col4 {
   background-color: #ccd9ed;
   color: #000000;
 }
-#T_8e5a6_row1_col18, #T_8e5a6_row3_col9, #T_8e5a6_row4_col20, #T_8e5a6_row6_col26, #T_8e5a6_row9_col3, #T_8e5a6_row13_col23, #T_8e5a6_row18_col1, #T_8e5a6_row20_col4, #T_8e5a6_row23_col13, #T_8e5a6_row26_col6 {
+#T_cc33e_row1_col18, #T_cc33e_row3_col9, #T_cc33e_row4_col20, #T_cc33e_row6_col26, #T_cc33e_row9_col3, #T_cc33e_row13_col23, #T_cc33e_row18_col1, #T_cc33e_row20_col4, #T_cc33e_row23_col13, #T_cc33e_row26_col6 {
   background-color: #d2dbe8;
   color: #000000;
 }
-#T_8e5a6_row1_col20, #T_8e5a6_row20_col1 {
+#T_cc33e_row1_col20, #T_cc33e_row20_col1 {
   background-color: #b2ccfb;
   color: #000000;
 }
-#T_8e5a6_row1_col23, #T_8e5a6_row6_col13, #T_8e5a6_row13_col6, #T_8e5a6_row23_col1 {
+#T_cc33e_row1_col23, #T_cc33e_row6_col13, #T_cc33e_row13_col6, #T_cc33e_row23_col1 {
   background-color: #c5d6f2;
   color: #000000;
 }
-#T_8e5a6_row1_col24, #T_8e5a6_row3_col19, #T_8e5a6_row5_col7, #T_8e5a6_row5_col8, #T_8e5a6_row6_col7, #T_8e5a6_row6_col8, #T_8e5a6_row7_col5, #T_8e5a6_row7_col6, #T_8e5a6_row8_col5, #T_8e5a6_row8_col6, #T_8e5a6_row19_col3, #T_8e5a6_row24_col1 {
+#T_cc33e_row1_col24, #T_cc33e_row3_col19, #T_cc33e_row5_col7, #T_cc33e_row5_col8, #T_cc33e_row6_col7, #T_cc33e_row6_col8, #T_cc33e_row7_col5, #T_cc33e_row7_col6, #T_cc33e_row8_col5, #T_cc33e_row8_col6, #T_cc33e_row19_col3, #T_cc33e_row24_col1 {
   background-color: #cad8ef;
   color: #000000;
 }
-#T_8e5a6_row2_col3, #T_8e5a6_row3_col2 {
+#T_cc33e_row2_col3, #T_cc33e_row3_col2 {
   background-color: #a5c3fe;
   color: #000000;
 }
-#T_8e5a6_row2_col4, #T_8e5a6_row4_col2 {
+#T_cc33e_row2_col4, #T_cc33e_row4_col2 {
   background-color: #6f92f3;
   color: #f1f1f1;
 }
-#T_8e5a6_row2_col5, #T_8e5a6_row5_col2, #T_8e5a6_row11_col13, #T_8e5a6_row13_col11 {
+#T_cc33e_row2_col5, #T_cc33e_row5_col2, #T_cc33e_row11_col13, #T_cc33e_row13_col11 {
   background-color: #bbd1f8;
   color: #000000;
 }
-#T_8e5a6_row2_col6, #T_8e5a6_row2_col12, #T_8e5a6_row6_col2, #T_8e5a6_row6_col24, #T_8e5a6_row9_col15, #T_8e5a6_row12_col2, #T_8e5a6_row15_col9, #T_8e5a6_row24_col6 {
+#T_cc33e_row2_col6, #T_cc33e_row2_col12, #T_cc33e_row6_col2, #T_cc33e_row6_col24, #T_cc33e_row9_col15, #T_cc33e_row12_col2, #T_cc33e_row15_col9, #T_cc33e_row24_col6 {
   background-color: #f3c8b2;
   color: #000000;
 }
-#T_8e5a6_row2_col7, #T_8e5a6_row7_col2, #T_8e5a6_row9_col26, #T_8e5a6_row17_col23, #T_8e5a6_row23_col17, #T_8e5a6_row26_col9 {
+#T_cc33e_row2_col7, #T_cc33e_row7_col2, #T_cc33e_row9_col26, #T_cc33e_row17_col23, #T_cc33e_row23_col17, #T_cc33e_row26_col9 {
   background-color: #b5cdfa;
   color: #000000;
 }
-#T_8e5a6_row2_col9, #T_8e5a6_row4_col26, #T_8e5a6_row9_col2, #T_8e5a6_row26_col4 {
+#T_cc33e_row2_col9, #T_cc33e_row4_col26, #T_cc33e_row9_col2, #T_cc33e_row26_col4 {
   background-color: #e8d6cc;
   color: #000000;
 }
-#T_8e5a6_row2_col10, #T_8e5a6_row10_col2 {
+#T_cc33e_row2_col10, #T_cc33e_row10_col2 {
   background-color: #f7ac8e;
   color: #000000;
 }
-#T_8e5a6_row2_col13, #T_8e5a6_row13_col2 {
+#T_cc33e_row2_col13, #T_cc33e_row13_col2 {
   background-color: #aac7fd;
   color: #000000;
 }
-#T_8e5a6_row2_col14, #T_8e5a6_row2_col15, #T_8e5a6_row11_col15, #T_8e5a6_row14_col2, #T_8e5a6_row15_col2, #T_8e5a6_row15_col11 {
+#T_cc33e_row2_col14, #T_cc33e_row2_col15, #T_cc33e_row11_col15, #T_cc33e_row14_col2, #T_cc33e_row15_col2, #T_cc33e_row15_col11 {
   background-color: #f2c9b4;
   color: #000000;
 }
-#T_8e5a6_row2_col16, #T_8e5a6_row2_col22, #T_8e5a6_row4_col24, #T_8e5a6_row8_col24, #T_8e5a6_row9_col19, #T_8e5a6_row11_col20, #T_8e5a6_row16_col2, #T_8e5a6_row19_col9, #T_8e5a6_row20_col11, #T_8e5a6_row22_col2, #T_8e5a6_row24_col4, #T_8e5a6_row24_col8 {
+#T_cc33e_row2_col16, #T_cc33e_row2_col22, #T_cc33e_row4_col24, #T_cc33e_row8_col24, #T_cc33e_row9_col19, #T_cc33e_row11_col20, #T_cc33e_row16_col2, #T_cc33e_row19_col9, #T_cc33e_row20_col11, #T_cc33e_row22_col2, #T_cc33e_row24_col4, #T_cc33e_row24_col8 {
   background-color: #afcafc;
   color: #000000;
 }
-#T_8e5a6_row2_col17, #T_8e5a6_row11_col12, #T_8e5a6_row12_col11, #T_8e5a6_row17_col2 {
+#T_cc33e_row2_col17, #T_cc33e_row11_col12, #T_cc33e_row12_col11, #T_cc33e_row17_col2 {
   background-color: #edd1c2;
   color: #000000;
 }
-#T_8e5a6_row2_col21, #T_8e5a6_row2_col25, #T_8e5a6_row10_col16, #T_8e5a6_row10_col22, #T_8e5a6_row16_col10, #T_8e5a6_row21_col2, #T_8e5a6_row22_col10, #T_8e5a6_row24_col25, #T_8e5a6_row25_col2, #T_8e5a6_row25_col24 {
+#T_cc33e_row2_col21, #T_cc33e_row2_col25, #T_cc33e_row10_col16, #T_cc33e_row10_col22, #T_cc33e_row16_col10, #T_cc33e_row21_col2, #T_cc33e_row22_col10, #T_cc33e_row24_col25, #T_cc33e_row25_col2, #T_cc33e_row25_col24 {
   background-color: #aec9fc;
   color: #000000;
 }
-#T_8e5a6_row2_col24, #T_8e5a6_row24_col2 {
+#T_cc33e_row2_col24, #T_cc33e_row24_col2 {
   background-color: #ea7b60;
   color: #f1f1f1;
 }
-#T_8e5a6_row2_col26, #T_8e5a6_row7_col24, #T_8e5a6_row9_col20, #T_8e5a6_row10_col25, #T_8e5a6_row20_col9, #T_8e5a6_row24_col7, #T_8e5a6_row25_col10, #T_8e5a6_row26_col2 {
+#T_cc33e_row2_col26, #T_cc33e_row7_col24, #T_cc33e_row9_col20, #T_cc33e_row10_col25, #T_cc33e_row20_col9, #T_cc33e_row24_col7, #T_cc33e_row25_col10, #T_cc33e_row26_col2 {
   background-color: #a3c2fe;
   color: #000000;
 }
-#T_8e5a6_row3_col4, #T_8e5a6_row4_col3 {
+#T_cc33e_row3_col4, #T_cc33e_row4_col3 {
   background-color: #d24b40;
   color: #f1f1f1;
 }
-#T_8e5a6_row3_col5, #T_8e5a6_row3_col18, #T_8e5a6_row3_col20, #T_8e5a6_row5_col3, #T_8e5a6_row18_col3, #T_8e5a6_row20_col3 {
+#T_cc33e_row3_col5, #T_cc33e_row3_col18, #T_cc33e_row3_col20, #T_cc33e_row5_col3, #T_cc33e_row18_col3, #T_cc33e_row20_col3 {
   background-color: #cbd8ee;
   color: #000000;
 }
-#T_8e5a6_row3_col10, #T_8e5a6_row4_col23, #T_8e5a6_row10_col3, #T_8e5a6_row23_col4 {
+#T_cc33e_row3_col10, #T_cc33e_row4_col23, #T_cc33e_row10_col3, #T_cc33e_row23_col4 {
   background-color: #c4d5f3;
   color: #000000;
 }
-#T_8e5a6_row3_col11, #T_8e5a6_row4_col25, #T_8e5a6_row7_col19, #T_8e5a6_row11_col3, #T_8e5a6_row19_col7, #T_8e5a6_row25_col4 {
+#T_cc33e_row3_col11, #T_cc33e_row4_col25, #T_cc33e_row7_col19, #T_cc33e_row11_col3, #T_cc33e_row19_col7, #T_cc33e_row25_col4 {
   background-color: #e9d5cb;
   color: #000000;
 }
-#T_8e5a6_row3_col23, #T_8e5a6_row17_col19, #T_8e5a6_row19_col17, #T_8e5a6_row23_col3, #T_8e5a6_row23_col26, #T_8e5a6_row26_col23 {
+#T_cc33e_row3_col23, #T_cc33e_row17_col19, #T_cc33e_row19_col17, #T_cc33e_row23_col3, #T_cc33e_row23_col26, #T_cc33e_row26_col23 {
   background-color: #c1d4f4;
   color: #000000;
 }
-#T_8e5a6_row3_col25, #T_8e5a6_row11_col24, #T_8e5a6_row24_col11, #T_8e5a6_row25_col3 {
+#T_cc33e_row3_col25, #T_cc33e_row11_col24, #T_cc33e_row24_col11, #T_cc33e_row25_col3 {
   background-color: #e6d7cf;
   color: #000000;
 }
-#T_8e5a6_row4_col7, #T_8e5a6_row5_col25, #T_8e5a6_row6_col15, #T_8e5a6_row6_col20, #T_8e5a6_row7_col4, #T_8e5a6_row13_col18, #T_8e5a6_row13_col20, #T_8e5a6_row15_col6, #T_8e5a6_row18_col13, #T_8e5a6_row20_col6, #T_8e5a6_row20_col13, #T_8e5a6_row20_col24, #T_8e5a6_row24_col20, #T_8e5a6_row25_col5 {
+#T_cc33e_row4_col7, #T_cc33e_row5_col25, #T_cc33e_row6_col15, #T_cc33e_row6_col20, #T_cc33e_row7_col4, #T_cc33e_row13_col18, #T_cc33e_row13_col20, #T_cc33e_row15_col6, #T_cc33e_row18_col13, #T_cc33e_row20_col6, #T_cc33e_row20_col13, #T_cc33e_row20_col24, #T_cc33e_row24_col20, #T_cc33e_row25_col5 {
   background-color: #d7dce3;
   color: #000000;
 }
-#T_8e5a6_row4_col10, #T_8e5a6_row10_col4, #T_8e5a6_row11_col19, #T_8e5a6_row19_col11 {
+#T_cc33e_row4_col10, #T_cc33e_row10_col4, #T_cc33e_row11_col19, #T_cc33e_row19_col11 {
   background-color: #b3cdfb;
   color: #000000;
 }
-#T_8e5a6_row5_col6, #T_8e5a6_row6_col5 {
+#T_cc33e_row5_col6, #T_cc33e_row6_col5 {
   background-color: #e0dbd8;
   color: #000000;
 }
-#T_8e5a6_row5_col9, #T_8e5a6_row9_col5 {
+#T_cc33e_row5_col9, #T_cc33e_row9_col5 {
   background-color: #e1dad6;
   color: #000000;
 }
-#T_8e5a6_row5_col24, #T_8e5a6_row10_col20, #T_8e5a6_row20_col10, #T_8e5a6_row24_col5 {
+#T_cc33e_row5_col24, #T_cc33e_row10_col20, #T_cc33e_row20_col10, #T_cc33e_row24_col5 {
   background-color: #bcd2f7;
   color: #000000;
 }
-#T_8e5a6_row7_col8, #T_8e5a6_row8_col7 {
+#T_cc33e_row7_col8, #T_cc33e_row8_col7 {
   background-color: #e0654f;
   color: #f1f1f1;
 }
-#T_8e5a6_row7_col9, #T_8e5a6_row9_col7 {
+#T_cc33e_row7_col9, #T_cc33e_row9_col7 {
   background-color: #6485ec;
   color: #f1f1f1;
 }
-#T_8e5a6_row7_col10, #T_8e5a6_row10_col7, #T_8e5a6_row12_col19, #T_8e5a6_row19_col12 {
+#T_cc33e_row7_col10, #T_cc33e_row10_col7, #T_cc33e_row12_col19, #T_cc33e_row19_col12 {
   background-color: #9bbcff;
   color: #000000;
 }
-#T_8e5a6_row7_col12, #T_8e5a6_row8_col12, #T_8e5a6_row12_col7, #T_8e5a6_row12_col8, #T_8e5a6_row15_col26, #T_8e5a6_row26_col15 {
+#T_cc33e_row7_col12, #T_cc33e_row8_col12, #T_cc33e_row12_col7, #T_cc33e_row12_col8, #T_cc33e_row15_col26, #T_cc33e_row26_col15 {
   background-color: #7da0f9;
   color: #f1f1f1;
 }
-#T_8e5a6_row7_col13, #T_8e5a6_row10_col15, #T_8e5a6_row13_col7, #T_8e5a6_row15_col10 {
+#T_cc33e_row7_col13, #T_cc33e_row10_col15, #T_cc33e_row13_col7, #T_cc33e_row15_col10 {
   background-color: #f7af91;
   color: #000000;
 }
-#T_8e5a6_row7_col14, #T_8e5a6_row8_col14, #T_8e5a6_row14_col7, #T_8e5a6_row14_col8 {
+#T_cc33e_row7_col14, #T_cc33e_row8_col14, #T_cc33e_row14_col7, #T_cc33e_row14_col8 {
   background-color: #7b9ff9;
   color: #f1f1f1;
 }
-#T_8e5a6_row7_col15, #T_8e5a6_row8_col15, #T_8e5a6_row15_col7, #T_8e5a6_row15_col8 {
+#T_cc33e_row7_col15, #T_cc33e_row8_col15, #T_cc33e_row15_col7, #T_cc33e_row15_col8 {
   background-color: #80a3fa;
   color: #f1f1f1;
 }
-#T_8e5a6_row7_col16, #T_8e5a6_row7_col22, #T_8e5a6_row16_col7, #T_8e5a6_row22_col7 {
+#T_cc33e_row7_col16, #T_cc33e_row7_col22, #T_cc33e_row16_col7, #T_cc33e_row22_col7 {
   background-color: #f7a889;
   color: #000000;
 }
-#T_8e5a6_row7_col17, #T_8e5a6_row14_col23, #T_8e5a6_row17_col7, #T_8e5a6_row23_col14 {
+#T_cc33e_row7_col17, #T_cc33e_row14_col23, #T_cc33e_row17_col7, #T_cc33e_row23_col14 {
   background-color: #8caffe;
   color: #000000;
 }
-#T_8e5a6_row7_col18, #T_8e5a6_row11_col17, #T_8e5a6_row17_col11, #T_8e5a6_row18_col7 {
+#T_cc33e_row7_col18, #T_cc33e_row11_col17, #T_cc33e_row17_col11, #T_cc33e_row18_col7 {
   background-color: #e7d7ce;
   color: #000000;
 }
-#T_8e5a6_row7_col21, #T_8e5a6_row21_col7 {
+#T_cc33e_row7_col21, #T_cc33e_row21_col7 {
   background-color: #f7a98b;
   color: #000000;
 }
-#T_8e5a6_row7_col23, #T_8e5a6_row23_col7 {
+#T_cc33e_row7_col23, #T_cc33e_row23_col7 {
   background-color: #f2cab5;
   color: #000000;
 }
-#T_8e5a6_row7_col25, #T_8e5a6_row9_col17, #T_8e5a6_row11_col14, #T_8e5a6_row14_col11, #T_8e5a6_row17_col9, #T_8e5a6_row25_col7 {
+#T_cc33e_row7_col25, #T_cc33e_row9_col17, #T_cc33e_row11_col14, #T_cc33e_row14_col11, #T_cc33e_row17_col9, #T_cc33e_row25_col7 {
   background-color: #efcebd;
   color: #000000;
 }
-#T_8e5a6_row7_col26, #T_8e5a6_row8_col23, #T_8e5a6_row23_col8, #T_8e5a6_row26_col7 {
+#T_cc33e_row7_col26, #T_cc33e_row8_col23, #T_cc33e_row23_col8, #T_cc33e_row26_col7 {
   background-color: #f7b79b;
   color: #000000;
 }
-#T_8e5a6_row8_col9, #T_8e5a6_row9_col8, #T_8e5a6_row17_col21, #T_8e5a6_row21_col17 {
+#T_cc33e_row8_col9, #T_cc33e_row9_col8, #T_cc33e_row17_col21, #T_cc33e_row21_col17 {
   background-color: #445acc;
   color: #f1f1f1;
 }
-#T_8e5a6_row8_col10, #T_8e5a6_row10_col8, #T_8e5a6_row12_col23, #T_8e5a6_row14_col18, #T_8e5a6_row18_col14, #T_8e5a6_row23_col12 {
+#T_cc33e_row8_col10, #T_cc33e_row10_col8, #T_cc33e_row12_col23, #T_cc33e_row14_col18, #T_cc33e_row18_col14, #T_cc33e_row23_col12 {
   background-color: #96b7ff;
   color: #000000;
 }
-#T_8e5a6_row8_col13, #T_8e5a6_row13_col8 {
+#T_cc33e_row8_col13, #T_cc33e_row13_col8 {
   background-color: #f7b093;
   color: #000000;
 }
-#T_8e5a6_row8_col16, #T_8e5a6_row8_col21, #T_8e5a6_row8_col22, #T_8e5a6_row16_col8, #T_8e5a6_row16_col25, #T_8e5a6_row21_col8, #T_8e5a6_row22_col8, #T_8e5a6_row22_col25, #T_8e5a6_row25_col16, #T_8e5a6_row25_col22 {
+#T_cc33e_row8_col16, #T_cc33e_row8_col21, #T_cc33e_row8_col22, #T_cc33e_row16_col8, #T_cc33e_row16_col25, #T_cc33e_row21_col8, #T_cc33e_row22_col8, #T_cc33e_row22_col25, #T_cc33e_row25_col16, #T_cc33e_row25_col22 {
   background-color: #f3c7b1;
   color: #000000;
 }
-#T_8e5a6_row8_col17, #T_8e5a6_row17_col8 {
+#T_cc33e_row8_col17, #T_cc33e_row17_col8 {
   background-color: #a2c1ff;
   color: #000000;
 }
-#T_8e5a6_row8_col18, #T_8e5a6_row8_col19, #T_8e5a6_row9_col14, #T_8e5a6_row14_col9, #T_8e5a6_row18_col8, #T_8e5a6_row19_col8 {
+#T_cc33e_row8_col18, #T_cc33e_row8_col19, #T_cc33e_row9_col14, #T_cc33e_row14_col9, #T_cc33e_row18_col8, #T_cc33e_row19_col8 {
   background-color: #f5c4ac;
   color: #000000;
 }
-#T_8e5a6_row8_col20, #T_8e5a6_row9_col10, #T_8e5a6_row10_col9, #T_8e5a6_row20_col8 {
+#T_cc33e_row8_col20, #T_cc33e_row9_col10, #T_cc33e_row10_col9, #T_cc33e_row20_col8 {
   background-color: #f5c0a7;
   color: #000000;
 }
-#T_8e5a6_row8_col26, #T_8e5a6_row26_col8 {
+#T_cc33e_row8_col26, #T_cc33e_row26_col8 {
   background-color: #f0cdbb;
   color: #000000;
 }
-#T_8e5a6_row9_col12, #T_8e5a6_row12_col9 {
+#T_cc33e_row9_col12, #T_cc33e_row12_col9 {
   background-color: #f5c2aa;
   color: #000000;
 }
-#T_8e5a6_row9_col13, #T_8e5a6_row13_col9 {
+#T_cc33e_row9_col13, #T_cc33e_row13_col9 {
   background-color: #97b8ff;
   color: #000000;
 }
-#T_8e5a6_row9_col16, #T_8e5a6_row9_col21, #T_8e5a6_row9_col22, #T_8e5a6_row16_col9, #T_8e5a6_row18_col25, #T_8e5a6_row19_col25, #T_8e5a6_row21_col9, #T_8e5a6_row22_col9, #T_8e5a6_row25_col18, #T_8e5a6_row25_col19 {
+#T_cc33e_row9_col16, #T_cc33e_row9_col21, #T_cc33e_row9_col22, #T_cc33e_row16_col9, #T_cc33e_row18_col25, #T_cc33e_row19_col25, #T_cc33e_row21_col9, #T_cc33e_row22_col9, #T_cc33e_row25_col18, #T_cc33e_row25_col19 {
   background-color: #abc8fd;
   color: #000000;
 }
-#T_8e5a6_row9_col18, #T_8e5a6_row17_col25, #T_8e5a6_row18_col9, #T_8e5a6_row25_col17 {
+#T_cc33e_row9_col18, #T_cc33e_row17_col25, #T_cc33e_row18_col9, #T_cc33e_row25_col17 {
   background-color: #b1cbfc;
   color: #000000;
 }
-#T_8e5a6_row9_col23, #T_8e5a6_row18_col26, #T_8e5a6_row23_col9, #T_8e5a6_row26_col18 {
+#T_cc33e_row9_col23, #T_cc33e_row18_col26, #T_cc33e_row23_col9, #T_cc33e_row26_col18 {
   background-color: #b6cefa;
   color: #000000;
 }
-#T_8e5a6_row9_col24, #T_8e5a6_row24_col9 {
+#T_cc33e_row9_col24, #T_cc33e_row24_col9 {
   background-color: #ecd3c5;
   color: #000000;
 }
-#T_8e5a6_row10_col12, #T_8e5a6_row12_col10 {
+#T_cc33e_row10_col12, #T_cc33e_row12_col10 {
   background-color: #f6a586;
   color: #000000;
 }
-#T_8e5a6_row10_col13, #T_8e5a6_row13_col10 {
+#T_cc33e_row10_col13, #T_cc33e_row13_col10 {
   background-color: #8fb1fe;
   color: #000000;
 }
-#T_8e5a6_row10_col14, #T_8e5a6_row14_col10 {
+#T_cc33e_row10_col14, #T_cc33e_row14_col10 {
   background-color: #f7a688;
   color: #000000;
 }
-#T_8e5a6_row10_col17, #T_8e5a6_row17_col10 {
+#T_cc33e_row10_col17, #T_cc33e_row17_col10 {
   background-color: #efcfbf;
   color: #000000;
 }
-#T_8e5a6_row10_col19, #T_8e5a6_row19_col10 {
+#T_cc33e_row10_col19, #T_cc33e_row19_col10 {
   background-color: #bfd3f6;
   color: #000000;
 }
-#T_8e5a6_row10_col21, #T_8e5a6_row11_col23, #T_8e5a6_row21_col10, #T_8e5a6_row23_col11 {
+#T_cc33e_row10_col21, #T_cc33e_row11_col23, #T_cc33e_row21_col10, #T_cc33e_row23_col11 {
   background-color: #adc9fd;
   color: #000000;
 }
-#T_8e5a6_row10_col23, #T_8e5a6_row23_col10, #T_8e5a6_row23_col24, #T_8e5a6_row24_col23 {
+#T_cc33e_row10_col23, #T_cc33e_row23_col10, #T_cc33e_row23_col24, #T_cc33e_row24_col23 {
   background-color: #c6d6f1;
   color: #000000;
 }
-#T_8e5a6_row10_col24, #T_8e5a6_row24_col10 {
+#T_cc33e_row10_col24, #T_cc33e_row24_col10 {
   background-color: #f5c1a9;
   color: #000000;
 }
-#T_8e5a6_row10_col26, #T_8e5a6_row12_col21, #T_8e5a6_row14_col16, #T_8e5a6_row14_col22, #T_8e5a6_row16_col14, #T_8e5a6_row21_col12, #T_8e5a6_row22_col14, #T_8e5a6_row26_col10 {
+#T_cc33e_row10_col26, #T_cc33e_row12_col21, #T_cc33e_row14_col16, #T_cc33e_row14_col22, #T_cc33e_row16_col14, #T_cc33e_row21_col12, #T_cc33e_row22_col14, #T_cc33e_row26_col10 {
   background-color: #93b5fe;
   color: #000000;
 }
-#T_8e5a6_row11_col16, #T_8e5a6_row11_col21, #T_8e5a6_row11_col22, #T_8e5a6_row16_col11, #T_8e5a6_row21_col11, #T_8e5a6_row22_col11 {
+#T_cc33e_row11_col16, #T_cc33e_row11_col21, #T_cc33e_row11_col22, #T_cc33e_row16_col11, #T_cc33e_row21_col11, #T_cc33e_row22_col11 {
   background-color: #bed2f6;
   color: #000000;
 }
-#T_8e5a6_row11_col18, #T_8e5a6_row18_col11 {
+#T_cc33e_row11_col18, #T_cc33e_row18_col11 {
   background-color: #bad0f8;
   color: #000000;
 }
-#T_8e5a6_row12_col13, #T_8e5a6_row13_col12 {
+#T_cc33e_row12_col13, #T_cc33e_row13_col12 {
   background-color: #5e7de7;
   color: #f1f1f1;
 }
-#T_8e5a6_row12_col14, #T_8e5a6_row14_col12 {
+#T_cc33e_row12_col14, #T_cc33e_row14_col12 {
   background-color: #ba162b;
   color: #f1f1f1;
 }
-#T_8e5a6_row12_col15, #T_8e5a6_row15_col12 {
+#T_cc33e_row12_col15, #T_cc33e_row15_col12 {
   background-color: #c53334;
   color: #f1f1f1;
 }
-#T_8e5a6_row12_col16, #T_8e5a6_row12_col22, #T_8e5a6_row14_col19, #T_8e5a6_row16_col12, #T_8e5a6_row19_col14, #T_8e5a6_row22_col12 {
+#T_cc33e_row12_col16, #T_cc33e_row12_col22, #T_cc33e_row14_col19, #T_cc33e_row16_col12, #T_cc33e_row19_col14, #T_cc33e_row22_col12 {
   background-color: #94b6ff;
   color: #000000;
 }
-#T_8e5a6_row12_col17, #T_8e5a6_row17_col12 {
+#T_cc33e_row12_col17, #T_cc33e_row17_col12 {
   background-color: #f6bda2;
   color: #000000;
 }
-#T_8e5a6_row12_col18, #T_8e5a6_row13_col24, #T_8e5a6_row14_col25, #T_8e5a6_row18_col12, #T_8e5a6_row24_col13, #T_8e5a6_row24_col26, #T_8e5a6_row25_col14, #T_8e5a6_row26_col24 {
+#T_cc33e_row12_col18, #T_cc33e_row13_col24, #T_cc33e_row14_col25, #T_cc33e_row18_col12, #T_cc33e_row24_col13, #T_cc33e_row24_col26, #T_cc33e_row25_col14, #T_cc33e_row26_col24 {
   background-color: #9dbdff;
   color: #000000;
 }
-#T_8e5a6_row12_col20, #T_8e5a6_row20_col12 {
+#T_cc33e_row12_col20, #T_cc33e_row20_col12 {
   background-color: #a6c4fe;
   color: #000000;
 }
-#T_8e5a6_row12_col24, #T_8e5a6_row14_col24, #T_8e5a6_row24_col12, #T_8e5a6_row24_col14 {
+#T_cc33e_row12_col24, #T_cc33e_row14_col24, #T_cc33e_row24_col12, #T_cc33e_row24_col14 {
   background-color: #f7b497;
   color: #000000;
 }
-#T_8e5a6_row12_col25, #T_8e5a6_row25_col12 {
+#T_cc33e_row12_col25, #T_cc33e_row25_col12 {
   background-color: #9abbff;
   color: #000000;
 }
-#T_8e5a6_row12_col26, #T_8e5a6_row26_col12 {
+#T_cc33e_row12_col26, #T_cc33e_row26_col12 {
   background-color: #7597f6;
   color: #f1f1f1;
 }
-#T_8e5a6_row13_col14, #T_8e5a6_row14_col13 {
+#T_cc33e_row13_col14, #T_cc33e_row14_col13 {
   background-color: #5f7fe8;
   color: #f1f1f1;
 }
-#T_8e5a6_row13_col15, #T_8e5a6_row15_col13 {
+#T_cc33e_row13_col15, #T_cc33e_row15_col13 {
   background-color: #6b8df0;
   color: #f1f1f1;
 }
-#T_8e5a6_row13_col16, #T_8e5a6_row13_col21, #T_8e5a6_row13_col22, #T_8e5a6_row13_col25, #T_8e5a6_row16_col13, #T_8e5a6_row21_col13, #T_8e5a6_row22_col13, #T_8e5a6_row25_col13 {
+#T_cc33e_row13_col16, #T_cc33e_row13_col21, #T_cc33e_row13_col22, #T_cc33e_row13_col25, #T_cc33e_row16_col13, #T_cc33e_row21_col13, #T_cc33e_row22_col13, #T_cc33e_row25_col13 {
   background-color: #f2cbb7;
   color: #000000;
 }
-#T_8e5a6_row13_col17, #T_8e5a6_row17_col13, #T_8e5a6_row20_col26, #T_8e5a6_row26_col20 {
+#T_cc33e_row13_col17, #T_cc33e_row17_col13, #T_cc33e_row20_col26, #T_cc33e_row26_col20 {
   background-color: #a9c6fd;
   color: #000000;
 }
-#T_8e5a6_row13_col19, #T_8e5a6_row19_col13 {
+#T_cc33e_row13_col19, #T_cc33e_row19_col13 {
   background-color: #dcdddd;
   color: #000000;
 }
-#T_8e5a6_row13_col26, #T_8e5a6_row26_col13 {
+#T_cc33e_row13_col26, #T_cc33e_row26_col13 {
   background-color: #f6a385;
   color: #000000;
 }
-#T_8e5a6_row14_col15, #T_8e5a6_row15_col14 {
+#T_cc33e_row14_col15, #T_cc33e_row15_col14 {
   background-color: #be242e;
   color: #f1f1f1;
 }
-#T_8e5a6_row14_col17, #T_8e5a6_row17_col14 {
+#T_cc33e_row14_col17, #T_cc33e_row17_col14 {
   background-color: #f7b99e;
   color: #000000;
 }
-#T_8e5a6_row14_col20, #T_8e5a6_row20_col14 {
+#T_cc33e_row14_col20, #T_cc33e_row20_col14 {
   background-color: #a1c0ff;
   color: #000000;
 }
-#T_8e5a6_row14_col21, #T_8e5a6_row15_col18, #T_8e5a6_row15_col19, #T_8e5a6_row18_col15, #T_8e5a6_row19_col15, #T_8e5a6_row21_col14 {
+#T_cc33e_row14_col21, #T_cc33e_row15_col18, #T_cc33e_row15_col19, #T_cc33e_row18_col15, #T_cc33e_row19_col15, #T_cc33e_row21_col14 {
   background-color: #92b4fe;
   color: #000000;
 }
-#T_8e5a6_row14_col26, #T_8e5a6_row26_col14 {
+#T_cc33e_row14_col26, #T_cc33e_row26_col14 {
   background-color: #799cf8;
   color: #f1f1f1;
 }
-#T_8e5a6_row15_col16, #T_8e5a6_row15_col21, #T_8e5a6_row15_col22, #T_8e5a6_row16_col15, #T_8e5a6_row21_col15, #T_8e5a6_row22_col15 {
+#T_cc33e_row15_col16, #T_cc33e_row15_col21, #T_cc33e_row15_col22, #T_cc33e_row16_col15, #T_cc33e_row21_col15, #T_cc33e_row22_col15 {
   background-color: #8badfd;
   color: #000000;
 }
-#T_8e5a6_row15_col17, #T_8e5a6_row17_col15, #T_8e5a6_row17_col24, #T_8e5a6_row24_col17 {
+#T_cc33e_row15_col17, #T_cc33e_row17_col15, #T_cc33e_row17_col24, #T_cc33e_row24_col17 {
   background-color: #f7b194;
   color: #000000;
 }
-#T_8e5a6_row15_col20, #T_8e5a6_row15_col25, #T_8e5a6_row17_col26, #T_8e5a6_row20_col15, #T_8e5a6_row25_col15, #T_8e5a6_row26_col17 {
+#T_cc33e_row15_col20, #T_cc33e_row15_col25, #T_cc33e_row17_col26, #T_cc33e_row20_col15, #T_cc33e_row25_col15, #T_cc33e_row26_col17 {
   background-color: #9fbfff;
   color: #000000;
 }
-#T_8e5a6_row15_col23, #T_8e5a6_row23_col15 {
+#T_cc33e_row15_col23, #T_cc33e_row23_col15 {
   background-color: #81a4fb;
   color: #f1f1f1;
 }
-#T_8e5a6_row15_col24, #T_8e5a6_row24_col15 {
+#T_cc33e_row15_col24, #T_cc33e_row24_col15 {
   background-color: #f7b396;
   color: #000000;
 }
-#T_8e5a6_row16_col17, #T_8e5a6_row17_col16, #T_8e5a6_row17_col22, #T_8e5a6_row22_col17 {
+#T_cc33e_row16_col17, #T_cc33e_row17_col16, #T_cc33e_row17_col22, #T_cc33e_row22_col17 {
   background-color: #3b4cc0;
   color: #f1f1f1;
 }
-#T_8e5a6_row16_col20, #T_8e5a6_row20_col16, #T_8e5a6_row20_col21, #T_8e5a6_row20_col22, #T_8e5a6_row21_col20, #T_8e5a6_row22_col20 {
+#T_cc33e_row16_col20, #T_cc33e_row20_col16, #T_cc33e_row20_col21, #T_cc33e_row20_col22, #T_cc33e_row21_col20, #T_cc33e_row22_col20 {
   background-color: #c9d7f0;
   color: #000000;
 }
-#T_8e5a6_row16_col21, #T_8e5a6_row18_col19, #T_8e5a6_row19_col18, #T_8e5a6_row21_col16, #T_8e5a6_row21_col22, #T_8e5a6_row22_col21 {
+#T_cc33e_row16_col21, #T_cc33e_row18_col19, #T_cc33e_row19_col18, #T_cc33e_row21_col16, #T_cc33e_row21_col22, #T_cc33e_row22_col21 {
   background-color: #c0282f;
   color: #f1f1f1;
 }
-#T_8e5a6_row16_col23, #T_8e5a6_row21_col23, #T_8e5a6_row22_col23, #T_8e5a6_row23_col16, #T_8e5a6_row23_col21, #T_8e5a6_row23_col22 {
+#T_cc33e_row16_col23, #T_cc33e_row21_col23, #T_cc33e_row22_col23, #T_cc33e_row23_col16, #T_cc33e_row23_col21, #T_cc33e_row23_col22 {
   background-color: #ebd3c6;
   color: #000000;
 }
-#T_8e5a6_row16_col24, #T_8e5a6_row22_col24, #T_8e5a6_row24_col16, #T_8e5a6_row24_col22 {
+#T_cc33e_row16_col24, #T_cc33e_row22_col24, #T_cc33e_row24_col16, #T_cc33e_row24_col22 {
   background-color: #85a8fc;
   color: #f1f1f1;
 }
-#T_8e5a6_row16_col26, #T_8e5a6_row22_col26, #T_8e5a6_row26_col16, #T_8e5a6_row26_col22 {
+#T_cc33e_row16_col26, #T_cc33e_row22_col26, #T_cc33e_row26_col16, #T_cc33e_row26_col22 {
   background-color: #f7b89c;
   color: #000000;
 }
-#T_8e5a6_row18_col20, #T_8e5a6_row20_col18 {
+#T_cc33e_row18_col20, #T_cc33e_row20_col18 {
   background-color: #df634e;
   color: #f1f1f1;
 }
-#T_8e5a6_row18_col23, #T_8e5a6_row23_col18 {
+#T_cc33e_row18_col23, #T_cc33e_row23_col18 {
   background-color: #f49a7b;
   color: #000000;
 }
-#T_8e5a6_row19_col20, #T_8e5a6_row20_col19 {
+#T_cc33e_row19_col20, #T_cc33e_row20_col19 {
   background-color: #e16751;
   color: #f1f1f1;
 }
-#T_8e5a6_row19_col23, #T_8e5a6_row23_col19 {
+#T_cc33e_row19_col23, #T_cc33e_row23_col19 {
   background-color: #f59f80;
   color: #000000;
 }
-#T_8e5a6_row20_col23, #T_8e5a6_row23_col20 {
+#T_cc33e_row20_col23, #T_cc33e_row23_col20 {
   background-color: #f39778;
   color: #000000;
 }
-#T_8e5a6_row20_col25, #T_8e5a6_row25_col20 {
+#T_cc33e_row20_col25, #T_cc33e_row25_col20 {
   background-color: #9ebeff;
   color: #000000;
 }
-#T_8e5a6_row21_col24, #T_8e5a6_row24_col21 {
+#T_cc33e_row21_col24, #T_cc33e_row24_col21 {
   background-color: #84a7fc;
   color: #f1f1f1;
 }
-#T_8e5a6_row21_col25, #T_8e5a6_row25_col21 {
+#T_cc33e_row21_col25, #T_cc33e_row25_col21 {
   background-color: #f4c5ad;
   color: #000000;
 }
-#T_8e5a6_row21_col26, #T_8e5a6_row26_col21 {
+#T_cc33e_row21_col26, #T_cc33e_row26_col21 {
   background-color: #f7b599;
   color: #000000;
 }
-#T_8e5a6_row23_col25, #T_8e5a6_row25_col23 {
+#T_cc33e_row23_col25, #T_cc33e_row25_col23 {
   background-color: #b7cff9;
   color: #000000;
 }
-#T_8e5a6_row25_col26, #T_8e5a6_row26_col25 {
+#T_cc33e_row25_col26, #T_cc33e_row26_col25 {
   background-color: #c12b30;
   color: #f1f1f1;
 }
 </style>
 
-<table id="T_8e5a6" data-quarto-postprocess="true" class="table table-sm table-striped small">
+<table id="T_cc33e" data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="blank level0" data-quarto-table-cell-role="th">&nbsp;</th>
-<th id="T_8e5a6_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">ALAND</th>
-<th id="T_8e5a6_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">FIPS_y</th>
-<th id="T_8e5a6_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">INTERNATIONAL_MIG_2017</th>
-<th id="T_8e5a6_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">DOMESTIC_MIG_2014</th>
-<th id="T_8e5a6_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">DOMESTIC_MIG_2017</th>
-<th id="T_8e5a6_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">RESIDUAL_2010</th>
-<th id="T_8e5a6_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">RESIDUAL_2019</th>
-<th id="T_8e5a6_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">R_death_2012</th>
-<th id="T_8e5a6_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">R_death_2019</th>
-<th id="T_8e5a6_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">R_NATURAL_INC_2019</th>
-<th id="T_8e5a6_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">R_INTERNATIONAL_MIG_2011</th>
-<th id="T_8e5a6_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">R_DOMESTIC_MIG_2012</th>
-<th id="T_8e5a6_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 1990</th>
-<th id="T_8e5a6_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">Percent of adults with a high school diploma only, 2000</th>
-<th id="T_8e5a6_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2000</th>
-<th id="T_8e5a6_level0_col15" class="col_heading level0 col15" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2015-19</th>
-<th id="T_8e5a6_level0_col16" class="col_heading level0 col16" data-quarto-table-cell-role="th">Rural_urban_continuum_code_2013</th>
-<th id="T_8e5a6_level0_col17" class="col_heading level0 col17" data-quarto-table-cell-role="th">Metro_2013</th>
-<th id="T_8e5a6_level0_col18" class="col_heading level0 col18" data-quarto-table-cell-role="th">Unemployment_rate_2002</th>
-<th id="T_8e5a6_level0_col19" class="col_heading level0 col19" data-quarto-table-cell-role="th">Unemployment_rate_2003</th>
-<th id="T_8e5a6_level0_col20" class="col_heading level0 col20" data-quarto-table-cell-role="th">Unemployment_rate_2012</th>
-<th id="T_8e5a6_level0_col21" class="col_heading level0 col21" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2003</th>
-<th id="T_8e5a6_level0_col22" class="col_heading level0 col22" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2013</th>
-<th id="T_8e5a6_level0_col23" class="col_heading level0 col23" data-quarto-table-cell-role="th">CI90LB517P_2019</th>
-<th id="T_8e5a6_level0_col24" class="col_heading level0 col24" data-quarto-table-cell-role="th">candidatevotes_2016_republican</th>
-<th id="T_8e5a6_level0_col25" class="col_heading level0 col25" data-quarto-table-cell-role="th">share_2012_republican</th>
-<th id="T_8e5a6_level0_col26" class="col_heading level0 col26" data-quarto-table-cell-role="th">share_2016_republican</th>
+<th id="T_cc33e_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">ALAND</th>
+<th id="T_cc33e_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">FIPS_y</th>
+<th id="T_cc33e_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">INTERNATIONAL_MIG_2017</th>
+<th id="T_cc33e_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">DOMESTIC_MIG_2014</th>
+<th id="T_cc33e_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">DOMESTIC_MIG_2017</th>
+<th id="T_cc33e_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">RESIDUAL_2010</th>
+<th id="T_cc33e_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">RESIDUAL_2019</th>
+<th id="T_cc33e_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">R_death_2012</th>
+<th id="T_cc33e_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">R_death_2019</th>
+<th id="T_cc33e_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">R_NATURAL_INC_2019</th>
+<th id="T_cc33e_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">R_INTERNATIONAL_MIG_2011</th>
+<th id="T_cc33e_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">R_DOMESTIC_MIG_2012</th>
+<th id="T_cc33e_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 1990</th>
+<th id="T_cc33e_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">Percent of adults with a high school diploma only, 2000</th>
+<th id="T_cc33e_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2000</th>
+<th id="T_cc33e_level0_col15" class="col_heading level0 col15" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2015-19</th>
+<th id="T_cc33e_level0_col16" class="col_heading level0 col16" data-quarto-table-cell-role="th">Rural_urban_continuum_code_2013</th>
+<th id="T_cc33e_level0_col17" class="col_heading level0 col17" data-quarto-table-cell-role="th">Metro_2013</th>
+<th id="T_cc33e_level0_col18" class="col_heading level0 col18" data-quarto-table-cell-role="th">Unemployment_rate_2002</th>
+<th id="T_cc33e_level0_col19" class="col_heading level0 col19" data-quarto-table-cell-role="th">Unemployment_rate_2003</th>
+<th id="T_cc33e_level0_col20" class="col_heading level0 col20" data-quarto-table-cell-role="th">Unemployment_rate_2012</th>
+<th id="T_cc33e_level0_col21" class="col_heading level0 col21" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2003</th>
+<th id="T_cc33e_level0_col22" class="col_heading level0 col22" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2013</th>
+<th id="T_cc33e_level0_col23" class="col_heading level0 col23" data-quarto-table-cell-role="th">CI90LB517P_2019</th>
+<th id="T_cc33e_level0_col24" class="col_heading level0 col24" data-quarto-table-cell-role="th">candidatevotes_2016_republican</th>
+<th id="T_cc33e_level0_col25" class="col_heading level0 col25" data-quarto-table-cell-role="th">share_2012_republican</th>
+<th id="T_cc33e_level0_col26" class="col_heading level0 col26" data-quarto-table-cell-role="th">share_2016_republican</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_8e5a6_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">ALAND</td>
-<td id="T_8e5a6_row0_col0" class="data row0 col0">1.00</td>
-<td id="T_8e5a6_row0_col1" class="data row0 col1">-0.01</td>
-<td id="T_8e5a6_row0_col2" class="data row0 col2">0.03</td>
-<td id="T_8e5a6_row0_col3" class="data row0 col3">0.05</td>
-<td id="T_8e5a6_row0_col4" class="data row0 col4">0.06</td>
-<td id="T_8e5a6_row0_col5" class="data row0 col5">-0.02</td>
-<td id="T_8e5a6_row0_col6" class="data row0 col6">0.12</td>
-<td id="T_8e5a6_row0_col7" class="data row0 col7">-0.11</td>
-<td id="T_8e5a6_row0_col8" class="data row0 col8">-0.12</td>
-<td id="T_8e5a6_row0_col9" class="data row0 col9">0.10</td>
-<td id="T_8e5a6_row0_col10" class="data row0 col10">-0.03</td>
-<td id="T_8e5a6_row0_col11" class="data row0 col11">0.03</td>
-<td id="T_8e5a6_row0_col12" class="data row0 col12">0.06</td>
-<td id="T_8e5a6_row0_col13" class="data row0 col13">-0.17</td>
-<td id="T_8e5a6_row0_col14" class="data row0 col14">0.04</td>
-<td id="T_8e5a6_row0_col15" class="data row0 col15">-0.00</td>
-<td id="T_8e5a6_row0_col16" class="data row0 col16">0.08</td>
-<td id="T_8e5a6_row0_col17" class="data row0 col17">-0.08</td>
-<td id="T_8e5a6_row0_col18" class="data row0 col18">0.06</td>
-<td id="T_8e5a6_row0_col19" class="data row0 col19">0.05</td>
-<td id="T_8e5a6_row0_col20" class="data row0 col20">0.02</td>
-<td id="T_8e5a6_row0_col21" class="data row0 col21">0.08</td>
-<td id="T_8e5a6_row0_col22" class="data row0 col22">0.08</td>
-<td id="T_8e5a6_row0_col23" class="data row0 col23">0.01</td>
-<td id="T_8e5a6_row0_col24" class="data row0 col24">0.11</td>
-<td id="T_8e5a6_row0_col25" class="data row0 col25">0.03</td>
-<td id="T_8e5a6_row0_col26" class="data row0 col26">-0.04</td>
+<td id="T_cc33e_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">ALAND</td>
+<td id="T_cc33e_row0_col0" class="data row0 col0">1.00</td>
+<td id="T_cc33e_row0_col1" class="data row0 col1">-0.01</td>
+<td id="T_cc33e_row0_col2" class="data row0 col2">0.03</td>
+<td id="T_cc33e_row0_col3" class="data row0 col3">0.05</td>
+<td id="T_cc33e_row0_col4" class="data row0 col4">0.06</td>
+<td id="T_cc33e_row0_col5" class="data row0 col5">-0.02</td>
+<td id="T_cc33e_row0_col6" class="data row0 col6">0.12</td>
+<td id="T_cc33e_row0_col7" class="data row0 col7">-0.11</td>
+<td id="T_cc33e_row0_col8" class="data row0 col8">-0.12</td>
+<td id="T_cc33e_row0_col9" class="data row0 col9">0.10</td>
+<td id="T_cc33e_row0_col10" class="data row0 col10">-0.03</td>
+<td id="T_cc33e_row0_col11" class="data row0 col11">0.03</td>
+<td id="T_cc33e_row0_col12" class="data row0 col12">0.06</td>
+<td id="T_cc33e_row0_col13" class="data row0 col13">-0.17</td>
+<td id="T_cc33e_row0_col14" class="data row0 col14">0.04</td>
+<td id="T_cc33e_row0_col15" class="data row0 col15">-0.00</td>
+<td id="T_cc33e_row0_col16" class="data row0 col16">0.08</td>
+<td id="T_cc33e_row0_col17" class="data row0 col17">-0.08</td>
+<td id="T_cc33e_row0_col18" class="data row0 col18">0.06</td>
+<td id="T_cc33e_row0_col19" class="data row0 col19">0.05</td>
+<td id="T_cc33e_row0_col20" class="data row0 col20">0.02</td>
+<td id="T_cc33e_row0_col21" class="data row0 col21">0.08</td>
+<td id="T_cc33e_row0_col22" class="data row0 col22">0.08</td>
+<td id="T_cc33e_row0_col23" class="data row0 col23">0.01</td>
+<td id="T_cc33e_row0_col24" class="data row0 col24">0.11</td>
+<td id="T_cc33e_row0_col25" class="data row0 col25">0.03</td>
+<td id="T_cc33e_row0_col26" class="data row0 col26">-0.04</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">FIPS_y</td>
-<td id="T_8e5a6_row1_col0" class="data row1 col0">-0.01</td>
-<td id="T_8e5a6_row1_col1" class="data row1 col1">1.00</td>
-<td id="T_8e5a6_row1_col2" class="data row1 col2">-0.04</td>
-<td id="T_8e5a6_row1_col3" class="data row1 col3">0.01</td>
-<td id="T_8e5a6_row1_col4" class="data row1 col4">0.01</td>
-<td id="T_8e5a6_row1_col5" class="data row1 col5">-0.00</td>
-<td id="T_8e5a6_row1_col6" class="data row1 col6">-0.05</td>
-<td id="T_8e5a6_row1_col7" class="data row1 col7">0.01</td>
-<td id="T_8e5a6_row1_col8" class="data row1 col8">-0.03</td>
-<td id="T_8e5a6_row1_col9" class="data row1 col9">0.01</td>
-<td id="T_8e5a6_row1_col10" class="data row1 col10">-0.00</td>
-<td id="T_8e5a6_row1_col11" class="data row1 col11">0.11</td>
-<td id="T_8e5a6_row1_col12" class="data row1 col12">0.03</td>
-<td id="T_8e5a6_row1_col13" class="data row1 col13">0.01</td>
-<td id="T_8e5a6_row1_col14" class="data row1 col14">0.03</td>
-<td id="T_8e5a6_row1_col15" class="data row1 col15">0.04</td>
-<td id="T_8e5a6_row1_col16" class="data row1 col16">0.01</td>
-<td id="T_8e5a6_row1_col17" class="data row1 col17">-0.01</td>
-<td id="T_8e5a6_row1_col18" class="data row1 col18">-0.01</td>
-<td id="T_8e5a6_row1_col19" class="data row1 col19">-0.01</td>
-<td id="T_8e5a6_row1_col20" class="data row1 col20">-0.20</td>
-<td id="T_8e5a6_row1_col21" class="data row1 col21">0.01</td>
-<td id="T_8e5a6_row1_col22" class="data row1 col22">0.01</td>
-<td id="T_8e5a6_row1_col23" class="data row1 col23">-0.09</td>
-<td id="T_8e5a6_row1_col24" class="data row1 col24">-0.06</td>
-<td id="T_8e5a6_row1_col25" class="data row1 col25">0.05</td>
-<td id="T_8e5a6_row1_col26" class="data row1 col26">0.05</td>
+<td id="T_cc33e_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">FIPS_y</td>
+<td id="T_cc33e_row1_col0" class="data row1 col0">-0.01</td>
+<td id="T_cc33e_row1_col1" class="data row1 col1">1.00</td>
+<td id="T_cc33e_row1_col2" class="data row1 col2">-0.04</td>
+<td id="T_cc33e_row1_col3" class="data row1 col3">0.01</td>
+<td id="T_cc33e_row1_col4" class="data row1 col4">0.01</td>
+<td id="T_cc33e_row1_col5" class="data row1 col5">-0.00</td>
+<td id="T_cc33e_row1_col6" class="data row1 col6">-0.05</td>
+<td id="T_cc33e_row1_col7" class="data row1 col7">0.01</td>
+<td id="T_cc33e_row1_col8" class="data row1 col8">-0.03</td>
+<td id="T_cc33e_row1_col9" class="data row1 col9">0.01</td>
+<td id="T_cc33e_row1_col10" class="data row1 col10">-0.00</td>
+<td id="T_cc33e_row1_col11" class="data row1 col11">0.11</td>
+<td id="T_cc33e_row1_col12" class="data row1 col12">0.03</td>
+<td id="T_cc33e_row1_col13" class="data row1 col13">0.01</td>
+<td id="T_cc33e_row1_col14" class="data row1 col14">0.03</td>
+<td id="T_cc33e_row1_col15" class="data row1 col15">0.04</td>
+<td id="T_cc33e_row1_col16" class="data row1 col16">0.01</td>
+<td id="T_cc33e_row1_col17" class="data row1 col17">-0.01</td>
+<td id="T_cc33e_row1_col18" class="data row1 col18">-0.01</td>
+<td id="T_cc33e_row1_col19" class="data row1 col19">-0.01</td>
+<td id="T_cc33e_row1_col20" class="data row1 col20">-0.20</td>
+<td id="T_cc33e_row1_col21" class="data row1 col21">0.01</td>
+<td id="T_cc33e_row1_col22" class="data row1 col22">0.01</td>
+<td id="T_cc33e_row1_col23" class="data row1 col23">-0.09</td>
+<td id="T_cc33e_row1_col24" class="data row1 col24">-0.06</td>
+<td id="T_cc33e_row1_col25" class="data row1 col25">0.05</td>
+<td id="T_cc33e_row1_col26" class="data row1 col26">0.05</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">INTERNATIONAL_MIG_2017</td>
-<td id="T_8e5a6_row2_col0" class="data row2 col0">0.03</td>
-<td id="T_8e5a6_row2_col1" class="data row2 col1">-0.04</td>
-<td id="T_8e5a6_row2_col2" class="data row2 col2">1.00</td>
-<td id="T_8e5a6_row2_col3" class="data row2 col3">-0.28</td>
-<td id="T_8e5a6_row2_col4" class="data row2 col4">-0.56</td>
-<td id="T_8e5a6_row2_col5" class="data row2 col5">-0.15</td>
-<td id="T_8e5a6_row2_col6" class="data row2 col6">0.27</td>
-<td id="T_8e5a6_row2_col7" class="data row2 col7">-0.19</td>
-<td id="T_8e5a6_row2_col8" class="data row2 col8">-0.17</td>
-<td id="T_8e5a6_row2_col9" class="data row2 col9">0.15</td>
-<td id="T_8e5a6_row2_col10" class="data row2 col10">0.44</td>
-<td id="T_8e5a6_row2_col11" class="data row2 col11">0.05</td>
-<td id="T_8e5a6_row2_col12" class="data row2 col12">0.27</td>
-<td id="T_8e5a6_row2_col13" class="data row2 col13">-0.25</td>
-<td id="T_8e5a6_row2_col14" class="data row2 col14">0.26</td>
-<td id="T_8e5a6_row2_col15" class="data row2 col15">0.27</td>
-<td id="T_8e5a6_row2_col16" class="data row2 col16">-0.22</td>
-<td id="T_8e5a6_row2_col17" class="data row2 col17">0.20</td>
-<td id="T_8e5a6_row2_col18" class="data row2 col18">0.01</td>
-<td id="T_8e5a6_row2_col19" class="data row2 col19">-0.01</td>
-<td id="T_8e5a6_row2_col20" class="data row2 col20">0.00</td>
-<td id="T_8e5a6_row2_col21" class="data row2 col21">-0.22</td>
-<td id="T_8e5a6_row2_col22" class="data row2 col22">-0.22</td>
-<td id="T_8e5a6_row2_col23" class="data row2 col23">-0.00</td>
-<td id="T_8e5a6_row2_col24" class="data row2 col24">0.66</td>
-<td id="T_8e5a6_row2_col25" class="data row2 col25">-0.23</td>
-<td id="T_8e5a6_row2_col26" class="data row2 col26">-0.29</td>
+<td id="T_cc33e_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">INTERNATIONAL_MIG_2017</td>
+<td id="T_cc33e_row2_col0" class="data row2 col0">0.03</td>
+<td id="T_cc33e_row2_col1" class="data row2 col1">-0.04</td>
+<td id="T_cc33e_row2_col2" class="data row2 col2">1.00</td>
+<td id="T_cc33e_row2_col3" class="data row2 col3">-0.28</td>
+<td id="T_cc33e_row2_col4" class="data row2 col4">-0.56</td>
+<td id="T_cc33e_row2_col5" class="data row2 col5">-0.15</td>
+<td id="T_cc33e_row2_col6" class="data row2 col6">0.27</td>
+<td id="T_cc33e_row2_col7" class="data row2 col7">-0.19</td>
+<td id="T_cc33e_row2_col8" class="data row2 col8">-0.17</td>
+<td id="T_cc33e_row2_col9" class="data row2 col9">0.15</td>
+<td id="T_cc33e_row2_col10" class="data row2 col10">0.44</td>
+<td id="T_cc33e_row2_col11" class="data row2 col11">0.05</td>
+<td id="T_cc33e_row2_col12" class="data row2 col12">0.27</td>
+<td id="T_cc33e_row2_col13" class="data row2 col13">-0.25</td>
+<td id="T_cc33e_row2_col14" class="data row2 col14">0.26</td>
+<td id="T_cc33e_row2_col15" class="data row2 col15">0.27</td>
+<td id="T_cc33e_row2_col16" class="data row2 col16">-0.22</td>
+<td id="T_cc33e_row2_col17" class="data row2 col17">0.20</td>
+<td id="T_cc33e_row2_col18" class="data row2 col18">0.01</td>
+<td id="T_cc33e_row2_col19" class="data row2 col19">-0.01</td>
+<td id="T_cc33e_row2_col20" class="data row2 col20">0.00</td>
+<td id="T_cc33e_row2_col21" class="data row2 col21">-0.22</td>
+<td id="T_cc33e_row2_col22" class="data row2 col22">-0.22</td>
+<td id="T_cc33e_row2_col23" class="data row2 col23">-0.00</td>
+<td id="T_cc33e_row2_col24" class="data row2 col24">0.66</td>
+<td id="T_cc33e_row2_col25" class="data row2 col25">-0.23</td>
+<td id="T_cc33e_row2_col26" class="data row2 col26">-0.29</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">DOMESTIC_MIG_2014</td>
-<td id="T_8e5a6_row3_col0" class="data row3 col0">0.05</td>
-<td id="T_8e5a6_row3_col1" class="data row3 col1">0.01</td>
-<td id="T_8e5a6_row3_col2" class="data row3 col2">-0.28</td>
-<td id="T_8e5a6_row3_col3" class="data row3 col3">1.00</td>
-<td id="T_8e5a6_row3_col4" class="data row3 col4">0.84</td>
-<td id="T_8e5a6_row3_col5" class="data row3 col5">-0.05</td>
-<td id="T_8e5a6_row3_col6" class="data row3 col6">0.10</td>
-<td id="T_8e5a6_row3_col7" class="data row3 col7">-0.02</td>
-<td id="T_8e5a6_row3_col8" class="data row3 col8">-0.03</td>
-<td id="T_8e5a6_row3_col9" class="data row3 col9">-0.01</td>
-<td id="T_8e5a6_row3_col10" class="data row3 col10">-0.10</td>
-<td id="T_8e5a6_row3_col11" class="data row3 col11">0.16</td>
-<td id="T_8e5a6_row3_col12" class="data row3 col12">0.01</td>
-<td id="T_8e5a6_row3_col13" class="data row3 col13">-0.02</td>
-<td id="T_8e5a6_row3_col14" class="data row3 col14">0.03</td>
-<td id="T_8e5a6_row3_col15" class="data row3 col15">0.04</td>
-<td id="T_8e5a6_row3_col16" class="data row3 col16">-0.03</td>
-<td id="T_8e5a6_row3_col17" class="data row3 col17">0.04</td>
-<td id="T_8e5a6_row3_col18" class="data row3 col18">-0.05</td>
-<td id="T_8e5a6_row3_col19" class="data row3 col19">-0.06</td>
-<td id="T_8e5a6_row3_col20" class="data row3 col20">-0.05</td>
-<td id="T_8e5a6_row3_col21" class="data row3 col21">-0.03</td>
-<td id="T_8e5a6_row3_col22" class="data row3 col22">-0.03</td>
-<td id="T_8e5a6_row3_col23" class="data row3 col23">-0.11</td>
-<td id="T_8e5a6_row3_col24" class="data row3 col24">-0.03</td>
-<td id="T_8e5a6_row3_col25" class="data row3 col25">0.13</td>
-<td id="T_8e5a6_row3_col26" class="data row3 col26">0.10</td>
+<td id="T_cc33e_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">DOMESTIC_MIG_2014</td>
+<td id="T_cc33e_row3_col0" class="data row3 col0">0.05</td>
+<td id="T_cc33e_row3_col1" class="data row3 col1">0.01</td>
+<td id="T_cc33e_row3_col2" class="data row3 col2">-0.28</td>
+<td id="T_cc33e_row3_col3" class="data row3 col3">1.00</td>
+<td id="T_cc33e_row3_col4" class="data row3 col4">0.84</td>
+<td id="T_cc33e_row3_col5" class="data row3 col5">-0.05</td>
+<td id="T_cc33e_row3_col6" class="data row3 col6">0.10</td>
+<td id="T_cc33e_row3_col7" class="data row3 col7">-0.02</td>
+<td id="T_cc33e_row3_col8" class="data row3 col8">-0.03</td>
+<td id="T_cc33e_row3_col9" class="data row3 col9">-0.01</td>
+<td id="T_cc33e_row3_col10" class="data row3 col10">-0.10</td>
+<td id="T_cc33e_row3_col11" class="data row3 col11">0.16</td>
+<td id="T_cc33e_row3_col12" class="data row3 col12">0.01</td>
+<td id="T_cc33e_row3_col13" class="data row3 col13">-0.02</td>
+<td id="T_cc33e_row3_col14" class="data row3 col14">0.03</td>
+<td id="T_cc33e_row3_col15" class="data row3 col15">0.04</td>
+<td id="T_cc33e_row3_col16" class="data row3 col16">-0.03</td>
+<td id="T_cc33e_row3_col17" class="data row3 col17">0.04</td>
+<td id="T_cc33e_row3_col18" class="data row3 col18">-0.05</td>
+<td id="T_cc33e_row3_col19" class="data row3 col19">-0.06</td>
+<td id="T_cc33e_row3_col20" class="data row3 col20">-0.05</td>
+<td id="T_cc33e_row3_col21" class="data row3 col21">-0.03</td>
+<td id="T_cc33e_row3_col22" class="data row3 col22">-0.03</td>
+<td id="T_cc33e_row3_col23" class="data row3 col23">-0.11</td>
+<td id="T_cc33e_row3_col24" class="data row3 col24">-0.03</td>
+<td id="T_cc33e_row3_col25" class="data row3 col25">0.13</td>
+<td id="T_cc33e_row3_col26" class="data row3 col26">0.10</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">DOMESTIC_MIG_2017</td>
-<td id="T_8e5a6_row4_col0" class="data row4 col0">0.06</td>
-<td id="T_8e5a6_row4_col1" class="data row4 col1">0.01</td>
-<td id="T_8e5a6_row4_col2" class="data row4 col2">-0.56</td>
-<td id="T_8e5a6_row4_col3" class="data row4 col3">0.84</td>
-<td id="T_8e5a6_row4_col4" class="data row4 col4">1.00</td>
-<td id="T_8e5a6_row4_col5" class="data row4 col5">0.04</td>
-<td id="T_8e5a6_row4_col6" class="data row4 col6">0.02</td>
-<td id="T_8e5a6_row4_col7" class="data row4 col7">0.02</td>
-<td id="T_8e5a6_row4_col8" class="data row4 col8">0.02</td>
-<td id="T_8e5a6_row4_col9" class="data row4 col9">-0.05</td>
-<td id="T_8e5a6_row4_col10" class="data row4 col10">-0.19</td>
-<td id="T_8e5a6_row4_col11" class="data row4 col11">0.10</td>
-<td id="T_8e5a6_row4_col12" class="data row4 col12">-0.05</td>
-<td id="T_8e5a6_row4_col13" class="data row4 col13">0.04</td>
-<td id="T_8e5a6_row4_col14" class="data row4 col14">-0.03</td>
-<td id="T_8e5a6_row4_col15" class="data row4 col15">-0.02</td>
-<td id="T_8e5a6_row4_col16" class="data row4 col16">-0.00</td>
-<td id="T_8e5a6_row4_col17" class="data row4 col17">0.01</td>
-<td id="T_8e5a6_row4_col18" class="data row4 col18">-0.04</td>
-<td id="T_8e5a6_row4_col19" class="data row4 col19">-0.05</td>
-<td id="T_8e5a6_row4_col20" class="data row4 col20">-0.02</td>
-<td id="T_8e5a6_row4_col21" class="data row4 col21">0.00</td>
-<td id="T_8e5a6_row4_col22" class="data row4 col22">-0.00</td>
-<td id="T_8e5a6_row4_col23" class="data row4 col23">-0.10</td>
-<td id="T_8e5a6_row4_col24" class="data row4 col24">-0.21</td>
-<td id="T_8e5a6_row4_col25" class="data row4 col25">0.16</td>
-<td id="T_8e5a6_row4_col26" class="data row4 col26">0.15</td>
+<td id="T_cc33e_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">DOMESTIC_MIG_2017</td>
+<td id="T_cc33e_row4_col0" class="data row4 col0">0.06</td>
+<td id="T_cc33e_row4_col1" class="data row4 col1">0.01</td>
+<td id="T_cc33e_row4_col2" class="data row4 col2">-0.56</td>
+<td id="T_cc33e_row4_col3" class="data row4 col3">0.84</td>
+<td id="T_cc33e_row4_col4" class="data row4 col4">1.00</td>
+<td id="T_cc33e_row4_col5" class="data row4 col5">0.04</td>
+<td id="T_cc33e_row4_col6" class="data row4 col6">0.02</td>
+<td id="T_cc33e_row4_col7" class="data row4 col7">0.02</td>
+<td id="T_cc33e_row4_col8" class="data row4 col8">0.02</td>
+<td id="T_cc33e_row4_col9" class="data row4 col9">-0.05</td>
+<td id="T_cc33e_row4_col10" class="data row4 col10">-0.19</td>
+<td id="T_cc33e_row4_col11" class="data row4 col11">0.10</td>
+<td id="T_cc33e_row4_col12" class="data row4 col12">-0.05</td>
+<td id="T_cc33e_row4_col13" class="data row4 col13">0.04</td>
+<td id="T_cc33e_row4_col14" class="data row4 col14">-0.03</td>
+<td id="T_cc33e_row4_col15" class="data row4 col15">-0.02</td>
+<td id="T_cc33e_row4_col16" class="data row4 col16">-0.00</td>
+<td id="T_cc33e_row4_col17" class="data row4 col17">0.01</td>
+<td id="T_cc33e_row4_col18" class="data row4 col18">-0.04</td>
+<td id="T_cc33e_row4_col19" class="data row4 col19">-0.05</td>
+<td id="T_cc33e_row4_col20" class="data row4 col20">-0.02</td>
+<td id="T_cc33e_row4_col21" class="data row4 col21">0.00</td>
+<td id="T_cc33e_row4_col22" class="data row4 col22">-0.00</td>
+<td id="T_cc33e_row4_col23" class="data row4 col23">-0.10</td>
+<td id="T_cc33e_row4_col24" class="data row4 col24">-0.21</td>
+<td id="T_cc33e_row4_col25" class="data row4 col25">0.16</td>
+<td id="T_cc33e_row4_col26" class="data row4 col26">0.15</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">RESIDUAL_2010</td>
-<td id="T_8e5a6_row5_col0" class="data row5 col0">-0.02</td>
-<td id="T_8e5a6_row5_col1" class="data row5 col1">-0.00</td>
-<td id="T_8e5a6_row5_col2" class="data row5 col2">-0.15</td>
-<td id="T_8e5a6_row5_col3" class="data row5 col3">-0.05</td>
-<td id="T_8e5a6_row5_col4" class="data row5 col4">0.04</td>
-<td id="T_8e5a6_row5_col5" class="data row5 col5">1.00</td>
-<td id="T_8e5a6_row5_col6" class="data row5 col6">0.09</td>
-<td id="T_8e5a6_row5_col7" class="data row5 col7">-0.06</td>
-<td id="T_8e5a6_row5_col8" class="data row5 col8">-0.07</td>
-<td id="T_8e5a6_row5_col9" class="data row5 col9">0.09</td>
-<td id="T_8e5a6_row5_col10" class="data row5 col10">-0.03</td>
-<td id="T_8e5a6_row5_col11" class="data row5 col11">0.03</td>
-<td id="T_8e5a6_row5_col12" class="data row5 col12">-0.03</td>
-<td id="T_8e5a6_row5_col13" class="data row5 col13">-0.02</td>
-<td id="T_8e5a6_row5_col14" class="data row5 col14">-0.03</td>
-<td id="T_8e5a6_row5_col15" class="data row5 col15">-0.02</td>
-<td id="T_8e5a6_row5_col16" class="data row5 col16">0.01</td>
-<td id="T_8e5a6_row5_col17" class="data row5 col17">-0.01</td>
-<td id="T_8e5a6_row5_col18" class="data row5 col18">0.02</td>
-<td id="T_8e5a6_row5_col19" class="data row5 col19">0.02</td>
-<td id="T_8e5a6_row5_col20" class="data row5 col20">0.01</td>
-<td id="T_8e5a6_row5_col21" class="data row5 col21">0.01</td>
-<td id="T_8e5a6_row5_col22" class="data row5 col22">0.01</td>
-<td id="T_8e5a6_row5_col23" class="data row5 col23">0.03</td>
-<td id="T_8e5a6_row5_col24" class="data row5 col24">-0.15</td>
-<td id="T_8e5a6_row5_col25" class="data row5 col25">0.02</td>
-<td id="T_8e5a6_row5_col26" class="data row5 col26">0.02</td>
+<td id="T_cc33e_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">RESIDUAL_2010</td>
+<td id="T_cc33e_row5_col0" class="data row5 col0">-0.02</td>
+<td id="T_cc33e_row5_col1" class="data row5 col1">-0.00</td>
+<td id="T_cc33e_row5_col2" class="data row5 col2">-0.15</td>
+<td id="T_cc33e_row5_col3" class="data row5 col3">-0.05</td>
+<td id="T_cc33e_row5_col4" class="data row5 col4">0.04</td>
+<td id="T_cc33e_row5_col5" class="data row5 col5">1.00</td>
+<td id="T_cc33e_row5_col6" class="data row5 col6">0.09</td>
+<td id="T_cc33e_row5_col7" class="data row5 col7">-0.06</td>
+<td id="T_cc33e_row5_col8" class="data row5 col8">-0.07</td>
+<td id="T_cc33e_row5_col9" class="data row5 col9">0.09</td>
+<td id="T_cc33e_row5_col10" class="data row5 col10">-0.03</td>
+<td id="T_cc33e_row5_col11" class="data row5 col11">0.03</td>
+<td id="T_cc33e_row5_col12" class="data row5 col12">-0.03</td>
+<td id="T_cc33e_row5_col13" class="data row5 col13">-0.02</td>
+<td id="T_cc33e_row5_col14" class="data row5 col14">-0.03</td>
+<td id="T_cc33e_row5_col15" class="data row5 col15">-0.02</td>
+<td id="T_cc33e_row5_col16" class="data row5 col16">0.01</td>
+<td id="T_cc33e_row5_col17" class="data row5 col17">-0.01</td>
+<td id="T_cc33e_row5_col18" class="data row5 col18">0.02</td>
+<td id="T_cc33e_row5_col19" class="data row5 col19">0.02</td>
+<td id="T_cc33e_row5_col20" class="data row5 col20">0.01</td>
+<td id="T_cc33e_row5_col21" class="data row5 col21">0.01</td>
+<td id="T_cc33e_row5_col22" class="data row5 col22">0.01</td>
+<td id="T_cc33e_row5_col23" class="data row5 col23">0.03</td>
+<td id="T_cc33e_row5_col24" class="data row5 col24">-0.15</td>
+<td id="T_cc33e_row5_col25" class="data row5 col25">0.02</td>
+<td id="T_cc33e_row5_col26" class="data row5 col26">0.02</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">RESIDUAL_2019</td>
-<td id="T_8e5a6_row6_col0" class="data row6 col0">0.12</td>
-<td id="T_8e5a6_row6_col1" class="data row6 col1">-0.05</td>
-<td id="T_8e5a6_row6_col2" class="data row6 col2">0.27</td>
-<td id="T_8e5a6_row6_col3" class="data row6 col3">0.10</td>
-<td id="T_8e5a6_row6_col4" class="data row6 col4">0.02</td>
-<td id="T_8e5a6_row6_col5" class="data row6 col5">0.09</td>
-<td id="T_8e5a6_row6_col6" class="data row6 col6">1.00</td>
-<td id="T_8e5a6_row6_col7" class="data row6 col7">-0.06</td>
-<td id="T_8e5a6_row6_col8" class="data row6 col8">-0.06</td>
-<td id="T_8e5a6_row6_col9" class="data row6 col9">0.05</td>
-<td id="T_8e5a6_row6_col10" class="data row6 col10">0.08</td>
-<td id="T_8e5a6_row6_col11" class="data row6 col11">0.07</td>
-<td id="T_8e5a6_row6_col12" class="data row6 col12">0.03</td>
-<td id="T_8e5a6_row6_col13" class="data row6 col13">-0.09</td>
-<td id="T_8e5a6_row6_col14" class="data row6 col14">0.03</td>
-<td id="T_8e5a6_row6_col15" class="data row6 col15">0.02</td>
-<td id="T_8e5a6_row6_col16" class="data row6 col16">-0.02</td>
-<td id="T_8e5a6_row6_col17" class="data row6 col17">0.03</td>
-<td id="T_8e5a6_row6_col18" class="data row6 col18">0.01</td>
-<td id="T_8e5a6_row6_col19" class="data row6 col19">-0.00</td>
-<td id="T_8e5a6_row6_col20" class="data row6 col20">0.02</td>
-<td id="T_8e5a6_row6_col21" class="data row6 col21">-0.02</td>
-<td id="T_8e5a6_row6_col22" class="data row6 col22">-0.02</td>
-<td id="T_8e5a6_row6_col23" class="data row6 col23">0.01</td>
-<td id="T_8e5a6_row6_col24" class="data row6 col24">0.27</td>
-<td id="T_8e5a6_row6_col25" class="data row6 col25">0.02</td>
-<td id="T_8e5a6_row6_col26" class="data row6 col26">-0.01</td>
+<td id="T_cc33e_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">RESIDUAL_2019</td>
+<td id="T_cc33e_row6_col0" class="data row6 col0">0.12</td>
+<td id="T_cc33e_row6_col1" class="data row6 col1">-0.05</td>
+<td id="T_cc33e_row6_col2" class="data row6 col2">0.27</td>
+<td id="T_cc33e_row6_col3" class="data row6 col3">0.10</td>
+<td id="T_cc33e_row6_col4" class="data row6 col4">0.02</td>
+<td id="T_cc33e_row6_col5" class="data row6 col5">0.09</td>
+<td id="T_cc33e_row6_col6" class="data row6 col6">1.00</td>
+<td id="T_cc33e_row6_col7" class="data row6 col7">-0.06</td>
+<td id="T_cc33e_row6_col8" class="data row6 col8">-0.06</td>
+<td id="T_cc33e_row6_col9" class="data row6 col9">0.05</td>
+<td id="T_cc33e_row6_col10" class="data row6 col10">0.08</td>
+<td id="T_cc33e_row6_col11" class="data row6 col11">0.07</td>
+<td id="T_cc33e_row6_col12" class="data row6 col12">0.03</td>
+<td id="T_cc33e_row6_col13" class="data row6 col13">-0.09</td>
+<td id="T_cc33e_row6_col14" class="data row6 col14">0.03</td>
+<td id="T_cc33e_row6_col15" class="data row6 col15">0.02</td>
+<td id="T_cc33e_row6_col16" class="data row6 col16">-0.02</td>
+<td id="T_cc33e_row6_col17" class="data row6 col17">0.03</td>
+<td id="T_cc33e_row6_col18" class="data row6 col18">0.01</td>
+<td id="T_cc33e_row6_col19" class="data row6 col19">-0.00</td>
+<td id="T_cc33e_row6_col20" class="data row6 col20">0.02</td>
+<td id="T_cc33e_row6_col21" class="data row6 col21">-0.02</td>
+<td id="T_cc33e_row6_col22" class="data row6 col22">-0.02</td>
+<td id="T_cc33e_row6_col23" class="data row6 col23">0.01</td>
+<td id="T_cc33e_row6_col24" class="data row6 col24">0.27</td>
+<td id="T_cc33e_row6_col25" class="data row6 col25">0.02</td>
+<td id="T_cc33e_row6_col26" class="data row6 col26">-0.01</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">R_death_2012</td>
-<td id="T_8e5a6_row7_col0" class="data row7 col0">-0.11</td>
-<td id="T_8e5a6_row7_col1" class="data row7 col1">0.01</td>
-<td id="T_8e5a6_row7_col2" class="data row7 col2">-0.19</td>
-<td id="T_8e5a6_row7_col3" class="data row7 col3">-0.02</td>
-<td id="T_8e5a6_row7_col4" class="data row7 col4">0.02</td>
-<td id="T_8e5a6_row7_col5" class="data row7 col5">-0.06</td>
-<td id="T_8e5a6_row7_col6" class="data row7 col6">-0.06</td>
-<td id="T_8e5a6_row7_col7" class="data row7 col7">1.00</td>
-<td id="T_8e5a6_row7_col8" class="data row7 col8">0.75</td>
-<td id="T_8e5a6_row7_col9" class="data row7 col9">-0.62</td>
-<td id="T_8e5a6_row7_col10" class="data row7 col10">-0.33</td>
-<td id="T_8e5a6_row7_col11" class="data row7 col11">-0.11</td>
-<td id="T_8e5a6_row7_col12" class="data row7 col12">-0.49</td>
-<td id="T_8e5a6_row7_col13" class="data row7 col13">0.43</td>
-<td id="T_8e5a6_row7_col14" class="data row7 col14">-0.50</td>
-<td id="T_8e5a6_row7_col15" class="data row7 col15">-0.47</td>
-<td id="T_8e5a6_row7_col16" class="data row7 col16">0.46</td>
-<td id="T_8e5a6_row7_col17" class="data row7 col17">-0.41</td>
-<td id="T_8e5a6_row7_col18" class="data row7 col18">0.14</td>
-<td id="T_8e5a6_row7_col19" class="data row7 col19">0.16</td>
-<td id="T_8e5a6_row7_col20" class="data row7 col20">0.08</td>
-<td id="T_8e5a6_row7_col21" class="data row7 col21">0.45</td>
-<td id="T_8e5a6_row7_col22" class="data row7 col22">0.46</td>
-<td id="T_8e5a6_row7_col23" class="data row7 col23">0.26</td>
-<td id="T_8e5a6_row7_col24" class="data row7 col24">-0.28</td>
-<td id="T_8e5a6_row7_col25" class="data row7 col25">0.22</td>
-<td id="T_8e5a6_row7_col26" class="data row7 col26">0.38</td>
+<td id="T_cc33e_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">R_death_2012</td>
+<td id="T_cc33e_row7_col0" class="data row7 col0">-0.11</td>
+<td id="T_cc33e_row7_col1" class="data row7 col1">0.01</td>
+<td id="T_cc33e_row7_col2" class="data row7 col2">-0.19</td>
+<td id="T_cc33e_row7_col3" class="data row7 col3">-0.02</td>
+<td id="T_cc33e_row7_col4" class="data row7 col4">0.02</td>
+<td id="T_cc33e_row7_col5" class="data row7 col5">-0.06</td>
+<td id="T_cc33e_row7_col6" class="data row7 col6">-0.06</td>
+<td id="T_cc33e_row7_col7" class="data row7 col7">1.00</td>
+<td id="T_cc33e_row7_col8" class="data row7 col8">0.75</td>
+<td id="T_cc33e_row7_col9" class="data row7 col9">-0.62</td>
+<td id="T_cc33e_row7_col10" class="data row7 col10">-0.33</td>
+<td id="T_cc33e_row7_col11" class="data row7 col11">-0.11</td>
+<td id="T_cc33e_row7_col12" class="data row7 col12">-0.49</td>
+<td id="T_cc33e_row7_col13" class="data row7 col13">0.43</td>
+<td id="T_cc33e_row7_col14" class="data row7 col14">-0.50</td>
+<td id="T_cc33e_row7_col15" class="data row7 col15">-0.47</td>
+<td id="T_cc33e_row7_col16" class="data row7 col16">0.46</td>
+<td id="T_cc33e_row7_col17" class="data row7 col17">-0.41</td>
+<td id="T_cc33e_row7_col18" class="data row7 col18">0.14</td>
+<td id="T_cc33e_row7_col19" class="data row7 col19">0.16</td>
+<td id="T_cc33e_row7_col20" class="data row7 col20">0.08</td>
+<td id="T_cc33e_row7_col21" class="data row7 col21">0.45</td>
+<td id="T_cc33e_row7_col22" class="data row7 col22">0.46</td>
+<td id="T_cc33e_row7_col23" class="data row7 col23">0.26</td>
+<td id="T_cc33e_row7_col24" class="data row7 col24">-0.28</td>
+<td id="T_cc33e_row7_col25" class="data row7 col25">0.22</td>
+<td id="T_cc33e_row7_col26" class="data row7 col26">0.38</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row8" class="row_heading level0 row8" data-quarto-table-cell-role="th">R_death_2019</td>
-<td id="T_8e5a6_row8_col0" class="data row8 col0">-0.12</td>
-<td id="T_8e5a6_row8_col1" class="data row8 col1">-0.03</td>
-<td id="T_8e5a6_row8_col2" class="data row8 col2">-0.17</td>
-<td id="T_8e5a6_row8_col3" class="data row8 col3">-0.03</td>
-<td id="T_8e5a6_row8_col4" class="data row8 col4">0.02</td>
-<td id="T_8e5a6_row8_col5" class="data row8 col5">-0.07</td>
-<td id="T_8e5a6_row8_col6" class="data row8 col6">-0.06</td>
-<td id="T_8e5a6_row8_col7" class="data row8 col7">0.75</td>
-<td id="T_8e5a6_row8_col8" class="data row8 col8">1.00</td>
-<td id="T_8e5a6_row8_col9" class="data row8 col9">-0.81</td>
-<td id="T_8e5a6_row8_col10" class="data row8 col10">-0.35</td>
-<td id="T_8e5a6_row8_col11" class="data row8 col11">-0.12</td>
-<td id="T_8e5a6_row8_col12" class="data row8 col12">-0.49</td>
-<td id="T_8e5a6_row8_col13" class="data row8 col13">0.42</td>
-<td id="T_8e5a6_row8_col14" class="data row8 col14">-0.50</td>
-<td id="T_8e5a6_row8_col15" class="data row8 col15">-0.47</td>
-<td id="T_8e5a6_row8_col16" class="data row8 col16">0.28</td>
-<td id="T_8e5a6_row8_col17" class="data row8 col17">-0.29</td>
-<td id="T_8e5a6_row8_col18" class="data row8 col18">0.30</td>
-<td id="T_8e5a6_row8_col19" class="data row8 col19">0.31</td>
-<td id="T_8e5a6_row8_col20" class="data row8 col20">0.32</td>
-<td id="T_8e5a6_row8_col21" class="data row8 col21">0.28</td>
-<td id="T_8e5a6_row8_col22" class="data row8 col22">0.28</td>
-<td id="T_8e5a6_row8_col23" class="data row8 col23">0.38</td>
-<td id="T_8e5a6_row8_col24" class="data row8 col24">-0.22</td>
-<td id="T_8e5a6_row8_col25" class="data row8 col25">0.07</td>
-<td id="T_8e5a6_row8_col26" class="data row8 col26">0.23</td>
+<td id="T_cc33e_level0_row8" class="row_heading level0 row8" data-quarto-table-cell-role="th">R_death_2019</td>
+<td id="T_cc33e_row8_col0" class="data row8 col0">-0.12</td>
+<td id="T_cc33e_row8_col1" class="data row8 col1">-0.03</td>
+<td id="T_cc33e_row8_col2" class="data row8 col2">-0.17</td>
+<td id="T_cc33e_row8_col3" class="data row8 col3">-0.03</td>
+<td id="T_cc33e_row8_col4" class="data row8 col4">0.02</td>
+<td id="T_cc33e_row8_col5" class="data row8 col5">-0.07</td>
+<td id="T_cc33e_row8_col6" class="data row8 col6">-0.06</td>
+<td id="T_cc33e_row8_col7" class="data row8 col7">0.75</td>
+<td id="T_cc33e_row8_col8" class="data row8 col8">1.00</td>
+<td id="T_cc33e_row8_col9" class="data row8 col9">-0.81</td>
+<td id="T_cc33e_row8_col10" class="data row8 col10">-0.35</td>
+<td id="T_cc33e_row8_col11" class="data row8 col11">-0.12</td>
+<td id="T_cc33e_row8_col12" class="data row8 col12">-0.49</td>
+<td id="T_cc33e_row8_col13" class="data row8 col13">0.42</td>
+<td id="T_cc33e_row8_col14" class="data row8 col14">-0.50</td>
+<td id="T_cc33e_row8_col15" class="data row8 col15">-0.47</td>
+<td id="T_cc33e_row8_col16" class="data row8 col16">0.28</td>
+<td id="T_cc33e_row8_col17" class="data row8 col17">-0.29</td>
+<td id="T_cc33e_row8_col18" class="data row8 col18">0.30</td>
+<td id="T_cc33e_row8_col19" class="data row8 col19">0.31</td>
+<td id="T_cc33e_row8_col20" class="data row8 col20">0.32</td>
+<td id="T_cc33e_row8_col21" class="data row8 col21">0.28</td>
+<td id="T_cc33e_row8_col22" class="data row8 col22">0.28</td>
+<td id="T_cc33e_row8_col23" class="data row8 col23">0.38</td>
+<td id="T_cc33e_row8_col24" class="data row8 col24">-0.22</td>
+<td id="T_cc33e_row8_col25" class="data row8 col25">0.07</td>
+<td id="T_cc33e_row8_col26" class="data row8 col26">0.23</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row9" class="row_heading level0 row9" data-quarto-table-cell-role="th">R_NATURAL_INC_2019</td>
-<td id="T_8e5a6_row9_col0" class="data row9 col0">0.10</td>
-<td id="T_8e5a6_row9_col1" class="data row9 col1">0.01</td>
-<td id="T_8e5a6_row9_col2" class="data row9 col2">0.15</td>
-<td id="T_8e5a6_row9_col3" class="data row9 col3">-0.01</td>
-<td id="T_8e5a6_row9_col4" class="data row9 col4">-0.05</td>
-<td id="T_8e5a6_row9_col5" class="data row9 col5">0.09</td>
-<td id="T_8e5a6_row9_col6" class="data row9 col6">0.05</td>
-<td id="T_8e5a6_row9_col7" class="data row9 col7">-0.62</td>
-<td id="T_8e5a6_row9_col8" class="data row9 col8">-0.81</td>
-<td id="T_8e5a6_row9_col9" class="data row9 col9">1.00</td>
-<td id="T_8e5a6_row9_col10" class="data row9 col10">0.32</td>
-<td id="T_8e5a6_row9_col11" class="data row9 col11">0.11</td>
-<td id="T_8e5a6_row9_col12" class="data row9 col12">0.31</td>
-<td id="T_8e5a6_row9_col13" class="data row9 col13">-0.35</td>
-<td id="T_8e5a6_row9_col14" class="data row9 col14">0.30</td>
-<td id="T_8e5a6_row9_col15" class="data row9 col15">0.27</td>
-<td id="T_8e5a6_row9_col16" class="data row9 col16">-0.24</td>
-<td id="T_8e5a6_row9_col17" class="data row9 col17">0.22</td>
-<td id="T_8e5a6_row9_col18" class="data row9 col18">-0.21</td>
-<td id="T_8e5a6_row9_col19" class="data row9 col19">-0.22</td>
-<td id="T_8e5a6_row9_col20" class="data row9 col20">-0.28</td>
-<td id="T_8e5a6_row9_col21" class="data row9 col21">-0.24</td>
-<td id="T_8e5a6_row9_col22" class="data row9 col22">-0.24</td>
-<td id="T_8e5a6_row9_col23" class="data row9 col23">-0.18</td>
-<td id="T_8e5a6_row9_col24" class="data row9 col24">0.18</td>
-<td id="T_8e5a6_row9_col25" class="data row9 col25">-0.04</td>
-<td id="T_8e5a6_row9_col26" class="data row9 col26">-0.19</td>
+<td id="T_cc33e_level0_row9" class="row_heading level0 row9" data-quarto-table-cell-role="th">R_NATURAL_INC_2019</td>
+<td id="T_cc33e_row9_col0" class="data row9 col0">0.10</td>
+<td id="T_cc33e_row9_col1" class="data row9 col1">0.01</td>
+<td id="T_cc33e_row9_col2" class="data row9 col2">0.15</td>
+<td id="T_cc33e_row9_col3" class="data row9 col3">-0.01</td>
+<td id="T_cc33e_row9_col4" class="data row9 col4">-0.05</td>
+<td id="T_cc33e_row9_col5" class="data row9 col5">0.09</td>
+<td id="T_cc33e_row9_col6" class="data row9 col6">0.05</td>
+<td id="T_cc33e_row9_col7" class="data row9 col7">-0.62</td>
+<td id="T_cc33e_row9_col8" class="data row9 col8">-0.81</td>
+<td id="T_cc33e_row9_col9" class="data row9 col9">1.00</td>
+<td id="T_cc33e_row9_col10" class="data row9 col10">0.32</td>
+<td id="T_cc33e_row9_col11" class="data row9 col11">0.11</td>
+<td id="T_cc33e_row9_col12" class="data row9 col12">0.31</td>
+<td id="T_cc33e_row9_col13" class="data row9 col13">-0.35</td>
+<td id="T_cc33e_row9_col14" class="data row9 col14">0.30</td>
+<td id="T_cc33e_row9_col15" class="data row9 col15">0.27</td>
+<td id="T_cc33e_row9_col16" class="data row9 col16">-0.24</td>
+<td id="T_cc33e_row9_col17" class="data row9 col17">0.22</td>
+<td id="T_cc33e_row9_col18" class="data row9 col18">-0.21</td>
+<td id="T_cc33e_row9_col19" class="data row9 col19">-0.22</td>
+<td id="T_cc33e_row9_col20" class="data row9 col20">-0.28</td>
+<td id="T_cc33e_row9_col21" class="data row9 col21">-0.24</td>
+<td id="T_cc33e_row9_col22" class="data row9 col22">-0.24</td>
+<td id="T_cc33e_row9_col23" class="data row9 col23">-0.18</td>
+<td id="T_cc33e_row9_col24" class="data row9 col24">0.18</td>
+<td id="T_cc33e_row9_col25" class="data row9 col25">-0.04</td>
+<td id="T_cc33e_row9_col26" class="data row9 col26">-0.19</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row10" class="row_heading level0 row10" data-quarto-table-cell-role="th">R_INTERNATIONAL_MIG_2011</td>
-<td id="T_8e5a6_row10_col0" class="data row10 col0">-0.03</td>
-<td id="T_8e5a6_row10_col1" class="data row10 col1">-0.00</td>
-<td id="T_8e5a6_row10_col2" class="data row10 col2">0.44</td>
-<td id="T_8e5a6_row10_col3" class="data row10 col3">-0.10</td>
-<td id="T_8e5a6_row10_col4" class="data row10 col4">-0.19</td>
-<td id="T_8e5a6_row10_col5" class="data row10 col5">-0.03</td>
-<td id="T_8e5a6_row10_col6" class="data row10 col6">0.08</td>
-<td id="T_8e5a6_row10_col7" class="data row10 col7">-0.33</td>
-<td id="T_8e5a6_row10_col8" class="data row10 col8">-0.35</td>
-<td id="T_8e5a6_row10_col9" class="data row10 col9">0.32</td>
-<td id="T_8e5a6_row10_col10" class="data row10 col10">1.00</td>
-<td id="T_8e5a6_row10_col11" class="data row10 col11">0.08</td>
-<td id="T_8e5a6_row10_col12" class="data row10 col12">0.48</td>
-<td id="T_8e5a6_row10_col13" class="data row10 col13">-0.39</td>
-<td id="T_8e5a6_row10_col14" class="data row10 col14">0.47</td>
-<td id="T_8e5a6_row10_col15" class="data row10 col15">0.43</td>
-<td id="T_8e5a6_row10_col16" class="data row10 col16">-0.23</td>
-<td id="T_8e5a6_row10_col17" class="data row10 col17">0.21</td>
-<td id="T_8e5a6_row10_col18" class="data row10 col18">-0.12</td>
-<td id="T_8e5a6_row10_col19" class="data row10 col19">-0.13</td>
-<td id="T_8e5a6_row10_col20" class="data row10 col20">-0.14</td>
-<td id="T_8e5a6_row10_col21" class="data row10 col21">-0.23</td>
-<td id="T_8e5a6_row10_col22" class="data row10 col22">-0.23</td>
-<td id="T_8e5a6_row10_col23" class="data row10 col23">-0.09</td>
-<td id="T_8e5a6_row10_col24" class="data row10 col24">0.31</td>
-<td id="T_8e5a6_row10_col25" class="data row10 col25">-0.28</td>
-<td id="T_8e5a6_row10_col26" class="data row10 col26">-0.37</td>
+<td id="T_cc33e_level0_row10" class="row_heading level0 row10" data-quarto-table-cell-role="th">R_INTERNATIONAL_MIG_2011</td>
+<td id="T_cc33e_row10_col0" class="data row10 col0">-0.03</td>
+<td id="T_cc33e_row10_col1" class="data row10 col1">-0.00</td>
+<td id="T_cc33e_row10_col2" class="data row10 col2">0.44</td>
+<td id="T_cc33e_row10_col3" class="data row10 col3">-0.10</td>
+<td id="T_cc33e_row10_col4" class="data row10 col4">-0.19</td>
+<td id="T_cc33e_row10_col5" class="data row10 col5">-0.03</td>
+<td id="T_cc33e_row10_col6" class="data row10 col6">0.08</td>
+<td id="T_cc33e_row10_col7" class="data row10 col7">-0.33</td>
+<td id="T_cc33e_row10_col8" class="data row10 col8">-0.35</td>
+<td id="T_cc33e_row10_col9" class="data row10 col9">0.32</td>
+<td id="T_cc33e_row10_col10" class="data row10 col10">1.00</td>
+<td id="T_cc33e_row10_col11" class="data row10 col11">0.08</td>
+<td id="T_cc33e_row10_col12" class="data row10 col12">0.48</td>
+<td id="T_cc33e_row10_col13" class="data row10 col13">-0.39</td>
+<td id="T_cc33e_row10_col14" class="data row10 col14">0.47</td>
+<td id="T_cc33e_row10_col15" class="data row10 col15">0.43</td>
+<td id="T_cc33e_row10_col16" class="data row10 col16">-0.23</td>
+<td id="T_cc33e_row10_col17" class="data row10 col17">0.21</td>
+<td id="T_cc33e_row10_col18" class="data row10 col18">-0.12</td>
+<td id="T_cc33e_row10_col19" class="data row10 col19">-0.13</td>
+<td id="T_cc33e_row10_col20" class="data row10 col20">-0.14</td>
+<td id="T_cc33e_row10_col21" class="data row10 col21">-0.23</td>
+<td id="T_cc33e_row10_col22" class="data row10 col22">-0.23</td>
+<td id="T_cc33e_row10_col23" class="data row10 col23">-0.09</td>
+<td id="T_cc33e_row10_col24" class="data row10 col24">0.31</td>
+<td id="T_cc33e_row10_col25" class="data row10 col25">-0.28</td>
+<td id="T_cc33e_row10_col26" class="data row10 col26">-0.37</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row11" class="row_heading level0 row11" data-quarto-table-cell-role="th">R_DOMESTIC_MIG_2012</td>
-<td id="T_8e5a6_row11_col0" class="data row11 col0">0.03</td>
-<td id="T_8e5a6_row11_col1" class="data row11 col1">0.11</td>
-<td id="T_8e5a6_row11_col2" class="data row11 col2">0.05</td>
-<td id="T_8e5a6_row11_col3" class="data row11 col3">0.16</td>
-<td id="T_8e5a6_row11_col4" class="data row11 col4">0.10</td>
-<td id="T_8e5a6_row11_col5" class="data row11 col5">0.03</td>
-<td id="T_8e5a6_row11_col6" class="data row11 col6">0.07</td>
-<td id="T_8e5a6_row11_col7" class="data row11 col7">-0.11</td>
-<td id="T_8e5a6_row11_col8" class="data row11 col8">-0.12</td>
-<td id="T_8e5a6_row11_col9" class="data row11 col9">0.11</td>
-<td id="T_8e5a6_row11_col10" class="data row11 col10">0.08</td>
-<td id="T_8e5a6_row11_col11" class="data row11 col11">1.00</td>
-<td id="T_8e5a6_row11_col12" class="data row11 col12">0.20</td>
-<td id="T_8e5a6_row11_col13" class="data row11 col13">-0.15</td>
-<td id="T_8e5a6_row11_col14" class="data row11 col14">0.22</td>
-<td id="T_8e5a6_row11_col15" class="data row11 col15">0.27</td>
-<td id="T_8e5a6_row11_col16" class="data row11 col16">-0.13</td>
-<td id="T_8e5a6_row11_col17" class="data row11 col17">0.14</td>
-<td id="T_8e5a6_row11_col18" class="data row11 col18">-0.16</td>
-<td id="T_8e5a6_row11_col19" class="data row11 col19">-0.19</td>
-<td id="T_8e5a6_row11_col20" class="data row11 col20">-0.21</td>
-<td id="T_8e5a6_row11_col21" class="data row11 col21">-0.13</td>
-<td id="T_8e5a6_row11_col22" class="data row11 col22">-0.13</td>
-<td id="T_8e5a6_row11_col23" class="data row11 col23">-0.23</td>
-<td id="T_8e5a6_row11_col24" class="data row11 col24">0.13</td>
-<td id="T_8e5a6_row11_col25" class="data row11 col25">0.08</td>
-<td id="T_8e5a6_row11_col26" class="data row11 col26">0.03</td>
+<td id="T_cc33e_level0_row11" class="row_heading level0 row11" data-quarto-table-cell-role="th">R_DOMESTIC_MIG_2012</td>
+<td id="T_cc33e_row11_col0" class="data row11 col0">0.03</td>
+<td id="T_cc33e_row11_col1" class="data row11 col1">0.11</td>
+<td id="T_cc33e_row11_col2" class="data row11 col2">0.05</td>
+<td id="T_cc33e_row11_col3" class="data row11 col3">0.16</td>
+<td id="T_cc33e_row11_col4" class="data row11 col4">0.10</td>
+<td id="T_cc33e_row11_col5" class="data row11 col5">0.03</td>
+<td id="T_cc33e_row11_col6" class="data row11 col6">0.07</td>
+<td id="T_cc33e_row11_col7" class="data row11 col7">-0.11</td>
+<td id="T_cc33e_row11_col8" class="data row11 col8">-0.12</td>
+<td id="T_cc33e_row11_col9" class="data row11 col9">0.11</td>
+<td id="T_cc33e_row11_col10" class="data row11 col10">0.08</td>
+<td id="T_cc33e_row11_col11" class="data row11 col11">1.00</td>
+<td id="T_cc33e_row11_col12" class="data row11 col12">0.20</td>
+<td id="T_cc33e_row11_col13" class="data row11 col13">-0.15</td>
+<td id="T_cc33e_row11_col14" class="data row11 col14">0.22</td>
+<td id="T_cc33e_row11_col15" class="data row11 col15">0.27</td>
+<td id="T_cc33e_row11_col16" class="data row11 col16">-0.13</td>
+<td id="T_cc33e_row11_col17" class="data row11 col17">0.14</td>
+<td id="T_cc33e_row11_col18" class="data row11 col18">-0.16</td>
+<td id="T_cc33e_row11_col19" class="data row11 col19">-0.19</td>
+<td id="T_cc33e_row11_col20" class="data row11 col20">-0.21</td>
+<td id="T_cc33e_row11_col21" class="data row11 col21">-0.13</td>
+<td id="T_cc33e_row11_col22" class="data row11 col22">-0.13</td>
+<td id="T_cc33e_row11_col23" class="data row11 col23">-0.23</td>
+<td id="T_cc33e_row11_col24" class="data row11 col24">0.13</td>
+<td id="T_cc33e_row11_col25" class="data row11 col25">0.08</td>
+<td id="T_cc33e_row11_col26" class="data row11 col26">0.03</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row12" class="row_heading level0 row12" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 1990</td>
-<td id="T_8e5a6_row12_col0" class="data row12 col0">0.06</td>
-<td id="T_8e5a6_row12_col1" class="data row12 col1">0.03</td>
-<td id="T_8e5a6_row12_col2" class="data row12 col2">0.27</td>
-<td id="T_8e5a6_row12_col3" class="data row12 col3">0.01</td>
-<td id="T_8e5a6_row12_col4" class="data row12 col4">-0.05</td>
-<td id="T_8e5a6_row12_col5" class="data row12 col5">-0.03</td>
-<td id="T_8e5a6_row12_col6" class="data row12 col6">0.03</td>
-<td id="T_8e5a6_row12_col7" class="data row12 col7">-0.49</td>
-<td id="T_8e5a6_row12_col8" class="data row12 col8">-0.49</td>
-<td id="T_8e5a6_row12_col9" class="data row12 col9">0.31</td>
-<td id="T_8e5a6_row12_col10" class="data row12 col10">0.48</td>
-<td id="T_8e5a6_row12_col11" class="data row12 col11">0.20</td>
-<td id="T_8e5a6_row12_col12" class="data row12 col12">1.00</td>
-<td id="T_8e5a6_row12_col13" class="data row12 col13">-0.66</td>
-<td id="T_8e5a6_row12_col14" class="data row12 col14">0.97</td>
-<td id="T_8e5a6_row12_col15" class="data row12 col15">0.91</td>
-<td id="T_8e5a6_row12_col16" class="data row12 col16">-0.37</td>
-<td id="T_8e5a6_row12_col17" class="data row12 col17">0.35</td>
-<td id="T_8e5a6_row12_col18" class="data row12 col18">-0.32</td>
-<td id="T_8e5a6_row12_col19" class="data row12 col19">-0.33</td>
-<td id="T_8e5a6_row12_col20" class="data row12 col20">-0.27</td>
-<td id="T_8e5a6_row12_col21" class="data row12 col21">-0.37</td>
-<td id="T_8e5a6_row12_col22" class="data row12 col22">-0.37</td>
-<td id="T_8e5a6_row12_col23" class="data row12 col23">-0.36</td>
-<td id="T_8e5a6_row12_col24" class="data row12 col24">0.40</td>
-<td id="T_8e5a6_row12_col25" class="data row12 col25">-0.34</td>
-<td id="T_8e5a6_row12_col26" class="data row12 col26">-0.53</td>
+<td id="T_cc33e_level0_row12" class="row_heading level0 row12" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 1990</td>
+<td id="T_cc33e_row12_col0" class="data row12 col0">0.06</td>
+<td id="T_cc33e_row12_col1" class="data row12 col1">0.03</td>
+<td id="T_cc33e_row12_col2" class="data row12 col2">0.27</td>
+<td id="T_cc33e_row12_col3" class="data row12 col3">0.01</td>
+<td id="T_cc33e_row12_col4" class="data row12 col4">-0.05</td>
+<td id="T_cc33e_row12_col5" class="data row12 col5">-0.03</td>
+<td id="T_cc33e_row12_col6" class="data row12 col6">0.03</td>
+<td id="T_cc33e_row12_col7" class="data row12 col7">-0.49</td>
+<td id="T_cc33e_row12_col8" class="data row12 col8">-0.49</td>
+<td id="T_cc33e_row12_col9" class="data row12 col9">0.31</td>
+<td id="T_cc33e_row12_col10" class="data row12 col10">0.48</td>
+<td id="T_cc33e_row12_col11" class="data row12 col11">0.20</td>
+<td id="T_cc33e_row12_col12" class="data row12 col12">1.00</td>
+<td id="T_cc33e_row12_col13" class="data row12 col13">-0.66</td>
+<td id="T_cc33e_row12_col14" class="data row12 col14">0.97</td>
+<td id="T_cc33e_row12_col15" class="data row12 col15">0.91</td>
+<td id="T_cc33e_row12_col16" class="data row12 col16">-0.37</td>
+<td id="T_cc33e_row12_col17" class="data row12 col17">0.35</td>
+<td id="T_cc33e_row12_col18" class="data row12 col18">-0.32</td>
+<td id="T_cc33e_row12_col19" class="data row12 col19">-0.33</td>
+<td id="T_cc33e_row12_col20" class="data row12 col20">-0.27</td>
+<td id="T_cc33e_row12_col21" class="data row12 col21">-0.37</td>
+<td id="T_cc33e_row12_col22" class="data row12 col22">-0.37</td>
+<td id="T_cc33e_row12_col23" class="data row12 col23">-0.36</td>
+<td id="T_cc33e_row12_col24" class="data row12 col24">0.40</td>
+<td id="T_cc33e_row12_col25" class="data row12 col25">-0.34</td>
+<td id="T_cc33e_row12_col26" class="data row12 col26">-0.53</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row13" class="row_heading level0 row13" data-quarto-table-cell-role="th">Percent of adults with a high school diploma only, 2000</td>
-<td id="T_8e5a6_row13_col0" class="data row13 col0">-0.17</td>
-<td id="T_8e5a6_row13_col1" class="data row13 col1">0.01</td>
-<td id="T_8e5a6_row13_col2" class="data row13 col2">-0.25</td>
-<td id="T_8e5a6_row13_col3" class="data row13 col3">-0.02</td>
-<td id="T_8e5a6_row13_col4" class="data row13 col4">0.04</td>
-<td id="T_8e5a6_row13_col5" class="data row13 col5">-0.02</td>
-<td id="T_8e5a6_row13_col6" class="data row13 col6">-0.09</td>
-<td id="T_8e5a6_row13_col7" class="data row13 col7">0.43</td>
-<td id="T_8e5a6_row13_col8" class="data row13 col8">0.42</td>
-<td id="T_8e5a6_row13_col9" class="data row13 col9">-0.35</td>
-<td id="T_8e5a6_row13_col10" class="data row13 col10">-0.39</td>
-<td id="T_8e5a6_row13_col11" class="data row13 col11">-0.15</td>
-<td id="T_8e5a6_row13_col12" class="data row13 col12">-0.66</td>
-<td id="T_8e5a6_row13_col13" class="data row13 col13">1.00</td>
-<td id="T_8e5a6_row13_col14" class="data row13 col14">-0.65</td>
-<td id="T_8e5a6_row13_col15" class="data row13 col15">-0.58</td>
-<td id="T_8e5a6_row13_col16" class="data row13 col16">0.25</td>
-<td id="T_8e5a6_row13_col17" class="data row13 col17">-0.25</td>
-<td id="T_8e5a6_row13_col18" class="data row13 col18">0.02</td>
-<td id="T_8e5a6_row13_col19" class="data row13 col19">0.06</td>
-<td id="T_8e5a6_row13_col20" class="data row13 col20">0.02</td>
-<td id="T_8e5a6_row13_col21" class="data row13 col21">0.25</td>
-<td id="T_8e5a6_row13_col22" class="data row13 col22">0.25</td>
-<td id="T_8e5a6_row13_col23" class="data row13 col23">-0.01</td>
-<td id="T_8e5a6_row13_col24" class="data row13 col24">-0.32</td>
-<td id="T_8e5a6_row13_col25" class="data row13 col25">0.25</td>
-<td id="T_8e5a6_row13_col26" class="data row13 col26">0.48</td>
+<td id="T_cc33e_level0_row13" class="row_heading level0 row13" data-quarto-table-cell-role="th">Percent of adults with a high school diploma only, 2000</td>
+<td id="T_cc33e_row13_col0" class="data row13 col0">-0.17</td>
+<td id="T_cc33e_row13_col1" class="data row13 col1">0.01</td>
+<td id="T_cc33e_row13_col2" class="data row13 col2">-0.25</td>
+<td id="T_cc33e_row13_col3" class="data row13 col3">-0.02</td>
+<td id="T_cc33e_row13_col4" class="data row13 col4">0.04</td>
+<td id="T_cc33e_row13_col5" class="data row13 col5">-0.02</td>
+<td id="T_cc33e_row13_col6" class="data row13 col6">-0.09</td>
+<td id="T_cc33e_row13_col7" class="data row13 col7">0.43</td>
+<td id="T_cc33e_row13_col8" class="data row13 col8">0.42</td>
+<td id="T_cc33e_row13_col9" class="data row13 col9">-0.35</td>
+<td id="T_cc33e_row13_col10" class="data row13 col10">-0.39</td>
+<td id="T_cc33e_row13_col11" class="data row13 col11">-0.15</td>
+<td id="T_cc33e_row13_col12" class="data row13 col12">-0.66</td>
+<td id="T_cc33e_row13_col13" class="data row13 col13">1.00</td>
+<td id="T_cc33e_row13_col14" class="data row13 col14">-0.65</td>
+<td id="T_cc33e_row13_col15" class="data row13 col15">-0.58</td>
+<td id="T_cc33e_row13_col16" class="data row13 col16">0.25</td>
+<td id="T_cc33e_row13_col17" class="data row13 col17">-0.25</td>
+<td id="T_cc33e_row13_col18" class="data row13 col18">0.02</td>
+<td id="T_cc33e_row13_col19" class="data row13 col19">0.06</td>
+<td id="T_cc33e_row13_col20" class="data row13 col20">0.02</td>
+<td id="T_cc33e_row13_col21" class="data row13 col21">0.25</td>
+<td id="T_cc33e_row13_col22" class="data row13 col22">0.25</td>
+<td id="T_cc33e_row13_col23" class="data row13 col23">-0.01</td>
+<td id="T_cc33e_row13_col24" class="data row13 col24">-0.32</td>
+<td id="T_cc33e_row13_col25" class="data row13 col25">0.25</td>
+<td id="T_cc33e_row13_col26" class="data row13 col26">0.48</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row14" class="row_heading level0 row14" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2000</td>
-<td id="T_8e5a6_row14_col0" class="data row14 col0">0.04</td>
-<td id="T_8e5a6_row14_col1" class="data row14 col1">0.03</td>
-<td id="T_8e5a6_row14_col2" class="data row14 col2">0.26</td>
-<td id="T_8e5a6_row14_col3" class="data row14 col3">0.03</td>
-<td id="T_8e5a6_row14_col4" class="data row14 col4">-0.03</td>
-<td id="T_8e5a6_row14_col5" class="data row14 col5">-0.03</td>
-<td id="T_8e5a6_row14_col6" class="data row14 col6">0.03</td>
-<td id="T_8e5a6_row14_col7" class="data row14 col7">-0.50</td>
-<td id="T_8e5a6_row14_col8" class="data row14 col8">-0.50</td>
-<td id="T_8e5a6_row14_col9" class="data row14 col9">0.30</td>
-<td id="T_8e5a6_row14_col10" class="data row14 col10">0.47</td>
-<td id="T_8e5a6_row14_col11" class="data row14 col11">0.22</td>
-<td id="T_8e5a6_row14_col12" class="data row14 col12">0.97</td>
-<td id="T_8e5a6_row14_col13" class="data row14 col13">-0.65</td>
-<td id="T_8e5a6_row14_col14" class="data row14 col14">1.00</td>
-<td id="T_8e5a6_row14_col15" class="data row14 col15">0.94</td>
-<td id="T_8e5a6_row14_col16" class="data row14 col16">-0.37</td>
-<td id="T_8e5a6_row14_col17" class="data row14 col17">0.37</td>
-<td id="T_8e5a6_row14_col18" class="data row14 col18">-0.36</td>
-<td id="T_8e5a6_row14_col19" class="data row14 col19">-0.36</td>
-<td id="T_8e5a6_row14_col20" class="data row14 col20">-0.30</td>
-<td id="T_8e5a6_row14_col21" class="data row14 col21">-0.38</td>
-<td id="T_8e5a6_row14_col22" class="data row14 col22">-0.37</td>
-<td id="T_8e5a6_row14_col23" class="data row14 col23">-0.41</td>
-<td id="T_8e5a6_row14_col24" class="data row14 col24">0.39</td>
-<td id="T_8e5a6_row14_col25" class="data row14 col25">-0.32</td>
-<td id="T_8e5a6_row14_col26" class="data row14 col26">-0.51</td>
+<td id="T_cc33e_level0_row14" class="row_heading level0 row14" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2000</td>
+<td id="T_cc33e_row14_col0" class="data row14 col0">0.04</td>
+<td id="T_cc33e_row14_col1" class="data row14 col1">0.03</td>
+<td id="T_cc33e_row14_col2" class="data row14 col2">0.26</td>
+<td id="T_cc33e_row14_col3" class="data row14 col3">0.03</td>
+<td id="T_cc33e_row14_col4" class="data row14 col4">-0.03</td>
+<td id="T_cc33e_row14_col5" class="data row14 col5">-0.03</td>
+<td id="T_cc33e_row14_col6" class="data row14 col6">0.03</td>
+<td id="T_cc33e_row14_col7" class="data row14 col7">-0.50</td>
+<td id="T_cc33e_row14_col8" class="data row14 col8">-0.50</td>
+<td id="T_cc33e_row14_col9" class="data row14 col9">0.30</td>
+<td id="T_cc33e_row14_col10" class="data row14 col10">0.47</td>
+<td id="T_cc33e_row14_col11" class="data row14 col11">0.22</td>
+<td id="T_cc33e_row14_col12" class="data row14 col12">0.97</td>
+<td id="T_cc33e_row14_col13" class="data row14 col13">-0.65</td>
+<td id="T_cc33e_row14_col14" class="data row14 col14">1.00</td>
+<td id="T_cc33e_row14_col15" class="data row14 col15">0.94</td>
+<td id="T_cc33e_row14_col16" class="data row14 col16">-0.37</td>
+<td id="T_cc33e_row14_col17" class="data row14 col17">0.37</td>
+<td id="T_cc33e_row14_col18" class="data row14 col18">-0.36</td>
+<td id="T_cc33e_row14_col19" class="data row14 col19">-0.36</td>
+<td id="T_cc33e_row14_col20" class="data row14 col20">-0.30</td>
+<td id="T_cc33e_row14_col21" class="data row14 col21">-0.38</td>
+<td id="T_cc33e_row14_col22" class="data row14 col22">-0.37</td>
+<td id="T_cc33e_row14_col23" class="data row14 col23">-0.41</td>
+<td id="T_cc33e_row14_col24" class="data row14 col24">0.39</td>
+<td id="T_cc33e_row14_col25" class="data row14 col25">-0.32</td>
+<td id="T_cc33e_row14_col26" class="data row14 col26">-0.51</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row15" class="row_heading level0 row15" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2015-19</td>
-<td id="T_8e5a6_row15_col0" class="data row15 col0">-0.00</td>
-<td id="T_8e5a6_row15_col1" class="data row15 col1">0.04</td>
-<td id="T_8e5a6_row15_col2" class="data row15 col2">0.27</td>
-<td id="T_8e5a6_row15_col3" class="data row15 col3">0.04</td>
-<td id="T_8e5a6_row15_col4" class="data row15 col4">-0.02</td>
-<td id="T_8e5a6_row15_col5" class="data row15 col5">-0.02</td>
-<td id="T_8e5a6_row15_col6" class="data row15 col6">0.02</td>
-<td id="T_8e5a6_row15_col7" class="data row15 col7">-0.47</td>
-<td id="T_8e5a6_row15_col8" class="data row15 col8">-0.47</td>
-<td id="T_8e5a6_row15_col9" class="data row15 col9">0.27</td>
-<td id="T_8e5a6_row15_col10" class="data row15 col10">0.43</td>
-<td id="T_8e5a6_row15_col11" class="data row15 col11">0.27</td>
-<td id="T_8e5a6_row15_col12" class="data row15 col12">0.91</td>
-<td id="T_8e5a6_row15_col13" class="data row15 col13">-0.58</td>
-<td id="T_8e5a6_row15_col14" class="data row15 col14">0.94</td>
-<td id="T_8e5a6_row15_col15" class="data row15 col15">1.00</td>
-<td id="T_8e5a6_row15_col16" class="data row15 col16">-0.41</td>
-<td id="T_8e5a6_row15_col17" class="data row15 col17">0.41</td>
-<td id="T_8e5a6_row15_col18" class="data row15 col18">-0.38</td>
-<td id="T_8e5a6_row15_col19" class="data row15 col19">-0.38</td>
-<td id="T_8e5a6_row15_col20" class="data row15 col20">-0.31</td>
-<td id="T_8e5a6_row15_col21" class="data row15 col21">-0.41</td>
-<td id="T_8e5a6_row15_col22" class="data row15 col22">-0.41</td>
-<td id="T_8e5a6_row15_col23" class="data row15 col23">-0.47</td>
-<td id="T_8e5a6_row15_col24" class="data row15 col24">0.40</td>
-<td id="T_8e5a6_row15_col25" class="data row15 col25">-0.31</td>
-<td id="T_8e5a6_row15_col26" class="data row15 col26">-0.49</td>
+<td id="T_cc33e_level0_row15" class="row_heading level0 row15" data-quarto-table-cell-role="th">Percent of adults with a bachelor's degree or higher, 2015-19</td>
+<td id="T_cc33e_row15_col0" class="data row15 col0">-0.00</td>
+<td id="T_cc33e_row15_col1" class="data row15 col1">0.04</td>
+<td id="T_cc33e_row15_col2" class="data row15 col2">0.27</td>
+<td id="T_cc33e_row15_col3" class="data row15 col3">0.04</td>
+<td id="T_cc33e_row15_col4" class="data row15 col4">-0.02</td>
+<td id="T_cc33e_row15_col5" class="data row15 col5">-0.02</td>
+<td id="T_cc33e_row15_col6" class="data row15 col6">0.02</td>
+<td id="T_cc33e_row15_col7" class="data row15 col7">-0.47</td>
+<td id="T_cc33e_row15_col8" class="data row15 col8">-0.47</td>
+<td id="T_cc33e_row15_col9" class="data row15 col9">0.27</td>
+<td id="T_cc33e_row15_col10" class="data row15 col10">0.43</td>
+<td id="T_cc33e_row15_col11" class="data row15 col11">0.27</td>
+<td id="T_cc33e_row15_col12" class="data row15 col12">0.91</td>
+<td id="T_cc33e_row15_col13" class="data row15 col13">-0.58</td>
+<td id="T_cc33e_row15_col14" class="data row15 col14">0.94</td>
+<td id="T_cc33e_row15_col15" class="data row15 col15">1.00</td>
+<td id="T_cc33e_row15_col16" class="data row15 col16">-0.41</td>
+<td id="T_cc33e_row15_col17" class="data row15 col17">0.41</td>
+<td id="T_cc33e_row15_col18" class="data row15 col18">-0.38</td>
+<td id="T_cc33e_row15_col19" class="data row15 col19">-0.38</td>
+<td id="T_cc33e_row15_col20" class="data row15 col20">-0.31</td>
+<td id="T_cc33e_row15_col21" class="data row15 col21">-0.41</td>
+<td id="T_cc33e_row15_col22" class="data row15 col22">-0.41</td>
+<td id="T_cc33e_row15_col23" class="data row15 col23">-0.47</td>
+<td id="T_cc33e_row15_col24" class="data row15 col24">0.40</td>
+<td id="T_cc33e_row15_col25" class="data row15 col25">-0.31</td>
+<td id="T_cc33e_row15_col26" class="data row15 col26">-0.49</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row16" class="row_heading level0 row16" data-quarto-table-cell-role="th">Rural_urban_continuum_code_2013</td>
-<td id="T_8e5a6_row16_col0" class="data row16 col0">0.08</td>
-<td id="T_8e5a6_row16_col1" class="data row16 col1">0.01</td>
-<td id="T_8e5a6_row16_col2" class="data row16 col2">-0.22</td>
-<td id="T_8e5a6_row16_col3" class="data row16 col3">-0.03</td>
-<td id="T_8e5a6_row16_col4" class="data row16 col4">-0.00</td>
-<td id="T_8e5a6_row16_col5" class="data row16 col5">0.01</td>
-<td id="T_8e5a6_row16_col6" class="data row16 col6">-0.02</td>
-<td id="T_8e5a6_row16_col7" class="data row16 col7">0.46</td>
-<td id="T_8e5a6_row16_col8" class="data row16 col8">0.28</td>
-<td id="T_8e5a6_row16_col9" class="data row16 col9">-0.24</td>
-<td id="T_8e5a6_row16_col10" class="data row16 col10">-0.23</td>
-<td id="T_8e5a6_row16_col11" class="data row16 col11">-0.13</td>
-<td id="T_8e5a6_row16_col12" class="data row16 col12">-0.37</td>
-<td id="T_8e5a6_row16_col13" class="data row16 col13">0.25</td>
-<td id="T_8e5a6_row16_col14" class="data row16 col14">-0.37</td>
-<td id="T_8e5a6_row16_col15" class="data row16 col15">-0.41</td>
-<td id="T_8e5a6_row16_col16" class="data row16 col16">1.00</td>
-<td id="T_8e5a6_row16_col17" class="data row16 col17">-0.87</td>
-<td id="T_8e5a6_row16_col18" class="data row16 col18">0.04</td>
-<td id="T_8e5a6_row16_col19" class="data row16 col19">0.05</td>
-<td id="T_8e5a6_row16_col20" class="data row16 col20">-0.07</td>
-<td id="T_8e5a6_row16_col21" class="data row16 col21">0.93</td>
-<td id="T_8e5a6_row16_col22" class="data row16 col22">1.00</td>
-<td id="T_8e5a6_row16_col23" class="data row16 col23">0.18</td>
-<td id="T_8e5a6_row16_col24" class="data row16 col24">-0.44</td>
-<td id="T_8e5a6_row16_col25" class="data row16 col25">0.28</td>
-<td id="T_8e5a6_row16_col26" class="data row16 col26">0.38</td>
+<td id="T_cc33e_level0_row16" class="row_heading level0 row16" data-quarto-table-cell-role="th">Rural_urban_continuum_code_2013</td>
+<td id="T_cc33e_row16_col0" class="data row16 col0">0.08</td>
+<td id="T_cc33e_row16_col1" class="data row16 col1">0.01</td>
+<td id="T_cc33e_row16_col2" class="data row16 col2">-0.22</td>
+<td id="T_cc33e_row16_col3" class="data row16 col3">-0.03</td>
+<td id="T_cc33e_row16_col4" class="data row16 col4">-0.00</td>
+<td id="T_cc33e_row16_col5" class="data row16 col5">0.01</td>
+<td id="T_cc33e_row16_col6" class="data row16 col6">-0.02</td>
+<td id="T_cc33e_row16_col7" class="data row16 col7">0.46</td>
+<td id="T_cc33e_row16_col8" class="data row16 col8">0.28</td>
+<td id="T_cc33e_row16_col9" class="data row16 col9">-0.24</td>
+<td id="T_cc33e_row16_col10" class="data row16 col10">-0.23</td>
+<td id="T_cc33e_row16_col11" class="data row16 col11">-0.13</td>
+<td id="T_cc33e_row16_col12" class="data row16 col12">-0.37</td>
+<td id="T_cc33e_row16_col13" class="data row16 col13">0.25</td>
+<td id="T_cc33e_row16_col14" class="data row16 col14">-0.37</td>
+<td id="T_cc33e_row16_col15" class="data row16 col15">-0.41</td>
+<td id="T_cc33e_row16_col16" class="data row16 col16">1.00</td>
+<td id="T_cc33e_row16_col17" class="data row16 col17">-0.87</td>
+<td id="T_cc33e_row16_col18" class="data row16 col18">0.04</td>
+<td id="T_cc33e_row16_col19" class="data row16 col19">0.05</td>
+<td id="T_cc33e_row16_col20" class="data row16 col20">-0.07</td>
+<td id="T_cc33e_row16_col21" class="data row16 col21">0.93</td>
+<td id="T_cc33e_row16_col22" class="data row16 col22">1.00</td>
+<td id="T_cc33e_row16_col23" class="data row16 col23">0.18</td>
+<td id="T_cc33e_row16_col24" class="data row16 col24">-0.44</td>
+<td id="T_cc33e_row16_col25" class="data row16 col25">0.28</td>
+<td id="T_cc33e_row16_col26" class="data row16 col26">0.38</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row17" class="row_heading level0 row17" data-quarto-table-cell-role="th">Metro_2013</td>
-<td id="T_8e5a6_row17_col0" class="data row17 col0">-0.08</td>
-<td id="T_8e5a6_row17_col1" class="data row17 col1">-0.01</td>
-<td id="T_8e5a6_row17_col2" class="data row17 col2">0.20</td>
-<td id="T_8e5a6_row17_col3" class="data row17 col3">0.04</td>
-<td id="T_8e5a6_row17_col4" class="data row17 col4">0.01</td>
-<td id="T_8e5a6_row17_col5" class="data row17 col5">-0.01</td>
-<td id="T_8e5a6_row17_col6" class="data row17 col6">0.03</td>
-<td id="T_8e5a6_row17_col7" class="data row17 col7">-0.41</td>
-<td id="T_8e5a6_row17_col8" class="data row17 col8">-0.29</td>
-<td id="T_8e5a6_row17_col9" class="data row17 col9">0.22</td>
-<td id="T_8e5a6_row17_col10" class="data row17 col10">0.21</td>
-<td id="T_8e5a6_row17_col11" class="data row17 col11">0.14</td>
-<td id="T_8e5a6_row17_col12" class="data row17 col12">0.35</td>
-<td id="T_8e5a6_row17_col13" class="data row17 col13">-0.25</td>
-<td id="T_8e5a6_row17_col14" class="data row17 col14">0.37</td>
-<td id="T_8e5a6_row17_col15" class="data row17 col15">0.41</td>
-<td id="T_8e5a6_row17_col16" class="data row17 col16">-0.87</td>
-<td id="T_8e5a6_row17_col17" class="data row17 col17">1.00</td>
-<td id="T_8e5a6_row17_col18" class="data row17 col18">-0.10</td>
-<td id="T_8e5a6_row17_col19" class="data row17 col19">-0.12</td>
-<td id="T_8e5a6_row17_col20" class="data row17 col20">-0.00</td>
-<td id="T_8e5a6_row17_col21" class="data row17 col21">-0.81</td>
-<td id="T_8e5a6_row17_col22" class="data row17 col22">-0.87</td>
-<td id="T_8e5a6_row17_col23" class="data row17 col23">-0.19</td>
-<td id="T_8e5a6_row17_col24" class="data row17 col24">0.41</td>
-<td id="T_8e5a6_row17_col25" class="data row17 col25">-0.21</td>
-<td id="T_8e5a6_row17_col26" class="data row17 col26">-0.31</td>
+<td id="T_cc33e_level0_row17" class="row_heading level0 row17" data-quarto-table-cell-role="th">Metro_2013</td>
+<td id="T_cc33e_row17_col0" class="data row17 col0">-0.08</td>
+<td id="T_cc33e_row17_col1" class="data row17 col1">-0.01</td>
+<td id="T_cc33e_row17_col2" class="data row17 col2">0.20</td>
+<td id="T_cc33e_row17_col3" class="data row17 col3">0.04</td>
+<td id="T_cc33e_row17_col4" class="data row17 col4">0.01</td>
+<td id="T_cc33e_row17_col5" class="data row17 col5">-0.01</td>
+<td id="T_cc33e_row17_col6" class="data row17 col6">0.03</td>
+<td id="T_cc33e_row17_col7" class="data row17 col7">-0.41</td>
+<td id="T_cc33e_row17_col8" class="data row17 col8">-0.29</td>
+<td id="T_cc33e_row17_col9" class="data row17 col9">0.22</td>
+<td id="T_cc33e_row17_col10" class="data row17 col10">0.21</td>
+<td id="T_cc33e_row17_col11" class="data row17 col11">0.14</td>
+<td id="T_cc33e_row17_col12" class="data row17 col12">0.35</td>
+<td id="T_cc33e_row17_col13" class="data row17 col13">-0.25</td>
+<td id="T_cc33e_row17_col14" class="data row17 col14">0.37</td>
+<td id="T_cc33e_row17_col15" class="data row17 col15">0.41</td>
+<td id="T_cc33e_row17_col16" class="data row17 col16">-0.87</td>
+<td id="T_cc33e_row17_col17" class="data row17 col17">1.00</td>
+<td id="T_cc33e_row17_col18" class="data row17 col18">-0.10</td>
+<td id="T_cc33e_row17_col19" class="data row17 col19">-0.12</td>
+<td id="T_cc33e_row17_col20" class="data row17 col20">-0.00</td>
+<td id="T_cc33e_row17_col21" class="data row17 col21">-0.81</td>
+<td id="T_cc33e_row17_col22" class="data row17 col22">-0.87</td>
+<td id="T_cc33e_row17_col23" class="data row17 col23">-0.19</td>
+<td id="T_cc33e_row17_col24" class="data row17 col24">0.41</td>
+<td id="T_cc33e_row17_col25" class="data row17 col25">-0.21</td>
+<td id="T_cc33e_row17_col26" class="data row17 col26">-0.31</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row18" class="row_heading level0 row18" data-quarto-table-cell-role="th">Unemployment_rate_2002</td>
-<td id="T_8e5a6_row18_col0" class="data row18 col0">0.06</td>
-<td id="T_8e5a6_row18_col1" class="data row18 col1">-0.01</td>
-<td id="T_8e5a6_row18_col2" class="data row18 col2">0.01</td>
-<td id="T_8e5a6_row18_col3" class="data row18 col3">-0.05</td>
-<td id="T_8e5a6_row18_col4" class="data row18 col4">-0.04</td>
-<td id="T_8e5a6_row18_col5" class="data row18 col5">0.02</td>
-<td id="T_8e5a6_row18_col6" class="data row18 col6">0.01</td>
-<td id="T_8e5a6_row18_col7" class="data row18 col7">0.14</td>
-<td id="T_8e5a6_row18_col8" class="data row18 col8">0.30</td>
-<td id="T_8e5a6_row18_col9" class="data row18 col9">-0.21</td>
-<td id="T_8e5a6_row18_col10" class="data row18 col10">-0.12</td>
-<td id="T_8e5a6_row18_col11" class="data row18 col11">-0.16</td>
-<td id="T_8e5a6_row18_col12" class="data row18 col12">-0.32</td>
-<td id="T_8e5a6_row18_col13" class="data row18 col13">0.02</td>
-<td id="T_8e5a6_row18_col14" class="data row18 col14">-0.36</td>
-<td id="T_8e5a6_row18_col15" class="data row18 col15">-0.38</td>
-<td id="T_8e5a6_row18_col16" class="data row18 col16">0.04</td>
-<td id="T_8e5a6_row18_col17" class="data row18 col17">-0.10</td>
-<td id="T_8e5a6_row18_col18" class="data row18 col18">1.00</td>
-<td id="T_8e5a6_row18_col19" class="data row18 col19">0.94</td>
-<td id="T_8e5a6_row18_col20" class="data row18 col20">0.76</td>
-<td id="T_8e5a6_row18_col21" class="data row18 col21">0.04</td>
-<td id="T_8e5a6_row18_col22" class="data row18 col22">0.04</td>
-<td id="T_8e5a6_row18_col23" class="data row18 col23">0.53</td>
-<td id="T_8e5a6_row18_col24" class="data row18 col24">-0.02</td>
-<td id="T_8e5a6_row18_col25" class="data row18 col25">-0.24</td>
-<td id="T_8e5a6_row18_col26" class="data row18 col26">-0.18</td>
+<td id="T_cc33e_level0_row18" class="row_heading level0 row18" data-quarto-table-cell-role="th">Unemployment_rate_2002</td>
+<td id="T_cc33e_row18_col0" class="data row18 col0">0.06</td>
+<td id="T_cc33e_row18_col1" class="data row18 col1">-0.01</td>
+<td id="T_cc33e_row18_col2" class="data row18 col2">0.01</td>
+<td id="T_cc33e_row18_col3" class="data row18 col3">-0.05</td>
+<td id="T_cc33e_row18_col4" class="data row18 col4">-0.04</td>
+<td id="T_cc33e_row18_col5" class="data row18 col5">0.02</td>
+<td id="T_cc33e_row18_col6" class="data row18 col6">0.01</td>
+<td id="T_cc33e_row18_col7" class="data row18 col7">0.14</td>
+<td id="T_cc33e_row18_col8" class="data row18 col8">0.30</td>
+<td id="T_cc33e_row18_col9" class="data row18 col9">-0.21</td>
+<td id="T_cc33e_row18_col10" class="data row18 col10">-0.12</td>
+<td id="T_cc33e_row18_col11" class="data row18 col11">-0.16</td>
+<td id="T_cc33e_row18_col12" class="data row18 col12">-0.32</td>
+<td id="T_cc33e_row18_col13" class="data row18 col13">0.02</td>
+<td id="T_cc33e_row18_col14" class="data row18 col14">-0.36</td>
+<td id="T_cc33e_row18_col15" class="data row18 col15">-0.38</td>
+<td id="T_cc33e_row18_col16" class="data row18 col16">0.04</td>
+<td id="T_cc33e_row18_col17" class="data row18 col17">-0.10</td>
+<td id="T_cc33e_row18_col18" class="data row18 col18">1.00</td>
+<td id="T_cc33e_row18_col19" class="data row18 col19">0.94</td>
+<td id="T_cc33e_row18_col20" class="data row18 col20">0.76</td>
+<td id="T_cc33e_row18_col21" class="data row18 col21">0.04</td>
+<td id="T_cc33e_row18_col22" class="data row18 col22">0.04</td>
+<td id="T_cc33e_row18_col23" class="data row18 col23">0.53</td>
+<td id="T_cc33e_row18_col24" class="data row18 col24">-0.02</td>
+<td id="T_cc33e_row18_col25" class="data row18 col25">-0.24</td>
+<td id="T_cc33e_row18_col26" class="data row18 col26">-0.18</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row19" class="row_heading level0 row19" data-quarto-table-cell-role="th">Unemployment_rate_2003</td>
-<td id="T_8e5a6_row19_col0" class="data row19 col0">0.05</td>
-<td id="T_8e5a6_row19_col1" class="data row19 col1">-0.01</td>
-<td id="T_8e5a6_row19_col2" class="data row19 col2">-0.01</td>
-<td id="T_8e5a6_row19_col3" class="data row19 col3">-0.06</td>
-<td id="T_8e5a6_row19_col4" class="data row19 col4">-0.05</td>
-<td id="T_8e5a6_row19_col5" class="data row19 col5">0.02</td>
-<td id="T_8e5a6_row19_col6" class="data row19 col6">-0.00</td>
-<td id="T_8e5a6_row19_col7" class="data row19 col7">0.16</td>
-<td id="T_8e5a6_row19_col8" class="data row19 col8">0.31</td>
-<td id="T_8e5a6_row19_col9" class="data row19 col9">-0.22</td>
-<td id="T_8e5a6_row19_col10" class="data row19 col10">-0.13</td>
-<td id="T_8e5a6_row19_col11" class="data row19 col11">-0.19</td>
-<td id="T_8e5a6_row19_col12" class="data row19 col12">-0.33</td>
-<td id="T_8e5a6_row19_col13" class="data row19 col13">0.06</td>
-<td id="T_8e5a6_row19_col14" class="data row19 col14">-0.36</td>
-<td id="T_8e5a6_row19_col15" class="data row19 col15">-0.38</td>
-<td id="T_8e5a6_row19_col16" class="data row19 col16">0.05</td>
-<td id="T_8e5a6_row19_col17" class="data row19 col17">-0.12</td>
-<td id="T_8e5a6_row19_col18" class="data row19 col18">0.94</td>
-<td id="T_8e5a6_row19_col19" class="data row19 col19">1.00</td>
-<td id="T_8e5a6_row19_col20" class="data row19 col20">0.74</td>
-<td id="T_8e5a6_row19_col21" class="data row19 col21">0.05</td>
-<td id="T_8e5a6_row19_col22" class="data row19 col22">0.05</td>
-<td id="T_8e5a6_row19_col23" class="data row19 col23">0.51</td>
-<td id="T_8e5a6_row19_col24" class="data row19 col24">-0.04</td>
-<td id="T_8e5a6_row19_col25" class="data row19 col25">-0.24</td>
-<td id="T_8e5a6_row19_col26" class="data row19 col26">-0.16</td>
+<td id="T_cc33e_level0_row19" class="row_heading level0 row19" data-quarto-table-cell-role="th">Unemployment_rate_2003</td>
+<td id="T_cc33e_row19_col0" class="data row19 col0">0.05</td>
+<td id="T_cc33e_row19_col1" class="data row19 col1">-0.01</td>
+<td id="T_cc33e_row19_col2" class="data row19 col2">-0.01</td>
+<td id="T_cc33e_row19_col3" class="data row19 col3">-0.06</td>
+<td id="T_cc33e_row19_col4" class="data row19 col4">-0.05</td>
+<td id="T_cc33e_row19_col5" class="data row19 col5">0.02</td>
+<td id="T_cc33e_row19_col6" class="data row19 col6">-0.00</td>
+<td id="T_cc33e_row19_col7" class="data row19 col7">0.16</td>
+<td id="T_cc33e_row19_col8" class="data row19 col8">0.31</td>
+<td id="T_cc33e_row19_col9" class="data row19 col9">-0.22</td>
+<td id="T_cc33e_row19_col10" class="data row19 col10">-0.13</td>
+<td id="T_cc33e_row19_col11" class="data row19 col11">-0.19</td>
+<td id="T_cc33e_row19_col12" class="data row19 col12">-0.33</td>
+<td id="T_cc33e_row19_col13" class="data row19 col13">0.06</td>
+<td id="T_cc33e_row19_col14" class="data row19 col14">-0.36</td>
+<td id="T_cc33e_row19_col15" class="data row19 col15">-0.38</td>
+<td id="T_cc33e_row19_col16" class="data row19 col16">0.05</td>
+<td id="T_cc33e_row19_col17" class="data row19 col17">-0.12</td>
+<td id="T_cc33e_row19_col18" class="data row19 col18">0.94</td>
+<td id="T_cc33e_row19_col19" class="data row19 col19">1.00</td>
+<td id="T_cc33e_row19_col20" class="data row19 col20">0.74</td>
+<td id="T_cc33e_row19_col21" class="data row19 col21">0.05</td>
+<td id="T_cc33e_row19_col22" class="data row19 col22">0.05</td>
+<td id="T_cc33e_row19_col23" class="data row19 col23">0.51</td>
+<td id="T_cc33e_row19_col24" class="data row19 col24">-0.04</td>
+<td id="T_cc33e_row19_col25" class="data row19 col25">-0.24</td>
+<td id="T_cc33e_row19_col26" class="data row19 col26">-0.16</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row20" class="row_heading level0 row20" data-quarto-table-cell-role="th">Unemployment_rate_2012</td>
-<td id="T_8e5a6_row20_col0" class="data row20 col0">0.02</td>
-<td id="T_8e5a6_row20_col1" class="data row20 col1">-0.20</td>
-<td id="T_8e5a6_row20_col2" class="data row20 col2">0.00</td>
-<td id="T_8e5a6_row20_col3" class="data row20 col3">-0.05</td>
-<td id="T_8e5a6_row20_col4" class="data row20 col4">-0.02</td>
-<td id="T_8e5a6_row20_col5" class="data row20 col5">0.01</td>
-<td id="T_8e5a6_row20_col6" class="data row20 col6">0.02</td>
-<td id="T_8e5a6_row20_col7" class="data row20 col7">0.08</td>
-<td id="T_8e5a6_row20_col8" class="data row20 col8">0.32</td>
-<td id="T_8e5a6_row20_col9" class="data row20 col9">-0.28</td>
-<td id="T_8e5a6_row20_col10" class="data row20 col10">-0.14</td>
-<td id="T_8e5a6_row20_col11" class="data row20 col11">-0.21</td>
-<td id="T_8e5a6_row20_col12" class="data row20 col12">-0.27</td>
-<td id="T_8e5a6_row20_col13" class="data row20 col13">0.02</td>
-<td id="T_8e5a6_row20_col14" class="data row20 col14">-0.30</td>
-<td id="T_8e5a6_row20_col15" class="data row20 col15">-0.31</td>
-<td id="T_8e5a6_row20_col16" class="data row20 col16">-0.07</td>
-<td id="T_8e5a6_row20_col17" class="data row20 col17">-0.00</td>
-<td id="T_8e5a6_row20_col18" class="data row20 col18">0.76</td>
-<td id="T_8e5a6_row20_col19" class="data row20 col19">0.74</td>
-<td id="T_8e5a6_row20_col20" class="data row20 col20">1.00</td>
-<td id="T_8e5a6_row20_col21" class="data row20 col21">-0.07</td>
-<td id="T_8e5a6_row20_col22" class="data row20 col22">-0.07</td>
-<td id="T_8e5a6_row20_col23" class="data row20 col23">0.55</td>
-<td id="T_8e5a6_row20_col24" class="data row20 col24">0.02</td>
-<td id="T_8e5a6_row20_col25" class="data row20 col25">-0.32</td>
-<td id="T_8e5a6_row20_col26" class="data row20 col26">-0.25</td>
+<td id="T_cc33e_level0_row20" class="row_heading level0 row20" data-quarto-table-cell-role="th">Unemployment_rate_2012</td>
+<td id="T_cc33e_row20_col0" class="data row20 col0">0.02</td>
+<td id="T_cc33e_row20_col1" class="data row20 col1">-0.20</td>
+<td id="T_cc33e_row20_col2" class="data row20 col2">0.00</td>
+<td id="T_cc33e_row20_col3" class="data row20 col3">-0.05</td>
+<td id="T_cc33e_row20_col4" class="data row20 col4">-0.02</td>
+<td id="T_cc33e_row20_col5" class="data row20 col5">0.01</td>
+<td id="T_cc33e_row20_col6" class="data row20 col6">0.02</td>
+<td id="T_cc33e_row20_col7" class="data row20 col7">0.08</td>
+<td id="T_cc33e_row20_col8" class="data row20 col8">0.32</td>
+<td id="T_cc33e_row20_col9" class="data row20 col9">-0.28</td>
+<td id="T_cc33e_row20_col10" class="data row20 col10">-0.14</td>
+<td id="T_cc33e_row20_col11" class="data row20 col11">-0.21</td>
+<td id="T_cc33e_row20_col12" class="data row20 col12">-0.27</td>
+<td id="T_cc33e_row20_col13" class="data row20 col13">0.02</td>
+<td id="T_cc33e_row20_col14" class="data row20 col14">-0.30</td>
+<td id="T_cc33e_row20_col15" class="data row20 col15">-0.31</td>
+<td id="T_cc33e_row20_col16" class="data row20 col16">-0.07</td>
+<td id="T_cc33e_row20_col17" class="data row20 col17">-0.00</td>
+<td id="T_cc33e_row20_col18" class="data row20 col18">0.76</td>
+<td id="T_cc33e_row20_col19" class="data row20 col19">0.74</td>
+<td id="T_cc33e_row20_col20" class="data row20 col20">1.00</td>
+<td id="T_cc33e_row20_col21" class="data row20 col21">-0.07</td>
+<td id="T_cc33e_row20_col22" class="data row20 col22">-0.07</td>
+<td id="T_cc33e_row20_col23" class="data row20 col23">0.55</td>
+<td id="T_cc33e_row20_col24" class="data row20 col24">0.02</td>
+<td id="T_cc33e_row20_col25" class="data row20 col25">-0.32</td>
+<td id="T_cc33e_row20_col26" class="data row20 col26">-0.25</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row21" class="row_heading level0 row21" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2003</td>
-<td id="T_8e5a6_row21_col0" class="data row21 col0">0.08</td>
-<td id="T_8e5a6_row21_col1" class="data row21 col1">0.01</td>
-<td id="T_8e5a6_row21_col2" class="data row21 col2">-0.22</td>
-<td id="T_8e5a6_row21_col3" class="data row21 col3">-0.03</td>
-<td id="T_8e5a6_row21_col4" class="data row21 col4">0.00</td>
-<td id="T_8e5a6_row21_col5" class="data row21 col5">0.01</td>
-<td id="T_8e5a6_row21_col6" class="data row21 col6">-0.02</td>
-<td id="T_8e5a6_row21_col7" class="data row21 col7">0.45</td>
-<td id="T_8e5a6_row21_col8" class="data row21 col8">0.28</td>
-<td id="T_8e5a6_row21_col9" class="data row21 col9">-0.24</td>
-<td id="T_8e5a6_row21_col10" class="data row21 col10">-0.23</td>
-<td id="T_8e5a6_row21_col11" class="data row21 col11">-0.13</td>
-<td id="T_8e5a6_row21_col12" class="data row21 col12">-0.37</td>
-<td id="T_8e5a6_row21_col13" class="data row21 col13">0.25</td>
-<td id="T_8e5a6_row21_col14" class="data row21 col14">-0.38</td>
-<td id="T_8e5a6_row21_col15" class="data row21 col15">-0.41</td>
-<td id="T_8e5a6_row21_col16" class="data row21 col16">0.93</td>
-<td id="T_8e5a6_row21_col17" class="data row21 col17">-0.81</td>
-<td id="T_8e5a6_row21_col18" class="data row21 col18">0.04</td>
-<td id="T_8e5a6_row21_col19" class="data row21 col19">0.05</td>
-<td id="T_8e5a6_row21_col20" class="data row21 col20">-0.07</td>
-<td id="T_8e5a6_row21_col21" class="data row21 col21">1.00</td>
-<td id="T_8e5a6_row21_col22" class="data row21 col22">0.93</td>
-<td id="T_8e5a6_row21_col23" class="data row21 col23">0.17</td>
-<td id="T_8e5a6_row21_col24" class="data row21 col24">-0.45</td>
-<td id="T_8e5a6_row21_col25" class="data row21 col25">0.29</td>
-<td id="T_8e5a6_row21_col26" class="data row21 col26">0.39</td>
+<td id="T_cc33e_level0_row21" class="row_heading level0 row21" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2003</td>
+<td id="T_cc33e_row21_col0" class="data row21 col0">0.08</td>
+<td id="T_cc33e_row21_col1" class="data row21 col1">0.01</td>
+<td id="T_cc33e_row21_col2" class="data row21 col2">-0.22</td>
+<td id="T_cc33e_row21_col3" class="data row21 col3">-0.03</td>
+<td id="T_cc33e_row21_col4" class="data row21 col4">0.00</td>
+<td id="T_cc33e_row21_col5" class="data row21 col5">0.01</td>
+<td id="T_cc33e_row21_col6" class="data row21 col6">-0.02</td>
+<td id="T_cc33e_row21_col7" class="data row21 col7">0.45</td>
+<td id="T_cc33e_row21_col8" class="data row21 col8">0.28</td>
+<td id="T_cc33e_row21_col9" class="data row21 col9">-0.24</td>
+<td id="T_cc33e_row21_col10" class="data row21 col10">-0.23</td>
+<td id="T_cc33e_row21_col11" class="data row21 col11">-0.13</td>
+<td id="T_cc33e_row21_col12" class="data row21 col12">-0.37</td>
+<td id="T_cc33e_row21_col13" class="data row21 col13">0.25</td>
+<td id="T_cc33e_row21_col14" class="data row21 col14">-0.38</td>
+<td id="T_cc33e_row21_col15" class="data row21 col15">-0.41</td>
+<td id="T_cc33e_row21_col16" class="data row21 col16">0.93</td>
+<td id="T_cc33e_row21_col17" class="data row21 col17">-0.81</td>
+<td id="T_cc33e_row21_col18" class="data row21 col18">0.04</td>
+<td id="T_cc33e_row21_col19" class="data row21 col19">0.05</td>
+<td id="T_cc33e_row21_col20" class="data row21 col20">-0.07</td>
+<td id="T_cc33e_row21_col21" class="data row21 col21">1.00</td>
+<td id="T_cc33e_row21_col22" class="data row21 col22">0.93</td>
+<td id="T_cc33e_row21_col23" class="data row21 col23">0.17</td>
+<td id="T_cc33e_row21_col24" class="data row21 col24">-0.45</td>
+<td id="T_cc33e_row21_col25" class="data row21 col25">0.29</td>
+<td id="T_cc33e_row21_col26" class="data row21 col26">0.39</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row22" class="row_heading level0 row22" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2013</td>
-<td id="T_8e5a6_row22_col0" class="data row22 col0">0.08</td>
-<td id="T_8e5a6_row22_col1" class="data row22 col1">0.01</td>
-<td id="T_8e5a6_row22_col2" class="data row22 col2">-0.22</td>
-<td id="T_8e5a6_row22_col3" class="data row22 col3">-0.03</td>
-<td id="T_8e5a6_row22_col4" class="data row22 col4">-0.00</td>
-<td id="T_8e5a6_row22_col5" class="data row22 col5">0.01</td>
-<td id="T_8e5a6_row22_col6" class="data row22 col6">-0.02</td>
-<td id="T_8e5a6_row22_col7" class="data row22 col7">0.46</td>
-<td id="T_8e5a6_row22_col8" class="data row22 col8">0.28</td>
-<td id="T_8e5a6_row22_col9" class="data row22 col9">-0.24</td>
-<td id="T_8e5a6_row22_col10" class="data row22 col10">-0.23</td>
-<td id="T_8e5a6_row22_col11" class="data row22 col11">-0.13</td>
-<td id="T_8e5a6_row22_col12" class="data row22 col12">-0.37</td>
-<td id="T_8e5a6_row22_col13" class="data row22 col13">0.25</td>
-<td id="T_8e5a6_row22_col14" class="data row22 col14">-0.37</td>
-<td id="T_8e5a6_row22_col15" class="data row22 col15">-0.41</td>
-<td id="T_8e5a6_row22_col16" class="data row22 col16">1.00</td>
-<td id="T_8e5a6_row22_col17" class="data row22 col17">-0.87</td>
-<td id="T_8e5a6_row22_col18" class="data row22 col18">0.04</td>
-<td id="T_8e5a6_row22_col19" class="data row22 col19">0.05</td>
-<td id="T_8e5a6_row22_col20" class="data row22 col20">-0.07</td>
-<td id="T_8e5a6_row22_col21" class="data row22 col21">0.93</td>
-<td id="T_8e5a6_row22_col22" class="data row22 col22">1.00</td>
-<td id="T_8e5a6_row22_col23" class="data row22 col23">0.18</td>
-<td id="T_8e5a6_row22_col24" class="data row22 col24">-0.44</td>
-<td id="T_8e5a6_row22_col25" class="data row22 col25">0.28</td>
-<td id="T_8e5a6_row22_col26" class="data row22 col26">0.38</td>
+<td id="T_cc33e_level0_row22" class="row_heading level0 row22" data-quarto-table-cell-role="th">Rural-urban_Continuum_Code_2013</td>
+<td id="T_cc33e_row22_col0" class="data row22 col0">0.08</td>
+<td id="T_cc33e_row22_col1" class="data row22 col1">0.01</td>
+<td id="T_cc33e_row22_col2" class="data row22 col2">-0.22</td>
+<td id="T_cc33e_row22_col3" class="data row22 col3">-0.03</td>
+<td id="T_cc33e_row22_col4" class="data row22 col4">-0.00</td>
+<td id="T_cc33e_row22_col5" class="data row22 col5">0.01</td>
+<td id="T_cc33e_row22_col6" class="data row22 col6">-0.02</td>
+<td id="T_cc33e_row22_col7" class="data row22 col7">0.46</td>
+<td id="T_cc33e_row22_col8" class="data row22 col8">0.28</td>
+<td id="T_cc33e_row22_col9" class="data row22 col9">-0.24</td>
+<td id="T_cc33e_row22_col10" class="data row22 col10">-0.23</td>
+<td id="T_cc33e_row22_col11" class="data row22 col11">-0.13</td>
+<td id="T_cc33e_row22_col12" class="data row22 col12">-0.37</td>
+<td id="T_cc33e_row22_col13" class="data row22 col13">0.25</td>
+<td id="T_cc33e_row22_col14" class="data row22 col14">-0.37</td>
+<td id="T_cc33e_row22_col15" class="data row22 col15">-0.41</td>
+<td id="T_cc33e_row22_col16" class="data row22 col16">1.00</td>
+<td id="T_cc33e_row22_col17" class="data row22 col17">-0.87</td>
+<td id="T_cc33e_row22_col18" class="data row22 col18">0.04</td>
+<td id="T_cc33e_row22_col19" class="data row22 col19">0.05</td>
+<td id="T_cc33e_row22_col20" class="data row22 col20">-0.07</td>
+<td id="T_cc33e_row22_col21" class="data row22 col21">0.93</td>
+<td id="T_cc33e_row22_col22" class="data row22 col22">1.00</td>
+<td id="T_cc33e_row22_col23" class="data row22 col23">0.18</td>
+<td id="T_cc33e_row22_col24" class="data row22 col24">-0.44</td>
+<td id="T_cc33e_row22_col25" class="data row22 col25">0.28</td>
+<td id="T_cc33e_row22_col26" class="data row22 col26">0.38</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row23" class="row_heading level0 row23" data-quarto-table-cell-role="th">CI90LB517P_2019</td>
-<td id="T_8e5a6_row23_col0" class="data row23 col0">0.01</td>
-<td id="T_8e5a6_row23_col1" class="data row23 col1">-0.09</td>
-<td id="T_8e5a6_row23_col2" class="data row23 col2">-0.00</td>
-<td id="T_8e5a6_row23_col3" class="data row23 col3">-0.11</td>
-<td id="T_8e5a6_row23_col4" class="data row23 col4">-0.10</td>
-<td id="T_8e5a6_row23_col5" class="data row23 col5">0.03</td>
-<td id="T_8e5a6_row23_col6" class="data row23 col6">0.01</td>
-<td id="T_8e5a6_row23_col7" class="data row23 col7">0.26</td>
-<td id="T_8e5a6_row23_col8" class="data row23 col8">0.38</td>
-<td id="T_8e5a6_row23_col9" class="data row23 col9">-0.18</td>
-<td id="T_8e5a6_row23_col10" class="data row23 col10">-0.09</td>
-<td id="T_8e5a6_row23_col11" class="data row23 col11">-0.23</td>
-<td id="T_8e5a6_row23_col12" class="data row23 col12">-0.36</td>
-<td id="T_8e5a6_row23_col13" class="data row23 col13">-0.01</td>
-<td id="T_8e5a6_row23_col14" class="data row23 col14">-0.41</td>
-<td id="T_8e5a6_row23_col15" class="data row23 col15">-0.47</td>
-<td id="T_8e5a6_row23_col16" class="data row23 col16">0.18</td>
-<td id="T_8e5a6_row23_col17" class="data row23 col17">-0.19</td>
-<td id="T_8e5a6_row23_col18" class="data row23 col18">0.53</td>
-<td id="T_8e5a6_row23_col19" class="data row23 col19">0.51</td>
-<td id="T_8e5a6_row23_col20" class="data row23 col20">0.55</td>
-<td id="T_8e5a6_row23_col21" class="data row23 col21">0.17</td>
-<td id="T_8e5a6_row23_col22" class="data row23 col22">0.18</td>
-<td id="T_8e5a6_row23_col23" class="data row23 col23">1.00</td>
-<td id="T_8e5a6_row23_col24" class="data row23 col24">-0.09</td>
-<td id="T_8e5a6_row23_col25" class="data row23 col25">-0.17</td>
-<td id="T_8e5a6_row23_col26" class="data row23 col26">-0.11</td>
+<td id="T_cc33e_level0_row23" class="row_heading level0 row23" data-quarto-table-cell-role="th">CI90LB517P_2019</td>
+<td id="T_cc33e_row23_col0" class="data row23 col0">0.01</td>
+<td id="T_cc33e_row23_col1" class="data row23 col1">-0.09</td>
+<td id="T_cc33e_row23_col2" class="data row23 col2">-0.00</td>
+<td id="T_cc33e_row23_col3" class="data row23 col3">-0.11</td>
+<td id="T_cc33e_row23_col4" class="data row23 col4">-0.10</td>
+<td id="T_cc33e_row23_col5" class="data row23 col5">0.03</td>
+<td id="T_cc33e_row23_col6" class="data row23 col6">0.01</td>
+<td id="T_cc33e_row23_col7" class="data row23 col7">0.26</td>
+<td id="T_cc33e_row23_col8" class="data row23 col8">0.38</td>
+<td id="T_cc33e_row23_col9" class="data row23 col9">-0.18</td>
+<td id="T_cc33e_row23_col10" class="data row23 col10">-0.09</td>
+<td id="T_cc33e_row23_col11" class="data row23 col11">-0.23</td>
+<td id="T_cc33e_row23_col12" class="data row23 col12">-0.36</td>
+<td id="T_cc33e_row23_col13" class="data row23 col13">-0.01</td>
+<td id="T_cc33e_row23_col14" class="data row23 col14">-0.41</td>
+<td id="T_cc33e_row23_col15" class="data row23 col15">-0.47</td>
+<td id="T_cc33e_row23_col16" class="data row23 col16">0.18</td>
+<td id="T_cc33e_row23_col17" class="data row23 col17">-0.19</td>
+<td id="T_cc33e_row23_col18" class="data row23 col18">0.53</td>
+<td id="T_cc33e_row23_col19" class="data row23 col19">0.51</td>
+<td id="T_cc33e_row23_col20" class="data row23 col20">0.55</td>
+<td id="T_cc33e_row23_col21" class="data row23 col21">0.17</td>
+<td id="T_cc33e_row23_col22" class="data row23 col22">0.18</td>
+<td id="T_cc33e_row23_col23" class="data row23 col23">1.00</td>
+<td id="T_cc33e_row23_col24" class="data row23 col24">-0.09</td>
+<td id="T_cc33e_row23_col25" class="data row23 col25">-0.17</td>
+<td id="T_cc33e_row23_col26" class="data row23 col26">-0.11</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row24" class="row_heading level0 row24" data-quarto-table-cell-role="th">candidatevotes_2016_republican</td>
-<td id="T_8e5a6_row24_col0" class="data row24 col0">0.11</td>
-<td id="T_8e5a6_row24_col1" class="data row24 col1">-0.06</td>
-<td id="T_8e5a6_row24_col2" class="data row24 col2">0.66</td>
-<td id="T_8e5a6_row24_col3" class="data row24 col3">-0.03</td>
-<td id="T_8e5a6_row24_col4" class="data row24 col4">-0.21</td>
-<td id="T_8e5a6_row24_col5" class="data row24 col5">-0.15</td>
-<td id="T_8e5a6_row24_col6" class="data row24 col6">0.27</td>
-<td id="T_8e5a6_row24_col7" class="data row24 col7">-0.28</td>
-<td id="T_8e5a6_row24_col8" class="data row24 col8">-0.22</td>
-<td id="T_8e5a6_row24_col9" class="data row24 col9">0.18</td>
-<td id="T_8e5a6_row24_col10" class="data row24 col10">0.31</td>
-<td id="T_8e5a6_row24_col11" class="data row24 col11">0.13</td>
-<td id="T_8e5a6_row24_col12" class="data row24 col12">0.40</td>
-<td id="T_8e5a6_row24_col13" class="data row24 col13">-0.32</td>
-<td id="T_8e5a6_row24_col14" class="data row24 col14">0.39</td>
-<td id="T_8e5a6_row24_col15" class="data row24 col15">0.40</td>
-<td id="T_8e5a6_row24_col16" class="data row24 col16">-0.44</td>
-<td id="T_8e5a6_row24_col17" class="data row24 col17">0.41</td>
-<td id="T_8e5a6_row24_col18" class="data row24 col18">-0.02</td>
-<td id="T_8e5a6_row24_col19" class="data row24 col19">-0.04</td>
-<td id="T_8e5a6_row24_col20" class="data row24 col20">0.02</td>
-<td id="T_8e5a6_row24_col21" class="data row24 col21">-0.45</td>
-<td id="T_8e5a6_row24_col22" class="data row24 col22">-0.44</td>
-<td id="T_8e5a6_row24_col23" class="data row24 col23">-0.09</td>
-<td id="T_8e5a6_row24_col24" class="data row24 col24">1.00</td>
-<td id="T_8e5a6_row24_col25" class="data row24 col25">-0.22</td>
-<td id="T_8e5a6_row24_col26" class="data row24 col26">-0.32</td>
+<td id="T_cc33e_level0_row24" class="row_heading level0 row24" data-quarto-table-cell-role="th">candidatevotes_2016_republican</td>
+<td id="T_cc33e_row24_col0" class="data row24 col0">0.11</td>
+<td id="T_cc33e_row24_col1" class="data row24 col1">-0.06</td>
+<td id="T_cc33e_row24_col2" class="data row24 col2">0.66</td>
+<td id="T_cc33e_row24_col3" class="data row24 col3">-0.03</td>
+<td id="T_cc33e_row24_col4" class="data row24 col4">-0.21</td>
+<td id="T_cc33e_row24_col5" class="data row24 col5">-0.15</td>
+<td id="T_cc33e_row24_col6" class="data row24 col6">0.27</td>
+<td id="T_cc33e_row24_col7" class="data row24 col7">-0.28</td>
+<td id="T_cc33e_row24_col8" class="data row24 col8">-0.22</td>
+<td id="T_cc33e_row24_col9" class="data row24 col9">0.18</td>
+<td id="T_cc33e_row24_col10" class="data row24 col10">0.31</td>
+<td id="T_cc33e_row24_col11" class="data row24 col11">0.13</td>
+<td id="T_cc33e_row24_col12" class="data row24 col12">0.40</td>
+<td id="T_cc33e_row24_col13" class="data row24 col13">-0.32</td>
+<td id="T_cc33e_row24_col14" class="data row24 col14">0.39</td>
+<td id="T_cc33e_row24_col15" class="data row24 col15">0.40</td>
+<td id="T_cc33e_row24_col16" class="data row24 col16">-0.44</td>
+<td id="T_cc33e_row24_col17" class="data row24 col17">0.41</td>
+<td id="T_cc33e_row24_col18" class="data row24 col18">-0.02</td>
+<td id="T_cc33e_row24_col19" class="data row24 col19">-0.04</td>
+<td id="T_cc33e_row24_col20" class="data row24 col20">0.02</td>
+<td id="T_cc33e_row24_col21" class="data row24 col21">-0.45</td>
+<td id="T_cc33e_row24_col22" class="data row24 col22">-0.44</td>
+<td id="T_cc33e_row24_col23" class="data row24 col23">-0.09</td>
+<td id="T_cc33e_row24_col24" class="data row24 col24">1.00</td>
+<td id="T_cc33e_row24_col25" class="data row24 col25">-0.22</td>
+<td id="T_cc33e_row24_col26" class="data row24 col26">-0.32</td>
 </tr>
 <tr class="even">
-<td id="T_8e5a6_level0_row25" class="row_heading level0 row25" data-quarto-table-cell-role="th">share_2012_republican</td>
-<td id="T_8e5a6_row25_col0" class="data row25 col0">0.03</td>
-<td id="T_8e5a6_row25_col1" class="data row25 col1">0.05</td>
-<td id="T_8e5a6_row25_col2" class="data row25 col2">-0.23</td>
-<td id="T_8e5a6_row25_col3" class="data row25 col3">0.13</td>
-<td id="T_8e5a6_row25_col4" class="data row25 col4">0.16</td>
-<td id="T_8e5a6_row25_col5" class="data row25 col5">0.02</td>
-<td id="T_8e5a6_row25_col6" class="data row25 col6">0.02</td>
-<td id="T_8e5a6_row25_col7" class="data row25 col7">0.22</td>
-<td id="T_8e5a6_row25_col8" class="data row25 col8">0.07</td>
-<td id="T_8e5a6_row25_col9" class="data row25 col9">-0.04</td>
-<td id="T_8e5a6_row25_col10" class="data row25 col10">-0.28</td>
-<td id="T_8e5a6_row25_col11" class="data row25 col11">0.08</td>
-<td id="T_8e5a6_row25_col12" class="data row25 col12">-0.34</td>
-<td id="T_8e5a6_row25_col13" class="data row25 col13">0.25</td>
-<td id="T_8e5a6_row25_col14" class="data row25 col14">-0.32</td>
-<td id="T_8e5a6_row25_col15" class="data row25 col15">-0.31</td>
-<td id="T_8e5a6_row25_col16" class="data row25 col16">0.28</td>
-<td id="T_8e5a6_row25_col17" class="data row25 col17">-0.21</td>
-<td id="T_8e5a6_row25_col18" class="data row25 col18">-0.24</td>
-<td id="T_8e5a6_row25_col19" class="data row25 col19">-0.24</td>
-<td id="T_8e5a6_row25_col20" class="data row25 col20">-0.32</td>
-<td id="T_8e5a6_row25_col21" class="data row25 col21">0.29</td>
-<td id="T_8e5a6_row25_col22" class="data row25 col22">0.28</td>
-<td id="T_8e5a6_row25_col23" class="data row25 col23">-0.17</td>
-<td id="T_8e5a6_row25_col24" class="data row25 col24">-0.22</td>
-<td id="T_8e5a6_row25_col25" class="data row25 col25">1.00</td>
-<td id="T_8e5a6_row25_col26" class="data row25 col26">0.93</td>
+<td id="T_cc33e_level0_row25" class="row_heading level0 row25" data-quarto-table-cell-role="th">share_2012_republican</td>
+<td id="T_cc33e_row25_col0" class="data row25 col0">0.03</td>
+<td id="T_cc33e_row25_col1" class="data row25 col1">0.05</td>
+<td id="T_cc33e_row25_col2" class="data row25 col2">-0.23</td>
+<td id="T_cc33e_row25_col3" class="data row25 col3">0.13</td>
+<td id="T_cc33e_row25_col4" class="data row25 col4">0.16</td>
+<td id="T_cc33e_row25_col5" class="data row25 col5">0.02</td>
+<td id="T_cc33e_row25_col6" class="data row25 col6">0.02</td>
+<td id="T_cc33e_row25_col7" class="data row25 col7">0.22</td>
+<td id="T_cc33e_row25_col8" class="data row25 col8">0.07</td>
+<td id="T_cc33e_row25_col9" class="data row25 col9">-0.04</td>
+<td id="T_cc33e_row25_col10" class="data row25 col10">-0.28</td>
+<td id="T_cc33e_row25_col11" class="data row25 col11">0.08</td>
+<td id="T_cc33e_row25_col12" class="data row25 col12">-0.34</td>
+<td id="T_cc33e_row25_col13" class="data row25 col13">0.25</td>
+<td id="T_cc33e_row25_col14" class="data row25 col14">-0.32</td>
+<td id="T_cc33e_row25_col15" class="data row25 col15">-0.31</td>
+<td id="T_cc33e_row25_col16" class="data row25 col16">0.28</td>
+<td id="T_cc33e_row25_col17" class="data row25 col17">-0.21</td>
+<td id="T_cc33e_row25_col18" class="data row25 col18">-0.24</td>
+<td id="T_cc33e_row25_col19" class="data row25 col19">-0.24</td>
+<td id="T_cc33e_row25_col20" class="data row25 col20">-0.32</td>
+<td id="T_cc33e_row25_col21" class="data row25 col21">0.29</td>
+<td id="T_cc33e_row25_col22" class="data row25 col22">0.28</td>
+<td id="T_cc33e_row25_col23" class="data row25 col23">-0.17</td>
+<td id="T_cc33e_row25_col24" class="data row25 col24">-0.22</td>
+<td id="T_cc33e_row25_col25" class="data row25 col25">1.00</td>
+<td id="T_cc33e_row25_col26" class="data row25 col26">0.93</td>
 </tr>
 <tr class="odd">
-<td id="T_8e5a6_level0_row26" class="row_heading level0 row26" data-quarto-table-cell-role="th">share_2016_republican</td>
-<td id="T_8e5a6_row26_col0" class="data row26 col0">-0.04</td>
-<td id="T_8e5a6_row26_col1" class="data row26 col1">0.05</td>
-<td id="T_8e5a6_row26_col2" class="data row26 col2">-0.29</td>
-<td id="T_8e5a6_row26_col3" class="data row26 col3">0.10</td>
-<td id="T_8e5a6_row26_col4" class="data row26 col4">0.15</td>
-<td id="T_8e5a6_row26_col5" class="data row26 col5">0.02</td>
-<td id="T_8e5a6_row26_col6" class="data row26 col6">-0.01</td>
-<td id="T_8e5a6_row26_col7" class="data row26 col7">0.38</td>
-<td id="T_8e5a6_row26_col8" class="data row26 col8">0.23</td>
-<td id="T_8e5a6_row26_col9" class="data row26 col9">-0.19</td>
-<td id="T_8e5a6_row26_col10" class="data row26 col10">-0.37</td>
-<td id="T_8e5a6_row26_col11" class="data row26 col11">0.03</td>
-<td id="T_8e5a6_row26_col12" class="data row26 col12">-0.53</td>
-<td id="T_8e5a6_row26_col13" class="data row26 col13">0.48</td>
-<td id="T_8e5a6_row26_col14" class="data row26 col14">-0.51</td>
-<td id="T_8e5a6_row26_col15" class="data row26 col15">-0.49</td>
-<td id="T_8e5a6_row26_col16" class="data row26 col16">0.38</td>
-<td id="T_8e5a6_row26_col17" class="data row26 col17">-0.31</td>
-<td id="T_8e5a6_row26_col18" class="data row26 col18">-0.18</td>
-<td id="T_8e5a6_row26_col19" class="data row26 col19">-0.16</td>
-<td id="T_8e5a6_row26_col20" class="data row26 col20">-0.25</td>
-<td id="T_8e5a6_row26_col21" class="data row26 col21">0.39</td>
-<td id="T_8e5a6_row26_col22" class="data row26 col22">0.38</td>
-<td id="T_8e5a6_row26_col23" class="data row26 col23">-0.11</td>
-<td id="T_8e5a6_row26_col24" class="data row26 col24">-0.32</td>
-<td id="T_8e5a6_row26_col25" class="data row26 col25">0.93</td>
-<td id="T_8e5a6_row26_col26" class="data row26 col26">1.00</td>
+<td id="T_cc33e_level0_row26" class="row_heading level0 row26" data-quarto-table-cell-role="th">share_2016_republican</td>
+<td id="T_cc33e_row26_col0" class="data row26 col0">-0.04</td>
+<td id="T_cc33e_row26_col1" class="data row26 col1">0.05</td>
+<td id="T_cc33e_row26_col2" class="data row26 col2">-0.29</td>
+<td id="T_cc33e_row26_col3" class="data row26 col3">0.10</td>
+<td id="T_cc33e_row26_col4" class="data row26 col4">0.15</td>
+<td id="T_cc33e_row26_col5" class="data row26 col5">0.02</td>
+<td id="T_cc33e_row26_col6" class="data row26 col6">-0.01</td>
+<td id="T_cc33e_row26_col7" class="data row26 col7">0.38</td>
+<td id="T_cc33e_row26_col8" class="data row26 col8">0.23</td>
+<td id="T_cc33e_row26_col9" class="data row26 col9">-0.19</td>
+<td id="T_cc33e_row26_col10" class="data row26 col10">-0.37</td>
+<td id="T_cc33e_row26_col11" class="data row26 col11">0.03</td>
+<td id="T_cc33e_row26_col12" class="data row26 col12">-0.53</td>
+<td id="T_cc33e_row26_col13" class="data row26 col13">0.48</td>
+<td id="T_cc33e_row26_col14" class="data row26 col14">-0.51</td>
+<td id="T_cc33e_row26_col15" class="data row26 col15">-0.49</td>
+<td id="T_cc33e_row26_col16" class="data row26 col16">0.38</td>
+<td id="T_cc33e_row26_col17" class="data row26 col17">-0.31</td>
+<td id="T_cc33e_row26_col18" class="data row26 col18">-0.18</td>
+<td id="T_cc33e_row26_col19" class="data row26 col19">-0.16</td>
+<td id="T_cc33e_row26_col20" class="data row26 col20">-0.25</td>
+<td id="T_cc33e_row26_col21" class="data row26 col21">0.39</td>
+<td id="T_cc33e_row26_col22" class="data row26 col22">0.38</td>
+<td id="T_cc33e_row26_col23" class="data row26 col23">-0.11</td>
+<td id="T_cc33e_row26_col24" class="data row26 col24">-0.32</td>
+<td id="T_cc33e_row26_col25" class="data row26 col25">0.93</td>
+<td id="T_cc33e_row26_col26" class="data row26 col26">1.00</td>
 </tr>
 </tbody>
 </table>
@@ -2150,11 +2152,11 @@ les variables sélectionnées sont :</p>
 <pre><code>&lt;Figure size 672x480 with 0 Axes&gt;</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="12">
+<div class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="4_featureselection_files/figure-html/cell-13-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="4_featureselection_files/figure-html/cell-13-output-1.png" width="593" height="450" class="figure-img"></a></p>
+<p><a href="4_featureselection_files/figure-html/cell-14-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="4_featureselection_files/figure-html/cell-14-output-1.png" width="593" height="450" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
@@ -2168,25 +2170,25 @@ les variables sélectionnées sont :</p>
 il convient d’effectuer une validation croisée afin de choisir le modèle pour
 lequel les variables qui passent la phase de sélection permettent de mieux
 prédire le résultat Républicain :</p>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LassoCV</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df2.select_dtypes(include<span class="op">=</span>np.number)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df3.replace([np.inf, <span class="op">-</span>np.inf], np.nan, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df3.fillna(<span class="dv">0</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>yindex <span class="op">=</span> df3.columns.get_loc(<span class="st">"per_gop"</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df3_scale <span class="op">=</span> scaler.fit(df3).transform(df3)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># X_train, X_test , y_train, y_test = train_test_split(np.delete(data, yindex, axis = 1),data[:,yindex], test_size=0.2, random_state=0)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>lcv <span class="op">=</span> LassoCV(alphas<span class="op">=</span>my_alphas, fit_intercept<span class="op">=</span><span class="va">False</span>,random_state<span class="op">=</span><span class="dv">0</span>,cv<span class="op">=</span><span class="dv">5</span>).fit(np.delete(df3_scale, yindex, axis <span class="op">=</span> <span class="dv">1</span>), df3_scale[:,yindex])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LassoCV</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df2.select_dtypes(include<span class="op">=</span>np.number)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>df3.replace([np.inf, <span class="op">-</span>np.inf], np.nan, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df3.fillna(<span class="dv">0</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>yindex <span class="op">=</span> df3.columns.get_loc(<span class="st">"per_gop"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>df3_scale <span class="op">=</span> scaler.fit(df3).transform(df3)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># X_train, X_test , y_train, y_test = train_test_split(np.delete(data, yindex, axis = 1),data[:,yindex], test_size=0.2, random_state=0)</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>lcv <span class="op">=</span> LassoCV(alphas<span class="op">=</span>my_alphas, fit_intercept<span class="op">=</span><span class="va">False</span>,random_state<span class="op">=</span><span class="dv">0</span>,cv<span class="op">=</span><span class="dv">5</span>).fit(np.delete(df3_scale, yindex, axis <span class="op">=</span> <span class="dv">1</span>), df3_scale[:,yindex])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="16">
 <div class="cell-output cell-output-stdout">
 <pre><code>alpha optimal : 0.001</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="16">
+<div class="cell" data-execution_count="17">
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/mamba/lib/python3.9/site-packages/sklearn/linear_model/_coordinate_descent.py:628: ConvergenceWarning:
 
@@ -2195,7 +2197,7 @@ Objective did not converge. You might want to increase the number of iterations,
 </div>
 </div>
 <p>Les variables sélectionnées sont :</p>
-<div class="cell" data-execution_count="17">
+<div class="cell" data-execution_count="18">
 <div class="cell-output cell-output-stdout">
 <pre><code>['ALAND', 'AWATER', 'votes_gop', 'diff', 'Rural-urban_Continuum Code_2003', 'Rural-urban_Continuum Code_2013', 'Urban_Influence_Code_2013', 'Economic_typology_2015', 'CENSUS_2010_POP', 'N_POP_CHG_2013', 'N_POP_CHG_2016', 'N_POP_CHG_2017', 'N_POP_CHG_2018', 'N_POP_CHG_2019', 'Births_2011', 'Births_2015', 'Deaths_2015', 'Deaths_2017', 'Deaths_2018', 'NATURAL_INC_2012', 'NATURAL_INC_2013', 'NATURAL_INC_2014', 'NATURAL_INC_2016', 'NATURAL_INC_2018', 'INTERNATIONAL_MIG_2010', 'INTERNATIONAL_MIG_2011', 'INTERNATIONAL_MIG_2012', 'INTERNATIONAL_MIG_2013', 'INTERNATIONAL_MIG_2014', 'INTERNATIONAL_MIG_2015', 'INTERNATIONAL_MIG_2016', 'INTERNATIONAL_MIG_2017', 'INTERNATIONAL_MIG_2018', 'INTERNATIONAL_MIG_2019', 'DOMESTIC_MIG_2010', 'DOMESTIC_MIG_2012', 'DOMESTIC_MIG_2013', 'DOMESTIC_MIG_2015', 'DOMESTIC_MIG_2016', 'DOMESTIC_MIG_2018', 'NET_MIG_2011', 'NET_MIG_2014', 'NET_MIG_2018', 'NET_MIG_2019', 'RESIDUAL_2010', 'RESIDUAL_2011', 'RESIDUAL_2012', 'RESIDUAL_2013', 'RESIDUAL_2014', 'RESIDUAL_2015', 'RESIDUAL_2016', 'RESIDUAL_2017', 'RESIDUAL_2018', 'RESIDUAL_2019', 'GQ_ESTIMATES_BASE_2010', 'GQ_ESTIMATES_2013', 'GQ_ESTIMATES_2015', 'GQ_ESTIMATES_2017', 'R_birth_2011', 'R_birth_2013', 'R_birth_2014', 'R_birth_2016', 'R_birth_2017', 'R_birth_2019', 'R_death_2011', 'R_death_2012', 'R_death_2013', 'R_death_2014', 'R_death_2015', 'R_death_2016', 'R_death_2017', 'R_death_2018', 'R_death_2019', 'R_NATURAL_INC_2012', 'R_NATURAL_INC_2015', 'R_NATURAL_INC_2017', 'R_NATURAL_INC_2018', 'R_NATURAL_INC_2019', 'R_INTERNATIONAL_MIG_2011', 'R_INTERNATIONAL_MIG_2012', 'R_INTERNATIONAL_MIG_2013', 'R_INTERNATIONAL_MIG_2014', 'R_INTERNATIONAL_MIG_2015', 'R_INTERNATIONAL_MIG_2016', 'R_INTERNATIONAL_MIG_2017', 'R_INTERNATIONAL_MIG_2018', 'R_INTERNATIONAL_MIG_2019', 'R_DOMESTIC_MIG_2011', 'R_DOMESTIC_MIG_2012', 'R_DOMESTIC_MIG_2013', 'R_DOMESTIC_MIG_2015', 'R_DOMESTIC_MIG_2016', 'R_DOMESTIC_MIG_2018', 'R_NET_MIG_2014', 'R_NET_MIG_2017', 'R_NET_MIG_2019', '2003 Rural-urban Continuum Code', 'Less than a high school diploma, 1970', 'High school diploma only, 1970', 'Some college (1-3 years), 1970', 'Four years of college or higher, 1970', 'Percent of adults with less than a high school diploma, 1970', 'Percent of adults with a high school diploma only, 1970', 'Percent of adults completing some college (1-3 years), 1970', 'Percent of adults completing four years of college or higher, 1970', 'Less than a high school diploma, 1980', 'High school diploma only, 1980', 'Some college (1-3 years), 1980', 'Four years of college or higher, 1980', 'Percent of adults with less than a high school diploma, 1980', 'Percent of adults with a high school diploma only, 1980', 'Percent of adults completing some college (1-3 years), 1980', 'Percent of adults completing four years of college or higher, 1980', 'Less than a high school diploma, 1990', 'Percent of adults with less than a high school diploma, 1990', 'Percent of adults with a high school diploma only, 1990', 'Less than a high school diploma, 2000', 'High school diploma only, 2000', "Some college or associate's degree, 2000", "Bachelor's degree or higher, 2000", 'Percent of adults with less than a high school diploma, 2000', 'Percent of adults with a high school diploma only, 2000', "Percent of adults completing some college or associate's degree, 2000", "Percent of adults with a bachelor's degree or higher, 2000", 'Less than a high school diploma, 2015-19', 'High school diploma only, 2015-19', "Some college or associate's degree, 2015-19", "Bachelor's degree or higher, 2015-19", 'Percent of adults with less than a high school diploma, 2015-19', 'Percent of adults with a high school diploma only, 2015-19', "Percent of adults completing some college or associate's degree, 2015-19", "Percent of adults with a bachelor's degree or higher, 2015-19", 'Metro_2013', 'Unemployed_2000', 'Unemployment_rate_2000', 'Unemployment_rate_2001', 'Unemployed_2002', 'Unemployment_rate_2002', 'Unemployed_2003', 'Unemployment_rate_2003', 'Civilian_labor_force_2004', 'Employed_2004', 'Unemployment_rate_2004', 'Civilian_labor_force_2005', 'Unemployed_2005', 'Unemployment_rate_2005', 'Civilian_labor_force_2006', 'Unemployed_2006', 'Unemployment_rate_2006', 'Unemployed_2007', 'Unemployment_rate_2007', 'Unemployed_2008', 'Unemployment_rate_2008', 'Employed_2009', 'Unemployment_rate_2009', 'Employed_2010', 'Unemployment_rate_2010', 'Civilian_labor_force_2011', 'Employed_2011', 'Unemployed_2011', 'Civilian_labor_force_2012', 'Employed_2012', 'Unemployed_2012', 'Unemployment_rate_2012', 'Unemployed_2013', 'Unemployment_rate_2013', 'Unemployed_2014', 'Unemployment_rate_2014', 'Civilian_labor_force_2015', 'Employed_2015', 'Unemployment_rate_2015', 'Unemployed_2016', 'Unemployment_rate_2016', 'Unemployed_2017', 'Unemployment_rate_2017', 'Unemployed_2018', 'Unemployment_rate_2018', 'Unemployment_rate_2019', 'Med_HH_Income_Percent_of_State_Total_2019', 'Rural-urban_Continuum_Code_2003', 'Urban_Influence_Code_2003', 'Rural-urban_Continuum_Code_2013', 'POVALL_2019', 'CI90LBALL_2019', 'CI90UBALL_2019', 'CI90LBALLP_2019', 'CI90UBALLP_2019', 'POV017_2019', 'CI90LB017_2019', 'CI90UB017_2019', 'CI90LB017P_2019', 'CI90LB517_2019', 'CI90UB517_2019', 'PCTPOV517_2019', 'CI90LB517P_2019', 'CI90LBINC_2019', 'CI90UBINC_2019', 'candidatevotes_2000_republican', 'candidatevotes_2004_republican', 'candidatevotes_2008_republican', 'candidatevotes_2012_republican', 'candidatevotes_2016_republican', 'share_2000_republican', 'share_2008_republican', 'share_2012_republican', 'share_2016_republican']</code></pre>
 </div>
@@ -2483,7 +2485,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 <a href="https://github.com/linogaliana/python-datascientist">Code source disponible sur <i class="fa-brands fa-github" aria-label="github"></i> <code>GitHub</code></a></div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":true,"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom"});</script>
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","openEffect":"zoom","loop":true});</script>
 
 
 
