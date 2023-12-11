@@ -128,6 +128,8 @@ div.csl-indent {
         background: #e9f3fa;
       }
 </style>
+<script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -146,8 +148,8 @@ sur le groupe auquel appartient réellement une observation. Les applications
 au monde réel sont nombreuses, notamment dans le domaine de la
 segmentation tarifaire.">
 <meta name="twitter:image" content="https://pythonds.linogaliana.fr/content/modelisation/featured_clustering.png">
-<meta name="twitter:image-height" content="480">
-<meta name="twitter:image-width" content="672">
+<meta name="twitter:image-height" content="460">
+<meta name="twitter:image-width" content="614">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="citation_title" content="Python pour la data science">
 <meta name="citation_author" content="Lino Galiana">
@@ -621,6 +623,7 @@ segmentation tarifaire.">
   <li><a href="#pour-la-visualisation-de-clusters" id="toc-pour-la-visualisation-de-clusters" class="nav-link" data-scroll-target="#pour-la-visualisation-de-clusters">Pour la visualisation de clusters</a></li>
   <li><a href="#pour-la-réduction-de-dimension" id="toc-pour-la-réduction-de-dimension" class="nav-link" data-scroll-target="#pour-la-réduction-de-dimension">Pour la réduction de dimension</a></li>
   </ul></li>
+  <li><a href="#références" id="toc-références" class="nav-link" data-scroll-target="#références">Références</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/modelisation/5_clustering.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -637,38 +640,215 @@ segmentation tarifaire.">
 <!-- <div class="quarto-title page-columns page-full featured-image p-4" style="background-image: url(featured.png), url(featured.jpg), url(../featured.jpg);"> -->
     
 
-<div class="cell markdown">
-<p class="badges">
-<a href="https://github.com/linogaliana/python-datascientist-notebooks/blob/main/notebooks/modelisation/5_clustering.ipynb" class="github"><i class="fab fa-github"></i></a>
-<a href="https://downgit.github.io/#/home?url=https://github.com/linogaliana/python-datascientist-notebooks/blob/main/notebooks/modelisation/5_clustering.ipynb" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter" alt="Download"></a>
-<a href="https://nbviewer.jupyter.org/github/linogaliana/python-datascientist-notebooksblob/main/notebooks/modelisation/5_clustering.ipynb" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter" alt="nbviewer"></a>
-<a href="https://datalab.sspcloud.fr/launcher/ide/jupyter-python?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB5_clustering%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%ABmodelisation%205_clustering%C2%BB&amp;security.allowlist.enabled=false" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"></a>
-<a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB5_clustering%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%ABmodelisation%205_clustering%C2%BB&amp;security.allowlist.enabled=false" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"></a><br>
-<a href="https://colab.research.google.com/github/linogaliana/python-datascientist-notebooks/blob/main/notebooks/modelisation/5_clustering.ipynb" target="_blank" rel="noopener"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>
-<a href="https://github.dev/linogaliana/python-datascientist-notebooks/notebooks/modelisation/5_clustering.ipynb" target="_blank" rel="noopener"><img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"></a>
-</p>
-<p></p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="1" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">replace</span>(<span class="st">".html"</span><span class="op">,</span> <span class="st">".qmd"</span>)<span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path})<span class="sc">}</span><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="1" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink<span class="op">,</span> nbviewerLink<span class="op">;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/tree/main`</span><span class="op">;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> downloadLink<span class="op">;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`&lt;a href="https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter" alt="Download"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> visualizeLink<span class="op">;</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter" alt="nbviewer"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span> downloadLink<span class="op">,</span></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>        visualizeLink<span class="op">,</span> sspcloudJupyterLink<span class="op">,</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink<span class="op">,</span> vscodeLink)<span class="op">;</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
 </div>
 <p>Ce chapitre utilise toujours le même jeu de données, présenté dans l’<a href="../../content/modelisation/index.html">introduction
 de cette partie</a> : les données de vote aux élections présidentielles américaines
 croisées à des variables sociodémographiques.
 Le code
 est disponible <a href="https://github.com/linogaliana/python-datascientist/blob/master/content/modelisation/get_data.py">sur Github</a>.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">'getdata.py'</span>, <span class="st">'wb'</span>).write(r.content)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="python">
+<p>Il peut également être utile d’installer <code>plotnine</code>
+pour réaliser des graphiques simplement:</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py'</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">'getdata.py'</span>, <span class="st">'wb'</span>).write(r.content)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install plotnine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introduction-sur-le-clustering" class="level2">
 <h2 class="anchored" data-anchor-id="introduction-sur-le-clustering">Introduction sur le <em>clustering</em></h2>
@@ -749,24 +929,25 @@ avec <span class="math inline">\(\mu_i\)</span> la moyenne des <span class="math
 utiliser <code>Scikit</code>. Voici néanmoins une proposition
 d’imports de packages, pour gagner du temps.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans <span class="co">#pour kmeans</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns <span class="co">#pour scatterplots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans <span class="co">#pour kmeans</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns <span class="co">#pour scatterplots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
 <h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 1 : Principe des k-means</h3>
 <ol type="1">
-<li><p>Importer les données et se restreindre aux variables <code>'Unemployment_rate_2019', 'Median_Household_Income_2019', 'Percent of adults with less than a high school diploma, 2015-19', "Percent of adults with a bachelor's degree or higher, 2015-19"</code> et bien sûr <code>'per_gop'</code>. Appelez cette base restreinte <code>df2</code> et enlevez les valeurs manquantes.</p></li>
-<li><p>Faire un <em>k-means</em> avec <span class="math inline">\(k=4\)</span>.</p></li>
-<li><p>Créer une variable <code>label</code> dans <code>votes</code> stockant le résultat de la typologie</p></li>
-<li><p>Afficher cette typologie sur une carte.</p></li>
-<li><p>Choisir les variables <code>Median_Household_Incomme_2019</code> et <code>Unemployment_rate_2019</code> et représenter le nuage de points en colorant différemment
-en fonction du label obtenu.</p></li>
-<li><p>Représenter la distribution du vote pour chaque <em>cluster</em></p></li>
+<li>Importer les données et se restreindre aux variables <code>'Unemployment_rate_2019', 'Median_Household_Income_2019', 'Percent of adults with less than a high school diploma, 2015-19', "Percent of adults with a bachelor's degree or higher, 2015-19"</code> et bien sûr <code>'per_gop'</code>. Appelez cette base restreinte <code>df2</code> et enlevez les valeurs manquantes.</li>
+<li>Faire un <em>k-means</em> avec <span class="math inline">\(k=4\)</span>.</li>
+<li>Créer une variable <code>label</code> dans <code>votes</code> stockant le résultat de la typologie</li>
+<li>Afficher cette typologie sur une carte.</li>
+<li>Choisir les variables <code>Median_Household_Incomme_2019</code> et <code>Unemployment_rate_2019</code> et représenter le nuage de points en colorant différemment
+en fonction du label obtenu. Quel est le problème ?</li>
+<li>Refaire les questions 2 à 5 en standardisant les variables en amont</li>
+<li>Représenter la distribution du vote pour chaque <em>cluster</em></li>
 </ol>
 </div>
 </div>
@@ -786,22 +967,76 @@ la suivante :</p>
 la relation entre <code>Median_Household_Income_2019</code>
 et <code>Unemployment_rate_2019</code>, aura l’aspect suivant :</p>
 <div class="cell" data-execution_count="11">
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="5_clustering_files/figure-html/cell-12-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="5_clustering_files/figure-html/cell-12-output-1.png" width="597" height="431" class="figure-img"></a></p>
+<p><a href="5_clustering_files/figure-html/cell-12-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="5_clustering_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<p>La classification apparaît un peu trop nettement dans cette figure.
+Cela suggère que la variable de revenu (<code>Median_Household_Income_2019</code>)
+explique un peu trop bien le partitionnement produit par notre
+modèle pour que ce soit normal. C’est probablement le fait
+de la variance forte du revenu par rapport aux autres variables.
+Dans ce type de sitution, comme cela a été évoqué, il est
+recommandé de standardiser les variables.</p>
+<div class="cell" data-execution_count="13">
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/mamba/lib/python3.9/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+/opt/mamba/lib/python3.9/site-packages/geopandas/plotting.py:730: FutureWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, CategoricalDtype) instead</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="5_clustering_files/figure-html/cell-14-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="5_clustering_files/figure-html/cell-14-output-2.png" width="672" height="480" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Enfin, l’histogramme des votes pour chaque cluster est :</p>
+<p>On obtient ainsi la carte suivante à la question 5:</p>
 <div class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="5_clustering_files/figure-html/cell-15-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="5_clustering_files/figure-html/cell-15-output-1.png" width="534" height="468" class="figure-img"></a></p>
+<p><a href="5_clustering_files/figure-html/cell-15-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="5_clustering_files/figure-html/cell-15-output-1.png" width="672" height="480" class="figure-img"></a></p>
 </figure>
 </div>
+</div>
+</div>
+<p>Et le nuage de point de la question 5 présente un aspect moins
+déterministe, ce qui est préférable :</p>
+<div class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="5_clustering_files/figure-html/cell-16-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="5_clustering_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+</div>
+</div>
+<p>Enfin, en ce qui concerne la question 6, on obtient cet
+histogramme des votes pour chaque cluster :</p>
+<div class="cell" data-execution_count="17">
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/mamba/lib/python3.9/site-packages/plotnine/stats/stat_bin.py:109: PlotnineWarning: 'stat_bin()' using 'bins = 31'. Pick better value with 'binwidth'.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="5_clustering_files/figure-html/cell-18-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="5_clustering_files/figure-html/cell-18-output-2.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
 </div>
 </div>
 <div class="cell markdown">
@@ -860,15 +1095,15 @@ où <code>m_intra_cluster</code> est la moyenne des distances de l’observation
 et <code>m_nearest_cluster</code> est la moyenne des distances de l’observation aux observations du cluster le plus proche.</p>
 <p>Le package <code>yellowbrick</code> fournit une extension utile à <code>scikit</code> pour représenter
 facilement la performance en <em>clustering</em>.</p>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> KElbowVisualizer</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>visualizer <span class="op">=</span> KElbowVisualizer(model, k<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">12</span>))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>visualizer.fit(df2[xvars])        <span class="co"># Fit the data to the visualizer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> KElbowVisualizer</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>visualizer <span class="op">=</span> KElbowVisualizer(model, k<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">12</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>visualizer.fit(df2[xvars])        <span class="co"># Fit the data to the visualizer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="16">
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell" data-execution_count="19">
+<div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>&lt;Axes: title={'center': 'Distortion Score Elbow for KMeans Clustering'}, xlabel='k', ylabel='distortion score'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -877,7 +1112,7 @@ facilement la performance en <em>clustering</em>.</p>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="elbow-yellowbrick.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="elbow-yellowbrick.png" class="img-fluid figure-img"></a></p>
+<p><a href="elbow-yellowbrick.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="elbow-yellowbrick.png" class="img-fluid figure-img"></a></p>
 </figure>
 </div>
 <p>Pour la méthode du coude, la courbe
@@ -885,29 +1120,29 @@ de performance du modèle marque un coude léger à <span class="math inline">\(
 semblait donc approprié.</p>
 <p><code>yellowbrick</code> permet également de représenter des silhouettes mais
 l’interprétation est moins aisée et le coût computationnel plus élevé :</p>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> SilhouetteVisualizer</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">8</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>j<span class="op">=</span><span class="dv">0</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">10</span>]:</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    j <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Create KMeans instance for different number of clusters</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    km <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>i, init<span class="op">=</span><span class="st">'k-means++'</span>, n_init<span class="op">=</span><span class="dv">10</span>, max_iter<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    q, mod <span class="op">=</span> <span class="bu">divmod</span>(j, <span class="dv">2</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Create SilhouetteVisualizer instance with KMeans instance</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Fit the visualizer</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    visualizer <span class="op">=</span> SilhouetteVisualizer(km, colors<span class="op">=</span><span class="st">'yellowbrick'</span>, ax<span class="op">=</span>ax[q<span class="op">-</span><span class="dv">1</span>][mod])</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    ax[q<span class="op">-</span><span class="dv">1</span>][mod].set_title(<span class="st">"k = "</span> <span class="op">+</span> <span class="bu">str</span>(i))</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    visualizer.fit(df2[xvars])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> SilhouetteVisualizer</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">8</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>j<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">10</span>]:</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    j <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Create KMeans instance for different number of clusters</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    km <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>i, init<span class="op">=</span><span class="st">'k-means++'</span>, n_init<span class="op">=</span><span class="dv">10</span>, max_iter<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    q, mod <span class="op">=</span> <span class="bu">divmod</span>(j, <span class="dv">2</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Create SilhouetteVisualizer instance with KMeans instance</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Fit the visualizer</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    visualizer <span class="op">=</span> SilhouetteVisualizer(km, colors<span class="op">=</span><span class="st">'yellowbrick'</span>, ax<span class="op">=</span>ax[q<span class="op">-</span><span class="dv">1</span>][mod])</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    ax[q<span class="op">-</span><span class="dv">1</span>][mod].set_title(<span class="st">"k = "</span> <span class="op">+</span> <span class="bu">str</span>(i))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    visualizer.fit(df2[xvars])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="silhouette-yellowbrick.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="silhouette-yellowbrick.png" class="img-fluid figure-img"></a></p>
+<p><a href="silhouette-yellowbrick.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="silhouette-yellowbrick.png" class="img-fluid figure-img"></a></p>
 </figure>
 </div>
 <p>Le score de silhouette offre une représentation plus riche que la courbe coudée.</p>
@@ -1004,14 +1239,17 @@ En effet, la combinaison linéaire des colonnes donnant naissance à nos nouveau
 <section id="pour-la-réduction-de-dimension" class="level3">
 <h3 class="anchored" data-anchor-id="pour-la-réduction-de-dimension">Pour la réduction de dimension</h3>
 <p>L’ACP est également très utile dans le champ de la réduction du nombre de variables pour de nombreux types de modélisations, comme par exemple les régressions linéaires.
-Il est ainsi possible de projeter l’espace des variables explicatives dans un espace de dimension donnée plus faible, pour notamment limiter les risques d’overfitting.</p>
+Il est ainsi possible de projeter l’espace des variables explicatives dans un espace de dimension donnée plus faible, pour notamment limiter les risques d’<em>overfitting</em>.</p>
+</section>
+</section>
+<section id="références" class="level2 unnumbered">
+
 
 
 
 </section>
-</section>
 
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">Références</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-geron2022hands" class="csl-entry" role="listitem">
 Géron, Aurélien. 2022. <em>Hands-on Machine Learning with Scikit-Learn, Keras, and TensorFlow</em>. " O’Reilly Media, Inc.".
 </div>
@@ -1026,6 +1264,17 @@ Géron, Aurélien. 2022. <em>Hands-on Machine Learning with Scikit-Learn, Keras,
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-galiana2023" class="csl-entry quarto-appendix-citeas" role="listitem">
 Galiana, Lino. 2023. <em>Python Pour La Data Science</em>. <a href="https://doi.org/10.5281/zenodo.8229676">https://doi.org/10.5281/zenodo.8229676</a>.
 </div></div></section></div></main> <!-- /main -->
+<script type="ojs-module-contents">
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"path = window.location.pathname.replace(\".html\", \".qmd\");\nhtml`${printBadges({fpath: path})}`\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"function reminderBadges({\n    sourceFile = \"content/01_toto.Rmd\",\n    type = ['md', 'html'],\n    split = null,\n    onyxiaOnly = false,\n    sspCloudService = \"python\",\n    GPU = false,\n    correction = false\n} = {}) {\n    if (Array.isArray(type)) {\n        type = type[0];\n    }\n\n    let notebook = sourceFile.replace(/(.Rmd|.qmd)/, \".ipynb\");\n    if (correction) {\n        notebook = notebook.replace(/content/, \"corrections\");\n    } else {\n        notebook = notebook.replace(/content/, \"notebooks\");\n    }\n\n    const githubRepoNotebooksSimplified = \"github/linogaliana/python-datascientist-notebooks\";\n    const githubAlias = githubRepoNotebooksSimplified.replace(\"github\", \"github.com\");\n    const githubRepoNotebooks = `https://${githubAlias}`;\n\n    let githubLink, nbviewerLink;\n\n    if (notebook === \"\") {\n        githubLink = githubRepoNotebooks;\n        nbviewerLink = `https://nbviewer.jupyter.org/${githubRepoNotebooksSimplified}/tree/main`;\n    } else {\n        githubLink = `${githubRepoNotebooks}/blob/main`;\n        nbviewerLink = `https://nbviewer.jupyter.org/${githubRepoNotebooksSimplified}/blob/main/${notebook}`;\n    }\n\n    const notebookRelPath = `/${notebook}`;\n    const [section, chapter] = notebook.split(\"/\").slice(-2);\n\n    let downloadLink;\n    if (type === \"md\") {\n        downloadLink = `[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=${githubLink}${notebookRelPath})`;\n    } else {\n        downloadLink = `<a href=\"https://downgit.github.io/#/home?url=${githubLink}${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter\" alt=\"Download\"></a>`;\n    }\n\n    githubLink = `<a href=\"${githubLink}${notebookRelPath}\" class=\"github\"><i class=\"fab fa-github\"></i></a>`;\n\n    let visualizeLink;\n    if (type === \"md\") {\n        visualizeLink = `[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](${nbviewerLink})`;\n    } else {\n        visualizeLink = `<a href=\"${nbviewerLink}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter\" alt=\"nbviewer\"></a>`;\n    }\n\n    const sectionLatest = section.split(\"/\").slice(-1)[0];\n    const chapterNoExtension = chapter.replace(\".ipynb\", \"\");\n    const onyxiaInitArgs = [sectionLatest, chapterNoExtension];\n\n    if (correction) {\n        onyxiaInitArgs.push(\"correction\");\n    }\n\n    const gpuSuffix = GPU ? \"-gpu\" : \"\";\n\n    const sspcloudJupyterLinkLauncher = `https://datalab.sspcloud.fr/launcher/ide/jupyter-${sspCloudService}${gpuSuffix}?autoLaunch=true&onyxia.friendlyName=%C2%AB${chapterNoExtension}%C2%BB&init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&init.personalInitArgs=%C2%AB${onyxiaInitArgs.join('%20')}%C2%BB&security.allowlist.enabled=false`;\n\n    let sspcloudJupyterLink;\n    if (type === \"md\") {\n        sspcloudJupyterLink = `[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&logoColor=orange)](${sspcloudJupyterLinkLauncher})`;\n    } else {\n        sspcloudJupyterLink = `<a href=\"${sspcloudJupyterLinkLauncher}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&logoColor=orange\" alt=\"Onyxia\"></a>`;\n    }\n\n    if (split === 4) {\n        sspcloudJupyterLink += '<br>';\n    }\n\n    const sspcloudVscodeLinkLauncher = `https://datalab.sspcloud.fr/launcher/ide/vscode-${sspCloudService}${gpuSuffix}?autoLaunch=true&onyxia.friendlyName=%C2%AB${chapterNoExtension}%C2%BB&init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&init.personalInitArgs=%C2%AB${onyxiaInitArgs.join('%20')}%C2%BB&security.allowlist.enabled=false`;\n\n    let sspcloudVscodeLink;\n    if (type === \"md\") {\n        sspcloudVscodeLink = `[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&logoColor=blue)](${sspcloudVscodeLinkLauncher})`;\n    } else {\n        sspcloudVscodeLink = `<a href=\"${sspcloudVscodeLinkLauncher}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&logoColor=blue\" alt=\"Onyxia\"></a>`;\n    }\n\n    if (split === 5) {\n        sspcloudVscodeLink += '<br>';\n    }\n\n    let colabLink;\n    if (type === \"md\") {\n        colabLink = `[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/${githubRepoNotebooksSimplified}/blob/main${notebookRelPath})`;\n    } else {\n        colabLink = `<a href=\"https://colab.research.google.com/${githubRepoNotebooksSimplified}/blob/main${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"></a>`;\n    }\n\n    if (split === 7) {\n        colabLink += '<br>';\n    }\n\n    let vscodeLink;\n    if (type === \"md\") {\n        vscodeLink = `[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual Studio Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks${notebookRelPath})`;\n    } else {\n        vscodeLink = `<a href=\"https://github.dev/linogaliana/python-datascientist-notebooks${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc\" alt=\"githubdev\"></a></p>`;\n    }\n\n    const badges = [\n        githubLink, downloadLink,\n        visualizeLink, sspcloudJupyterLink,\n        sspcloudVscodeLink\n    ];\n\n    if (!onyxiaOnly) {\n        badges.push(colabLink, vscodeLink);\n    }\n\n    let result = badges.join(\"\\n\");\n\n    if (type === \"html\") {\n        result = `<p class=\"badges\">${result}</p>`;\n    }\n\n    if (onyxiaOnly) {\n        result = `${sspcloudJupyterLink}${sspcloudVscodeLink}`;\n    }\n\n    return result;\n}\n\n\nfunction printBadges({\n    fpath,\n    onyxiaOnly = false,\n    split = 5,\n    type = \"html\",\n    sspCloudService = \"python\",\n    GPU = false,\n    correction = false\n} = {}) {\n    const badges = reminderBadges({\n        sourceFile: fpath,\n        type: type,\n        split: split,\n        onyxiaOnly: onyxiaOnly,\n        sspCloudService: sspCloudService,\n        GPU: GPU,\n        correction: correction\n    });\n\n    return badges\n}\n\n// Example usage:\n// printBadges({ fpath: \"content/getting-started/05_rappels_types.qmd\", onyxiaOnly: false, split: 5, type: \"html\", sspCloudService: \"python\", GPU: false, correction: false });\n"}]}
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../content/modelisation";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "../..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1287,7 +1536,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 <a href="https://github.com/linogaliana/python-datascientist">Code source disponible sur <i class="fa-brands fa-github" aria-label="github"></i> <code>GitHub</code></a></div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom","loop":true,"selector":".lightbox"});</script>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom","loop":true});</script>
 
 
 
