@@ -536,7 +536,8 @@ des word embeddings (plongements de mots).">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#nettoyage-des-données" id="toc-nettoyage-des-données" class="nav-link active" data-scroll-target="#nettoyage-des-données">Nettoyage des données</a>
+  <li><a href="#packages-à-installer" id="toc-packages-à-installer" class="nav-link active" data-scroll-target="#packages-à-installer">Packages à installer</a></li>
+  <li><a href="#nettoyage-des-données" id="toc-nettoyage-des-données" class="nav-link" data-scroll-target="#nettoyage-des-données">Nettoyage des données</a>
   <ul class="collapse">
   <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link" data-scroll-target="#preprocessing">Preprocessing</a></li>
   <li><a href="#encodage-de-la-variable-à-prédire" id="toc-encodage-de-la-variable-à-prédire" class="nav-link" data-scroll-target="#encodage-de-la-variable-à-prédire">Encodage de la variable à prédire</a></li>
@@ -587,7 +588,7 @@ des word embeddings (plongements de mots).">
 <p></p>
 </div>
 <p>Cette page approfondit certains aspects présentés dans la
-<a href="#nlp">partie introductive</a>. Après avoir travaillé sur le
+<a href="../../content/NLP/02_exoclean.html">partie introductive</a>. Après avoir travaillé sur le
 <em>Comte de Monte Cristo</em>, on va continuer notre exploration de la littérature
 avec cette fois des auteurs anglophones :</p>
 <ul>
@@ -595,38 +596,28 @@ avec cette fois des auteurs anglophones :</p>
 <li>HP Lovecraft (HPL) ;</li>
 <li>Mary Wollstonecraft Shelley (MWS).</li>
 </ul>
-<p>Les données sont disponibles ici : <a href="https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/blob/master/data/spooky.csv">spooky.csv</a> et peuvent être requétées via l’url
+<p>Les données sont disponibles sur un CSV mis à disposition sur <a href="https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/blob/master/data/spooky.csv"><code>Github</code></a>. L’URL pour les récupérer directement est
 <a href="https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv" class="uri">https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv</a>.</p>
 <p>Le but va être dans un premier temps de regarder dans le détail les termes les plus fréquents utilisés par les auteurs et de les représenter graphiquement, puis on va ensuite essayer de prédire quel texte correspond à quel auteur à partir de différents modèles de vectorisation, notamment les <em>word embeddings</em>.</p>
-<p>Ce notebook est librement inspiré de :</p>
+<p>Ce chapitre s’inspire de plusieurs ressources disponibles en ligne:</p>
 <ul>
-<li>https://www.kaggle.com/enerrio/scary-nlp-with-spacy-and-keras</li>
-<li>https://github.com/GU4243-ADS/spring2018-project1-ginnyqg</li>
-<li>https://www.kaggle.com/meiyizi/spooky-nlp-and-topic-modelling-tutorial/notebook</li>
+<li>Un <a href="https://www.kaggle.com/enerrio/scary-nlp-with-spacy-and-keras">premier <em>notebook</em> sur <code>Kaggle</code></a>
+et un <a href="https://www.kaggle.com/meiyizi/spooky-nlp-and-topic-modelling-tutorial/notebook">deuxième</a> ;</li>
+<li>Un <a href="https://github.com/GU4243-ADS/spring2018-project1-ginnyqg">dépôt <code>Github</code></a> ;</li>
 </ul>
-<div class="callout callout-style-default callout-warning callout-titled" title="Packages à installer">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Packages à installer
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Comme dans la <a href="#nlp">partie précédente</a>, il faut télécharger des librairies
+<section id="packages-à-installer" class="level2">
+<h2 class="anchored" data-anchor-id="packages-à-installer">Packages à installer</h2>
+<p>Comme dans la <a href="../../content/NLP/02_exoclean.html">partie précédente</a>, il faut télécharger des librairies
 spécialiséees pour le NLP, ainsi que certaines de leurs dépendances.</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install spacy gensim sentence_transformers pandas matplotlib seaborn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ensuite, comme nous allons utiliser la librairie <code>spaCy</code> avec un corpus de textes
+<p>Ensuite, comme nous allons utiliser la librairie <code>SpaCy</code> avec un corpus de textes
 en Anglais, il convient de télécharger le modèle NLP pour l’Anglais. Pour cela,
-on peut se référer à <a href="https://spacy.io/usage/models">la documentation de <code>spacy</code></a>,
+on peut se référer à <a href="https://spacy.io/usage/models">la documentation de <code>SpaCy</code></a>,
 extrêmement bien faite.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download en_core_web_sm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
 </div>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
@@ -649,6 +640,7 @@ extrêmement bien faite.</p>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 <section id="nettoyage-des-données" class="level2">
 <h2 class="anchored" data-anchor-id="nettoyage-des-données">Nettoyage des données</h2>
 <p>Nous allons ainsi à nouveau utiliser le jeu de données <code>spooky</code> :</p>
@@ -1446,7 +1438,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 <a href="https://github.com/linogaliana/python-datascientist">Code source disponible sur <i class="fa-brands fa-github" aria-label="github"></i> <code>GitHub</code></a></div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":true,"openEffect":"zoom"});</script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":true});</script>
 
 
 
