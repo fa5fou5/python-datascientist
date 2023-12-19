@@ -1965,7 +1965,7 @@ Name: count, dtype: int64[pyarrow]</code></pre>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[:,<span class="st">"Type local"</span>].value_counts().compute()</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>3.488004207611084 seconds</code></pre>
+<pre><code>3.560560464859009 seconds</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="10">
@@ -1973,7 +1973,7 @@ Name: count, dtype: int64[pyarrow]</code></pre>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dvf.loc[:,<span class="st">"Type local"</span>].value_counts()</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.12879180908203125 seconds</code></pre>
+<pre><code>0.13317155838012695 seconds</code></pre>
 </div>
 </div>
 <p>On se rend compte que le <code>pandas.DataFrame</code> a un temps de calcul plus court, mais c’est parce que <code>dask</code> va nous servir avant tout à lire des bases dont le traitement excède notre RAM. Donc, cette comparaison n’existera tout simplement pas car le <code>pandas.DataFrame</code> n’aura pas été chargé en RAM. <strong>On voit dans cet exemple que lorsque le traitement du <code>DataFrame</code> tient en RAM, l’utilisation de <code>Dask</code> est inutile</strong>.</p>
@@ -2121,7 +2121,7 @@ les calculs.</p>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dvf_dd.head()</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.34511375427246094 seconds</code></pre>
+<pre><code>0.3441457748413086 seconds</code></pre>
 </div>
 </div>
 <p>On a bien un temps plus important avec le <code>dask.DataFrame</code> initial, comparé avec celui sur lequel on a utilisé <code>persist</code>. L’opération qu’on réalise ici étant peu complexe, la différence n’est pas substantielle. Elle serait beaucoup plus marquée avec un jeu de données plus volumineux ou des étapes intensives en calcul.</p>
@@ -2157,7 +2157,7 @@ manière suivante :</p>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>car3</span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(time.time() <span class="op">-</span> start_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.0024266242980957</code></pre>
+<pre><code>2.0024220943450928</code></pre>
 </div>
 </div>
 <p>Avec le décorateur <code>dask.delayed</code>, on définit
@@ -2191,7 +2191,7 @@ nos fonctions de la manière suivante :</p>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>car3.compute()</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(time.time() <span class="op">-</span> start_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.0020852088928223</code></pre>
+<pre><code>1.0023560523986816</code></pre>
 </div>
 </div>
 <p>Ici l’intérêt est assez limité, mais on voit que l’on réduit quand même de 2 à 1 seconde le temps de calcul. Mais l’idée derrière est que l’on a transformé <code>car3</code> en un objet <code>Delayed</code>. Cela a généré un <code>task graph</code> permettant de paralléliser certaines opérations.</p>
@@ -3695,16 +3695,170 @@ Description
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/linogaliana/python-datascientist/commit/e52cc8a">e52cc8a</a>
+<a href="https://github.com/linogaliana/python-datascientist/commit/3fba612">3fba612</a>
 </td>
 <td>
-2023-12-19 21:40:01
+2023-12-17 18:16:42
 </td>
 <td>
 Lino Galiana
 </td>
 <td>
-Automatic black formatting for python examples (#477)
+Remove some badges from python (#476)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/4cd44f3">4cd44f3</a>
+</td>
+<td>
+2023-12-11 17:37:50
+</td>
+<td>
+Antoine Palazzolo
+</td>
+<td>
+Relecture NLP (#474)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/1f23de2">1f23de2</a>
+</td>
+<td>
+2023-12-01 17:25:36
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Stockage des images sur S3 (#466)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/a771183">a771183</a>
+</td>
+<td>
+2023-10-09 11:27:45
+</td>
+<td>
+Antoine Palazzolo
+</td>
+<td>
+Relecture TD2 par Antoine (#418)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/154f09e">154f09e</a>
+</td>
+<td>
+2023-09-26 14:59:11
+</td>
+<td>
+Antoine Palazzolo
+</td>
+<td>
+Des typos corrigées par Antoine (#411)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/9a4e226">9a4e226</a>
+</td>
+<td>
+2023-08-28 17:11:52
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Action to check URL still exist (#399)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/3bdf3b0">3bdf3b0</a>
+</td>
+<td>
+2023-08-25 11:23:02
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Simplification de la structure 🤓 (#393)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/130ed71">130ed71</a>
+</td>
+<td>
+2023-07-18 19:37:11
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Restructure les titres (#374)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/f21a24d">f21a24d</a>
+</td>
+<td>
+2023-07-02 10:58:15
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Pipeline Quarto &amp; Pages 🚀 (#365)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/3c880d5">3c880d5</a>
+</td>
+<td>
+2022-12-27 17:34:59
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Chapitre regex + Change les boites dans plusieurs chapitres (#339)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/3a85970">3a85970</a>
+</td>
+<td>
+2022-09-03 18:10:08
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+change weight dask tutorial
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/8e5edba">8e5edba</a>
+</td>
+<td>
+2022-09-02 11:59:57
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Ajoute un chapitre dask (#264)
 </td>
 </tr>
 </tbody>
@@ -4142,7 +4296,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 <a href="https://github.com/linogaliana/python-datascientist">Code source disponible sur <i class="fa-brands fa-github" aria-label="github"></i> <code>GitHub</code></a></div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","loop":true,"descPosition":"bottom"});</script>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":true,"closeEffect":"zoom","openEffect":"zoom"});</script>
 
 
 
