@@ -541,6 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#recherche" id="toc-recherche" class="nav-link" data-scroll-target="#recherche">Recherche</a>
   <ul class="collapse">
   <li><a href="#premier-exemple-de-requête-géographique" id="toc-premier-exemple-de-requête-géographique" class="nav-link" data-scroll-target="#premier-exemple-de-requête-géographique">Premier exemple de requête géographique</a></li>
+  <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/modern-ds/elastic_approfondissement.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -560,8 +561,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Pour essayer les exemples présents dans ce tutoriel :</p>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="1" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">replace</span>(<span class="st">".html"</span><span class="op">,</span> <span class="st">".qmd"</span>)<span class="op">;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path})<span class="sc">}</span><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="662" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 661;"><span id="cb1-662"><a href="#cb1-662" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">replace</span>(<span class="st">".html"</span><span class="op">,</span> <span class="st">".qmd"</span>)<span class="op">;</span></span>
+<span id="cb1-663"><a href="#cb1-663" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path})<span class="sc">}</span><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -578,158 +579,158 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="1" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink<span class="op">,</span> nbviewerLink<span class="op">;</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/tree/main`</span><span class="op">;</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> downloadLink<span class="op">;</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`&lt;a href="https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter" alt="Download"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> visualizeLink<span class="op">;</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter" alt="nbviewer"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
-<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span> downloadLink<span class="op">,</span></span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>        visualizeLink<span class="op">,</span> sspcloudJupyterLink<span class="op">,</span></span>
-<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink</span>
-<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
-<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
-<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink<span class="op">,</span> vscodeLink)<span class="op">;</span></span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
-<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
-<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
-<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
-<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
-<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
-<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
-<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
-<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
-<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
-<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
-<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
-<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
-<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
-<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="667" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 666;"><span id="cb2-667"><a href="#cb2-667" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb2-668"><a href="#cb2-668" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
+<span id="cb2-669"><a href="#cb2-669" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
+<span id="cb2-670"><a href="#cb2-670" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb2-671"><a href="#cb2-671" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-672"><a href="#cb2-672" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb2-673"><a href="#cb2-673" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-674"><a href="#cb2-674" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-675"><a href="#cb2-675" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb2-676"><a href="#cb2-676" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
+<span id="cb2-677"><a href="#cb2-677" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-678"><a href="#cb2-678" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-679"><a href="#cb2-679" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-680"><a href="#cb2-680" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
+<span id="cb2-681"><a href="#cb2-681" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb2-682"><a href="#cb2-682" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
+<span id="cb2-683"><a href="#cb2-683" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-684"><a href="#cb2-684" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
+<span id="cb2-685"><a href="#cb2-685" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-686"><a href="#cb2-686" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-687"><a href="#cb2-687" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
+<span id="cb2-688"><a href="#cb2-688" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
+<span id="cb2-689"><a href="#cb2-689" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-690"><a href="#cb2-690" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-691"><a href="#cb2-691" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink<span class="op">,</span> nbviewerLink<span class="op">;</span></span>
+<span id="cb2-692"><a href="#cb2-692" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-693"><a href="#cb2-693" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
+<span id="cb2-694"><a href="#cb2-694" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
+<span id="cb2-695"><a href="#cb2-695" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/tree/main`</span><span class="op">;</span></span>
+<span id="cb2-696"><a href="#cb2-696" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-697"><a href="#cb2-697" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
+<span id="cb2-698"><a href="#cb2-698" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-699"><a href="#cb2-699" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-700"><a href="#cb2-700" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-701"><a href="#cb2-701" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-702"><a href="#cb2-702" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb2-703"><a href="#cb2-703" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-704"><a href="#cb2-704" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> downloadLink<span class="op">;</span></span>
+<span id="cb2-705"><a href="#cb2-705" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-706"><a href="#cb2-706" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-707"><a href="#cb2-707" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-708"><a href="#cb2-708" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`&lt;a href="https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter" alt="Download"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-709"><a href="#cb2-709" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-710"><a href="#cb2-710" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-711"><a href="#cb2-711" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-712"><a href="#cb2-712" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-713"><a href="#cb2-713" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> visualizeLink<span class="op">;</span></span>
+<span id="cb2-714"><a href="#cb2-714" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-715"><a href="#cb2-715" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-716"><a href="#cb2-716" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-717"><a href="#cb2-717" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter" alt="nbviewer"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-718"><a href="#cb2-718" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-719"><a href="#cb2-719" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-720"><a href="#cb2-720" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-721"><a href="#cb2-721" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
+<span id="cb2-722"><a href="#cb2-722" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
+<span id="cb2-723"><a href="#cb2-723" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-724"><a href="#cb2-724" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb2-725"><a href="#cb2-725" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
+<span id="cb2-726"><a href="#cb2-726" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-727"><a href="#cb2-727" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-728"><a href="#cb2-728" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb2-729"><a href="#cb2-729" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-730"><a href="#cb2-730" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb2-731"><a href="#cb2-731" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-732"><a href="#cb2-732" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
+<span id="cb2-733"><a href="#cb2-733" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-734"><a href="#cb2-734" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-735"><a href="#cb2-735" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-736"><a href="#cb2-736" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-737"><a href="#cb2-737" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-738"><a href="#cb2-738" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-739"><a href="#cb2-739" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
+<span id="cb2-740"><a href="#cb2-740" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-741"><a href="#cb2-741" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-742"><a href="#cb2-742" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-743"><a href="#cb2-743" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb2-744"><a href="#cb2-744" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-745"><a href="#cb2-745" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
+<span id="cb2-746"><a href="#cb2-746" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-747"><a href="#cb2-747" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-748"><a href="#cb2-748" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-749"><a href="#cb2-749" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-750"><a href="#cb2-750" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-751"><a href="#cb2-751" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-752"><a href="#cb2-752" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
+<span id="cb2-753"><a href="#cb2-753" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-754"><a href="#cb2-754" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-755"><a href="#cb2-755" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-756"><a href="#cb2-756" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
+<span id="cb2-757"><a href="#cb2-757" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-758"><a href="#cb2-758" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-759"><a href="#cb2-759" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-760"><a href="#cb2-760" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-761"><a href="#cb2-761" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-762"><a href="#cb2-762" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-763"><a href="#cb2-763" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
+<span id="cb2-764"><a href="#cb2-764" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-765"><a href="#cb2-765" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-766"><a href="#cb2-766" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-767"><a href="#cb2-767" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
+<span id="cb2-768"><a href="#cb2-768" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-769"><a href="#cb2-769" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-770"><a href="#cb2-770" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-771"><a href="#cb2-771" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb2-772"><a href="#cb2-772" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-773"><a href="#cb2-773" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-774"><a href="#cb2-774" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
+<span id="cb2-775"><a href="#cb2-775" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span> downloadLink<span class="op">,</span></span>
+<span id="cb2-776"><a href="#cb2-776" aria-hidden="true" tabindex="-1"></a>        visualizeLink<span class="op">,</span> sspcloudJupyterLink<span class="op">,</span></span>
+<span id="cb2-777"><a href="#cb2-777" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink</span>
+<span id="cb2-778"><a href="#cb2-778" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
+<span id="cb2-779"><a href="#cb2-779" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-780"><a href="#cb2-780" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
+<span id="cb2-781"><a href="#cb2-781" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink<span class="op">,</span> vscodeLink)<span class="op">;</span></span>
+<span id="cb2-782"><a href="#cb2-782" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-783"><a href="#cb2-783" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-784"><a href="#cb2-784" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
+<span id="cb2-785"><a href="#cb2-785" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-786"><a href="#cb2-786" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
+<span id="cb2-787"><a href="#cb2-787" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb2-788"><a href="#cb2-788" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-789"><a href="#cb2-789" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-790"><a href="#cb2-790" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
+<span id="cb2-791"><a href="#cb2-791" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-792"><a href="#cb2-792" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-793"><a href="#cb2-793" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-794"><a href="#cb2-794" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
+<span id="cb2-795"><a href="#cb2-795" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-796"><a href="#cb2-796" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-797"><a href="#cb2-797" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-798"><a href="#cb2-798" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
+<span id="cb2-799"><a href="#cb2-799" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
+<span id="cb2-800"><a href="#cb2-800" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-801"><a href="#cb2-801" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
+<span id="cb2-802"><a href="#cb2-802" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
+<span id="cb2-803"><a href="#cb2-803" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb2-804"><a href="#cb2-804" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-805"><a href="#cb2-805" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-806"><a href="#cb2-806" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb2-807"><a href="#cb2-807" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb2-808"><a href="#cb2-808" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
+<span id="cb2-809"><a href="#cb2-809" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
+<span id="cb2-810"><a href="#cb2-810" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
+<span id="cb2-811"><a href="#cb2-811" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
+<span id="cb2-812"><a href="#cb2-812" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
+<span id="cb2-813"><a href="#cb2-813" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
+<span id="cb2-814"><a href="#cb2-814" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
+<span id="cb2-815"><a href="#cb2-815" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb2-816"><a href="#cb2-816" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-817"><a href="#cb2-817" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
+<span id="cb2-818"><a href="#cb2-818" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -1233,6 +1234,1642 @@ dans les dix meilleurs échos.</p>
 <span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="st">}'''</span></span>
 <span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="informations-additionnelles" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informations-additionnelles">Informations additionnelles</h2>
+<details>
+<summary>
+<p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
+</summary>
+<p>Latest built version: 2023-12-19</p>
+<p>Python version used:</p>
+<div class="cell" data-execution_count="25">
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>'3.9.18 | packaged by conda-forge | (main, Aug 30 2023, 03:49:32) \n[GCC 12.3.0]'</code></pre>
+</div>
+</div>
+<div class="pip-freeze">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Package</th>
+<th style="text-align: left;">Version</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">absl-py</td>
+<td style="text-align: left;">2.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">affine</td>
+<td style="text-align: left;">2.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">aiobotocore</td>
+<td style="text-align: left;">2.5.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">aiohttp</td>
+<td style="text-align: left;">3.8.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">aioitertools</td>
+<td style="text-align: left;">0.11.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">aiosignal</td>
+<td style="text-align: left;">1.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">annotated-types</td>
+<td style="text-align: left;">0.5.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ansi2html</td>
+<td style="text-align: left;">1.8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">anyio</td>
+<td style="text-align: left;">4.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">appdirs</td>
+<td style="text-align: left;">1.4.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">argon2-cffi</td>
+<td style="text-align: left;">23.1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">argon2-cffi-bindings</td>
+<td style="text-align: left;">21.2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">arrow</td>
+<td style="text-align: left;">1.2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">astroid</td>
+<td style="text-align: left;">2.12.10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">asttokens</td>
+<td style="text-align: left;">2.0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">astunparse</td>
+<td style="text-align: left;">1.6.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">async-lru</td>
+<td style="text-align: left;">2.0.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">async-timeout</td>
+<td style="text-align: left;">4.0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">attrs</td>
+<td style="text-align: left;">23.1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Babel</td>
+<td style="text-align: left;">2.12.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">backcall</td>
+<td style="text-align: left;">0.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">backports.functools-lru-cache</td>
+<td style="text-align: left;">1.6.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">beautifulsoup4</td>
+<td style="text-align: left;">4.12.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bleach</td>
+<td style="text-align: left;">6.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">blinker</td>
+<td style="text-align: left;">1.6.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">blis</td>
+<td style="text-align: left;">0.7.11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bokeh</td>
+<td style="text-align: left;">3.2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">boto3</td>
+<td style="text-align: left;">1.24.93</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">botocore</td>
+<td style="text-align: left;">1.31.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">branca</td>
+<td style="text-align: left;">0.6.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brotli</td>
+<td style="text-align: left;">1.1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brotlipy</td>
+<td style="text-align: left;">0.7.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cached-property</td>
+<td style="text-align: left;">1.5.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cachetools</td>
+<td style="text-align: left;">5.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cartiflette</td>
+<td style="text-align: left;">0.0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cartopy</td>
+<td style="text-align: left;">0.22.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">catalogue</td>
+<td style="text-align: left;">2.0.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">certifi</td>
+<td style="text-align: left;">2022.9.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cffi</td>
+<td style="text-align: left;">1.15.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">charset-normalizer</td>
+<td style="text-align: left;">2.1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">chromedriver-autoinstaller</td>
+<td style="text-align: left;">0.6.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">click</td>
+<td style="text-align: left;">8.1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">click-plugins</td>
+<td style="text-align: left;">1.1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cligj</td>
+<td style="text-align: left;">0.7.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cloudpickle</td>
+<td style="text-align: left;">2.2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cmake</td>
+<td style="text-align: left;">3.27.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">colorama</td>
+<td style="text-align: left;">0.4.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">conda</td>
+<td style="text-align: left;">22.9.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">conda-package-handling</td>
+<td style="text-align: left;">1.9.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">confection</td>
+<td style="text-align: left;">0.1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">contextily</td>
+<td style="text-align: left;">1.3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">contourpy</td>
+<td style="text-align: left;">1.1.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cryptography</td>
+<td style="text-align: left;">41.0.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cycler</td>
+<td style="text-align: left;">0.11.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cymem</td>
+<td style="text-align: left;">2.0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cytoolz</td>
+<td style="text-align: left;">0.12.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dash</td>
+<td style="text-align: left;">2.13.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dash-core-components</td>
+<td style="text-align: left;">2.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dash-html-components</td>
+<td style="text-align: left;">2.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dash-table</td>
+<td style="text-align: left;">5.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dask</td>
+<td style="text-align: left;">2023.9.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">debugpy</td>
+<td style="text-align: left;">1.6.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">decorator</td>
+<td style="text-align: left;">5.1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">defusedxml</td>
+<td style="text-align: left;">0.7.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">descartes</td>
+<td style="text-align: left;">1.1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dill</td>
+<td style="text-align: left;">0.3.5.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">distributed</td>
+<td style="text-align: left;">2023.9.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">duckdb</td>
+<td style="text-align: left;">0.9.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">elastic-transport</td>
+<td style="text-align: left;">8.4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">elasticsearch</td>
+<td style="text-align: left;">8.10.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">en-core-web-sm</td>
+<td style="text-align: left;">3.6.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">entrypoints</td>
+<td style="text-align: left;">0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">et-xmlfile</td>
+<td style="text-align: left;">1.1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">exceptiongroup</td>
+<td style="text-align: left;">1.1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">executing</td>
+<td style="text-align: left;">1.1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fastjsonschema</td>
+<td style="text-align: left;">2.16.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fasttext</td>
+<td style="text-align: left;">0.9.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">filelock</td>
+<td style="text-align: left;">3.12.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fiona</td>
+<td style="text-align: left;">1.9.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Flask</td>
+<td style="text-align: left;">2.2.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">flatbuffers</td>
+<td style="text-align: left;">23.5.26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">folium</td>
+<td style="text-align: left;">0.14.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fontawesomefree</td>
+<td style="text-align: left;">6.4.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fonttools</td>
+<td style="text-align: left;">4.42.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fqdn</td>
+<td style="text-align: left;">1.5.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fr-core-news-sm</td>
+<td style="text-align: left;">3.6.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">frozenlist</td>
+<td style="text-align: left;">1.4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fsspec</td>
+<td style="text-align: left;">2023.9.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">funcy</td>
+<td style="text-align: left;">2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gast</td>
+<td style="text-align: left;">0.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GDAL</td>
+<td style="text-align: left;">3.7.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gensim</td>
+<td style="text-align: left;">4.3.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">geographiclib</td>
+<td style="text-align: left;">1.52</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">geopandas</td>
+<td style="text-align: left;">0.12.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">geoplot</td>
+<td style="text-align: left;">0.5.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">geopy</td>
+<td style="text-align: left;">2.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gmpy2</td>
+<td style="text-align: left;">2.1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">google-auth</td>
+<td style="text-align: left;">2.23.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">google-auth-oauthlib</td>
+<td style="text-align: left;">0.4.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">google-pasta</td>
+<td style="text-align: left;">0.2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">graphviz</td>
+<td style="text-align: left;">0.20.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">greenlet</td>
+<td style="text-align: left;">2.0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">grpcio</td>
+<td style="text-align: left;">1.51.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h11</td>
+<td style="text-align: left;">0.14.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">h5py</td>
+<td style="text-align: left;">3.9.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">huggingface-hub</td>
+<td style="text-align: left;">0.17.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hvac</td>
+<td style="text-align: left;">0.11.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idna</td>
+<td style="text-align: left;">3.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">imageio</td>
+<td style="text-align: left;">2.31.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">importlib-metadata</td>
+<td style="text-align: left;">6.8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">importlib-resources</td>
+<td style="text-align: left;">5.10.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">inflate64</td>
+<td style="text-align: left;">0.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ipykernel</td>
+<td style="text-align: left;">6.16.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ipython</td>
+<td style="text-align: left;">8.5.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ipython-genutils</td>
+<td style="text-align: left;">0.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ipywidgets</td>
+<td style="text-align: left;">8.0.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">isoduration</td>
+<td style="text-align: left;">20.11.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">isort</td>
+<td style="text-align: left;">5.10.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">itsdangerous</td>
+<td style="text-align: left;">2.1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jedi</td>
+<td style="text-align: left;">0.18.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jinja2</td>
+<td style="text-align: left;">3.1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jmespath</td>
+<td style="text-align: left;">1.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">joblib</td>
+<td style="text-align: left;">1.3.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">json5</td>
+<td style="text-align: left;">0.9.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jsonpointer</td>
+<td style="text-align: left;">2.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jsonschema</td>
+<td style="text-align: left;">4.19.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jsonschema-specifications</td>
+<td style="text-align: left;">2023.7.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyter</td>
+<td style="text-align: left;">1.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupyter-cache</td>
+<td style="text-align: left;">0.6.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyter_client</td>
+<td style="text-align: left;">8.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupyter-console</td>
+<td style="text-align: left;">6.6.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyter_core</td>
+<td style="text-align: left;">5.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupyter-events</td>
+<td style="text-align: left;">0.7.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyter-lsp</td>
+<td style="text-align: left;">2.2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupyter_server</td>
+<td style="text-align: left;">2.7.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyter_server_terminals</td>
+<td style="text-align: left;">0.4.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupyterlab</td>
+<td style="text-align: left;">4.0.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyterlab-pygments</td>
+<td style="text-align: left;">0.2.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupyterlab_server</td>
+<td style="text-align: left;">2.25.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">jupyterlab-widgets</td>
+<td style="text-align: left;">3.0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">jupytext</td>
+<td style="text-align: left;">1.15.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kaleido</td>
+<td style="text-align: left;">0.2.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">keras</td>
+<td style="text-align: left;">2.11.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Keras-Preprocessing</td>
+<td style="text-align: left;">1.1.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">kiwisolver</td>
+<td style="text-align: left;">1.4.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">langcodes</td>
+<td style="text-align: left;">3.3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lazy_loader</td>
+<td style="text-align: left;">0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lazy-object-proxy</td>
+<td style="text-align: left;">1.7.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Levenshtein</td>
+<td style="text-align: left;">0.21.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">libmambapy</td>
+<td style="text-align: left;">1.5.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lit</td>
+<td style="text-align: left;">16.0.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">locket</td>
+<td style="text-align: left;">1.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lxml</td>
+<td style="text-align: left;">4.9.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lz4</td>
+<td style="text-align: left;">4.3.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mamba</td>
+<td style="text-align: left;">1.5.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mapclassify</td>
+<td style="text-align: left;">2.5.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Markdown</td>
+<td style="text-align: left;">3.4.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">markdown-it-py</td>
+<td style="text-align: left;">3.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MarkupSafe</td>
+<td style="text-align: left;">2.1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">matplotlib</td>
+<td style="text-align: left;">3.8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">matplotlib-inline</td>
+<td style="text-align: left;">0.1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mccabe</td>
+<td style="text-align: left;">0.7.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mdit-py-plugins</td>
+<td style="text-align: left;">0.4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mdurl</td>
+<td style="text-align: left;">0.1.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mercantile</td>
+<td style="text-align: left;">1.2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mistune</td>
+<td style="text-align: left;">3.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mizani</td>
+<td style="text-align: left;">0.9.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mpmath</td>
+<td style="text-align: left;">1.3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">msgpack</td>
+<td style="text-align: left;">1.0.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">multidict</td>
+<td style="text-align: left;">6.0.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">multivolumefile</td>
+<td style="text-align: left;">0.2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">munch</td>
+<td style="text-align: left;">4.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">munkres</td>
+<td style="text-align: left;">1.1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">murmurhash</td>
+<td style="text-align: left;">1.0.10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nbclient</td>
+<td style="text-align: left;">0.7.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nbconvert</td>
+<td style="text-align: left;">7.8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nbformat</td>
+<td style="text-align: left;">5.7.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nest-asyncio</td>
+<td style="text-align: left;">1.5.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">networkx</td>
+<td style="text-align: left;">3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nltk</td>
+<td style="text-align: left;">3.8.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">notebook</td>
+<td style="text-align: left;">7.0.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">notebook_shim</td>
+<td style="text-align: left;">0.2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numexpr</td>
+<td style="text-align: left;">2.8.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">1.26.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nvidia-cublas-cu11</td>
+<td style="text-align: left;">11.10.3.66</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nvidia-cuda-cupti-cu11</td>
+<td style="text-align: left;">11.7.101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nvidia-cuda-nvrtc-cu11</td>
+<td style="text-align: left;">11.7.99</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nvidia-cuda-runtime-cu11</td>
+<td style="text-align: left;">11.7.99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nvidia-cudnn-cu11</td>
+<td style="text-align: left;">8.5.0.96</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nvidia-cufft-cu11</td>
+<td style="text-align: left;">10.9.0.58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nvidia-curand-cu11</td>
+<td style="text-align: left;">10.2.10.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nvidia-cusolver-cu11</td>
+<td style="text-align: left;">11.4.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nvidia-cusparse-cu11</td>
+<td style="text-align: left;">11.7.4.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nvidia-nccl-cu11</td>
+<td style="text-align: left;">2.14.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nvidia-nvtx-cu11</td>
+<td style="text-align: left;">11.7.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">oauthlib</td>
+<td style="text-align: left;">3.2.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">openpyxl</td>
+<td style="text-align: left;">3.1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">opt-einsum</td>
+<td style="text-align: left;">3.3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">outcome</td>
+<td style="text-align: left;">1.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">overrides</td>
+<td style="text-align: left;">7.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OWSLib</td>
+<td style="text-align: left;">0.28.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">packaging</td>
+<td style="text-align: left;">23.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pandas</td>
+<td style="text-align: left;">2.1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pandocfilters</td>
+<td style="text-align: left;">1.5.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">parso</td>
+<td style="text-align: left;">0.8.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">partd</td>
+<td style="text-align: left;">1.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pathy</td>
+<td style="text-align: left;">0.10.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">patsy</td>
+<td style="text-align: left;">0.5.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pexpect</td>
+<td style="text-align: left;">4.8.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pickleshare</td>
+<td style="text-align: left;">0.7.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pillow</td>
+<td style="text-align: left;">10.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pip</td>
+<td style="text-align: left;">23.2.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pkgutil_resolve_name</td>
+<td style="text-align: left;">1.3.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">platformdirs</td>
+<td style="text-align: left;">2.5.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">plotly</td>
+<td style="text-align: left;">5.17.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">plotnine</td>
+<td style="text-align: left;">0.12.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">preshed</td>
+<td style="text-align: left;">3.0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">prometheus-client</td>
+<td style="text-align: left;">0.17.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">prompt-toolkit</td>
+<td style="text-align: left;">3.0.31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">protobuf</td>
+<td style="text-align: left;">4.21.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">psutil</td>
+<td style="text-align: left;">5.9.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ptyprocess</td>
+<td style="text-align: left;">0.7.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pure-eval</td>
+<td style="text-align: left;">0.2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">py7zr</td>
+<td style="text-align: left;">0.20.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyarrow</td>
+<td style="text-align: left;">13.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pyasn1</td>
+<td style="text-align: left;">0.5.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyasn1-modules</td>
+<td style="text-align: left;">0.3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pybcj</td>
+<td style="text-align: left;">1.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pybind11</td>
+<td style="text-align: left;">2.11.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pycosat</td>
+<td style="text-align: left;">0.6.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pycparser</td>
+<td style="text-align: left;">2.21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pycryptodomex</td>
+<td style="text-align: left;">3.19.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pydantic</td>
+<td style="text-align: left;">2.3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pydantic_core</td>
+<td style="text-align: left;">2.6.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pygeos</td>
+<td style="text-align: left;">0.14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pygments</td>
+<td style="text-align: left;">2.13.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PyJWT</td>
+<td style="text-align: left;">2.8.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pyLDAvis</td>
+<td style="text-align: left;">3.4.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pylint</td>
+<td style="text-align: left;">2.15.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pynsee</td>
+<td style="text-align: left;">0.1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyOpenSSL</td>
+<td style="text-align: left;">23.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pyparsing</td>
+<td style="text-align: left;">3.0.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyppmd</td>
+<td style="text-align: left;">1.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pyproj</td>
+<td style="text-align: left;">3.6.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyrsistent</td>
+<td style="text-align: left;">0.18.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pyshp</td>
+<td style="text-align: left;">2.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PySocks</td>
+<td style="text-align: left;">1.7.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">python-dateutil</td>
+<td style="text-align: left;">2.8.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">python-dotenv</td>
+<td style="text-align: left;">1.0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">python-json-logger</td>
+<td style="text-align: left;">2.0.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">python-Levenshtein</td>
+<td style="text-align: left;">0.21.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pytz</td>
+<td style="text-align: left;">2022.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyu2f</td>
+<td style="text-align: left;">0.1.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pywaffle</td>
+<td style="text-align: left;">1.1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PyWavelets</td>
+<td style="text-align: left;">1.4.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PyYAML</td>
+<td style="text-align: left;">6.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pyzmq</td>
+<td style="text-align: left;">24.0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pyzstd</td>
+<td style="text-align: left;">0.15.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">qtconsole</td>
+<td style="text-align: left;">5.4.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">QtPy</td>
+<td style="text-align: left;">2.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rapidfuzz</td>
+<td style="text-align: left;">3.3.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rasterio</td>
+<td style="text-align: left;">1.3.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">referencing</td>
+<td style="text-align: left;">0.30.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regex</td>
+<td style="text-align: left;">2023.8.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">requests</td>
+<td style="text-align: left;">2.31.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">requests-oauthlib</td>
+<td style="text-align: left;">1.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">retrying</td>
+<td style="text-align: left;">1.3.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rfc3339-validator</td>
+<td style="text-align: left;">0.1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rfc3986-validator</td>
+<td style="text-align: left;">0.1.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rpds-py</td>
+<td style="text-align: left;">0.10.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rsa</td>
+<td style="text-align: left;">4.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rtree</td>
+<td style="text-align: left;">1.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ruamel-yaml-conda</td>
+<td style="text-align: left;">0.15.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">s3fs</td>
+<td style="text-align: left;">2023.9.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">s3transfer</td>
+<td style="text-align: left;">0.6.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">safetensors</td>
+<td style="text-align: left;">0.3.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">scikit-image</td>
+<td style="text-align: left;">0.21.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">scikit-learn</td>
+<td style="text-align: left;">1.3.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">scipy</td>
+<td style="text-align: left;">1.11.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">seaborn</td>
+<td style="text-align: left;">0.12.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">selenium</td>
+<td style="text-align: left;">4.12.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Send2Trash</td>
+<td style="text-align: left;">1.8.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sentence-transformers</td>
+<td style="text-align: left;">2.2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sentencepiece</td>
+<td style="text-align: left;">0.1.99</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">setuptools</td>
+<td style="text-align: left;">65.5.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">shapely</td>
+<td style="text-align: left;">2.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">six</td>
+<td style="text-align: left;">1.16.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">smart-open</td>
+<td style="text-align: left;">6.4.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sniffio</td>
+<td style="text-align: left;">1.3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">snuggs</td>
+<td style="text-align: left;">1.4.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sortedcontainers</td>
+<td style="text-align: left;">2.4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">soupsieve</td>
+<td style="text-align: left;">2.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">spacy</td>
+<td style="text-align: left;">3.6.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">spacy-legacy</td>
+<td style="text-align: left;">3.0.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">spacy-loggers</td>
+<td style="text-align: left;">1.0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SQLAlchemy</td>
+<td style="text-align: left;">2.0.21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">srsly</td>
+<td style="text-align: left;">2.4.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stack-data</td>
+<td style="text-align: left;">0.5.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">statsmodels</td>
+<td style="text-align: left;">0.14.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sympy</td>
+<td style="text-align: left;">1.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tabulate</td>
+<td style="text-align: left;">0.9.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tblib</td>
+<td style="text-align: left;">2.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tenacity</td>
+<td style="text-align: left;">8.2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tensorboard</td>
+<td style="text-align: left;">2.11.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tensorboard-data-server</td>
+<td style="text-align: left;">0.6.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tensorboard-plugin-wit</td>
+<td style="text-align: left;">1.8.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tensorflow</td>
+<td style="text-align: left;">2.11.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tensorflow-estimator</td>
+<td style="text-align: left;">2.11.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">termcolor</td>
+<td style="text-align: left;">2.3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">terminado</td>
+<td style="text-align: left;">0.17.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">texttable</td>
+<td style="text-align: left;">1.6.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thinc</td>
+<td style="text-align: left;">8.1.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">threadpoolctl</td>
+<td style="text-align: left;">3.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tifffile</td>
+<td style="text-align: left;">2023.9.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tinycss2</td>
+<td style="text-align: left;">1.2.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tokenizers</td>
+<td style="text-align: left;">0.13.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">toml</td>
+<td style="text-align: left;">0.10.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tomli</td>
+<td style="text-align: left;">2.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tomlkit</td>
+<td style="text-align: left;">0.11.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">toolz</td>
+<td style="text-align: left;">0.12.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">topojson</td>
+<td style="text-align: left;">1.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">torch</td>
+<td style="text-align: left;">2.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">torchvision</td>
+<td style="text-align: left;">0.15.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tornado</td>
+<td style="text-align: left;">6.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tqdm</td>
+<td style="text-align: left;">4.66.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">traitlets</td>
+<td style="text-align: left;">5.10.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">transformers</td>
+<td style="text-align: left;">4.33.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">trio</td>
+<td style="text-align: left;">0.22.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">trio-websocket</td>
+<td style="text-align: left;">0.10.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">triton</td>
+<td style="text-align: left;">2.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">typer</td>
+<td style="text-align: left;">0.9.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">typing_extensions</td>
+<td style="text-align: left;">4.8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tzdata</td>
+<td style="text-align: left;">2023.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">unicodedata2</td>
+<td style="text-align: left;">15.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unidecode</td>
+<td style="text-align: left;">1.3.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">uri-template</td>
+<td style="text-align: left;">1.3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">urllib3</td>
+<td style="text-align: left;">1.26.11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wasabi</td>
+<td style="text-align: left;">1.1.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wcwidth</td>
+<td style="text-align: left;">0.2.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">webcolors</td>
+<td style="text-align: left;">1.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">webdriver-manager</td>
+<td style="text-align: left;">4.0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">webencodings</td>
+<td style="text-align: left;">0.5.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">websocket-client</td>
+<td style="text-align: left;">1.6.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Werkzeug</td>
+<td style="text-align: left;">2.2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wheel</td>
+<td style="text-align: left;">0.37.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">widgetsnbextension</td>
+<td style="text-align: left;">4.0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wordcloud</td>
+<td style="text-align: left;">1.9.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wrapt</td>
+<td style="text-align: left;">1.14.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wsproto</td>
+<td style="text-align: left;">1.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">xlrd</td>
+<td style="text-align: left;">2.0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">xyzservices</td>
+<td style="text-align: left;">2023.7.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">yarl</td>
+<td style="text-align: left;">1.9.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">yellowbrick</td>
+<td style="text-align: left;">1.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">zict</td>
+<td style="text-align: left;">3.0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">zipp</td>
+<td style="text-align: left;">3.9.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div></details>
+<details>
+<summary>
+<p>View file history <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></p>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb30" data-startfrom="676" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 675;"><span id="cb30-676"><a href="#cb30-676" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb31" data-startfrom="696" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 695;"><span id="cb31-696"><a href="#cb31-696" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+
+<table class="commit-table" border="1">
+<thead>
+<tr>
+<th>
+SHA
+</th>
+<th>
+Date
+</th>
+<th>
+Author
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/e52cc8a">e52cc8a</a>
+</td>
+<td>
+2023-12-19 21:40:01
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Automatic black formatting for python examples (#477)
+</td>
+</tr>
+</tbody>
+
+</table>
+</details>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb32" data-startfrom="712" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 711;"><span id="cb32-712"><a href="#cb32-712" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
+<span id="cb32-713"><a href="#cb32-713" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
+<span id="cb32-714"><a href="#cb32-714" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb32-715"><a href="#cb32-715" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
+<span id="cb32-716"><a href="#cb32-716" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
+<span id="cb32-717"><a href="#cb32-717" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb32-718"><a href="#cb32-718" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
+<span id="cb32-719"><a href="#cb32-719" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
+<span id="cb32-720"><a href="#cb32-720" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
+<span id="cb32-721"><a href="#cb32-721" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
+<span id="cb32-722"><a href="#cb32-722" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
+<span id="cb32-723"><a href="#cb32-723" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
+<span id="cb32-724"><a href="#cb32-724" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb32-725"><a href="#cb32-725" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-726"><a href="#cb32-726" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb33" data-startfrom="726" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 725;"><span id="cb33-726"><a href="#cb33-726" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb33-727"><a href="#cb33-727" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb33-728"><a href="#cb33-728" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
+<span id="cb33-729"><a href="#cb33-729" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb33-730"><a href="#cb33-730" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
+<span id="cb33-731"><a href="#cb33-731" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
+<span id="cb33-732"><a href="#cb33-732" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
+<span id="cb33-733"><a href="#cb33-733" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb33-734"><a href="#cb33-734" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb34" data-startfrom="730" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 729;"><span id="cb34-730"><a href="#cb34-730" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
+<span id="cb34-731"><a href="#cb34-731" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
+<span id="cb34-732"><a href="#cb34-732" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
+<span id="cb34-733"><a href="#cb34-733" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-734"><a href="#cb34-734" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
+<span id="cb34-735"><a href="#cb34-735" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
+<span id="cb34-736"><a href="#cb34-736" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-737"><a href="#cb34-737" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
+<span id="cb34-738"><a href="#cb34-738" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb35" data-startfrom="770" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 769;"><span id="cb35-770"><a href="#cb35-770" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb36" data-startfrom="786" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 785;"><span id="cb36-786"><a href="#cb36-786" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
+<span id="cb36-787"><a href="#cb36-787" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-788"><a href="#cb36-788" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
+<span id="cb36-789"><a href="#cb36-789" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
+<span id="cb36-790"><a href="#cb36-790" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-791"><a href="#cb36-791" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
+<span id="cb36-792"><a href="#cb36-792" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
+<span id="cb36-793"><a href="#cb36-793" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
+<span id="cb36-794"><a href="#cb36-794" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb36-795"><a href="#cb36-795" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-796"><a href="#cb36-796" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
+<span id="cb36-797"><a href="#cb36-797" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb36-798"><a href="#cb36-798" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb36-799"><a href="#cb36-799" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
+<span id="cb36-800"><a href="#cb36-800" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-801"><a href="#cb36-801" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-802"><a href="#cb36-802" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
+<span id="cb36-803"><a href="#cb36-803" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb36-804"><a href="#cb36-804" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
+<span id="cb36-805"><a href="#cb36-805" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb36-806"><a href="#cb36-806" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-807"><a href="#cb36-807" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
+<span id="cb36-808"><a href="#cb36-808" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb36-809"><a href="#cb36-809" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
+<span id="cb36-810"><a href="#cb36-810" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
+<span id="cb36-811"><a href="#cb36-811" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb36-812"><a href="#cb36-812" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-813"><a href="#cb36-813" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
+<span id="cb36-814"><a href="#cb36-814" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
+<span id="cb36-815"><a href="#cb36-815" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-816"><a href="#cb36-816" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-817"><a href="#cb36-817" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-818"><a href="#cb36-818" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
+<span id="cb36-819"><a href="#cb36-819" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-820"><a href="#cb36-820" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb37" data-startfrom="1" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the element with class 'git-details'</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> gitDetails <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.git-details'</span>)<span class="op">;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check if the element exists</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (gitDetails) {</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Hide the element</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>      gitDetails<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">display</span> <span class="op">=</span> <span class="st">'none'</span><span class="op">;</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-10" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb38" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb38-0"><a href="#cb38-0" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="pp">require</span>(<span class="st">'@observablehq/plot@0.6.12/dist/plot.umd.min.js'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-11" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
 
 
 </section>
@@ -1274,8 +2911,9 @@ des recherches.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩�
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-galiana2023" class="csl-entry quarto-appendix-citeas" role="listitem">
 Galiana, Lino. 2023. <em>Python Pour La Data Science</em>. <a href="https://doi.org/10.5281/zenodo.8229676">https://doi.org/10.5281/zenodo.8229676</a>.
 </div></div></section></div></main> <!-- /main -->
+
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"path = window.location.pathname.replace(\".html\", \".qmd\");\nhtml`${printBadges({fpath: path})}`\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"function reminderBadges({\n    sourceFile = \"content/01_toto.Rmd\",\n    type = ['md', 'html'],\n    split = null,\n    onyxiaOnly = false,\n    sspCloudService = \"python\",\n    GPU = false,\n    correction = false\n} = {}) {\n    if (Array.isArray(type)) {\n        type = type[0];\n    }\n\n    let notebook = sourceFile.replace(/(.Rmd|.qmd)/, \".ipynb\");\n    if (correction) {\n        notebook = notebook.replace(/content/, \"corrections\");\n    } else {\n        notebook = notebook.replace(/content/, \"notebooks\");\n    }\n\n    const githubRepoNotebooksSimplified = \"github/linogaliana/python-datascientist-notebooks\";\n    const githubAlias = githubRepoNotebooksSimplified.replace(\"github\", \"github.com\");\n    const githubRepoNotebooks = `https://${githubAlias}`;\n\n    let githubLink, nbviewerLink;\n\n    if (notebook === \"\") {\n        githubLink = githubRepoNotebooks;\n        nbviewerLink = `https://nbviewer.jupyter.org/${githubRepoNotebooksSimplified}/tree/main`;\n    } else {\n        githubLink = `${githubRepoNotebooks}/blob/main`;\n        nbviewerLink = `https://nbviewer.jupyter.org/${githubRepoNotebooksSimplified}/blob/main/${notebook}`;\n    }\n\n    const notebookRelPath = `/${notebook}`;\n    const [section, chapter] = notebook.split(\"/\").slice(-2);\n\n    let downloadLink;\n    if (type === \"md\") {\n        downloadLink = `[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=${githubLink}${notebookRelPath})`;\n    } else {\n        downloadLink = `<a href=\"https://downgit.github.io/#/home?url=${githubLink}${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter\" alt=\"Download\"></a>`;\n    }\n\n    githubLink = `<a href=\"${githubLink}${notebookRelPath}\" class=\"github\"><i class=\"fab fa-github\"></i></a>`;\n\n    let visualizeLink;\n    if (type === \"md\") {\n        visualizeLink = `[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](${nbviewerLink})`;\n    } else {\n        visualizeLink = `<a href=\"${nbviewerLink}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter\" alt=\"nbviewer\"></a>`;\n    }\n\n    const sectionLatest = section.split(\"/\").slice(-1)[0];\n    const chapterNoExtension = chapter.replace(\".ipynb\", \"\");\n    const onyxiaInitArgs = [sectionLatest, chapterNoExtension];\n\n    if (correction) {\n        onyxiaInitArgs.push(\"correction\");\n    }\n\n    const gpuSuffix = GPU ? \"-gpu\" : \"\";\n\n    const sspcloudJupyterLinkLauncher = `https://datalab.sspcloud.fr/launcher/ide/jupyter-${sspCloudService}${gpuSuffix}?autoLaunch=true&onyxia.friendlyName=%C2%AB${chapterNoExtension}%C2%BB&init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&init.personalInitArgs=%C2%AB${onyxiaInitArgs.join('%20')}%C2%BB&security.allowlist.enabled=false`;\n\n    let sspcloudJupyterLink;\n    if (type === \"md\") {\n        sspcloudJupyterLink = `[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&logoColor=orange)](${sspcloudJupyterLinkLauncher})`;\n    } else {\n        sspcloudJupyterLink = `<a href=\"${sspcloudJupyterLinkLauncher}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&logoColor=orange\" alt=\"Onyxia\"></a>`;\n    }\n\n    if (split === 4) {\n        sspcloudJupyterLink += '<br>';\n    }\n\n    const sspcloudVscodeLinkLauncher = `https://datalab.sspcloud.fr/launcher/ide/vscode-${sspCloudService}${gpuSuffix}?autoLaunch=true&onyxia.friendlyName=%C2%AB${chapterNoExtension}%C2%BB&init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&init.personalInitArgs=%C2%AB${onyxiaInitArgs.join('%20')}%C2%BB&security.allowlist.enabled=false`;\n\n    let sspcloudVscodeLink;\n    if (type === \"md\") {\n        sspcloudVscodeLink = `[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&logoColor=blue)](${sspcloudVscodeLinkLauncher})`;\n    } else {\n        sspcloudVscodeLink = `<a href=\"${sspcloudVscodeLinkLauncher}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&logoColor=blue\" alt=\"Onyxia\"></a>`;\n    }\n\n    if (split === 5) {\n        sspcloudVscodeLink += '<br>';\n    }\n\n    let colabLink;\n    if (type === \"md\") {\n        colabLink = `[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/${githubRepoNotebooksSimplified}/blob/main${notebookRelPath})`;\n    } else {\n        colabLink = `<a href=\"https://colab.research.google.com/${githubRepoNotebooksSimplified}/blob/main${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"></a>`;\n    }\n\n    if (split === 7) {\n        colabLink += '<br>';\n    }\n\n    let vscodeLink;\n    if (type === \"md\") {\n        vscodeLink = `[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual Studio Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks${notebookRelPath})`;\n    } else {\n        vscodeLink = `<a href=\"https://github.dev/linogaliana/python-datascientist-notebooks${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc\" alt=\"githubdev\"></a></p>`;\n    }\n\n    const badges = [\n        githubLink, downloadLink,\n        visualizeLink, sspcloudJupyterLink,\n        sspcloudVscodeLink\n    ];\n\n    if (!onyxiaOnly) {\n        badges.push(colabLink, vscodeLink);\n    }\n\n    let result = badges.join(\"\\n\");\n\n    if (type === \"html\") {\n        result = `<p class=\"badges\">${result}</p>`;\n    }\n\n    if (onyxiaOnly) {\n        result = `${sspcloudJupyterLink}${sspcloudVscodeLink}`;\n    }\n\n    return result;\n}\n\n\nfunction printBadges({\n    fpath,\n    onyxiaOnly = false,\n    split = 5,\n    type = \"html\",\n    sspCloudService = \"python\",\n    GPU = false,\n    correction = false\n} = {}) {\n    const badges = reminderBadges({\n        sourceFile: fpath,\n        type: type,\n        split: split,\n        onyxiaOnly: onyxiaOnly,\n        sspCloudService: sspCloudService,\n        GPU: GPU,\n        correction: correction\n    });\n\n    return badges\n}\n\n// Example usage:\n// printBadges({ fpath: \"content/getting-started/05_rappels_types.qmd\", onyxiaOnly: false, split: 5, type: \"html\", sspCloudService: \"python\", GPU: false, correction: false });\n"}]}
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"path = window.location.pathname.replace(\".html\", \".qmd\");\nhtml`${printBadges({fpath: path})}`\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"function reminderBadges({\n    sourceFile = \"content/01_toto.Rmd\",\n    type = ['md', 'html'],\n    split = null,\n    onyxiaOnly = false,\n    sspCloudService = \"python\",\n    GPU = false,\n    correction = false\n} = {}) {\n    if (Array.isArray(type)) {\n        type = type[0];\n    }\n\n    let notebook = sourceFile.replace(/(.Rmd|.qmd)/, \".ipynb\");\n    if (correction) {\n        notebook = notebook.replace(/content/, \"corrections\");\n    } else {\n        notebook = notebook.replace(/content/, \"notebooks\");\n    }\n\n    const githubRepoNotebooksSimplified = \"github/linogaliana/python-datascientist-notebooks\";\n    const githubAlias = githubRepoNotebooksSimplified.replace(\"github\", \"github.com\");\n    const githubRepoNotebooks = `https://${githubAlias}`;\n\n    let githubLink, nbviewerLink;\n\n    if (notebook === \"\") {\n        githubLink = githubRepoNotebooks;\n        nbviewerLink = `https://nbviewer.jupyter.org/${githubRepoNotebooksSimplified}/tree/main`;\n    } else {\n        githubLink = `${githubRepoNotebooks}/blob/main`;\n        nbviewerLink = `https://nbviewer.jupyter.org/${githubRepoNotebooksSimplified}/blob/main/${notebook}`;\n    }\n\n    const notebookRelPath = `/${notebook}`;\n    const [section, chapter] = notebook.split(\"/\").slice(-2);\n\n    let downloadLink;\n    if (type === \"md\") {\n        downloadLink = `[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=${githubLink}${notebookRelPath})`;\n    } else {\n        downloadLink = `<a href=\"https://downgit.github.io/#/home?url=${githubLink}${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter\" alt=\"Download\"></a>`;\n    }\n\n    githubLink = `<a href=\"${githubLink}${notebookRelPath}\" class=\"github\"><i class=\"fab fa-github\"></i></a>`;\n\n    let visualizeLink;\n    if (type === \"md\") {\n        visualizeLink = `[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](${nbviewerLink})`;\n    } else {\n        visualizeLink = `<a href=\"${nbviewerLink}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter\" alt=\"nbviewer\"></a>`;\n    }\n\n    const sectionLatest = section.split(\"/\").slice(-1)[0];\n    const chapterNoExtension = chapter.replace(\".ipynb\", \"\");\n    const onyxiaInitArgs = [sectionLatest, chapterNoExtension];\n\n    if (correction) {\n        onyxiaInitArgs.push(\"correction\");\n    }\n\n    const gpuSuffix = GPU ? \"-gpu\" : \"\";\n\n    const sspcloudJupyterLinkLauncher = `https://datalab.sspcloud.fr/launcher/ide/jupyter-${sspCloudService}${gpuSuffix}?autoLaunch=true&onyxia.friendlyName=%C2%AB${chapterNoExtension}%C2%BB&init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&init.personalInitArgs=%C2%AB${onyxiaInitArgs.join('%20')}%C2%BB&security.allowlist.enabled=false`;\n\n    let sspcloudJupyterLink;\n    if (type === \"md\") {\n        sspcloudJupyterLink = `[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&logoColor=orange)](${sspcloudJupyterLinkLauncher})`;\n    } else {\n        sspcloudJupyterLink = `<a href=\"${sspcloudJupyterLinkLauncher}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&logoColor=orange\" alt=\"Onyxia\"></a>`;\n    }\n\n    if (split === 4) {\n        sspcloudJupyterLink += '<br>';\n    }\n\n    const sspcloudVscodeLinkLauncher = `https://datalab.sspcloud.fr/launcher/ide/vscode-${sspCloudService}${gpuSuffix}?autoLaunch=true&onyxia.friendlyName=%C2%AB${chapterNoExtension}%C2%BB&init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&init.personalInitArgs=%C2%AB${onyxiaInitArgs.join('%20')}%C2%BB&security.allowlist.enabled=false`;\n\n    let sspcloudVscodeLink;\n    if (type === \"md\") {\n        sspcloudVscodeLink = `[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&logoColor=blue)](${sspcloudVscodeLinkLauncher})`;\n    } else {\n        sspcloudVscodeLink = `<a href=\"${sspcloudVscodeLinkLauncher}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&logoColor=blue\" alt=\"Onyxia\"></a>`;\n    }\n\n    if (split === 5) {\n        sspcloudVscodeLink += '<br>';\n    }\n\n    let colabLink;\n    if (type === \"md\") {\n        colabLink = `[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/${githubRepoNotebooksSimplified}/blob/main${notebookRelPath})`;\n    } else {\n        colabLink = `<a href=\"https://colab.research.google.com/${githubRepoNotebooksSimplified}/blob/main${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"></a>`;\n    }\n\n    if (split === 7) {\n        colabLink += '<br>';\n    }\n\n    let vscodeLink;\n    if (type === \"md\") {\n        vscodeLink = `[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual Studio Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks${notebookRelPath})`;\n    } else {\n        vscodeLink = `<a href=\"https://github.dev/linogaliana/python-datascientist-notebooks${notebookRelPath}\" target=\"_blank\" rel=\"noopener\"><img src=\"https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc\" alt=\"githubdev\"></a></p>`;\n    }\n\n    const badges = [\n        githubLink, downloadLink,\n        visualizeLink, sspcloudJupyterLink,\n        sspcloudVscodeLink\n    ];\n\n    if (!onyxiaOnly) {\n        badges.push(colabLink, vscodeLink);\n    }\n\n    let result = badges.join(\"\\n\");\n\n    if (type === \"html\") {\n        result = `<p class=\"badges\">${result}</p>`;\n    }\n\n    if (onyxiaOnly) {\n        result = `${sspcloudJupyterLink}${sspcloudVscodeLink}`;\n    }\n\n    return result;\n}\n\n\nfunction printBadges({\n    fpath,\n    onyxiaOnly = false,\n    split = 5,\n    type = \"html\",\n    sspCloudService = \"python\",\n    GPU = false,\n    correction = false\n} = {}) {\n    const badges = reminderBadges({\n        sourceFile: fpath,\n        type: type,\n        split: split,\n        onyxiaOnly: onyxiaOnly,\n        sspCloudService: sspCloudService,\n        GPU: GPU,\n        correction: correction\n    });\n\n    return badges\n}\n\n// Example usage:\n// printBadges({ fpath: \"content/getting-started/05_rappels_types.qmd\", onyxiaOnly: false, split: 5, type: \"html\", sspCloudService: \"python\", GPU: false, correction: false });\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"html`<div>${git_history_table}</div>`\n"},{"methodName":"interpret","cellName":"ojs-cell-4","inline":false,"source":"html`<div>${git_history_plot}</div>`\n"},{"methodName":"interpret","cellName":"ojs-cell-5","inline":false,"source":"git_history_table = Inputs.table(\n  table_commit,\n  {\n    format: {\n      SHA: x => md`[${x}](${github_repo}/commit/${x})`,\n      Description: x => md`${replacePullRequestPattern(x, github_repo)}`,\n      /*Date: x => x.toLocaleString(\"fr\", {\n        \"month\": \"numeric\",\n        \"day\": \"numeric\",\n        \"year\": \"numeric\"\n        })\n      */\n    }\n  }\n)\n"},{"methodName":"interpret","cellName":"ojs-cell-6","inline":false,"source":"git_history_plot = Plot.plot({\n  marks: [\n    Plot.ruleY([0], {stroke: \"royalblue\"}),\n    Plot.dot(\n          table_commit,\n          Plot.pointerX({x: (d) => new Date(d.date), y: 0, stroke: \"red\"})),\n    Plot.dot(table_commit, {x: (d) => new Date(d.Date), y: 0, fill: \"royalblue\"})\n  ]\n})\n"},{"methodName":"interpret","cellName":"ojs-cell-7","inline":false,"source":"function replacePullRequestPattern(inputString, githubRepo) {\n    // Use a regular expression to match the pattern #digit\n    var pattern = /#(\\d+)/g;\n\n    // Replace the pattern with ${github_repo}/pull/#digit\n    var replacedString = inputString.replace(pattern, '[#$1](' + githubRepo + '/pull/$1)');\n\n    return replacedString;\n}\n"},{"methodName":"interpret","cellName":"ojs-cell-8","inline":false,"source":"github_repo = \"https://github.com/linogaliana/python-datascientist\"\n"},{"methodName":"interpret","cellName":"ojs-cell-9","inline":false,"source":"table_commit = {\n\n// Get the HTML table by its class name\nvar table = document.querySelector('.commit-table');\n\n// Check if the table exists\nif (table) {\n    // Initialize an array to store the table data\n    var dataArray = [];\n\n    // Extract headers from the first row\n    var headers = [];\n    for (var i = 0; i < table.rows[0].cells.length; i++) {\n        headers.push(table.rows[0].cells[i].textContent.trim());\n    }\n\n    // Iterate through the rows, starting from the second row\n    for (var i = 1; i < table.rows.length; i++) {\n        var row = table.rows[i];\n        var rowData = {};\n\n        // Iterate through the cells in the row\n        for (var j = 0; j < row.cells.length; j++) {\n            // Use headers as keys and cell content as values\n            rowData[headers[j]] = row.cells[j].textContent.trim();\n        }\n\n        // Push the rowData object to the dataArray\n        dataArray.push(rowData);\n    }\n  }\n\n  return dataArray\n\n}\n"},{"methodName":"interpret","cellName":"ojs-cell-10","inline":false,"source":"\n// Get the element with class 'git-details'\n{\n  var gitDetails = document.querySelector('.git-details');\n\n  // Check if the element exists\n  if (gitDetails) {\n      // Hide the element\n      gitDetails.style.display = 'none';\n  }\n}\n"},{"methodName":"interpret","cellName":"ojs-cell-11","inline":false,"source":"Plot = require('@observablehq/plot@0.6.12/dist/plot.umd.min.js')\n"}]}
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
