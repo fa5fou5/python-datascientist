@@ -793,39 +793,39 @@ vaut mieux se contenter de <code>pandas</code>.</p>
 <section id="présentation-du-dask.dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="présentation-du-dask.dataframe">Présentation du <code>Dask.DataFrame</code></h3>
 <p>Nous allons utiliser les <a href="https://www.data.gouv.fr/fr/datasets/demandes-de-valeurs-foncieres/">données immobilières <code>DVF</code></a> pour montrer quelques éléments clefs de <code>Dask</code>.</p>
-<div id="8f357097" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="8f357097"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8f357097-1"><a href="#8f357097-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import dvf files</span></span>
-<span id="8f357097-2"><a href="#8f357097-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="8f357097-3"><a href="#8f357097-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.dataframe <span class="im">as</span> dd</span>
-<span id="8f357097-4"><a href="#8f357097-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8f357097-5"><a href="#8f357097-5" aria-hidden="true" tabindex="-1"></a>d_urls <span class="op">=</span> {</span>
-<span id="8f357097-6"><a href="#8f357097-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2019"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/3004168d-bec4-44d9-a781-ef16f41856a2"</span>,</span>
-<span id="8f357097-7"><a href="#8f357097-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2020"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/90a98de0-f562-4328-aa16-fe0dd1dca60f"</span>,</span>
-<span id="8f357097-8"><a href="#8f357097-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2021"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/817204ac-2202-4b4a-98e7-4184d154d98c"</span>,</span>
-<span id="8f357097-9"><a href="#8f357097-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="8f357097-10"><a href="#8f357097-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8f357097-11"><a href="#8f357097-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8f357097-12"><a href="#8f357097-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> import_dvf_one_year(year, dict_url<span class="op">=</span>d_urls):</span>
-<span id="8f357097-13"><a href="#8f357097-13" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_csv(dict_url[year], sep<span class="op">=</span><span class="st">"|"</span>, decimal<span class="op">=</span><span class="st">","</span>)</span>
-<span id="8f357097-14"><a href="#8f357097-14" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"year"</span>] <span class="op">=</span> year</span>
-<span id="8f357097-15"><a href="#8f357097-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
-<span id="8f357097-16"><a href="#8f357097-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8f357097-17"><a href="#8f357097-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8f357097-18"><a href="#8f357097-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> import_dvf_all_years(dict_url<span class="op">=</span>d_urls):</span>
-<span id="8f357097-19"><a href="#8f357097-19" aria-hidden="true" tabindex="-1"></a>    dfs <span class="op">=</span> [import_dvf_one_year(y, dict_url) <span class="cf">for</span> y <span class="kw">in</span> dict_url.keys()]</span>
-<span id="8f357097-20"><a href="#8f357097-20" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.concat(dfs).reset_index()</span>
-<span id="8f357097-21"><a href="#8f357097-21" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.drop([<span class="st">"level_0"</span>, <span class="st">"level_1"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="8f357097-22"><a href="#8f357097-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e57bb607" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="e57bb607"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e57bb607-1"><a href="#e57bb607-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import dvf files</span></span>
+<span id="e57bb607-2"><a href="#e57bb607-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="e57bb607-3"><a href="#e57bb607-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.dataframe <span class="im">as</span> dd</span>
+<span id="e57bb607-4"><a href="#e57bb607-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e57bb607-5"><a href="#e57bb607-5" aria-hidden="true" tabindex="-1"></a>d_urls <span class="op">=</span> {</span>
+<span id="e57bb607-6"><a href="#e57bb607-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2019"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/3004168d-bec4-44d9-a781-ef16f41856a2"</span>,</span>
+<span id="e57bb607-7"><a href="#e57bb607-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2020"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/90a98de0-f562-4328-aa16-fe0dd1dca60f"</span>,</span>
+<span id="e57bb607-8"><a href="#e57bb607-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2021"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/817204ac-2202-4b4a-98e7-4184d154d98c"</span>,</span>
+<span id="e57bb607-9"><a href="#e57bb607-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="e57bb607-10"><a href="#e57bb607-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e57bb607-11"><a href="#e57bb607-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e57bb607-12"><a href="#e57bb607-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> import_dvf_one_year(year, dict_url<span class="op">=</span>d_urls):</span>
+<span id="e57bb607-13"><a href="#e57bb607-13" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_csv(dict_url[year], sep<span class="op">=</span><span class="st">"|"</span>, decimal<span class="op">=</span><span class="st">","</span>)</span>
+<span id="e57bb607-14"><a href="#e57bb607-14" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"year"</span>] <span class="op">=</span> year</span>
+<span id="e57bb607-15"><a href="#e57bb607-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
+<span id="e57bb607-16"><a href="#e57bb607-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e57bb607-17"><a href="#e57bb607-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e57bb607-18"><a href="#e57bb607-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> import_dvf_all_years(dict_url<span class="op">=</span>d_urls):</span>
+<span id="e57bb607-19"><a href="#e57bb607-19" aria-hidden="true" tabindex="-1"></a>    dfs <span class="op">=</span> [import_dvf_one_year(y, dict_url) <span class="cf">for</span> y <span class="kw">in</span> dict_url.keys()]</span>
+<span id="e57bb607-20"><a href="#e57bb607-20" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.concat(dfs).reset_index()</span>
+<span id="e57bb607-21"><a href="#e57bb607-21" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.drop([<span class="st">"level_0"</span>, <span class="st">"level_1"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="e57bb607-22"><a href="#e57bb607-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans un premier temps, on va utiliser <code>pandas</code> pour
 importer une année de données (millésime 2019), ces dernières tenant en mémoire
 sur un ordinateur normalement doté en RAM<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
-<div id="07d1f3c9" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="07d1f3c9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="07d1f3c9-1"><a href="#07d1f3c9-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="op">=</span> import_dvf_one_year(<span class="st">"2019"</span>)</span>
-<span id="07d1f3c9-2"><a href="#07d1f3c9-2" aria-hidden="true" tabindex="-1"></a>dvf.shape</span>
-<span id="07d1f3c9-3"><a href="#07d1f3c9-3" aria-hidden="true" tabindex="-1"></a>dvf.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ef082d34" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="ef082d34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ef082d34-1"><a href="#ef082d34-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="op">=</span> import_dvf_one_year(<span class="st">"2019"</span>)</span>
+<span id="ef082d34-2"><a href="#ef082d34-2" aria-hidden="true" tabindex="-1"></a>dvf.shape</span>
+<span id="ef082d34-3"><a href="#ef082d34-3" aria-hidden="true" tabindex="-1"></a>dvf.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_4253/455432909.py:13: DtypeWarning:
+<pre><code>/tmp/ipykernel_4255/455432909.py:13: DtypeWarning:
 
 Columns (18,23,24,26,28,41) have mixed types. Specify dtype option on import or set low_memory=False.
 </code></pre>
@@ -1004,9 +1004,9 @@ pour une année (analogue de la fonction <code>import_dvf_one_year</code>) puis 
 </div>
 <p>On peut créer une structure <code>Dask</code> directement à partir
 d’un <code>DataFrame</code> <code>pandas</code> avec la méthode <code>from_pandas</code>.</p>
-<div id="4cad78b2" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="4cad78b2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4cad78b2-1"><a href="#4cad78b2-1" aria-hidden="true" tabindex="-1"></a>dvf_dd <span class="op">=</span> dd.from_pandas(dvf, npartitions<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="4cad78b2-2"><a href="#4cad78b2-2" aria-hidden="true" tabindex="-1"></a>dvf_dd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1973da29" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="1973da29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1973da29-1"><a href="#1973da29-1" aria-hidden="true" tabindex="-1"></a>dvf_dd <span class="op">=</span> dd.from_pandas(dvf, npartitions<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="1973da29-2"><a href="#1973da29-2" aria-hidden="true" tabindex="-1"></a>dvf_dd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 <div><strong>Dask DataFrame Structure:</strong></div>
@@ -1403,8 +1403,8 @@ des bases intermédiaires.</p>
 </div>
 </div>
 <p>On peut accéder aux index que couvrent les partitions de la manière suivante :</p>
-<div id="55eca105" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="55eca105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="55eca105-1"><a href="#55eca105-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.divisions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e23f947e" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="e23f947e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e23f947e-1"><a href="#e23f947e-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.divisions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>(0,
  362713,
@@ -1421,8 +1421,8 @@ des bases intermédiaires.</p>
 </div>
 <p>Autrement dit, la première partition couvrira les lignes 0 à 362713. La deuxième les lignes 362714 à 725426, etc.</p>
 <p>Et on peut directement accéder à une partition grâce aux crochets <code>[]</code>:</p>
-<div id="23025bf3" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="23025bf3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="23025bf3-1"><a href="#23025bf3-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.partitions[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="801c8ced" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="801c8ced"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="801c8ced-1"><a href="#801c8ced-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.partitions[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 <div><strong>Dask DataFrame Structure:</strong></div>
@@ -1634,8 +1634,8 @@ des bases intermédiaires.</p>
 méthode <code>compute</code>.
 A noter que certaines méthodes vont déclencher un <code>compute</code> directement, comme par exemple <code>len</code> ou <code>head</code>.</p>
 <p>Par exemple, pour afficher le contenu des 100 premières lignes :</p>
-<div id="50c51f20" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="50c51f20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="50c51f20-1"><a href="#50c51f20-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[<span class="dv">0</span>:<span class="dv">100</span>, :].compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="831f1916" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="831f1916"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="831f1916-1"><a href="#831f1916-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[<span class="dv">0</span>:<span class="dv">100</span>, :].compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 <div>
@@ -1942,8 +1942,8 @@ A noter que certaines méthodes vont déclencher un <code>compute</code> directe
 </div>
 </div>
 <p>Ce qui est pratique avec <code>dask.dataframe</code> c’est que de nombreuses méthodes sont semblables à celles de <code>pandas</code>. Par exemple, si l’on souhaite connaitre les types de locaux présents dans la base en 2019:</p>
-<div id="fa79fdf9" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="fa79fdf9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fa79fdf9-1"><a href="#fa79fdf9-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[:, <span class="st">"Type local"</span>].value_counts().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d359dda8" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="d359dda8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d359dda8-1"><a href="#d359dda8-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[:, <span class="st">"Type local"</span>].value_counts().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>Type local
 Appartement                                 656819
@@ -1954,35 +1954,35 @@ Name: count, dtype: int64[pyarrow]</code></pre>
 </div>
 </div>
 <p>A titre de comparaison, comparons les temps de calculs entre <code>pandas</code> et <code>dask</code> ici :</p>
-<div id="f61561a4" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="f61561a4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f61561a4-1"><a href="#f61561a4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="f61561a4-2"><a href="#f61561a4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="f61561a4-3"><a href="#f61561a4-3" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
-<span id="f61561a4-4"><a href="#f61561a4-4" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[:, <span class="st">"Type local"</span>].value_counts().compute()</span>
-<span id="f61561a4-5"><a href="#f61561a4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="224110c1" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="224110c1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="224110c1-1"><a href="#224110c1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="224110c1-2"><a href="#224110c1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="224110c1-3"><a href="#224110c1-3" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
+<span id="224110c1-4"><a href="#224110c1-4" aria-hidden="true" tabindex="-1"></a>dvf_dd.loc[:, <span class="st">"Type local"</span>].value_counts().compute()</span>
+<span id="224110c1-5"><a href="#224110c1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>4.405675172805786 seconds</code></pre>
+<pre><code>4.412353515625 seconds</code></pre>
 </div>
 </div>
-<div id="2bf2e420" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="2bf2e420"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2bf2e420-1"><a href="#2bf2e420-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
-<span id="2bf2e420-2"><a href="#2bf2e420-2" aria-hidden="true" tabindex="-1"></a>dvf.loc[:, <span class="st">"Type local"</span>].value_counts()</span>
-<span id="2bf2e420-3"><a href="#2bf2e420-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cee4afa8" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cee4afa8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cee4afa8-1"><a href="#cee4afa8-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
+<span id="cee4afa8-2"><a href="#cee4afa8-2" aria-hidden="true" tabindex="-1"></a>dvf.loc[:, <span class="st">"Type local"</span>].value_counts()</span>
+<span id="cee4afa8-3"><a href="#cee4afa8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.1418759822845459 seconds</code></pre>
+<pre><code>0.1414172649383545 seconds</code></pre>
 </div>
 </div>
 <p>On se rend compte que le <code>pandas.DataFrame</code> a un temps de calcul plus court, mais c’est parce que <code>dask</code> va nous servir avant tout à lire des bases dont le traitement excède notre RAM. Donc, cette comparaison n’existera tout simplement pas car le <code>pandas.DataFrame</code> n’aura pas été chargé en RAM. <strong>On voit dans cet exemple que lorsque le traitement du <code>DataFrame</code> tient en RAM, l’utilisation de <code>Dask</code> est inutile</strong>.</p>
 <p>Les méthodes dans <code>Dask</code> peuvent être chainées, comme dans <code>pandas</code>, par exemple, on pourra écrire:</p>
-<div id="98744ec9" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="98744ec9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="98744ec9-1"><a href="#98744ec9-1" aria-hidden="true" tabindex="-1"></a>mean_by_year <span class="op">=</span> (</span>
-<span id="98744ec9-2"><a href="#98744ec9-2" aria-hidden="true" tabindex="-1"></a>    dvf_dd.loc[<span class="op">~</span>dvf_dd[<span class="st">"Surface terrain"</span>].isna(), [<span class="st">"Surface terrain"</span>, <span class="st">"year"</span>]]</span>
-<span id="98744ec9-3"><a href="#98744ec9-3" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"year"</span>)</span>
-<span id="98744ec9-4"><a href="#98744ec9-4" aria-hidden="true" tabindex="-1"></a>    .mean()</span>
-<span id="98744ec9-5"><a href="#98744ec9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9cec3d49" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="9cec3d49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9cec3d49-1"><a href="#9cec3d49-1" aria-hidden="true" tabindex="-1"></a>mean_by_year <span class="op">=</span> (</span>
+<span id="9cec3d49-2"><a href="#9cec3d49-2" aria-hidden="true" tabindex="-1"></a>    dvf_dd.loc[<span class="op">~</span>dvf_dd[<span class="st">"Surface terrain"</span>].isna(), [<span class="st">"Surface terrain"</span>, <span class="st">"year"</span>]]</span>
+<span id="9cec3d49-3"><a href="#9cec3d49-3" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"year"</span>)</span>
+<span id="9cec3d49-4"><a href="#9cec3d49-4" aria-hidden="true" tabindex="-1"></a>    .mean()</span>
+<span id="9cec3d49-5"><a href="#9cec3d49-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2480f8b5" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="2480f8b5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2480f8b5-1"><a href="#2480f8b5-1" aria-hidden="true" tabindex="-1"></a>mean_by_year.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="68d94c78" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="68d94c78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="68d94c78-1"><a href="#68d94c78-1" aria-hidden="true" tabindex="-1"></a>mean_by_year.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 <div>
@@ -2020,15 +2020,15 @@ désire effectuer beaucoup d’opérations enchaînées, on peut
 vouloir visualiser le <em>graph</em> de computation de <code>dask</code>.
 Avec celui-ci, on voit toutes les étapes que jusqu’ici <code>dask</code> n’a pas <em>executé</em>
 et qu’il va devoir exécuter pour calculer le résultat (<code>compute()</code>).</p>
-<div id="5ca7be6a" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="5ca7be6a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5ca7be6a-1"><a href="#5ca7be6a-1" aria-hidden="true" tabindex="-1"></a>mean_by_year.dask</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="13c2f07d" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="13c2f07d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="13c2f07d-1"><a href="#13c2f07d-1" aria-hidden="true" tabindex="-1"></a>mean_by_year.dask</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>En l’occurence on voit l’enchaînement des étapes
 <code>from_pandas()</code>, <code>getitem</code>, <code>isna</code>, <code>inv</code> et <code>loc-series</code> qui résultent de nos filtres sur le <code>DataFrame</code>. Ensuite,
 on voit les étapes de <code>groupby</code> et, enfin, pour calculer la moyenne il convient de faire la somme et la division. Toutes ces étapes vont être effectuées quand on appelle <code>compute()</code> et pas avant (<em>lazy evaluation</em>).</p>
 <p>Afin de voir la structure du <code>dask.DataFrame</code> on peut utiliser la méthode <code>visualize()</code></p>
-<div id="f4d8cb99" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="f4d8cb99"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f4d8cb99-1"><a href="#f4d8cb99-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.visualize()  <span class="co"># attention graphviz est requis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="77b517fc" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="77b517fc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="77b517fc-1"><a href="#77b517fc-1" aria-hidden="true" tabindex="-1"></a>dvf_dd.visualize()  <span class="co"># attention graphviz est requis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 <figure class="figure">
@@ -2062,30 +2062,30 @@ de référence dans le monde de la <em>data science</em>.
 Une présentation extensive de celui-ci est disponible
 dans le <a href="#reads3">chapitre dédié</a>.</p>
 <p><code>dask</code> permet de lire le format <code>parquet</code>, et plus précisément d’utiliser des fonctionnalités spécifiques à ce format. La lecture et l’écriture en <code>parquet</code> reposent par défaut sur <code>pyarrow</code>. On peut aussi utiliser <code>fastparquet</code> et préciser dans la lecture/écriture ce que l’on souhaite des deux.</p>
-<div id="31f43d9b" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="31f43d9b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="31f43d9b-1"><a href="#31f43d9b-1" aria-hidden="true" tabindex="-1"></a>dvf_net <span class="op">=</span> dvf.loc[</span>
-<span id="31f43d9b-2"><a href="#31f43d9b-2" aria-hidden="true" tabindex="-1"></a>    :,</span>
-<span id="31f43d9b-3"><a href="#31f43d9b-3" aria-hidden="true" tabindex="-1"></a>    [</span>
-<span id="31f43d9b-4"><a href="#31f43d9b-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Date mutation"</span>,</span>
-<span id="31f43d9b-5"><a href="#31f43d9b-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nature mutation"</span>,</span>
-<span id="31f43d9b-6"><a href="#31f43d9b-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Valeur fonciere"</span>,</span>
-<span id="31f43d9b-7"><a href="#31f43d9b-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Commune"</span>,</span>
-<span id="31f43d9b-8"><a href="#31f43d9b-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Code commune"</span>,</span>
-<span id="31f43d9b-9"><a href="#31f43d9b-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type local"</span>,</span>
-<span id="31f43d9b-10"><a href="#31f43d9b-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Identifiant local"</span>,</span>
-<span id="31f43d9b-11"><a href="#31f43d9b-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Surface reelle bati"</span>,</span>
-<span id="31f43d9b-12"><a href="#31f43d9b-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nombre pieces principales"</span>,</span>
-<span id="31f43d9b-13"><a href="#31f43d9b-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nature culture"</span>,</span>
-<span id="31f43d9b-14"><a href="#31f43d9b-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nature culture speciale"</span>,</span>
-<span id="31f43d9b-15"><a href="#31f43d9b-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Surface terrain"</span>,</span>
-<span id="31f43d9b-16"><a href="#31f43d9b-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"year"</span>,</span>
-<span id="31f43d9b-17"><a href="#31f43d9b-17" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="31f43d9b-18"><a href="#31f43d9b-18" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="12e8cc92" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="12e8cc92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="12e8cc92-1"><a href="#12e8cc92-1" aria-hidden="true" tabindex="-1"></a>dvf_net <span class="op">=</span> dvf.loc[</span>
+<span id="12e8cc92-2"><a href="#12e8cc92-2" aria-hidden="true" tabindex="-1"></a>    :,</span>
+<span id="12e8cc92-3"><a href="#12e8cc92-3" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="12e8cc92-4"><a href="#12e8cc92-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Date mutation"</span>,</span>
+<span id="12e8cc92-5"><a href="#12e8cc92-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nature mutation"</span>,</span>
+<span id="12e8cc92-6"><a href="#12e8cc92-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Valeur fonciere"</span>,</span>
+<span id="12e8cc92-7"><a href="#12e8cc92-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Commune"</span>,</span>
+<span id="12e8cc92-8"><a href="#12e8cc92-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Code commune"</span>,</span>
+<span id="12e8cc92-9"><a href="#12e8cc92-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type local"</span>,</span>
+<span id="12e8cc92-10"><a href="#12e8cc92-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Identifiant local"</span>,</span>
+<span id="12e8cc92-11"><a href="#12e8cc92-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Surface reelle bati"</span>,</span>
+<span id="12e8cc92-12"><a href="#12e8cc92-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nombre pieces principales"</span>,</span>
+<span id="12e8cc92-13"><a href="#12e8cc92-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nature culture"</span>,</span>
+<span id="12e8cc92-14"><a href="#12e8cc92-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nature culture speciale"</span>,</span>
+<span id="12e8cc92-15"><a href="#12e8cc92-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Surface terrain"</span>,</span>
+<span id="12e8cc92-16"><a href="#12e8cc92-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"year"</span>,</span>
+<span id="12e8cc92-17"><a href="#12e8cc92-17" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="12e8cc92-18"><a href="#12e8cc92-18" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On va utiliser l’<em>engine</em> par défaut pour
 l’écriture de <code>parquet</code> qui est <code>pyarrow</code> (faire <code>pip install pyarrow</code> si vous ne l’avez pas déjà installé). <code>to_parquet</code> qui est une méthode <code>pandas</code> a été également étendue aux objets <code>dask</code>:</p>
-<div id="78ee6748" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="78ee6748"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="78ee6748-1"><a href="#78ee6748-1" aria-hidden="true" tabindex="-1"></a>dvf_net.to_parquet(<span class="st">"dvf/"</span>, partition_cols<span class="op">=</span><span class="st">"year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="07e2a2ee" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="07e2a2ee"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="07e2a2ee-1"><a href="#07e2a2ee-1" aria-hidden="true" tabindex="-1"></a>dvf_net.to_parquet(<span class="st">"dvf/"</span>, partition_cols<span class="op">=</span><span class="st">"year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lorsqu’il est partitionné, le format <code>parquet</code> amène à une structure
 de fichiers similaire à <a href="https://spark.apache.org/docs/latest/sql-data-sources-parquet.html#partition-discovery">celle-ci</a>:</p>
@@ -2110,10 +2110,10 @@ de fichiers similaire à <a href="https://spark.apache.org/docs/latest/sql-data-
             └── ...</code></pre>
 <p>On peut alors facilement traiter un sous-échantillon des données,
 par exemple l’année 2019:</p>
-<div id="69896457" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="69896457"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="69896457-1"><a href="#69896457-1" aria-hidden="true" tabindex="-1"></a>dvf_2019 <span class="op">=</span> dd.read_parquet(</span>
-<span id="69896457-2"><a href="#69896457-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dvf/year=2019/"</span>, columns<span class="op">=</span>[<span class="st">"Date mutation"</span>, <span class="st">"Valeur fonciere"</span>]</span>
-<span id="69896457-3"><a href="#69896457-3" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># On peut sélectionner directement les deux colonnes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2a724da3" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="2a724da3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2a724da3-1"><a href="#2a724da3-1" aria-hidden="true" tabindex="-1"></a>dvf_2019 <span class="op">=</span> dd.read_parquet(</span>
+<span id="2a724da3-2"><a href="#2a724da3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dvf/year=2019/"</span>, columns<span class="op">=</span>[<span class="st">"Date mutation"</span>, <span class="st">"Valeur fonciere"</span>]</span>
+<span id="2a724da3-3"><a href="#2a724da3-3" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># On peut sélectionner directement les deux colonnes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lorsqu’il faudra passer à l’échelle, on changera le chemin en <code>"dvf/</code>
 pour utiliser l’ensemble des données.</p>
@@ -2126,20 +2126,20 @@ ne sont pas conservées. Si on désire réutiliser une partie de celui-ci,
 par exemple les premières étapes, on devra donc ré-effectuer
 les calculs.</p>
 <p>Il est possible de garder une partie des données en mémoire avec <code>persist()</code>. Les données sont sauvegardées dans des objets appelés <code>Futures</code>. Cela peut être intéressant si un bloc particulier de données est utilisé dans plusieurs <code>compute</code> ou si l’on a besoin de voir ce qu’il y a à l’intérieur souvent.</p>
-<div id="7c67e79d" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="7c67e79d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7c67e79d-1"><a href="#7c67e79d-1" aria-hidden="true" tabindex="-1"></a>dvf_dd_mem <span class="op">=</span> dvf_dd.persist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="874b343a" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="874b343a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="874b343a-1"><a href="#874b343a-1" aria-hidden="true" tabindex="-1"></a>dvf_dd_mem <span class="op">=</span> dvf_dd.persist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="077235ee" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="077235ee"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="077235ee-1"><a href="#077235ee-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
-<span id="077235ee-2"><a href="#077235ee-2" aria-hidden="true" tabindex="-1"></a>dvf_dd_mem.head()</span>
-<span id="077235ee-3"><a href="#077235ee-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1032c94d" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="1032c94d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1032c94d-1"><a href="#1032c94d-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
+<span id="1032c94d-2"><a href="#1032c94d-2" aria-hidden="true" tabindex="-1"></a>dvf_dd_mem.head()</span>
+<span id="1032c94d-3"><a href="#1032c94d-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="660948b6" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="660948b6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="660948b6-1"><a href="#660948b6-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
-<span id="660948b6-2"><a href="#660948b6-2" aria-hidden="true" tabindex="-1"></a>dvf_dd.head()</span>
-<span id="660948b6-3"><a href="#660948b6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4c0a02ef" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="4c0a02ef"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4c0a02ef-1"><a href="#4c0a02ef-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
+<span id="4c0a02ef-2"><a href="#4c0a02ef-2" aria-hidden="true" tabindex="-1"></a>dvf_dd.head()</span>
+<span id="4c0a02ef-3"><a href="#4c0a02ef-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start_time<span class="sc">}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.44954967498779297 seconds</code></pre>
+<pre><code>0.4681549072265625 seconds</code></pre>
 </div>
 </div>
 <p>On a bien un temps plus important avec le <code>dask.DataFrame</code> initial, comparé avec celui sur lequel on a utilisé <code>persist</code>. L’opération qu’on réalise ici étant peu complexe, la différence n’est pas substantielle. Elle serait beaucoup plus marquée avec un jeu de données plus volumineux ou des étapes intensives en calcul.</p>
@@ -2152,75 +2152,75 @@ des aires et des périmètres. Comme il s’agit d’une opération
 très peu complexe, on ajoute un délai de calcul avec <code>time.sleep</code>
 pour que le <em>timer</em> ne nous suggère pas que l’opération est
 instantanée.</p>
-<div id="0e4e9c4c" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="0e4e9c4c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0e4e9c4c-1"><a href="#0e4e9c4c-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> aire_carre(longueur):</span>
-<span id="0e4e9c4c-2"><a href="#0e4e9c4c-2" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="0e4e9c4c-3"><a href="#0e4e9c4c-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> longueur<span class="op">**</span><span class="dv">2</span></span>
-<span id="0e4e9c4c-4"><a href="#0e4e9c4c-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0e4e9c4c-5"><a href="#0e4e9c4c-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0e4e9c4c-6"><a href="#0e4e9c4c-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> perimetre_carre(longueur):</span>
-<span id="0e4e9c4c-7"><a href="#0e4e9c4c-7" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="0e4e9c4c-8"><a href="#0e4e9c4c-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> longueur</span>
-<span id="0e4e9c4c-9"><a href="#0e4e9c4c-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0e4e9c4c-10"><a href="#0e4e9c4c-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0e4e9c4c-11"><a href="#0e4e9c4c-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ajout_aire_perim(a, b):</span>
-<span id="0e4e9c4c-12"><a href="#0e4e9c4c-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ac4c902e" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="ac4c902e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ac4c902e-1"><a href="#ac4c902e-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> aire_carre(longueur):</span>
+<span id="ac4c902e-2"><a href="#ac4c902e-2" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="ac4c902e-3"><a href="#ac4c902e-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> longueur<span class="op">**</span><span class="dv">2</span></span>
+<span id="ac4c902e-4"><a href="#ac4c902e-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4c902e-5"><a href="#ac4c902e-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4c902e-6"><a href="#ac4c902e-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> perimetre_carre(longueur):</span>
+<span id="ac4c902e-7"><a href="#ac4c902e-7" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="ac4c902e-8"><a href="#ac4c902e-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> longueur</span>
+<span id="ac4c902e-9"><a href="#ac4c902e-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4c902e-10"><a href="#ac4c902e-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4c902e-11"><a href="#ac4c902e-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ajout_aire_perim(a, b):</span>
+<span id="ac4c902e-12"><a href="#ac4c902e-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sans <em>timer</em>, c’est-à-dire de manière classique,
 on ferait nos appels de fonctions de la
 manière suivante :</p>
-<div id="4e1d5844" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="4e1d5844"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4e1d5844-1"><a href="#4e1d5844-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
-<span id="4e1d5844-2"><a href="#4e1d5844-2" aria-hidden="true" tabindex="-1"></a>car1 <span class="op">=</span> aire_carre(<span class="dv">7</span>)</span>
-<span id="4e1d5844-3"><a href="#4e1d5844-3" aria-hidden="true" tabindex="-1"></a>car2 <span class="op">=</span> perimetre_carre(<span class="dv">9</span>)</span>
-<span id="4e1d5844-4"><a href="#4e1d5844-4" aria-hidden="true" tabindex="-1"></a>car3 <span class="op">=</span> ajout_aire_perim(car1, car2)</span>
-<span id="4e1d5844-5"><a href="#4e1d5844-5" aria-hidden="true" tabindex="-1"></a>car3</span>
-<span id="4e1d5844-6"><a href="#4e1d5844-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(time.time() <span class="op">-</span> start_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dc6a4987" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="dc6a4987"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dc6a4987-1"><a href="#dc6a4987-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
+<span id="dc6a4987-2"><a href="#dc6a4987-2" aria-hidden="true" tabindex="-1"></a>car1 <span class="op">=</span> aire_carre(<span class="dv">7</span>)</span>
+<span id="dc6a4987-3"><a href="#dc6a4987-3" aria-hidden="true" tabindex="-1"></a>car2 <span class="op">=</span> perimetre_carre(<span class="dv">9</span>)</span>
+<span id="dc6a4987-4"><a href="#dc6a4987-4" aria-hidden="true" tabindex="-1"></a>car3 <span class="op">=</span> ajout_aire_perim(car1, car2)</span>
+<span id="dc6a4987-5"><a href="#dc6a4987-5" aria-hidden="true" tabindex="-1"></a>car3</span>
+<span id="dc6a4987-6"><a href="#dc6a4987-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(time.time() <span class="op">-</span> start_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.0024218559265137</code></pre>
+<pre><code>2.00235915184021</code></pre>
 </div>
 </div>
 <p>Avec le décorateur <code>dask.delayed</code>, on définit
 nos fonctions de la manière suivante :</p>
-<div id="2c4b7e64" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="2c4b7e64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2c4b7e64-1"><a href="#2c4b7e64-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span>
-<span id="2c4b7e64-2"><a href="#2c4b7e64-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2c4b7e64-3"><a href="#2c4b7e64-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2c4b7e64-4"><a href="#2c4b7e64-4" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
-<span id="2c4b7e64-5"><a href="#2c4b7e64-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> aire_carre(longueur):</span>
-<span id="2c4b7e64-6"><a href="#2c4b7e64-6" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="2c4b7e64-7"><a href="#2c4b7e64-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> longueur<span class="op">**</span><span class="dv">2</span></span>
-<span id="2c4b7e64-8"><a href="#2c4b7e64-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2c4b7e64-9"><a href="#2c4b7e64-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2c4b7e64-10"><a href="#2c4b7e64-10" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
-<span id="2c4b7e64-11"><a href="#2c4b7e64-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> perimetre_carre(longueur):</span>
-<span id="2c4b7e64-12"><a href="#2c4b7e64-12" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="2c4b7e64-13"><a href="#2c4b7e64-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> longueur</span>
-<span id="2c4b7e64-14"><a href="#2c4b7e64-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2c4b7e64-15"><a href="#2c4b7e64-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2c4b7e64-16"><a href="#2c4b7e64-16" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
-<span id="2c4b7e64-17"><a href="#2c4b7e64-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ajout_aire_perim(a, b):</span>
-<span id="2c4b7e64-18"><a href="#2c4b7e64-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6361a6aa" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="6361a6aa"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6361a6aa-1"><a href="#6361a6aa-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask</span>
+<span id="6361a6aa-2"><a href="#6361a6aa-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6361a6aa-3"><a href="#6361a6aa-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6361a6aa-4"><a href="#6361a6aa-4" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
+<span id="6361a6aa-5"><a href="#6361a6aa-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> aire_carre(longueur):</span>
+<span id="6361a6aa-6"><a href="#6361a6aa-6" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="6361a6aa-7"><a href="#6361a6aa-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> longueur<span class="op">**</span><span class="dv">2</span></span>
+<span id="6361a6aa-8"><a href="#6361a6aa-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6361a6aa-9"><a href="#6361a6aa-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6361a6aa-10"><a href="#6361a6aa-10" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
+<span id="6361a6aa-11"><a href="#6361a6aa-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> perimetre_carre(longueur):</span>
+<span id="6361a6aa-12"><a href="#6361a6aa-12" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="6361a6aa-13"><a href="#6361a6aa-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> longueur</span>
+<span id="6361a6aa-14"><a href="#6361a6aa-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6361a6aa-15"><a href="#6361a6aa-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6361a6aa-16"><a href="#6361a6aa-16" aria-hidden="true" tabindex="-1"></a><span class="at">@dask.delayed</span></span>
+<span id="6361a6aa-17"><a href="#6361a6aa-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ajout_aire_perim(a, b):</span>
+<span id="6361a6aa-18"><a href="#6361a6aa-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’appel de fonctions est identique</p>
-<div id="a8f3db84" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="a8f3db84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a8f3db84-1"><a href="#a8f3db84-1" aria-hidden="true" tabindex="-1"></a>car1 <span class="op">=</span> aire_carre(<span class="dv">7</span>)</span>
-<span id="a8f3db84-2"><a href="#a8f3db84-2" aria-hidden="true" tabindex="-1"></a>car2 <span class="op">=</span> perimetre_carre(<span class="dv">9</span>)</span>
-<span id="a8f3db84-3"><a href="#a8f3db84-3" aria-hidden="true" tabindex="-1"></a>car3 <span class="op">=</span> ajout_aire_perim(car1, car2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f51ba471" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="f51ba471"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f51ba471-1"><a href="#f51ba471-1" aria-hidden="true" tabindex="-1"></a>car1 <span class="op">=</span> aire_carre(<span class="dv">7</span>)</span>
+<span id="f51ba471-2"><a href="#f51ba471-2" aria-hidden="true" tabindex="-1"></a>car2 <span class="op">=</span> perimetre_carre(<span class="dv">9</span>)</span>
+<span id="f51ba471-3"><a href="#f51ba471-3" aria-hidden="true" tabindex="-1"></a>car3 <span class="op">=</span> ajout_aire_perim(car1, car2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Cependant, en fait rien n’a été calculé, si l’on souhaite le résultat, il faut appeler <code>compute</code>:</p>
-<div id="905a2ccb" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="905a2ccb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="905a2ccb-1"><a href="#905a2ccb-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
-<span id="905a2ccb-2"><a href="#905a2ccb-2" aria-hidden="true" tabindex="-1"></a>car3.compute()</span>
-<span id="905a2ccb-3"><a href="#905a2ccb-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(time.time() <span class="op">-</span> start_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ff2732f5" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="ff2732f5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ff2732f5-1"><a href="#ff2732f5-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
+<span id="ff2732f5-2"><a href="#ff2732f5-2" aria-hidden="true" tabindex="-1"></a>car3.compute()</span>
+<span id="ff2732f5-3"><a href="#ff2732f5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(time.time() <span class="op">-</span> start_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.0019659996032715</code></pre>
+<pre><code>1.0023398399353027</code></pre>
 </div>
 </div>
 <p>Ici l’intérêt est assez limité, mais on voit que l’on réduit quand même de 2 à 1 seconde le temps de calcul. Mais l’idée derrière est que l’on a transformé <code>car3</code> en un objet <code>Delayed</code>. Cela a généré un <code>task graph</code> permettant de paralléliser certaines opérations.</p>
 <p>Ici il est important de noter que les fonctions que l’on parallélise doivent mettre un certain temps, sinon il n’y aura pas de gain de performance (si on retire le <code>time.sleep</code> il n’y a pas de gain de performance car le fait de paralléliser rajoute en fait du temps vu que chaque fonction a un temps de calcul trop faible pour que la parallélisation soit intéressante).</p>
-<div id="3751ccfc" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="3751ccfc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3751ccfc-1"><a href="#3751ccfc-1" aria-hidden="true" tabindex="-1"></a>car3.visualize()  <span class="co"># on peut visualiser le task graph et voir ce qui est fait en parallèle</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7c211203" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="7c211203"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7c211203-1"><a href="#7c211203-1" aria-hidden="true" tabindex="-1"></a>car3.visualize()  <span class="co"># on peut visualiser le task graph et voir ce qui est fait en parallèle</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <div>
 <figure class="figure">
@@ -2244,7 +2244,7 @@ nos fonctions de la manière suivante :</p>
 </summary>
 <p>Latest built version: 2024-04-06</p>
 <p>Python version used:</p>
-<div id="83b430d9" class="cell" data-execution_count="28">
+<div id="ae7f9726" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>'3.10.13 | packaged by conda-forge | (main, Dec 23 2023, 15:36:39) [GCC 12.3.0]'</code></pre>
 </div>
@@ -4511,7 +4511,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","openEffect":"zoom","loop":false,"descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
