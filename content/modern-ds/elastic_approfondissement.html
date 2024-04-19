@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-12">
+<meta name="dcterms.date" content="2024-04-19">
 <meta name="description" content="Un chapitre plus approfondi sur ElasticSearch">
 
 <title>Python pour la data science - Approfondissement ElasticSearch pour des recherches de proximité géographique</title>
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-12">
+<meta name="citation_online_date" content="2024-04-19">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -460,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-12</p>
+        <p class="date">2024-04-19</p>
       </div>
     </div>
     
@@ -771,9 +771,9 @@ pour requêter une base existante).</p>
 <p>La première partie de ce tutoriel, qui consiste à créer une base Sirene géolocalisée
 à partir des données <em>open-data</em> ne nécessite pas d’architecture particulière et
 peut ainsi être exécutée en utilisant les packages suivants :</p>
-<div id="e7396e0d" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="e7396e0d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e7396e0d-1"><a href="#e7396e0d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="e7396e0d-2"><a href="#e7396e0d-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fcb75ce3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="fcb75ce3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fcb75ce3-1"><a href="#fcb75ce3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="fcb75ce3-2"><a href="#fcb75ce3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sources" class="level2">
@@ -800,21 +800,21 @@ désirons trouver ce numéro. La présence
 dans la base de ce numéro nous permettra d’évaluer la qualité
 de notre méthode de recherche avec
 <code>Elastic</code>.</p>
-<div id="49c18f88" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="49c18f88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="49c18f88-1"><a href="#49c18f88-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="49c18f88-2"><a href="#49c18f88-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
-<span id="49c18f88-3"><a href="#49c18f88-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="49c18f88-4"><a href="#49c18f88-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="49c18f88-5"><a href="#49c18f88-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.data.gouv.fr/fr/datasets/r/9af639b9-e2b6-4d7d-8c5f-0c4953c48663"</span></span>
-<span id="49c18f88-6"><a href="#49c18f88-6" aria-hidden="true" tabindex="-1"></a>req <span class="op">=</span> requests.get(url)</span>
-<span id="49c18f88-7"><a href="#49c18f88-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="49c18f88-8"><a href="#49c18f88-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"irep.zip"</span>, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
-<span id="49c18f88-9"><a href="#49c18f88-9" aria-hidden="true" tabindex="-1"></a>    f.write(req.content)</span>
-<span id="49c18f88-10"><a href="#49c18f88-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="49c18f88-11"><a href="#49c18f88-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">"irep.zip"</span>, <span class="st">"r"</span>) <span class="im">as</span> zip_ref:</span>
-<span id="49c18f88-12"><a href="#49c18f88-12" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">"irep"</span>)</span>
-<span id="49c18f88-13"><a href="#49c18f88-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="49c18f88-14"><a href="#49c18f88-14" aria-hidden="true" tabindex="-1"></a>etablissements <span class="op">=</span> pd.read_csv(<span class="st">"irep/2019/etablissements.csv"</span>, sep<span class="op">=</span><span class="st">";"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b3acb1f4" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="b3acb1f4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b3acb1f4-1"><a href="#b3acb1f4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="b3acb1f4-2"><a href="#b3acb1f4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
+<span id="b3acb1f4-3"><a href="#b3acb1f4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="b3acb1f4-4"><a href="#b3acb1f4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b3acb1f4-5"><a href="#b3acb1f4-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.data.gouv.fr/fr/datasets/r/9af639b9-e2b6-4d7d-8c5f-0c4953c48663"</span></span>
+<span id="b3acb1f4-6"><a href="#b3acb1f4-6" aria-hidden="true" tabindex="-1"></a>req <span class="op">=</span> requests.get(url)</span>
+<span id="b3acb1f4-7"><a href="#b3acb1f4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b3acb1f4-8"><a href="#b3acb1f4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"irep.zip"</span>, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="b3acb1f4-9"><a href="#b3acb1f4-9" aria-hidden="true" tabindex="-1"></a>    f.write(req.content)</span>
+<span id="b3acb1f4-10"><a href="#b3acb1f4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b3acb1f4-11"><a href="#b3acb1f4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">"irep.zip"</span>, <span class="st">"r"</span>) <span class="im">as</span> zip_ref:</span>
+<span id="b3acb1f4-12"><a href="#b3acb1f4-12" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">"irep"</span>)</span>
+<span id="b3acb1f4-13"><a href="#b3acb1f4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b3acb1f4-14"><a href="#b3acb1f4-14" aria-hidden="true" tabindex="-1"></a>etablissements <span class="op">=</span> pd.read_csv(<span class="st">"irep/2019/etablissements.csv"</span>, sep<span class="op">=</span><span class="st">";"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="constitution-du-référentiel-administratif-géolocalisé" class="level1">
@@ -836,169 +836,169 @@ Le code ayant construit cette base est présenté ci-dessous.</p>
 de <code>pyarrow</code> qui permettent d’importer un fichier sur
 un système de stockage <em>cloud</em> comme s’il était
 présent sur le disque :</p>
-<div id="47677322" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="47677322"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="47677322-1"><a href="#47677322-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyarrow <span class="im">import</span> fs</span>
-<span id="47677322-2"><a href="#47677322-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa</span>
-<span id="47677322-3"><a href="#47677322-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.parquet <span class="im">as</span> pq</span>
-<span id="47677322-4"><a href="#47677322-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="47677322-5"><a href="#47677322-5" aria-hidden="true" tabindex="-1"></a>bucket <span class="op">=</span> <span class="st">"lgaliana"</span></span>
-<span id="47677322-6"><a href="#47677322-6" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="st">"diffusion/sirene_geolocalized.parquet"</span></span>
-<span id="47677322-7"><a href="#47677322-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="47677322-8"><a href="#47677322-8" aria-hidden="true" tabindex="-1"></a>s3 <span class="op">=</span> fs.S3FileSystem(endpoint_override<span class="op">=</span><span class="st">"http://"</span> <span class="op">+</span> <span class="st">"minio.lab.sspcloud.fr"</span>)</span>
-<span id="47677322-9"><a href="#47677322-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="47677322-10"><a href="#47677322-10" aria-hidden="true" tabindex="-1"></a>df_geolocalized <span class="op">=</span> (</span>
-<span id="47677322-11"><a href="#47677322-11" aria-hidden="true" tabindex="-1"></a>    pq.ParquetDataset(<span class="ss">f"</span><span class="sc">{</span>bucket<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">"</span>, filesystem<span class="op">=</span>s3).read_pandas().to_pandas()</span>
-<span id="47677322-12"><a href="#47677322-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="47677322-13"><a href="#47677322-13" aria-hidden="true" tabindex="-1"></a>df_geolocalized.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="20ba5bc8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="20ba5bc8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="20ba5bc8-1"><a href="#20ba5bc8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyarrow <span class="im">import</span> fs</span>
+<span id="20ba5bc8-2"><a href="#20ba5bc8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa</span>
+<span id="20ba5bc8-3"><a href="#20ba5bc8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.parquet <span class="im">as</span> pq</span>
+<span id="20ba5bc8-4"><a href="#20ba5bc8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="20ba5bc8-5"><a href="#20ba5bc8-5" aria-hidden="true" tabindex="-1"></a>bucket <span class="op">=</span> <span class="st">"lgaliana"</span></span>
+<span id="20ba5bc8-6"><a href="#20ba5bc8-6" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="st">"diffusion/sirene_geolocalized.parquet"</span></span>
+<span id="20ba5bc8-7"><a href="#20ba5bc8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="20ba5bc8-8"><a href="#20ba5bc8-8" aria-hidden="true" tabindex="-1"></a>s3 <span class="op">=</span> fs.S3FileSystem(endpoint_override<span class="op">=</span><span class="st">"http://"</span> <span class="op">+</span> <span class="st">"minio.lab.sspcloud.fr"</span>)</span>
+<span id="20ba5bc8-9"><a href="#20ba5bc8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="20ba5bc8-10"><a href="#20ba5bc8-10" aria-hidden="true" tabindex="-1"></a>df_geolocalized <span class="op">=</span> (</span>
+<span id="20ba5bc8-11"><a href="#20ba5bc8-11" aria-hidden="true" tabindex="-1"></a>    pq.ParquetDataset(<span class="ss">f"</span><span class="sc">{</span>bucket<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">"</span>, filesystem<span class="op">=</span>s3).read_pandas().to_pandas()</span>
+<span id="20ba5bc8-12"><a href="#20ba5bc8-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="20ba5bc8-13"><a href="#20ba5bc8-13" aria-hidden="true" tabindex="-1"></a>df_geolocalized.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="reproduire-la-construction-de-la-base" class="level2">
 <h2 class="anchored" data-anchor-id="reproduire-la-construction-de-la-base">Reproduire la construction de la base</h2>
 <p>La première base d’entrée à utiliser est disponible sur
 <a href="https://www.data.gouv.fr/fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret/">data.gouv</a></p>
-<div id="60cbce61" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="60cbce61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="60cbce61-1"><a href="#60cbce61-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="60cbce61-2"><a href="#60cbce61-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
-<span id="60cbce61-3"><a href="#60cbce61-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="60cbce61-4"><a href="#60cbce61-4" aria-hidden="true" tabindex="-1"></a>url_download <span class="op">=</span> (</span>
-<span id="60cbce61-5"><a href="#60cbce61-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://www.data.gouv.fr/fr/datasets/r/0651fb76-bcf3-4f6a-a38d-bc04fa708576"</span></span>
-<span id="60cbce61-6"><a href="#60cbce61-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="60cbce61-7"><a href="#60cbce61-7" aria-hidden="true" tabindex="-1"></a>req <span class="op">=</span> requests.get(url_download)</span>
-<span id="60cbce61-8"><a href="#60cbce61-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="60cbce61-9"><a href="#60cbce61-9" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"sirene.zip"</span>, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
-<span id="60cbce61-10"><a href="#60cbce61-10" aria-hidden="true" tabindex="-1"></a>    f.write(req.content)</span>
-<span id="60cbce61-11"><a href="#60cbce61-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="60cbce61-12"><a href="#60cbce61-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">"sirene.zip"</span>, <span class="st">"r"</span>) <span class="im">as</span> zip_ref:</span>
-<span id="60cbce61-13"><a href="#60cbce61-13" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">"sirene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9f7efd7c" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="9f7efd7c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9f7efd7c-1"><a href="#9f7efd7c-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="9f7efd7c-2"><a href="#9f7efd7c-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
+<span id="9f7efd7c-3"><a href="#9f7efd7c-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="9f7efd7c-4"><a href="#9f7efd7c-4" aria-hidden="true" tabindex="-1"></a>url_download <span class="op">=</span> (</span>
+<span id="9f7efd7c-5"><a href="#9f7efd7c-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://www.data.gouv.fr/fr/datasets/r/0651fb76-bcf3-4f6a-a38d-bc04fa708576"</span></span>
+<span id="9f7efd7c-6"><a href="#9f7efd7c-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="9f7efd7c-7"><a href="#9f7efd7c-7" aria-hidden="true" tabindex="-1"></a>req <span class="op">=</span> requests.get(url_download)</span>
+<span id="9f7efd7c-8"><a href="#9f7efd7c-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="9f7efd7c-9"><a href="#9f7efd7c-9" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"sirene.zip"</span>, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="9f7efd7c-10"><a href="#9f7efd7c-10" aria-hidden="true" tabindex="-1"></a>    f.write(req.content)</span>
+<span id="9f7efd7c-11"><a href="#9f7efd7c-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="9f7efd7c-12"><a href="#9f7efd7c-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">"sirene.zip"</span>, <span class="st">"r"</span>) <span class="im">as</span> zip_ref:</span>
+<span id="9f7efd7c-13"><a href="#9f7efd7c-13" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">"sirene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On va importer seulement les colonnes utiles et simplifier la structure
 pour être en mesure de ne garder que les informations qui nous
 intéressent (nom de l’entreprise, adresse, commune, code postal…)</p>
-<div id="c7b9b67e" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="c7b9b67e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c7b9b67e-1"><a href="#c7b9b67e-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="c7b9b67e-2"><a href="#c7b9b67e-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="c7b9b67e-3"><a href="#c7b9b67e-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-4"><a href="#c7b9b67e-4" aria-hidden="true" tabindex="-1"></a>list_cols <span class="op">=</span> [</span>
-<span id="c7b9b67e-5"><a href="#c7b9b67e-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"siren"</span>,</span>
-<span id="c7b9b67e-6"><a href="#c7b9b67e-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"siret"</span>,</span>
-<span id="c7b9b67e-7"><a href="#c7b9b67e-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"activitePrincipaleRegistreMetiersEtablissement"</span>,</span>
-<span id="c7b9b67e-8"><a href="#c7b9b67e-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"complementAdresseEtablissement"</span>,</span>
-<span id="c7b9b67e-9"><a href="#c7b9b67e-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numeroVoieEtablissement"</span>,</span>
-<span id="c7b9b67e-10"><a href="#c7b9b67e-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"typeVoieEtablissement"</span>,</span>
-<span id="c7b9b67e-11"><a href="#c7b9b67e-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"libelleVoieEtablissement"</span>,</span>
-<span id="c7b9b67e-12"><a href="#c7b9b67e-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"codePostalEtablissement"</span>,</span>
-<span id="c7b9b67e-13"><a href="#c7b9b67e-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"libelleCommuneEtablissement"</span>,</span>
-<span id="c7b9b67e-14"><a href="#c7b9b67e-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"codeCommuneEtablissement"</span>,</span>
-<span id="c7b9b67e-15"><a href="#c7b9b67e-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"etatAdministratifEtablissement"</span>,</span>
-<span id="c7b9b67e-16"><a href="#c7b9b67e-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"denominationUsuelleEtablissement"</span>,</span>
-<span id="c7b9b67e-17"><a href="#c7b9b67e-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"activitePrincipaleEtablissement"</span>,</span>
-<span id="c7b9b67e-18"><a href="#c7b9b67e-18" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="c7b9b67e-19"><a href="#c7b9b67e-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-20"><a href="#c7b9b67e-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"sirene/StockEtablissement_utf8.csv"</span>, usecols<span class="op">=</span>list_cols)</span>
-<span id="c7b9b67e-21"><a href="#c7b9b67e-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-22"><a href="#c7b9b67e-22" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"numero"</span>] <span class="op">=</span> (</span>
-<span id="c7b9b67e-23"><a href="#c7b9b67e-23" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"numeroVoieEtablissement"</span>]</span>
-<span id="c7b9b67e-24"><a href="#c7b9b67e-24" aria-hidden="true" tabindex="-1"></a>    .replace(<span class="st">"-"</span>, np.NaN)</span>
-<span id="c7b9b67e-25"><a href="#c7b9b67e-25" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.split()</span>
-<span id="c7b9b67e-26"><a href="#c7b9b67e-26" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>[<span class="dv">0</span>]</span>
-<span id="c7b9b67e-27"><a href="#c7b9b67e-27" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.extract(<span class="st">"(\d+)"</span>, expand<span class="op">=</span><span class="va">False</span>)</span>
-<span id="c7b9b67e-28"><a href="#c7b9b67e-28" aria-hidden="true" tabindex="-1"></a>    .fillna(<span class="st">"0"</span>)</span>
-<span id="c7b9b67e-29"><a href="#c7b9b67e-29" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">int</span>)</span>
-<span id="c7b9b67e-30"><a href="#c7b9b67e-30" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="c7b9b67e-31"><a href="#c7b9b67e-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-32"><a href="#c7b9b67e-32" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"numero"</span>] <span class="op">=</span> df[<span class="st">"numero"</span>].astype(<span class="bu">str</span>).replace(<span class="st">"0"</span>, <span class="st">""</span>)</span>
-<span id="c7b9b67e-33"><a href="#c7b9b67e-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-34"><a href="#c7b9b67e-34" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"adresse"</span>] <span class="op">=</span> (</span>
-<span id="c7b9b67e-35"><a href="#c7b9b67e-35" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"numero"</span>]</span>
-<span id="c7b9b67e-36"><a href="#c7b9b67e-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> <span class="st">" "</span></span>
-<span id="c7b9b67e-37"><a href="#c7b9b67e-37" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> df[<span class="st">"typeVoieEtablissement"</span>]</span>
-<span id="c7b9b67e-38"><a href="#c7b9b67e-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> <span class="st">" "</span></span>
-<span id="c7b9b67e-39"><a href="#c7b9b67e-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> df[<span class="st">"libelleVoieEtablissement"</span>]</span>
-<span id="c7b9b67e-40"><a href="#c7b9b67e-40" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="c7b9b67e-41"><a href="#c7b9b67e-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-42"><a href="#c7b9b67e-42" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"adresse"</span>] <span class="op">=</span> df[<span class="st">"adresse"</span>].replace(np.nan, <span class="st">""</span>)</span>
-<span id="c7b9b67e-43"><a href="#c7b9b67e-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-44"><a href="#c7b9b67e-44" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.loc[df[<span class="st">"etatAdministratifEtablissement"</span>] <span class="op">==</span> <span class="st">"A"</span>]</span>
-<span id="c7b9b67e-45"><a href="#c7b9b67e-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-46"><a href="#c7b9b67e-46" aria-hidden="true" tabindex="-1"></a>df.rename(</span>
-<span id="c7b9b67e-47"><a href="#c7b9b67e-47" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="c7b9b67e-48"><a href="#c7b9b67e-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"denominationUsuelleEtablissement"</span>: <span class="st">"denom"</span>,</span>
-<span id="c7b9b67e-49"><a href="#c7b9b67e-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"libelleCommuneEtablissement"</span>: <span class="st">"commune"</span>,</span>
-<span id="c7b9b67e-50"><a href="#c7b9b67e-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"codeCommuneEtablissement"</span>: <span class="st">"code_commune"</span>,</span>
-<span id="c7b9b67e-51"><a href="#c7b9b67e-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"codePostalEtablissement"</span>: <span class="st">"code_postal"</span>,</span>
-<span id="c7b9b67e-52"><a href="#c7b9b67e-52" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="c7b9b67e-53"><a href="#c7b9b67e-53" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="st">"columns"</span>,</span>
-<span id="c7b9b67e-54"><a href="#c7b9b67e-54" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
-<span id="c7b9b67e-55"><a href="#c7b9b67e-55" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="c7b9b67e-56"><a href="#c7b9b67e-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-57"><a href="#c7b9b67e-57" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"ape"</span>] <span class="op">=</span> df[<span class="st">"activitePrincipaleEtablissement"</span>].<span class="bu">str</span>.replace(<span class="st">"\."</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">True</span>)</span>
-<span id="c7b9b67e-58"><a href="#c7b9b67e-58" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"denom"</span>] <span class="op">=</span> df[<span class="st">"denom"</span>].replace(np.nan, <span class="st">""</span>)</span>
-<span id="c7b9b67e-59"><a href="#c7b9b67e-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b9b67e-60"><a href="#c7b9b67e-60" aria-hidden="true" tabindex="-1"></a>df_siret <span class="op">=</span> df.loc[</span>
-<span id="c7b9b67e-61"><a href="#c7b9b67e-61" aria-hidden="true" tabindex="-1"></a>    :,</span>
-<span id="c7b9b67e-62"><a href="#c7b9b67e-62" aria-hidden="true" tabindex="-1"></a>    [</span>
-<span id="c7b9b67e-63"><a href="#c7b9b67e-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">"siren"</span>,</span>
-<span id="c7b9b67e-64"><a href="#c7b9b67e-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">"siret"</span>,</span>
-<span id="c7b9b67e-65"><a href="#c7b9b67e-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">"adresse"</span>,</span>
-<span id="c7b9b67e-66"><a href="#c7b9b67e-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ape"</span>,</span>
-<span id="c7b9b67e-67"><a href="#c7b9b67e-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">"denom"</span>,</span>
-<span id="c7b9b67e-68"><a href="#c7b9b67e-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">"commune"</span>,</span>
-<span id="c7b9b67e-69"><a href="#c7b9b67e-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">"code_commune"</span>,</span>
-<span id="c7b9b67e-70"><a href="#c7b9b67e-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">"code_postal"</span>,</span>
-<span id="c7b9b67e-71"><a href="#c7b9b67e-71" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="c7b9b67e-72"><a href="#c7b9b67e-72" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="c7b9b67e-73"><a href="#c7b9b67e-73" aria-hidden="true" tabindex="-1"></a>df_siret[<span class="st">"code_postal"</span>] <span class="op">=</span> (</span>
-<span id="c7b9b67e-74"><a href="#c7b9b67e-74" aria-hidden="true" tabindex="-1"></a>    df_siret[<span class="st">"code_postal"</span>]</span>
-<span id="c7b9b67e-75"><a href="#c7b9b67e-75" aria-hidden="true" tabindex="-1"></a>    .replace(np.nan, <span class="st">"0"</span>)</span>
-<span id="c7b9b67e-76"><a href="#c7b9b67e-76" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">int</span>)</span>
-<span id="c7b9b67e-77"><a href="#c7b9b67e-77" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">str</span>)</span>
-<span id="c7b9b67e-78"><a href="#c7b9b67e-78" aria-hidden="true" tabindex="-1"></a>    .replace(<span class="st">"0"</span>, <span class="st">""</span>)</span>
-<span id="c7b9b67e-79"><a href="#c7b9b67e-79" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e45f5719" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="e45f5719"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e45f5719-1"><a href="#e45f5719-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="e45f5719-2"><a href="#e45f5719-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="e45f5719-3"><a href="#e45f5719-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-4"><a href="#e45f5719-4" aria-hidden="true" tabindex="-1"></a>list_cols <span class="op">=</span> [</span>
+<span id="e45f5719-5"><a href="#e45f5719-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"siren"</span>,</span>
+<span id="e45f5719-6"><a href="#e45f5719-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"siret"</span>,</span>
+<span id="e45f5719-7"><a href="#e45f5719-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"activitePrincipaleRegistreMetiersEtablissement"</span>,</span>
+<span id="e45f5719-8"><a href="#e45f5719-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"complementAdresseEtablissement"</span>,</span>
+<span id="e45f5719-9"><a href="#e45f5719-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numeroVoieEtablissement"</span>,</span>
+<span id="e45f5719-10"><a href="#e45f5719-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"typeVoieEtablissement"</span>,</span>
+<span id="e45f5719-11"><a href="#e45f5719-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"libelleVoieEtablissement"</span>,</span>
+<span id="e45f5719-12"><a href="#e45f5719-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"codePostalEtablissement"</span>,</span>
+<span id="e45f5719-13"><a href="#e45f5719-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"libelleCommuneEtablissement"</span>,</span>
+<span id="e45f5719-14"><a href="#e45f5719-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"codeCommuneEtablissement"</span>,</span>
+<span id="e45f5719-15"><a href="#e45f5719-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"etatAdministratifEtablissement"</span>,</span>
+<span id="e45f5719-16"><a href="#e45f5719-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"denominationUsuelleEtablissement"</span>,</span>
+<span id="e45f5719-17"><a href="#e45f5719-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"activitePrincipaleEtablissement"</span>,</span>
+<span id="e45f5719-18"><a href="#e45f5719-18" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="e45f5719-19"><a href="#e45f5719-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-20"><a href="#e45f5719-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"sirene/StockEtablissement_utf8.csv"</span>, usecols<span class="op">=</span>list_cols)</span>
+<span id="e45f5719-21"><a href="#e45f5719-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-22"><a href="#e45f5719-22" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"numero"</span>] <span class="op">=</span> (</span>
+<span id="e45f5719-23"><a href="#e45f5719-23" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"numeroVoieEtablissement"</span>]</span>
+<span id="e45f5719-24"><a href="#e45f5719-24" aria-hidden="true" tabindex="-1"></a>    .replace(<span class="st">"-"</span>, np.NaN)</span>
+<span id="e45f5719-25"><a href="#e45f5719-25" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.split()</span>
+<span id="e45f5719-26"><a href="#e45f5719-26" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>[<span class="dv">0</span>]</span>
+<span id="e45f5719-27"><a href="#e45f5719-27" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">str</span>.extract(<span class="st">"(\d+)"</span>, expand<span class="op">=</span><span class="va">False</span>)</span>
+<span id="e45f5719-28"><a href="#e45f5719-28" aria-hidden="true" tabindex="-1"></a>    .fillna(<span class="st">"0"</span>)</span>
+<span id="e45f5719-29"><a href="#e45f5719-29" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">int</span>)</span>
+<span id="e45f5719-30"><a href="#e45f5719-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="e45f5719-31"><a href="#e45f5719-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-32"><a href="#e45f5719-32" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"numero"</span>] <span class="op">=</span> df[<span class="st">"numero"</span>].astype(<span class="bu">str</span>).replace(<span class="st">"0"</span>, <span class="st">""</span>)</span>
+<span id="e45f5719-33"><a href="#e45f5719-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-34"><a href="#e45f5719-34" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"adresse"</span>] <span class="op">=</span> (</span>
+<span id="e45f5719-35"><a href="#e45f5719-35" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"numero"</span>]</span>
+<span id="e45f5719-36"><a href="#e45f5719-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> <span class="st">" "</span></span>
+<span id="e45f5719-37"><a href="#e45f5719-37" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> df[<span class="st">"typeVoieEtablissement"</span>]</span>
+<span id="e45f5719-38"><a href="#e45f5719-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> <span class="st">" "</span></span>
+<span id="e45f5719-39"><a href="#e45f5719-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> df[<span class="st">"libelleVoieEtablissement"</span>]</span>
+<span id="e45f5719-40"><a href="#e45f5719-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="e45f5719-41"><a href="#e45f5719-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-42"><a href="#e45f5719-42" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"adresse"</span>] <span class="op">=</span> df[<span class="st">"adresse"</span>].replace(np.nan, <span class="st">""</span>)</span>
+<span id="e45f5719-43"><a href="#e45f5719-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-44"><a href="#e45f5719-44" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.loc[df[<span class="st">"etatAdministratifEtablissement"</span>] <span class="op">==</span> <span class="st">"A"</span>]</span>
+<span id="e45f5719-45"><a href="#e45f5719-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-46"><a href="#e45f5719-46" aria-hidden="true" tabindex="-1"></a>df.rename(</span>
+<span id="e45f5719-47"><a href="#e45f5719-47" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="e45f5719-48"><a href="#e45f5719-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"denominationUsuelleEtablissement"</span>: <span class="st">"denom"</span>,</span>
+<span id="e45f5719-49"><a href="#e45f5719-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"libelleCommuneEtablissement"</span>: <span class="st">"commune"</span>,</span>
+<span id="e45f5719-50"><a href="#e45f5719-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"codeCommuneEtablissement"</span>: <span class="st">"code_commune"</span>,</span>
+<span id="e45f5719-51"><a href="#e45f5719-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"codePostalEtablissement"</span>: <span class="st">"code_postal"</span>,</span>
+<span id="e45f5719-52"><a href="#e45f5719-52" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="e45f5719-53"><a href="#e45f5719-53" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="st">"columns"</span>,</span>
+<span id="e45f5719-54"><a href="#e45f5719-54" aria-hidden="true" tabindex="-1"></a>    inplace<span class="op">=</span><span class="va">True</span>,</span>
+<span id="e45f5719-55"><a href="#e45f5719-55" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="e45f5719-56"><a href="#e45f5719-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-57"><a href="#e45f5719-57" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"ape"</span>] <span class="op">=</span> df[<span class="st">"activitePrincipaleEtablissement"</span>].<span class="bu">str</span>.replace(<span class="st">"\."</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="e45f5719-58"><a href="#e45f5719-58" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"denom"</span>] <span class="op">=</span> df[<span class="st">"denom"</span>].replace(np.nan, <span class="st">""</span>)</span>
+<span id="e45f5719-59"><a href="#e45f5719-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e45f5719-60"><a href="#e45f5719-60" aria-hidden="true" tabindex="-1"></a>df_siret <span class="op">=</span> df.loc[</span>
+<span id="e45f5719-61"><a href="#e45f5719-61" aria-hidden="true" tabindex="-1"></a>    :,</span>
+<span id="e45f5719-62"><a href="#e45f5719-62" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="e45f5719-63"><a href="#e45f5719-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">"siren"</span>,</span>
+<span id="e45f5719-64"><a href="#e45f5719-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">"siret"</span>,</span>
+<span id="e45f5719-65"><a href="#e45f5719-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">"adresse"</span>,</span>
+<span id="e45f5719-66"><a href="#e45f5719-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ape"</span>,</span>
+<span id="e45f5719-67"><a href="#e45f5719-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">"denom"</span>,</span>
+<span id="e45f5719-68"><a href="#e45f5719-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">"commune"</span>,</span>
+<span id="e45f5719-69"><a href="#e45f5719-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">"code_commune"</span>,</span>
+<span id="e45f5719-70"><a href="#e45f5719-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">"code_postal"</span>,</span>
+<span id="e45f5719-71"><a href="#e45f5719-71" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="e45f5719-72"><a href="#e45f5719-72" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="e45f5719-73"><a href="#e45f5719-73" aria-hidden="true" tabindex="-1"></a>df_siret[<span class="st">"code_postal"</span>] <span class="op">=</span> (</span>
+<span id="e45f5719-74"><a href="#e45f5719-74" aria-hidden="true" tabindex="-1"></a>    df_siret[<span class="st">"code_postal"</span>]</span>
+<span id="e45f5719-75"><a href="#e45f5719-75" aria-hidden="true" tabindex="-1"></a>    .replace(np.nan, <span class="st">"0"</span>)</span>
+<span id="e45f5719-76"><a href="#e45f5719-76" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">int</span>)</span>
+<span id="e45f5719-77"><a href="#e45f5719-77" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">str</span>)</span>
+<span id="e45f5719-78"><a href="#e45f5719-78" aria-hidden="true" tabindex="-1"></a>    .replace(<span class="st">"0"</span>, <span class="st">""</span>)</span>
+<span id="e45f5719-79"><a href="#e45f5719-79" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On importe ensuite les données géolocalisées</p>
-<div id="199a3179" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="199a3179"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="199a3179-1"><a href="#199a3179-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
-<span id="199a3179-2"><a href="#199a3179-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
-<span id="199a3179-3"><a href="#199a3179-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="199a3179-4"><a href="#199a3179-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="199a3179-5"><a href="#199a3179-5" aria-hidden="true" tabindex="-1"></a><span class="co"># os.remove("sirene.zip")</span></span>
-<span id="199a3179-6"><a href="#199a3179-6" aria-hidden="true" tabindex="-1"></a><span class="co"># shutil.rmtree('sirene/')</span></span>
-<span id="199a3179-7"><a href="#199a3179-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="199a3179-8"><a href="#199a3179-8" aria-hidden="true" tabindex="-1"></a>url_geoloc <span class="op">=</span> <span class="st">"https://files.data.gouv.fr/insee-sirene-geo/GeolocalisationEtablissement_Sirene_pour_etudes_statistiques_utf8.zip"</span></span>
-<span id="199a3179-9"><a href="#199a3179-9" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url_geoloc)</span>
-<span id="199a3179-10"><a href="#199a3179-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="199a3179-11"><a href="#199a3179-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"geoloc.zip"</span>, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
-<span id="199a3179-12"><a href="#199a3179-12" aria-hidden="true" tabindex="-1"></a>    f.write(r.content)</span>
-<span id="199a3179-13"><a href="#199a3179-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="199a3179-14"><a href="#199a3179-14" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">"geoloc.zip"</span>, <span class="st">"r"</span>) <span class="im">as</span> zip_ref:</span>
-<span id="199a3179-15"><a href="#199a3179-15" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">"geoloc"</span>)</span>
-<span id="199a3179-16"><a href="#199a3179-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="199a3179-17"><a href="#199a3179-17" aria-hidden="true" tabindex="-1"></a>df_geoloc <span class="op">=</span> pd.read_csv(</span>
-<span id="199a3179-18"><a href="#199a3179-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"geoloc/GeolocalisationEtablissement_Sirene_pour_etudes_statistiques_utf8.csv"</span>,</span>
-<span id="199a3179-19"><a href="#199a3179-19" aria-hidden="true" tabindex="-1"></a>    usecols<span class="op">=</span>[<span class="st">"siret"</span>, <span class="st">"epsg"</span>, <span class="st">"x_longitude"</span>, <span class="st">"y_latitude"</span>],</span>
-<span id="199a3179-20"><a href="#199a3179-20" aria-hidden="true" tabindex="-1"></a>    sep<span class="op">=</span><span class="st">";"</span>,</span>
-<span id="199a3179-21"><a href="#199a3179-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7b19b05b" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="7b19b05b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7b19b05b-1"><a href="#7b19b05b-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
+<span id="7b19b05b-2"><a href="#7b19b05b-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
+<span id="7b19b05b-3"><a href="#7b19b05b-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="7b19b05b-4"><a href="#7b19b05b-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b19b05b-5"><a href="#7b19b05b-5" aria-hidden="true" tabindex="-1"></a><span class="co"># os.remove("sirene.zip")</span></span>
+<span id="7b19b05b-6"><a href="#7b19b05b-6" aria-hidden="true" tabindex="-1"></a><span class="co"># shutil.rmtree('sirene/')</span></span>
+<span id="7b19b05b-7"><a href="#7b19b05b-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b19b05b-8"><a href="#7b19b05b-8" aria-hidden="true" tabindex="-1"></a>url_geoloc <span class="op">=</span> <span class="st">"https://files.data.gouv.fr/insee-sirene-geo/GeolocalisationEtablissement_Sirene_pour_etudes_statistiques_utf8.zip"</span></span>
+<span id="7b19b05b-9"><a href="#7b19b05b-9" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url_geoloc)</span>
+<span id="7b19b05b-10"><a href="#7b19b05b-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b19b05b-11"><a href="#7b19b05b-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"geoloc.zip"</span>, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="7b19b05b-12"><a href="#7b19b05b-12" aria-hidden="true" tabindex="-1"></a>    f.write(r.content)</span>
+<span id="7b19b05b-13"><a href="#7b19b05b-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b19b05b-14"><a href="#7b19b05b-14" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">"geoloc.zip"</span>, <span class="st">"r"</span>) <span class="im">as</span> zip_ref:</span>
+<span id="7b19b05b-15"><a href="#7b19b05b-15" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall(<span class="st">"geoloc"</span>)</span>
+<span id="7b19b05b-16"><a href="#7b19b05b-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b19b05b-17"><a href="#7b19b05b-17" aria-hidden="true" tabindex="-1"></a>df_geoloc <span class="op">=</span> pd.read_csv(</span>
+<span id="7b19b05b-18"><a href="#7b19b05b-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"geoloc/GeolocalisationEtablissement_Sirene_pour_etudes_statistiques_utf8.csv"</span>,</span>
+<span id="7b19b05b-19"><a href="#7b19b05b-19" aria-hidden="true" tabindex="-1"></a>    usecols<span class="op">=</span>[<span class="st">"siret"</span>, <span class="st">"epsg"</span>, <span class="st">"x_longitude"</span>, <span class="st">"y_latitude"</span>],</span>
+<span id="7b19b05b-20"><a href="#7b19b05b-20" aria-hidden="true" tabindex="-1"></a>    sep<span class="op">=</span><span class="st">";"</span>,</span>
+<span id="7b19b05b-21"><a href="#7b19b05b-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il ne reste plus qu’à associer les deux jeux de données</p>
-<div id="37d00529" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="37d00529"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="37d00529-1"><a href="#37d00529-1" aria-hidden="true" tabindex="-1"></a>df_geolocalized <span class="op">=</span> df_siret.merge(df_geoloc, on<span class="op">=</span><span class="st">"siret"</span>)</span>
-<span id="37d00529-2"><a href="#37d00529-2" aria-hidden="true" tabindex="-1"></a>df_geolocalized[<span class="st">"code_commune"</span>] <span class="op">=</span> df_geolocalized[<span class="st">"code_commune"</span>].astype(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="522ccf8c" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="522ccf8c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="522ccf8c-1"><a href="#522ccf8c-1" aria-hidden="true" tabindex="-1"></a>df_geolocalized <span class="op">=</span> df_siret.merge(df_geoloc, on<span class="op">=</span><span class="st">"siret"</span>)</span>
+<span id="522ccf8c-2"><a href="#522ccf8c-2" aria-hidden="true" tabindex="-1"></a>df_geolocalized[<span class="st">"code_commune"</span>] <span class="op">=</span> df_geolocalized[<span class="st">"code_commune"</span>].astype(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si vous avez accès à un espace de stockage cloud de type
 <code>S3</code>, il est possible d’utiliser <code>pyarrow</code> pour enregister
 cette base. Afin de l’enregistrer dans un espace de stockage
 public, nous allons l’enregistrer dans un dossier <code>diffusion</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div id="a4f12d92" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="a4f12d92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a4f12d92-1"><a href="#a4f12d92-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyarrow <span class="im">import</span> fs</span>
-<span id="a4f12d92-2"><a href="#a4f12d92-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa</span>
-<span id="a4f12d92-3"><a href="#a4f12d92-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.parquet <span class="im">as</span> pq</span>
-<span id="a4f12d92-4"><a href="#a4f12d92-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a4f12d92-5"><a href="#a4f12d92-5" aria-hidden="true" tabindex="-1"></a>bucket <span class="op">=</span> <span class="st">"lgaliana"</span></span>
-<span id="a4f12d92-6"><a href="#a4f12d92-6" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="st">"diffusion/sirene_geolocalized.parquet"</span></span>
-<span id="a4f12d92-7"><a href="#a4f12d92-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a4f12d92-8"><a href="#a4f12d92-8" aria-hidden="true" tabindex="-1"></a>s3 <span class="op">=</span> fs.S3FileSystem(endpoint_override<span class="op">=</span><span class="st">"http://"</span> <span class="op">+</span> <span class="st">"minio.lab.sspcloud.fr"</span>)</span>
-<span id="a4f12d92-9"><a href="#a4f12d92-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a4f12d92-10"><a href="#a4f12d92-10" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pa.Table.from_pandas(df_geolocalized)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0cdcffc1" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="0cdcffc1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0cdcffc1-1"><a href="#0cdcffc1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyarrow <span class="im">import</span> fs</span>
+<span id="0cdcffc1-2"><a href="#0cdcffc1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa</span>
+<span id="0cdcffc1-3"><a href="#0cdcffc1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.parquet <span class="im">as</span> pq</span>
+<span id="0cdcffc1-4"><a href="#0cdcffc1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="0cdcffc1-5"><a href="#0cdcffc1-5" aria-hidden="true" tabindex="-1"></a>bucket <span class="op">=</span> <span class="st">"lgaliana"</span></span>
+<span id="0cdcffc1-6"><a href="#0cdcffc1-6" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="st">"diffusion/sirene_geolocalized.parquet"</span></span>
+<span id="0cdcffc1-7"><a href="#0cdcffc1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="0cdcffc1-8"><a href="#0cdcffc1-8" aria-hidden="true" tabindex="-1"></a>s3 <span class="op">=</span> fs.S3FileSystem(endpoint_override<span class="op">=</span><span class="st">"http://"</span> <span class="op">+</span> <span class="st">"minio.lab.sspcloud.fr"</span>)</span>
+<span id="0cdcffc1-9"><a href="#0cdcffc1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="0cdcffc1-10"><a href="#0cdcffc1-10" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pa.Table.from_pandas(df_geolocalized)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1008,24 +1008,24 @@ public, nous allons l’enregistrer dans un dossier <code>diffusion</code><a hre
 fonctionnel mais désire créer un nouvel index. Si vous utilisez
 le SSPCloud, la démarche de création d’un service
 Elastic est disponible dans le chapitre précédent.</p>
-<div id="403e28c0" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="403e28c0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="403e28c0-1"><a href="#403e28c0-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> elasticsearch <span class="im">import</span> Elasticsearch</span>
-<span id="403e28c0-2"><a href="#403e28c0-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="403e28c0-3"><a href="#403e28c0-3" aria-hidden="true" tabindex="-1"></a>HOST <span class="op">=</span> <span class="st">"elasticsearch-master"</span></span>
-<span id="403e28c0-4"><a href="#403e28c0-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="403e28c0-5"><a href="#403e28c0-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="403e28c0-6"><a href="#403e28c0-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elastic():</span>
-<span id="403e28c0-7"><a href="#403e28c0-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Connection avec Elastic sur le data lab"""</span></span>
-<span id="403e28c0-8"><a href="#403e28c0-8" aria-hidden="true" tabindex="-1"></a>    es <span class="op">=</span> Elasticsearch(</span>
-<span id="403e28c0-9"><a href="#403e28c0-9" aria-hidden="true" tabindex="-1"></a>        [{<span class="st">"host"</span>: HOST, <span class="st">"port"</span>: <span class="dv">9200</span>, <span class="st">"scheme"</span>: <span class="st">"http"</span>}],</span>
-<span id="403e28c0-10"><a href="#403e28c0-10" aria-hidden="true" tabindex="-1"></a>        http_compress<span class="op">=</span><span class="va">True</span>,</span>
-<span id="403e28c0-11"><a href="#403e28c0-11" aria-hidden="true" tabindex="-1"></a>        request_timeout<span class="op">=</span><span class="dv">200</span>,</span>
-<span id="403e28c0-12"><a href="#403e28c0-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="403e28c0-13"><a href="#403e28c0-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> es</span>
-<span id="403e28c0-14"><a href="#403e28c0-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="403e28c0-15"><a href="#403e28c0-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="403e28c0-16"><a href="#403e28c0-16" aria-hidden="true" tabindex="-1"></a>es <span class="op">=</span> elastic()</span>
-<span id="403e28c0-17"><a href="#403e28c0-17" aria-hidden="true" tabindex="-1"></a>es</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bc535827" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="bc535827"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bc535827-1"><a href="#bc535827-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> elasticsearch <span class="im">import</span> Elasticsearch</span>
+<span id="bc535827-2"><a href="#bc535827-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="bc535827-3"><a href="#bc535827-3" aria-hidden="true" tabindex="-1"></a>HOST <span class="op">=</span> <span class="st">"elasticsearch-master"</span></span>
+<span id="bc535827-4"><a href="#bc535827-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="bc535827-5"><a href="#bc535827-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="bc535827-6"><a href="#bc535827-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elastic():</span>
+<span id="bc535827-7"><a href="#bc535827-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Connection avec Elastic sur le data lab"""</span></span>
+<span id="bc535827-8"><a href="#bc535827-8" aria-hidden="true" tabindex="-1"></a>    es <span class="op">=</span> Elasticsearch(</span>
+<span id="bc535827-9"><a href="#bc535827-9" aria-hidden="true" tabindex="-1"></a>        [{<span class="st">"host"</span>: HOST, <span class="st">"port"</span>: <span class="dv">9200</span>, <span class="st">"scheme"</span>: <span class="st">"http"</span>}],</span>
+<span id="bc535827-10"><a href="#bc535827-10" aria-hidden="true" tabindex="-1"></a>        http_compress<span class="op">=</span><span class="va">True</span>,</span>
+<span id="bc535827-11"><a href="#bc535827-11" aria-hidden="true" tabindex="-1"></a>        request_timeout<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="bc535827-12"><a href="#bc535827-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="bc535827-13"><a href="#bc535827-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> es</span>
+<span id="bc535827-14"><a href="#bc535827-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="bc535827-15"><a href="#bc535827-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="bc535827-16"><a href="#bc535827-16" aria-hidden="true" tabindex="-1"></a>es <span class="op">=</span> elastic()</span>
+<span id="bc535827-17"><a href="#bc535827-17" aria-hidden="true" tabindex="-1"></a>es</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>&lt;Elasticsearch(['http://elasticsearch-master:9200'])&gt;</code></pre>
 </section>
@@ -1037,40 +1037,40 @@ Elastic est disponible dans le chapitre précédent.</p>
 possible.</p>
 <p>:one: On s’occupe d’abord de définir le <em>mapping</em>
 pour les variables textuelles.</p>
-<div id="8fda66a4" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="8fda66a4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8fda66a4-1"><a href="#8fda66a4-1" aria-hidden="true" tabindex="-1"></a>string_var <span class="op">=</span> [<span class="st">"adresse"</span>, <span class="st">"denom"</span>, <span class="st">"ape"</span>, <span class="st">"commune"</span>]</span>
-<span id="8fda66a4-2"><a href="#8fda66a4-2" aria-hidden="true" tabindex="-1"></a>map_string <span class="op">=</span> {</span>
-<span id="8fda66a4-3"><a href="#8fda66a4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span>: <span class="st">"text"</span>,</span>
-<span id="8fda66a4-4"><a href="#8fda66a4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fields"</span>: {<span class="st">"keyword"</span>: {<span class="st">"type"</span>: <span class="st">"keyword"</span>, <span class="st">"ignore_above"</span>: <span class="dv">256</span>}},</span>
-<span id="8fda66a4-5"><a href="#8fda66a4-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="8fda66a4-6"><a href="#8fda66a4-6" aria-hidden="true" tabindex="-1"></a>mapping_string <span class="op">=</span> {l: map_string <span class="cf">for</span> l <span class="kw">in</span> string_var}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="18ad69bc" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="18ad69bc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="18ad69bc-1"><a href="#18ad69bc-1" aria-hidden="true" tabindex="-1"></a>string_var <span class="op">=</span> [<span class="st">"adresse"</span>, <span class="st">"denom"</span>, <span class="st">"ape"</span>, <span class="st">"commune"</span>]</span>
+<span id="18ad69bc-2"><a href="#18ad69bc-2" aria-hidden="true" tabindex="-1"></a>map_string <span class="op">=</span> {</span>
+<span id="18ad69bc-3"><a href="#18ad69bc-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span>: <span class="st">"text"</span>,</span>
+<span id="18ad69bc-4"><a href="#18ad69bc-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fields"</span>: {<span class="st">"keyword"</span>: {<span class="st">"type"</span>: <span class="st">"keyword"</span>, <span class="st">"ignore_above"</span>: <span class="dv">256</span>}},</span>
+<span id="18ad69bc-5"><a href="#18ad69bc-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="18ad69bc-6"><a href="#18ad69bc-6" aria-hidden="true" tabindex="-1"></a>mapping_string <span class="op">=</span> {l: map_string <span class="cf">for</span> l <span class="kw">in</span> string_var}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>:two: Les variables catégorielles sont utilisées
 par le biais du type <code>keyword</code>:</p>
-<div id="66d5f38b" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="66d5f38b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="66d5f38b-1"><a href="#66d5f38b-1" aria-hidden="true" tabindex="-1"></a><span class="co"># keywords</span></span>
-<span id="66d5f38b-2"><a href="#66d5f38b-2" aria-hidden="true" tabindex="-1"></a>keyword_var <span class="op">=</span> [<span class="st">"siren"</span>, <span class="st">"siret"</span>, <span class="st">"code_commune"</span>, <span class="st">"code_postal"</span>]</span>
-<span id="66d5f38b-3"><a href="#66d5f38b-3" aria-hidden="true" tabindex="-1"></a>map_keywords <span class="op">=</span> {</span>
-<span id="66d5f38b-4"><a href="#66d5f38b-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span>: <span class="st">"text"</span>,</span>
-<span id="66d5f38b-5"><a href="#66d5f38b-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fields"</span>: {<span class="st">"keyword"</span>: {<span class="st">"type"</span>: <span class="st">"keyword"</span>, <span class="st">"ignore_above"</span>: <span class="dv">256</span>}},</span>
-<span id="66d5f38b-6"><a href="#66d5f38b-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="66d5f38b-7"><a href="#66d5f38b-7" aria-hidden="true" tabindex="-1"></a>mapping_keywords <span class="op">=</span> {l: map_keywords <span class="cf">for</span> l <span class="kw">in</span> keyword_var}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="660e53d4" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="660e53d4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="660e53d4-1"><a href="#660e53d4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># keywords</span></span>
+<span id="660e53d4-2"><a href="#660e53d4-2" aria-hidden="true" tabindex="-1"></a>keyword_var <span class="op">=</span> [<span class="st">"siren"</span>, <span class="st">"siret"</span>, <span class="st">"code_commune"</span>, <span class="st">"code_postal"</span>]</span>
+<span id="660e53d4-3"><a href="#660e53d4-3" aria-hidden="true" tabindex="-1"></a>map_keywords <span class="op">=</span> {</span>
+<span id="660e53d4-4"><a href="#660e53d4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"type"</span>: <span class="st">"text"</span>,</span>
+<span id="660e53d4-5"><a href="#660e53d4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fields"</span>: {<span class="st">"keyword"</span>: {<span class="st">"type"</span>: <span class="st">"keyword"</span>, <span class="st">"ignore_above"</span>: <span class="dv">256</span>}},</span>
+<span id="660e53d4-6"><a href="#660e53d4-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="660e53d4-7"><a href="#660e53d4-7" aria-hidden="true" tabindex="-1"></a>mapping_keywords <span class="op">=</span> {l: map_keywords <span class="cf">for</span> l <span class="kw">in</span> keyword_var}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>:three: La nouveauté par rapport à la partie
 précédente est l’utilisation de la
 dimension géographique. <code>Elastic</code> propose
 le type <code>geo_point</code> pour cela.</p>
-<div id="30e163ab" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="30e163ab"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="30e163ab-1"><a href="#30e163ab-1" aria-hidden="true" tabindex="-1"></a><span class="co"># geoloc</span></span>
-<span id="30e163ab-2"><a href="#30e163ab-2" aria-hidden="true" tabindex="-1"></a>mapping_geoloc <span class="op">=</span> {<span class="st">"location"</span>: {<span class="st">"type"</span>: <span class="st">"geo_point"</span>}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6ef6fc01" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="6ef6fc01"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6ef6fc01-1"><a href="#6ef6fc01-1" aria-hidden="true" tabindex="-1"></a><span class="co"># geoloc</span></span>
+<span id="6ef6fc01-2"><a href="#6ef6fc01-2" aria-hidden="true" tabindex="-1"></a>mapping_geoloc <span class="op">=</span> {<span class="st">"location"</span>: {<span class="st">"type"</span>: <span class="st">"geo_point"</span>}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On collecte tout cela ensemble dans un
 dictionnaire:</p>
-<div id="e0ce2b3a" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="e0ce2b3a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e0ce2b3a-1"><a href="#e0ce2b3a-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mapping</span></span>
-<span id="e0ce2b3a-2"><a href="#e0ce2b3a-2" aria-hidden="true" tabindex="-1"></a>mapping_elastic <span class="op">=</span> {</span>
-<span id="e0ce2b3a-3"><a href="#e0ce2b3a-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mappings"</span>: {<span class="st">"properties"</span>: {<span class="op">**</span>mapping_string, <span class="op">**</span>mapping_geoloc, <span class="op">**</span>mapping_keywords}}</span>
-<span id="e0ce2b3a-4"><a href="#e0ce2b3a-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ee7649bc" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="ee7649bc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ee7649bc-1"><a href="#ee7649bc-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mapping</span></span>
+<span id="ee7649bc-2"><a href="#ee7649bc-2" aria-hidden="true" tabindex="-1"></a>mapping_elastic <span class="op">=</span> {</span>
+<span id="ee7649bc-3"><a href="#ee7649bc-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mappings"</span>: {<span class="st">"properties"</span>: {<span class="op">**</span>mapping_string, <span class="op">**</span>mapping_geoloc, <span class="op">**</span>mapping_keywords}}</span>
+<span id="ee7649bc-4"><a href="#ee7649bc-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il est tout à fait possible de définir un <em>mapping</em>
 plus raffiné. Ici, on va privilégier
@@ -1083,11 +1083,11 @@ géographique en priorité.</p>
 <p>Pour créer le nouvel index, on s’assure d’abord de ne pas
 déjà l’avoir créé et on passe le <em>mapping</em> défini
 précédemment.</p>
-<div id="c1881b9a" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="c1881b9a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c1881b9a-1"><a href="#c1881b9a-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> es.indices.exists(<span class="st">"sirene"</span>):</span>
-<span id="c1881b9a-2"><a href="#c1881b9a-2" aria-hidden="true" tabindex="-1"></a>    es.indices.delete(<span class="st">"sirene"</span>)</span>
-<span id="c1881b9a-3"><a href="#c1881b9a-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c1881b9a-4"><a href="#c1881b9a-4" aria-hidden="true" tabindex="-1"></a>es.indices.create(index<span class="op">=</span><span class="st">"sirene"</span>, body<span class="op">=</span>mapping_elastic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="839608da" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="839608da"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="839608da-1"><a href="#839608da-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> es.indices.exists(<span class="st">"sirene"</span>):</span>
+<span id="839608da-2"><a href="#839608da-2" aria-hidden="true" tabindex="-1"></a>    es.indices.delete(<span class="st">"sirene"</span>)</span>
+<span id="839608da-3"><a href="#839608da-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="839608da-4"><a href="#839608da-4" aria-hidden="true" tabindex="-1"></a>es.indices.create(index<span class="op">=</span><span class="st">"sirene"</span>, body<span class="op">=</span>mapping_elastic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="indexation-de-la-base-géolocalisée" class="level2">
@@ -1097,42 +1097,42 @@ le peupler.</p>
 <p>Il est néanmoins nécessaire de créer le champ <code>location</code>
 au format attendu par elastic: <code>lat, lon</code> à partir
 de nos colonnes.</p>
-<div id="28ae825a" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="28ae825a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="28ae825a-1"><a href="#28ae825a-1" aria-hidden="true" tabindex="-1"></a>df_geolocalized[<span class="st">"location"</span>] <span class="op">=</span> (</span>
-<span id="28ae825a-2"><a href="#28ae825a-2" aria-hidden="true" tabindex="-1"></a>    df_geolocalized[<span class="st">"y_latitude"</span>].astype(<span class="bu">str</span>)</span>
-<span id="28ae825a-3"><a href="#28ae825a-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> <span class="st">", "</span></span>
-<span id="28ae825a-4"><a href="#28ae825a-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> df_geolocalized[<span class="st">"x_longitude"</span>].astype(<span class="bu">str</span>)</span>
-<span id="28ae825a-5"><a href="#28ae825a-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="04bb5457" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="04bb5457"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="04bb5457-1"><a href="#04bb5457-1" aria-hidden="true" tabindex="-1"></a>df_geolocalized[<span class="st">"location"</span>] <span class="op">=</span> (</span>
+<span id="04bb5457-2"><a href="#04bb5457-2" aria-hidden="true" tabindex="-1"></a>    df_geolocalized[<span class="st">"y_latitude"</span>].astype(<span class="bu">str</span>)</span>
+<span id="04bb5457-3"><a href="#04bb5457-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> <span class="st">", "</span></span>
+<span id="04bb5457-4"><a href="#04bb5457-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> df_geolocalized[<span class="st">"x_longitude"</span>].astype(<span class="bu">str</span>)</span>
+<span id="04bb5457-5"><a href="#04bb5457-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La fonction suivante permet de structurer chaque
 ligne du <code>DataFrame</code> telle qu’Elastic l’attend:</p>
-<div id="2f47b2eb" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="2f47b2eb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2f47b2eb-1"><a href="#2f47b2eb-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gen_dict_from_pandas(index_name, df):</span>
-<span id="2f47b2eb-2"><a href="#2f47b2eb-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="2f47b2eb-3"><a href="#2f47b2eb-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Lit un dataframe pandas Open Food Facts, renvoi un itérable = dictionnaire des données à indexer, sous l'index fourni</span></span>
-<span id="2f47b2eb-4"><a href="#2f47b2eb-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="2f47b2eb-5"><a href="#2f47b2eb-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, row <span class="kw">in</span> df.iterrows():</span>
-<span id="2f47b2eb-6"><a href="#2f47b2eb-6" aria-hidden="true" tabindex="-1"></a>        header <span class="op">=</span> {<span class="st">"_op_type"</span>: <span class="st">"index"</span>, <span class="st">"_index"</span>: index_name, <span class="st">"_id"</span>: i}</span>
-<span id="2f47b2eb-7"><a href="#2f47b2eb-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> {<span class="op">**</span>header, <span class="op">**</span>row}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8339f0d0" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="8339f0d0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8339f0d0-1"><a href="#8339f0d0-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gen_dict_from_pandas(index_name, df):</span>
+<span id="8339f0d0-2"><a href="#8339f0d0-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="8339f0d0-3"><a href="#8339f0d0-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Lit un dataframe pandas Open Food Facts, renvoi un itérable = dictionnaire des données à indexer, sous l'index fourni</span></span>
+<span id="8339f0d0-4"><a href="#8339f0d0-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="8339f0d0-5"><a href="#8339f0d0-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, row <span class="kw">in</span> df.iterrows():</span>
+<span id="8339f0d0-6"><a href="#8339f0d0-6" aria-hidden="true" tabindex="-1"></a>        header <span class="op">=</span> {<span class="st">"_op_type"</span>: <span class="st">"index"</span>, <span class="st">"_index"</span>: index_name, <span class="st">"_id"</span>: i}</span>
+<span id="8339f0d0-7"><a href="#8339f0d0-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> {<span class="op">**</span>header, <span class="op">**</span>row}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, on peut industrialiser l’indexation
 de notre <code>DataFrame</code> en faisant tourner de
 manière successive cette fonction :</p>
-<div id="b3318850" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="b3318850"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b3318850-1"><a href="#b3318850-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> elasticsearch.helpers <span class="im">import</span> bulk, parallel_bulk</span>
-<span id="b3318850-2"><a href="#b3318850-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
-<span id="b3318850-3"><a href="#b3318850-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b3318850-4"><a href="#b3318850-4" aria-hidden="true" tabindex="-1"></a>deque(</span>
-<span id="b3318850-5"><a href="#b3318850-5" aria-hidden="true" tabindex="-1"></a>    parallel_bulk(</span>
-<span id="b3318850-6"><a href="#b3318850-6" aria-hidden="true" tabindex="-1"></a>        client<span class="op">=</span>es,</span>
-<span id="b3318850-7"><a href="#b3318850-7" aria-hidden="true" tabindex="-1"></a>        actions<span class="op">=</span>gen_dict_from_pandas(<span class="st">"sirene"</span>, df_geolocalized),</span>
-<span id="b3318850-8"><a href="#b3318850-8" aria-hidden="true" tabindex="-1"></a>        chunk_size<span class="op">=</span><span class="dv">1000</span>,</span>
-<span id="b3318850-9"><a href="#b3318850-9" aria-hidden="true" tabindex="-1"></a>        thread_count<span class="op">=</span><span class="dv">4</span>,</span>
-<span id="b3318850-10"><a href="#b3318850-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="b3318850-11"><a href="#b3318850-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2431a475" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="2431a475"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2431a475-1"><a href="#2431a475-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> elasticsearch.helpers <span class="im">import</span> bulk, parallel_bulk</span>
+<span id="2431a475-2"><a href="#2431a475-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
+<span id="2431a475-3"><a href="#2431a475-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="2431a475-4"><a href="#2431a475-4" aria-hidden="true" tabindex="-1"></a>deque(</span>
+<span id="2431a475-5"><a href="#2431a475-5" aria-hidden="true" tabindex="-1"></a>    parallel_bulk(</span>
+<span id="2431a475-6"><a href="#2431a475-6" aria-hidden="true" tabindex="-1"></a>        client<span class="op">=</span>es,</span>
+<span id="2431a475-7"><a href="#2431a475-7" aria-hidden="true" tabindex="-1"></a>        actions<span class="op">=</span>gen_dict_from_pandas(<span class="st">"sirene"</span>, df_geolocalized),</span>
+<span id="2431a475-8"><a href="#2431a475-8" aria-hidden="true" tabindex="-1"></a>        chunk_size<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="2431a475-9"><a href="#2431a475-9" aria-hidden="true" tabindex="-1"></a>        thread_count<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="2431a475-10"><a href="#2431a475-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="2431a475-11"><a href="#2431a475-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7739da11" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="7739da11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7739da11-1"><a href="#7739da11-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"sirene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="110112cb" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="110112cb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="110112cb-1"><a href="#110112cb-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"sirene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'count': 13059694, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}})</code></pre>
 </section>
@@ -1144,51 +1144,51 @@ réactives, nous allons régulièrement
 utiliser la fonction suivante qui s’appuie
 sur un code déjà présenté dans un autre
 chapitre.</p>
-<div id="c9cf3379" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="c9cf3379"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c9cf3379-1"><a href="#c9cf3379-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_folium_sirene(df, yvar, xvar):</span>
-<span id="c9cf3379-2"><a href="#c9cf3379-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c9cf3379-3"><a href="#c9cf3379-3" aria-hidden="true" tabindex="-1"></a>    center <span class="op">=</span> df[[yvar, xvar]].mean().values.tolist()</span>
-<span id="c9cf3379-4"><a href="#c9cf3379-4" aria-hidden="true" tabindex="-1"></a>    sw <span class="op">=</span> df[[yvar, xvar]].<span class="bu">min</span>().values.tolist()</span>
-<span id="c9cf3379-5"><a href="#c9cf3379-5" aria-hidden="true" tabindex="-1"></a>    ne <span class="op">=</span> df[[yvar, xvar]].<span class="bu">max</span>().values.tolist()</span>
-<span id="c9cf3379-6"><a href="#c9cf3379-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c9cf3379-7"><a href="#c9cf3379-7" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> folium.Map(location<span class="op">=</span>center, tiles<span class="op">=</span><span class="st">"OpenStreetMap"</span>)</span>
-<span id="c9cf3379-8"><a href="#c9cf3379-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c9cf3379-9"><a href="#c9cf3379-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># I can add marker one by one on the map</span></span>
-<span id="c9cf3379-10"><a href="#c9cf3379-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(df)):</span>
-<span id="c9cf3379-11"><a href="#c9cf3379-11" aria-hidden="true" tabindex="-1"></a>        folium.Marker(</span>
-<span id="c9cf3379-12"><a href="#c9cf3379-12" aria-hidden="true" tabindex="-1"></a>            [df.iloc[i][yvar], df.iloc[i][xvar]],</span>
-<span id="c9cf3379-13"><a href="#c9cf3379-13" aria-hidden="true" tabindex="-1"></a>            popup<span class="op">=</span>df.iloc[i][<span class="st">"_source.denom"</span>]</span>
-<span id="c9cf3379-14"><a href="#c9cf3379-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> <span class="ss">f'&lt;br&gt;(Score: </span><span class="sc">{</span>df<span class="sc">.</span>iloc[i][<span class="st">"_score"</span>]<span class="sc">:.2f}</span><span class="ss">)'</span>,</span>
-<span id="c9cf3379-15"><a href="#c9cf3379-15" aria-hidden="true" tabindex="-1"></a>            icon<span class="op">=</span>folium.Icon(icon<span class="op">=</span><span class="st">"home"</span>),</span>
-<span id="c9cf3379-16"><a href="#c9cf3379-16" aria-hidden="true" tabindex="-1"></a>        ).add_to(m)</span>
-<span id="c9cf3379-17"><a href="#c9cf3379-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c9cf3379-18"><a href="#c9cf3379-18" aria-hidden="true" tabindex="-1"></a>    m.fit_bounds([sw, ne])</span>
-<span id="c9cf3379-19"><a href="#c9cf3379-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c9cf3379-20"><a href="#c9cf3379-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="23d2d744" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="23d2d744"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="23d2d744-1"><a href="#23d2d744-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_folium_sirene(df, yvar, xvar):</span>
+<span id="23d2d744-2"><a href="#23d2d744-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="23d2d744-3"><a href="#23d2d744-3" aria-hidden="true" tabindex="-1"></a>    center <span class="op">=</span> df[[yvar, xvar]].mean().values.tolist()</span>
+<span id="23d2d744-4"><a href="#23d2d744-4" aria-hidden="true" tabindex="-1"></a>    sw <span class="op">=</span> df[[yvar, xvar]].<span class="bu">min</span>().values.tolist()</span>
+<span id="23d2d744-5"><a href="#23d2d744-5" aria-hidden="true" tabindex="-1"></a>    ne <span class="op">=</span> df[[yvar, xvar]].<span class="bu">max</span>().values.tolist()</span>
+<span id="23d2d744-6"><a href="#23d2d744-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="23d2d744-7"><a href="#23d2d744-7" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> folium.Map(location<span class="op">=</span>center, tiles<span class="op">=</span><span class="st">"OpenStreetMap"</span>)</span>
+<span id="23d2d744-8"><a href="#23d2d744-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="23d2d744-9"><a href="#23d2d744-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># I can add marker one by one on the map</span></span>
+<span id="23d2d744-10"><a href="#23d2d744-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(df)):</span>
+<span id="23d2d744-11"><a href="#23d2d744-11" aria-hidden="true" tabindex="-1"></a>        folium.Marker(</span>
+<span id="23d2d744-12"><a href="#23d2d744-12" aria-hidden="true" tabindex="-1"></a>            [df.iloc[i][yvar], df.iloc[i][xvar]],</span>
+<span id="23d2d744-13"><a href="#23d2d744-13" aria-hidden="true" tabindex="-1"></a>            popup<span class="op">=</span>df.iloc[i][<span class="st">"_source.denom"</span>]</span>
+<span id="23d2d744-14"><a href="#23d2d744-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> <span class="ss">f'&lt;br&gt;(Score: </span><span class="sc">{</span>df<span class="sc">.</span>iloc[i][<span class="st">"_score"</span>]<span class="sc">:.2f}</span><span class="ss">)'</span>,</span>
+<span id="23d2d744-15"><a href="#23d2d744-15" aria-hidden="true" tabindex="-1"></a>            icon<span class="op">=</span>folium.Icon(icon<span class="op">=</span><span class="st">"home"</span>),</span>
+<span id="23d2d744-16"><a href="#23d2d744-16" aria-hidden="true" tabindex="-1"></a>        ).add_to(m)</span>
+<span id="23d2d744-17"><a href="#23d2d744-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="23d2d744-18"><a href="#23d2d744-18" aria-hidden="true" tabindex="-1"></a>    m.fit_bounds([sw, ne])</span>
+<span id="23d2d744-19"><a href="#23d2d744-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="23d2d744-20"><a href="#23d2d744-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="premier-exemple-de-requête-géographique" class="level2">
 <h2 class="anchored" data-anchor-id="premier-exemple-de-requête-géographique">Premier exemple de requête géographique</h2>
-<div id="11979c09" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="11979c09"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="11979c09-1"><a href="#11979c09-1" aria-hidden="true" tabindex="-1"></a>ex1 <span class="op">=</span> es.search(</span>
-<span id="11979c09-2"><a href="#11979c09-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"sirene"</span>,</span>
-<span id="11979c09-3"><a href="#11979c09-3" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span><span class="st">"""{</span></span>
-<span id="11979c09-4"><a href="#11979c09-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "query": {</span></span>
-<span id="11979c09-5"><a href="#11979c09-5" aria-hidden="true" tabindex="-1"></a><span class="st">    "bool": {</span></span>
-<span id="11979c09-6"><a href="#11979c09-6" aria-hidden="true" tabindex="-1"></a><span class="st">      "must":</span></span>
-<span id="11979c09-7"><a href="#11979c09-7" aria-hidden="true" tabindex="-1"></a><span class="st">      { "match": { "denom":   "institut national de la statistique"</span><span class="sc">}}</span></span>
-<span id="11979c09-8"><a href="#11979c09-8" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="11979c09-9"><a href="#11979c09-9" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="11979c09-10"><a href="#11979c09-10" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="11979c09-11"><a href="#11979c09-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>,</span>
-<span id="11979c09-12"><a href="#11979c09-12" aria-hidden="true" tabindex="-1"></a>)[<span class="st">"hits"</span>][<span class="st">"hits"</span>]</span>
-<span id="11979c09-13"><a href="#11979c09-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="11979c09-14"><a href="#11979c09-14" aria-hidden="true" tabindex="-1"></a>echo_insee <span class="op">=</span> pd.json_normalize(ex1)</span>
-<span id="11979c09-15"><a href="#11979c09-15" aria-hidden="true" tabindex="-1"></a>echo_insee</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2ea3b618" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="2ea3b618"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2ea3b618-1"><a href="#2ea3b618-1" aria-hidden="true" tabindex="-1"></a>ex1 <span class="op">=</span> es.search(</span>
+<span id="2ea3b618-2"><a href="#2ea3b618-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"sirene"</span>,</span>
+<span id="2ea3b618-3"><a href="#2ea3b618-3" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span><span class="st">"""{</span></span>
+<span id="2ea3b618-4"><a href="#2ea3b618-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "query": {</span></span>
+<span id="2ea3b618-5"><a href="#2ea3b618-5" aria-hidden="true" tabindex="-1"></a><span class="st">    "bool": {</span></span>
+<span id="2ea3b618-6"><a href="#2ea3b618-6" aria-hidden="true" tabindex="-1"></a><span class="st">      "must":</span></span>
+<span id="2ea3b618-7"><a href="#2ea3b618-7" aria-hidden="true" tabindex="-1"></a><span class="st">      { "match": { "denom":   "institut national de la statistique"</span><span class="sc">}}</span></span>
+<span id="2ea3b618-8"><a href="#2ea3b618-8" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="2ea3b618-9"><a href="#2ea3b618-9" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="2ea3b618-10"><a href="#2ea3b618-10" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="2ea3b618-11"><a href="#2ea3b618-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>,</span>
+<span id="2ea3b618-12"><a href="#2ea3b618-12" aria-hidden="true" tabindex="-1"></a>)[<span class="st">"hits"</span>][<span class="st">"hits"</span>]</span>
+<span id="2ea3b618-13"><a href="#2ea3b618-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="2ea3b618-14"><a href="#2ea3b618-14" aria-hidden="true" tabindex="-1"></a>echo_insee <span class="op">=</span> pd.json_normalize(ex1)</span>
+<span id="2ea3b618-15"><a href="#2ea3b618-15" aria-hidden="true" tabindex="-1"></a>echo_insee</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On remarque déjà que les intitulés ne sont
 pas bons. Quand est-il de leurs localisations ?</p>
-<div id="43b70406" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="43b70406"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="43b70406-1"><a href="#43b70406-1" aria-hidden="true" tabindex="-1"></a>plot_folium_sirene(echo_insee, yvar<span class="op">=</span><span class="st">"_source.y_latitude"</span>, xvar<span class="op">=</span><span class="st">"_source.x_longitude"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8b2211ea" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="8b2211ea"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8b2211ea-1"><a href="#8b2211ea-1" aria-hidden="true" tabindex="-1"></a>plot_folium_sirene(echo_insee, yvar<span class="op">=</span><span class="st">"_source.y_latitude"</span>, xvar<span class="op">=</span><span class="st">"_source.x_longitude"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce premier essai nous suggère qu’il est
 nécessaire d’améliorer notre recherche.
@@ -1217,32 +1217,32 @@ chercher dans un rayon relativement
 restreint. Si notre position était plus
 approximative, on pourrait rechercher
 dans un rayon plus large.</p>
-<div id="5924c06a" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="5924c06a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5924c06a-1"><a href="#5924c06a-1" aria-hidden="true" tabindex="-1"></a>ex2 <span class="op">=</span> es.search(</span>
-<span id="5924c06a-2"><a href="#5924c06a-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"sirene"</span>,</span>
-<span id="5924c06a-3"><a href="#5924c06a-3" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span><span class="st">"""{</span></span>
-<span id="5924c06a-4"><a href="#5924c06a-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "query": {</span></span>
-<span id="5924c06a-5"><a href="#5924c06a-5" aria-hidden="true" tabindex="-1"></a><span class="st">    "bool": {</span></span>
-<span id="5924c06a-6"><a href="#5924c06a-6" aria-hidden="true" tabindex="-1"></a><span class="st">      "must":</span></span>
-<span id="5924c06a-7"><a href="#5924c06a-7" aria-hidden="true" tabindex="-1"></a><span class="st">      { "match": { "denom":   "institut national de la statistique"</span><span class="sc">}}</span></span>
-<span id="5924c06a-8"><a href="#5924c06a-8" aria-hidden="true" tabindex="-1"></a><span class="st">      ,</span></span>
-<span id="5924c06a-9"><a href="#5924c06a-9" aria-hidden="true" tabindex="-1"></a><span class="st">      "filter":</span></span>
-<span id="5924c06a-10"><a href="#5924c06a-10" aria-hidden="true" tabindex="-1"></a><span class="st">        {"geo_distance": {</span></span>
-<span id="5924c06a-11"><a href="#5924c06a-11" aria-hidden="true" tabindex="-1"></a><span class="st">          "distance": "1km",</span></span>
-<span id="5924c06a-12"><a href="#5924c06a-12" aria-hidden="true" tabindex="-1"></a><span class="st">          "location": {</span></span>
-<span id="5924c06a-13"><a href="#5924c06a-13" aria-hidden="true" tabindex="-1"></a><span class="st">            "lat": "48.8168",</span></span>
-<span id="5924c06a-14"><a href="#5924c06a-14" aria-hidden="true" tabindex="-1"></a><span class="st">            "lon": "2.3099"</span></span>
-<span id="5924c06a-15"><a href="#5924c06a-15" aria-hidden="true" tabindex="-1"></a><span class="st">          }</span></span>
-<span id="5924c06a-16"><a href="#5924c06a-16" aria-hidden="true" tabindex="-1"></a><span class="st">        }</span></span>
-<span id="5924c06a-17"><a href="#5924c06a-17" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="5924c06a-18"><a href="#5924c06a-18" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
-<span id="5924c06a-19"><a href="#5924c06a-19" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="5924c06a-20"><a href="#5924c06a-20" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="5924c06a-21"><a href="#5924c06a-21" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>,</span>
-<span id="5924c06a-22"><a href="#5924c06a-22" aria-hidden="true" tabindex="-1"></a>)[<span class="st">"hits"</span>][<span class="st">"hits"</span>]</span>
-<span id="5924c06a-23"><a href="#5924c06a-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5924c06a-24"><a href="#5924c06a-24" aria-hidden="true" tabindex="-1"></a>echo_insee <span class="op">=</span> pd.json_normalize(ex2)</span>
-<span id="5924c06a-25"><a href="#5924c06a-25" aria-hidden="true" tabindex="-1"></a>echo_insee</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="28a3df92" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="28a3df92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="28a3df92-1"><a href="#28a3df92-1" aria-hidden="true" tabindex="-1"></a>ex2 <span class="op">=</span> es.search(</span>
+<span id="28a3df92-2"><a href="#28a3df92-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"sirene"</span>,</span>
+<span id="28a3df92-3"><a href="#28a3df92-3" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span><span class="st">"""{</span></span>
+<span id="28a3df92-4"><a href="#28a3df92-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "query": {</span></span>
+<span id="28a3df92-5"><a href="#28a3df92-5" aria-hidden="true" tabindex="-1"></a><span class="st">    "bool": {</span></span>
+<span id="28a3df92-6"><a href="#28a3df92-6" aria-hidden="true" tabindex="-1"></a><span class="st">      "must":</span></span>
+<span id="28a3df92-7"><a href="#28a3df92-7" aria-hidden="true" tabindex="-1"></a><span class="st">      { "match": { "denom":   "institut national de la statistique"</span><span class="sc">}}</span></span>
+<span id="28a3df92-8"><a href="#28a3df92-8" aria-hidden="true" tabindex="-1"></a><span class="st">      ,</span></span>
+<span id="28a3df92-9"><a href="#28a3df92-9" aria-hidden="true" tabindex="-1"></a><span class="st">      "filter":</span></span>
+<span id="28a3df92-10"><a href="#28a3df92-10" aria-hidden="true" tabindex="-1"></a><span class="st">        {"geo_distance": {</span></span>
+<span id="28a3df92-11"><a href="#28a3df92-11" aria-hidden="true" tabindex="-1"></a><span class="st">          "distance": "1km",</span></span>
+<span id="28a3df92-12"><a href="#28a3df92-12" aria-hidden="true" tabindex="-1"></a><span class="st">          "location": {</span></span>
+<span id="28a3df92-13"><a href="#28a3df92-13" aria-hidden="true" tabindex="-1"></a><span class="st">            "lat": "48.8168",</span></span>
+<span id="28a3df92-14"><a href="#28a3df92-14" aria-hidden="true" tabindex="-1"></a><span class="st">            "lon": "2.3099"</span></span>
+<span id="28a3df92-15"><a href="#28a3df92-15" aria-hidden="true" tabindex="-1"></a><span class="st">          }</span></span>
+<span id="28a3df92-16"><a href="#28a3df92-16" aria-hidden="true" tabindex="-1"></a><span class="st">        }</span></span>
+<span id="28a3df92-17"><a href="#28a3df92-17" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="28a3df92-18"><a href="#28a3df92-18" aria-hidden="true" tabindex="-1"></a><span class="st">    }</span></span>
+<span id="28a3df92-19"><a href="#28a3df92-19" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="28a3df92-20"><a href="#28a3df92-20" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="28a3df92-21"><a href="#28a3df92-21" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>,</span>
+<span id="28a3df92-22"><a href="#28a3df92-22" aria-hidden="true" tabindex="-1"></a>)[<span class="st">"hits"</span>][<span class="st">"hits"</span>]</span>
+<span id="28a3df92-23"><a href="#28a3df92-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="28a3df92-24"><a href="#28a3df92-24" aria-hidden="true" tabindex="-1"></a>echo_insee <span class="op">=</span> pd.json_normalize(ex2)</span>
+<span id="28a3df92-25"><a href="#28a3df92-25" aria-hidden="true" tabindex="-1"></a>echo_insee</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-warning" role="alert">
@@ -1265,29 +1265,29 @@ développée par Etalab.</p>
 ciblés. Néanmoins ils sont toujours décevants
 puisqu’on ne parvient pas à identifier l’Insee
 dans les dix meilleurs échos.</p>
-<div id="eb0a12f9" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="eb0a12f9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eb0a12f9-1"><a href="#eb0a12f9-1" aria-hidden="true" tabindex="-1"></a>specificsearch <span class="op">=</span> es.search(</span>
-<span id="eb0a12f9-2"><a href="#eb0a12f9-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"sirus_2020"</span>,</span>
-<span id="eb0a12f9-3"><a href="#eb0a12f9-3" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span><span class="st">"""{</span></span>
-<span id="eb0a12f9-4"><a href="#eb0a12f9-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "query": {</span></span>
-<span id="eb0a12f9-5"><a href="#eb0a12f9-5" aria-hidden="true" tabindex="-1"></a><span class="st">    "bool": {</span></span>
-<span id="eb0a12f9-6"><a href="#eb0a12f9-6" aria-hidden="true" tabindex="-1"></a><span class="st">      "should":</span></span>
-<span id="eb0a12f9-7"><a href="#eb0a12f9-7" aria-hidden="true" tabindex="-1"></a><span class="st">          { "match": { "rs_denom":   "CPCU - CENTRALE DE BERCY"</span><span class="sc">}}</span><span class="st">,</span></span>
-<span id="eb0a12f9-8"><a href="#eb0a12f9-8" aria-hidden="true" tabindex="-1"></a><span class="st">      "filter": [</span></span>
-<span id="eb0a12f9-9"><a href="#eb0a12f9-9" aria-hidden="true" tabindex="-1"></a><span class="st">          {"geo_distance": {</span></span>
-<span id="eb0a12f9-10"><a href="#eb0a12f9-10" aria-hidden="true" tabindex="-1"></a><span class="st">                  "distance": "0.5km",</span></span>
-<span id="eb0a12f9-11"><a href="#eb0a12f9-11" aria-hidden="true" tabindex="-1"></a><span class="st">                  "location": {</span></span>
-<span id="eb0a12f9-12"><a href="#eb0a12f9-12" aria-hidden="true" tabindex="-1"></a><span class="st">                        "lat": "48.84329", </span></span>
-<span id="eb0a12f9-13"><a href="#eb0a12f9-13" aria-hidden="true" tabindex="-1"></a><span class="st">                        "lon": "2.37396"</span></span>
-<span id="eb0a12f9-14"><a href="#eb0a12f9-14" aria-hidden="true" tabindex="-1"></a><span class="st">                              }</span></span>
-<span id="eb0a12f9-15"><a href="#eb0a12f9-15" aria-hidden="true" tabindex="-1"></a><span class="st">                            }</span></span>
-<span id="eb0a12f9-16"><a href="#eb0a12f9-16" aria-hidden="true" tabindex="-1"></a><span class="st">            }, </span></span>
-<span id="eb0a12f9-17"><a href="#eb0a12f9-17" aria-hidden="true" tabindex="-1"></a><span class="st">            { "prefix":  { "apet": "3530" </span><span class="sc">}}</span></span>
-<span id="eb0a12f9-18"><a href="#eb0a12f9-18" aria-hidden="true" tabindex="-1"></a><span class="st">                ]</span></span>
-<span id="eb0a12f9-19"><a href="#eb0a12f9-19" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
-<span id="eb0a12f9-20"><a href="#eb0a12f9-20" aria-hidden="true" tabindex="-1"></a><span class="st">          }</span></span>
-<span id="eb0a12f9-21"><a href="#eb0a12f9-21" aria-hidden="true" tabindex="-1"></a><span class="st">}"""</span>,</span>
-<span id="eb0a12f9-22"><a href="#eb0a12f9-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6f1dbfde" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="6f1dbfde"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6f1dbfde-1"><a href="#6f1dbfde-1" aria-hidden="true" tabindex="-1"></a>specificsearch <span class="op">=</span> es.search(</span>
+<span id="6f1dbfde-2"><a href="#6f1dbfde-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"sirus_2020"</span>,</span>
+<span id="6f1dbfde-3"><a href="#6f1dbfde-3" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span><span class="st">"""{</span></span>
+<span id="6f1dbfde-4"><a href="#6f1dbfde-4" aria-hidden="true" tabindex="-1"></a><span class="st">  "query": {</span></span>
+<span id="6f1dbfde-5"><a href="#6f1dbfde-5" aria-hidden="true" tabindex="-1"></a><span class="st">    "bool": {</span></span>
+<span id="6f1dbfde-6"><a href="#6f1dbfde-6" aria-hidden="true" tabindex="-1"></a><span class="st">      "should":</span></span>
+<span id="6f1dbfde-7"><a href="#6f1dbfde-7" aria-hidden="true" tabindex="-1"></a><span class="st">          { "match": { "rs_denom":   "CPCU - CENTRALE DE BERCY"</span><span class="sc">}}</span><span class="st">,</span></span>
+<span id="6f1dbfde-8"><a href="#6f1dbfde-8" aria-hidden="true" tabindex="-1"></a><span class="st">      "filter": [</span></span>
+<span id="6f1dbfde-9"><a href="#6f1dbfde-9" aria-hidden="true" tabindex="-1"></a><span class="st">          {"geo_distance": {</span></span>
+<span id="6f1dbfde-10"><a href="#6f1dbfde-10" aria-hidden="true" tabindex="-1"></a><span class="st">                  "distance": "0.5km",</span></span>
+<span id="6f1dbfde-11"><a href="#6f1dbfde-11" aria-hidden="true" tabindex="-1"></a><span class="st">                  "location": {</span></span>
+<span id="6f1dbfde-12"><a href="#6f1dbfde-12" aria-hidden="true" tabindex="-1"></a><span class="st">                        "lat": "48.84329", </span></span>
+<span id="6f1dbfde-13"><a href="#6f1dbfde-13" aria-hidden="true" tabindex="-1"></a><span class="st">                        "lon": "2.37396"</span></span>
+<span id="6f1dbfde-14"><a href="#6f1dbfde-14" aria-hidden="true" tabindex="-1"></a><span class="st">                              }</span></span>
+<span id="6f1dbfde-15"><a href="#6f1dbfde-15" aria-hidden="true" tabindex="-1"></a><span class="st">                            }</span></span>
+<span id="6f1dbfde-16"><a href="#6f1dbfde-16" aria-hidden="true" tabindex="-1"></a><span class="st">            }, </span></span>
+<span id="6f1dbfde-17"><a href="#6f1dbfde-17" aria-hidden="true" tabindex="-1"></a><span class="st">            { "prefix":  { "apet": "3530" </span><span class="sc">}}</span></span>
+<span id="6f1dbfde-18"><a href="#6f1dbfde-18" aria-hidden="true" tabindex="-1"></a><span class="st">                ]</span></span>
+<span id="6f1dbfde-19"><a href="#6f1dbfde-19" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
+<span id="6f1dbfde-20"><a href="#6f1dbfde-20" aria-hidden="true" tabindex="-1"></a><span class="st">          }</span></span>
+<span id="6f1dbfde-21"><a href="#6f1dbfde-21" aria-hidden="true" tabindex="-1"></a><span class="st">}"""</span>,</span>
+<span id="6f1dbfde-22"><a href="#6f1dbfde-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="informations-additionnelles" class="level2 unnumbered">
@@ -1296,9 +1296,9 @@ dans les dix meilleurs échos.</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-12</p>
+<p>Latest built version: 2024-04-19</p>
 <p>Python version used:</p>
-<div id="b8305165" class="cell" data-execution_count="25">
+<div id="c13819f4" class="cell" data-execution_count="25">
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1366,112 +1366,120 @@ dans les dix meilleurs échos.</p>
 <td style="text-align: left;">23.2.0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Babel</td>
+<td style="text-align: left;">2.14.0</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">bcrypt</td>
 <td style="text-align: left;">4.1.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">beautifulsoup4</td>
 <td style="text-align: left;">4.12.3</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">black</td>
-<td style="text-align: left;">24.3.0</td>
-</tr>
 <tr class="odd">
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">24.4.0</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">blinker</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">blis</td>
 <td style="text-align: left;">0.7.11</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">bokeh</td>
 <td style="text-align: left;">3.4.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">boltons</td>
 <td style="text-align: left;">23.1.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">boto3</td>
 <td style="text-align: left;">1.34.51</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">botocore</td>
 <td style="text-align: left;">1.34.51</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">branca</td>
 <td style="text-align: left;">0.7.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Brotli</td>
 <td style="text-align: left;">1.1.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cachetools</td>
 <td style="text-align: left;">5.3.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">cartiflette</td>
 <td style="text-align: left;">0.0.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Cartopy</td>
 <td style="text-align: left;">0.23.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">catalogue</td>
 <td style="text-align: left;">2.0.10</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cattrs</td>
 <td style="text-align: left;">23.2.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">certifi</td>
 <td style="text-align: left;">2024.2.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cffi</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">charset-normalizer</td>
 <td style="text-align: left;">3.3.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">chromedriver-autoinstaller</td>
 <td style="text-align: left;">0.6.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">click</td>
 <td style="text-align: left;">8.1.7</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">click-plugins</td>
 <td style="text-align: left;">1.1.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">cligj</td>
 <td style="text-align: left;">0.7.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cloudpathlib</td>
 <td style="text-align: left;">0.16.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">cloudpickle</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">colorama</td>
 <td style="text-align: left;">0.4.6</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">comm</td>
 <td style="text-align: left;">0.2.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">commonmark</td>
+<td style="text-align: left;">0.9.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">conda</td>
@@ -1666,16 +1674,24 @@ dans les dix meilleurs échos.</p>
 <td style="text-align: left;">0.20.3</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">great-tables</td>
+<td style="text-align: left;">0.5.0</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">greenlet</td>
 <td style="text-align: left;">3.0.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">gunicorn</td>
 <td style="text-align: left;">21.2.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">h11</td>
 <td style="text-align: left;">0.14.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">htmltools</td>
+<td style="text-align: left;">0.5.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hvac</td>
@@ -2183,7 +2199,7 @@ dans les dix meilleurs échos.</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rasterio</td>
-<td style="text-align: left;">1.3.9</td>
+<td style="text-align: left;">1.3.10</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">referencing</td>
@@ -2347,7 +2363,7 @@ dans les dix meilleurs échos.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tifffile</td>
-<td style="text-align: left;">2024.2.12</td>
+<td style="text-align: left;">2024.4.18</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tomli</td>
@@ -2426,70 +2442,74 @@ dans les dix meilleurs échos.</p>
 <td style="text-align: left;">0.3.4</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">webcolors</td>
+<td style="text-align: left;">1.13</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">webdriver-manager</td>
 <td style="text-align: left;">4.0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">websocket-client</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Werkzeug</td>
 <td style="text-align: left;">3.0.2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wheel</td>
 <td style="text-align: left;">0.43.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">widgetsnbextension</td>
 <td style="text-align: left;">4.0.10</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wordcloud</td>
 <td style="text-align: left;">1.9.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wrapt</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wsproto</td>
 <td style="text-align: left;">1.2.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xgboost</td>
 <td style="text-align: left;">2.0.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xlrd</td>
 <td style="text-align: left;">2.0.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xyzservices</td>
 <td style="text-align: left;">2024.4.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">yarl</td>
 <td style="text-align: left;">1.9.4</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">yellowbrick</td>
 <td style="text-align: left;">1.5</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zict</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zipp</td>
 <td style="text-align: left;">3.17.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zstandard</td>
 <td style="text-align: left;">0.22.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"></td>
 </tr>

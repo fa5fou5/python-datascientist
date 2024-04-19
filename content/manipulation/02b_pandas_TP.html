@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-12">
+<meta name="dcterms.date" content="2024-04-19">
 <meta name="description" content="Après avoir présenté la logique de Pandas dans le chapitre précédent, ce chapitre vise à illustrer les fonctionalités du package à partir de données d’émissions de gaz à effet de serre de l’Ademe.">
 
 <title>Python pour la data science - Pratique de pandas : un exemple complet</title>
@@ -165,7 +165,7 @@ de l’Ademe.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-12">
+<meta name="citation_online_date" content="2024-04-19">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -501,7 +501,7 @@ de l’Ademe.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-12</p>
+        <p class="date">2024-04-19</p>
       </div>
     </div>
     
@@ -594,6 +594,7 @@ de l’Ademe.">
   <li><a href="#travail-préliminaire" id="toc-travail-préliminaire" class="nav-link" data-scroll-target="#travail-préliminaire">Travail préliminaire</a></li>
   <li><a href="#associer-des-données" id="toc-associer-des-données" class="nav-link" data-scroll-target="#associer-des-données">Associer des données</a></li>
   </ul></li>
+  <li><a href="#formatter-des-tableaux-de-statistiques-descriptives" id="toc-formatter-des-tableaux-de-statistiques-descriptives" class="nav-link" data-scroll-target="#formatter-des-tableaux-de-statistiques-descriptives">Formatter des tableaux de statistiques descriptives</a></li>
   <li><a href="#exercices-bonus" id="toc-exercices-bonus" class="nav-link" data-scroll-target="#exercices-bonus">Exercices bonus</a></li>
   <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
   </ul>
@@ -608,8 +609,8 @@ de l’Ademe.">
 
 <p>Les exemples de ce TP sont visualisables sous forme de <code>Jupyter Notebooks</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="1038" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1037;"><span id="cb1-1038"><a href="#cb1-1038" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">replace</span>(<span class="st">".html"</span><span class="op">,</span> <span class="st">".qmd"</span>)<span class="op">;</span></span>
-<span id="cb1-1039"><a href="#cb1-1039" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path})<span class="sc">}</span><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="1233" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1232;"><span id="cb1-1233"><a href="#cb1-1233" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">replace</span>(<span class="st">".html"</span><span class="op">,</span> <span class="st">".qmd"</span>)<span class="op">;</span></span>
+<span id="cb1-1234"><a href="#cb1-1234" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path})<span class="sc">}</span><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -626,158 +627,158 @@ de l’Ademe.">
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="1044" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1043;"><span id="cb2-1044"><a href="#cb2-1044" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-1045"><a href="#cb2-1045" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
-<span id="cb2-1046"><a href="#cb2-1046" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
-<span id="cb2-1047"><a href="#cb2-1047" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
-<span id="cb2-1048"><a href="#cb2-1048" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1049"><a href="#cb2-1049" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-1050"><a href="#cb2-1050" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1051"><a href="#cb2-1051" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-1052"><a href="#cb2-1052" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-1053"><a href="#cb2-1053" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
-<span id="cb2-1054"><a href="#cb2-1054" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-1055"><a href="#cb2-1055" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1056"><a href="#cb2-1056" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1057"><a href="#cb2-1057" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
-<span id="cb2-1058"><a href="#cb2-1058" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-1059"><a href="#cb2-1059" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
-<span id="cb2-1060"><a href="#cb2-1060" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1061"><a href="#cb2-1061" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
-<span id="cb2-1062"><a href="#cb2-1062" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1063"><a href="#cb2-1063" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1064"><a href="#cb2-1064" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
-<span id="cb2-1065"><a href="#cb2-1065" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
-<span id="cb2-1066"><a href="#cb2-1066" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1067"><a href="#cb2-1067" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1068"><a href="#cb2-1068" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink<span class="op">,</span> nbviewerLink<span class="op">;</span></span>
-<span id="cb2-1069"><a href="#cb2-1069" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1070"><a href="#cb2-1070" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
-<span id="cb2-1071"><a href="#cb2-1071" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
-<span id="cb2-1072"><a href="#cb2-1072" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/tree/main`</span><span class="op">;</span></span>
-<span id="cb2-1073"><a href="#cb2-1073" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1074"><a href="#cb2-1074" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
-<span id="cb2-1075"><a href="#cb2-1075" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1076"><a href="#cb2-1076" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1077"><a href="#cb2-1077" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1078"><a href="#cb2-1078" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1079"><a href="#cb2-1079" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
-<span id="cb2-1080"><a href="#cb2-1080" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1081"><a href="#cb2-1081" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> downloadLink<span class="op">;</span></span>
-<span id="cb2-1082"><a href="#cb2-1082" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1083"><a href="#cb2-1083" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1084"><a href="#cb2-1084" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1085"><a href="#cb2-1085" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`&lt;a href="https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter" alt="Download"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1086"><a href="#cb2-1086" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1087"><a href="#cb2-1087" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1088"><a href="#cb2-1088" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1089"><a href="#cb2-1089" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1090"><a href="#cb2-1090" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> visualizeLink<span class="op">;</span></span>
-<span id="cb2-1091"><a href="#cb2-1091" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1092"><a href="#cb2-1092" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1093"><a href="#cb2-1093" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1094"><a href="#cb2-1094" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter" alt="nbviewer"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1095"><a href="#cb2-1095" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1096"><a href="#cb2-1096" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1097"><a href="#cb2-1097" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-1098"><a href="#cb2-1098" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
-<span id="cb2-1099"><a href="#cb2-1099" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
-<span id="cb2-1100"><a href="#cb2-1100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1101"><a href="#cb2-1101" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-1102"><a href="#cb2-1102" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
-<span id="cb2-1103"><a href="#cb2-1103" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1104"><a href="#cb2-1104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1105"><a href="#cb2-1105" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
-<span id="cb2-1106"><a href="#cb2-1106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1107"><a href="#cb2-1107" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-1108"><a href="#cb2-1108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1109"><a href="#cb2-1109" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
-<span id="cb2-1110"><a href="#cb2-1110" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1111"><a href="#cb2-1111" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1112"><a href="#cb2-1112" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1113"><a href="#cb2-1113" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1114"><a href="#cb2-1114" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1115"><a href="#cb2-1115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1116"><a href="#cb2-1116" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
-<span id="cb2-1117"><a href="#cb2-1117" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-1118"><a href="#cb2-1118" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1119"><a href="#cb2-1119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1120"><a href="#cb2-1120" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-1121"><a href="#cb2-1121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1122"><a href="#cb2-1122" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
-<span id="cb2-1123"><a href="#cb2-1123" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1124"><a href="#cb2-1124" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1125"><a href="#cb2-1125" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1126"><a href="#cb2-1126" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1127"><a href="#cb2-1127" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1128"><a href="#cb2-1128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1129"><a href="#cb2-1129" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
-<span id="cb2-1130"><a href="#cb2-1130" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-1131"><a href="#cb2-1131" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1132"><a href="#cb2-1132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1133"><a href="#cb2-1133" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
-<span id="cb2-1134"><a href="#cb2-1134" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1135"><a href="#cb2-1135" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1136"><a href="#cb2-1136" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1137"><a href="#cb2-1137" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1138"><a href="#cb2-1138" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1139"><a href="#cb2-1139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1140"><a href="#cb2-1140" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
-<span id="cb2-1141"><a href="#cb2-1141" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-1142"><a href="#cb2-1142" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1143"><a href="#cb2-1143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1144"><a href="#cb2-1144" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
-<span id="cb2-1145"><a href="#cb2-1145" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1146"><a href="#cb2-1146" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1147"><a href="#cb2-1147" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1148"><a href="#cb2-1148" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1149"><a href="#cb2-1149" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1150"><a href="#cb2-1150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1151"><a href="#cb2-1151" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
-<span id="cb2-1152"><a href="#cb2-1152" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span> downloadLink<span class="op">,</span></span>
-<span id="cb2-1153"><a href="#cb2-1153" aria-hidden="true" tabindex="-1"></a>        visualizeLink<span class="op">,</span> sspcloudJupyterLink<span class="op">,</span></span>
-<span id="cb2-1154"><a href="#cb2-1154" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink</span>
-<span id="cb2-1155"><a href="#cb2-1155" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
-<span id="cb2-1156"><a href="#cb2-1156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1157"><a href="#cb2-1157" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
-<span id="cb2-1158"><a href="#cb2-1158" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink<span class="op">,</span> vscodeLink)<span class="op">;</span></span>
-<span id="cb2-1159"><a href="#cb2-1159" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1160"><a href="#cb2-1160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1161"><a href="#cb2-1161" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
-<span id="cb2-1162"><a href="#cb2-1162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1163"><a href="#cb2-1163" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
-<span id="cb2-1164"><a href="#cb2-1164" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1165"><a href="#cb2-1165" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1166"><a href="#cb2-1166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1167"><a href="#cb2-1167" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
-<span id="cb2-1168"><a href="#cb2-1168" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1169"><a href="#cb2-1169" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1170"><a href="#cb2-1170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1171"><a href="#cb2-1171" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
-<span id="cb2-1172"><a href="#cb2-1172" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-1173"><a href="#cb2-1173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1174"><a href="#cb2-1174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1175"><a href="#cb2-1175" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
-<span id="cb2-1176"><a href="#cb2-1176" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
-<span id="cb2-1177"><a href="#cb2-1177" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1178"><a href="#cb2-1178" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
-<span id="cb2-1179"><a href="#cb2-1179" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
-<span id="cb2-1180"><a href="#cb2-1180" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-1181"><a href="#cb2-1181" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1182"><a href="#cb2-1182" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-1183"><a href="#cb2-1183" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-1184"><a href="#cb2-1184" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-1185"><a href="#cb2-1185" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
-<span id="cb2-1186"><a href="#cb2-1186" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
-<span id="cb2-1187"><a href="#cb2-1187" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
-<span id="cb2-1188"><a href="#cb2-1188" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
-<span id="cb2-1189"><a href="#cb2-1189" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
-<span id="cb2-1190"><a href="#cb2-1190" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
-<span id="cb2-1191"><a href="#cb2-1191" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
-<span id="cb2-1192"><a href="#cb2-1192" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
-<span id="cb2-1193"><a href="#cb2-1193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1194"><a href="#cb2-1194" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
-<span id="cb2-1195"><a href="#cb2-1195" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="1239" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1238;"><span id="cb2-1239"><a href="#cb2-1239" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb2-1240"><a href="#cb2-1240" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
+<span id="cb2-1241"><a href="#cb2-1241" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
+<span id="cb2-1242"><a href="#cb2-1242" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb2-1243"><a href="#cb2-1243" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-1244"><a href="#cb2-1244" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb2-1245"><a href="#cb2-1245" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-1246"><a href="#cb2-1246" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-1247"><a href="#cb2-1247" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb2-1248"><a href="#cb2-1248" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
+<span id="cb2-1249"><a href="#cb2-1249" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-1250"><a href="#cb2-1250" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1251"><a href="#cb2-1251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1252"><a href="#cb2-1252" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
+<span id="cb2-1253"><a href="#cb2-1253" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb2-1254"><a href="#cb2-1254" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
+<span id="cb2-1255"><a href="#cb2-1255" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1256"><a href="#cb2-1256" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
+<span id="cb2-1257"><a href="#cb2-1257" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1258"><a href="#cb2-1258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1259"><a href="#cb2-1259" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
+<span id="cb2-1260"><a href="#cb2-1260" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
+<span id="cb2-1261"><a href="#cb2-1261" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-1262"><a href="#cb2-1262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1263"><a href="#cb2-1263" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink<span class="op">,</span> nbviewerLink<span class="op">;</span></span>
+<span id="cb2-1264"><a href="#cb2-1264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1265"><a href="#cb2-1265" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
+<span id="cb2-1266"><a href="#cb2-1266" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
+<span id="cb2-1267"><a href="#cb2-1267" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/tree/main`</span><span class="op">;</span></span>
+<span id="cb2-1268"><a href="#cb2-1268" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1269"><a href="#cb2-1269" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
+<span id="cb2-1270"><a href="#cb2-1270" aria-hidden="true" tabindex="-1"></a>        nbviewerLink <span class="op">=</span> <span class="vs">`https://nbviewer.jupyter.org/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-1271"><a href="#cb2-1271" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1272"><a href="#cb2-1272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1273"><a href="#cb2-1273" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-1274"><a href="#cb2-1274" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb2-1275"><a href="#cb2-1275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1276"><a href="#cb2-1276" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> downloadLink<span class="op">;</span></span>
+<span id="cb2-1277"><a href="#cb2-1277" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-1278"><a href="#cb2-1278" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`[![Download](https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter)](https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-1279"><a href="#cb2-1279" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1280"><a href="#cb2-1280" aria-hidden="true" tabindex="-1"></a>        downloadLink <span class="op">=</span> <span class="vs">`&lt;a href="https://downgit.github.io/#/home?url=</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Download-Notebook-important?logo=Jupyter" alt="Download"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1281"><a href="#cb2-1281" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1282"><a href="#cb2-1282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1283"><a href="#cb2-1283" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1284"><a href="#cb2-1284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1285"><a href="#cb2-1285" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> visualizeLink<span class="op">;</span></span>
+<span id="cb2-1286"><a href="#cb2-1286" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-1287"><a href="#cb2-1287" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`[![nbviewer](https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter)](</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-1288"><a href="#cb2-1288" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1289"><a href="#cb2-1289" aria-hidden="true" tabindex="-1"></a>        visualizeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>nbviewerLink<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/Visualize-nbviewer-blue?logo=Jupyter" alt="nbviewer"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1290"><a href="#cb2-1290" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1291"><a href="#cb2-1291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1292"><a href="#cb2-1292" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-1293"><a href="#cb2-1293" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
+<span id="cb2-1294"><a href="#cb2-1294" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
+<span id="cb2-1295"><a href="#cb2-1295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1296"><a href="#cb2-1296" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb2-1297"><a href="#cb2-1297" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
+<span id="cb2-1298"><a href="#cb2-1298" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1299"><a href="#cb2-1299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1300"><a href="#cb2-1300" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb2-1301"><a href="#cb2-1301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1302"><a href="#cb2-1302" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb2-1303"><a href="#cb2-1303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1304"><a href="#cb2-1304" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
+<span id="cb2-1305"><a href="#cb2-1305" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-1306"><a href="#cb2-1306" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-1307"><a href="#cb2-1307" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1308"><a href="#cb2-1308" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1309"><a href="#cb2-1309" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1310"><a href="#cb2-1310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1311"><a href="#cb2-1311" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
+<span id="cb2-1312"><a href="#cb2-1312" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-1313"><a href="#cb2-1313" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1314"><a href="#cb2-1314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1315"><a href="#cb2-1315" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb2-1316"><a href="#cb2-1316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1317"><a href="#cb2-1317" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
+<span id="cb2-1318"><a href="#cb2-1318" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-1319"><a href="#cb2-1319" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-1320"><a href="#cb2-1320" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1321"><a href="#cb2-1321" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1322"><a href="#cb2-1322" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1323"><a href="#cb2-1323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1324"><a href="#cb2-1324" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
+<span id="cb2-1325"><a href="#cb2-1325" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-1326"><a href="#cb2-1326" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1327"><a href="#cb2-1327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1328"><a href="#cb2-1328" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
+<span id="cb2-1329"><a href="#cb2-1329" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-1330"><a href="#cb2-1330" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-1331"><a href="#cb2-1331" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1332"><a href="#cb2-1332" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1333"><a href="#cb2-1333" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1334"><a href="#cb2-1334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1335"><a href="#cb2-1335" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
+<span id="cb2-1336"><a href="#cb2-1336" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb2-1337"><a href="#cb2-1337" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1338"><a href="#cb2-1338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1339"><a href="#cb2-1339" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
+<span id="cb2-1340"><a href="#cb2-1340" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb2-1341"><a href="#cb2-1341" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb2-1342"><a href="#cb2-1342" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-1343"><a href="#cb2-1343" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1344"><a href="#cb2-1344" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1345"><a href="#cb2-1345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1346"><a href="#cb2-1346" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
+<span id="cb2-1347"><a href="#cb2-1347" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span> downloadLink<span class="op">,</span></span>
+<span id="cb2-1348"><a href="#cb2-1348" aria-hidden="true" tabindex="-1"></a>        visualizeLink<span class="op">,</span> sspcloudJupyterLink<span class="op">,</span></span>
+<span id="cb2-1349"><a href="#cb2-1349" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink</span>
+<span id="cb2-1350"><a href="#cb2-1350" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
+<span id="cb2-1351"><a href="#cb2-1351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1352"><a href="#cb2-1352" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
+<span id="cb2-1353"><a href="#cb2-1353" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink<span class="op">,</span> vscodeLink)<span class="op">;</span></span>
+<span id="cb2-1354"><a href="#cb2-1354" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1355"><a href="#cb2-1355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1356"><a href="#cb2-1356" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
+<span id="cb2-1357"><a href="#cb2-1357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1358"><a href="#cb2-1358" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
+<span id="cb2-1359"><a href="#cb2-1359" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb2-1360"><a href="#cb2-1360" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1361"><a href="#cb2-1361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1362"><a href="#cb2-1362" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
+<span id="cb2-1363"><a href="#cb2-1363" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-1364"><a href="#cb2-1364" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-1365"><a href="#cb2-1365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1366"><a href="#cb2-1366" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
+<span id="cb2-1367"><a href="#cb2-1367" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-1368"><a href="#cb2-1368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1369"><a href="#cb2-1369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1370"><a href="#cb2-1370" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
+<span id="cb2-1371"><a href="#cb2-1371" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
+<span id="cb2-1372"><a href="#cb2-1372" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-1373"><a href="#cb2-1373" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
+<span id="cb2-1374"><a href="#cb2-1374" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
+<span id="cb2-1375"><a href="#cb2-1375" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb2-1376"><a href="#cb2-1376" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-1377"><a href="#cb2-1377" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb2-1378"><a href="#cb2-1378" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb2-1379"><a href="#cb2-1379" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb2-1380"><a href="#cb2-1380" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
+<span id="cb2-1381"><a href="#cb2-1381" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
+<span id="cb2-1382"><a href="#cb2-1382" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
+<span id="cb2-1383"><a href="#cb2-1383" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
+<span id="cb2-1384"><a href="#cb2-1384" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
+<span id="cb2-1385"><a href="#cb2-1385" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
+<span id="cb2-1386"><a href="#cb2-1386" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
+<span id="cb2-1387"><a href="#cb2-1387" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb2-1388"><a href="#cb2-1388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-1389"><a href="#cb2-1389" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
+<span id="cb2-1390"><a href="#cb2-1390" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -819,19 +820,20 @@ produit par l’Insee utilisé pour identifier les communes à partir d’un cod
 </ul>
 <p>La librairie <code>pynsee</code> n’est pas installée par défaut avec <code>Python</code>. Avant de pouvoir l’utiliser,
 il est nécessaire de l’installer :</p>
-<div id="8f9cf866" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="8f9cf866"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8f9cf866-1"><a href="#8f9cf866-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span>
-<span id="8f9cf866-2"><a href="#8f9cf866-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pynsee</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="de55ffc6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="de55ffc6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="de55ffc6-1"><a href="#de55ffc6-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span>
+<span id="de55ffc6-2"><a href="#de55ffc6-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pynsee</span>
+<span id="de55ffc6-3"><a href="#de55ffc6-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install great_tables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Toutes les dépendances indispensables étant installées, il suffit
 maintenant d’importer les librairies qui seront utilisées
 pendant ces exercices :</p>
-<div id="64f0cfd5" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="64f0cfd5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="64f0cfd5-1"><a href="#64f0cfd5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="64f0cfd5-2"><a href="#64f0cfd5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="64f0cfd5-3"><a href="#64f0cfd5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="64f0cfd5-4"><a href="#64f0cfd5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee</span>
-<span id="64f0cfd5-5"><a href="#64f0cfd5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee.download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b85ae280" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="b85ae280"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b85ae280-1"><a href="#b85ae280-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="b85ae280-2"><a href="#b85ae280-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="b85ae280-3"><a href="#b85ae280-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="b85ae280-4"><a href="#b85ae280-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee</span>
+<span id="b85ae280-5"><a href="#b85ae280-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee.download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="importer-les-données" class="level2">
 <h2 class="anchored" data-anchor-id="importer-les-données">Importer les données</h2>
@@ -841,17 +843,30 @@ pendant ces exercices :</p>
 plutôt qu’un chemin absolu.</p>
 <p>Pour préparer cet exercice, le code suivant permettra de
 télécharger des données qu’on va écrire en local</p>
+<div id="8d2d2ee8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="8d2d2ee8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8d2d2ee8-1"><a href="#8d2d2ee8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="8d2d2ee8-2"><a href="#8d2d2ee8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8d2d2ee8-3"><a href="#8d2d2ee8-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.insee.fr/fr/statistiques/fichier/6800675/v_commune_2023.csv"</span></span>
+<span id="8d2d2ee8-4"><a href="#8d2d2ee8-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="8d2d2ee8-5"><a href="#8d2d2ee8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8d2d2ee8-6"><a href="#8d2d2ee8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assurez-vous que la requête a réussi</span></span>
+<span id="8d2d2ee8-7"><a href="#8d2d2ee8-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="8d2d2ee8-8"><a href="#8d2d2ee8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"cog_2023.csv"</span>, <span class="st">"wb"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="8d2d2ee8-9"><a href="#8d2d2ee8-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">file</span>.write(response.content)</span>
+<span id="8d2d2ee8-10"><a href="#8d2d2ee8-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="8d2d2ee8-11"><a href="#8d2d2ee8-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Échec du téléchargement du fichier. Statut HTTP :"</span>, response.status_code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice préliminaire: Importer un CSV</h3>
+<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice préliminaire: Importer un CSV&lt; (optionnel)/h3&gt;
 <ol type="1">
-<li>Utiliser le code ci-dessus pour télécharger les données. Utiliser <code>Pandas</code> pour lire le fichier téléchargé.</li>
+<li>Utiliser le code ci-dessus ☝️ pour télécharger les données. Utiliser <code>Pandas</code> pour lire le fichier téléchargé.</li>
 <li>Chercher où les données ont été écrites. Observer la structure de ce dossier.</li>
 <li>Créer un dossier depuis l’explorateur de fichiers (à gauche dans <code>Jupyter</code> ou <code>VSCode</code>). Déplacer le CSV et le <em>notebook</em>. Redémarrer le kernel et adaptez votre code si besoin. Refaire cette manipulation plusieurs fois avec des dossiers différents. Quel peut être le problème rencontré ?</li>
 </ol>
+</h3></div>
 </div>
-</div>
-<div id="eca8319f" class="cell" data-execution_count="4">
+<div id="9c2e2109" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 <div>
@@ -913,47 +928,13 @@ télécharger des données qu’on va écrire en local</p>
 </div>
 </div>
 </div>
-<div id="dc3e27e9" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>['04b_regex_TP.qmd',
- '04a_webscraping_TP.ipynb',
- '03_geopandas_TP.qmd',
- '03_geopandas_TP.ipynb',
- '01_numpy_files',
- '02b_pandas_TP.qmd',
- 'index.qmd',
- '04c_API_TP.qmd',
- '01_numpy.ipynb',
- '01_numpy.html',
- '02a_pandas_tutorial.qmd',
- '_06a_exo_supp_webscraping.qmd',
- '04c_API_TP.ipynb',
- '02a_pandas_tutorial.html',
- '04b_regex_TP.ipynb',
- '01_numpy.qmd',
- 'index.html',
- '02a_pandas_tutorial.ipynb',
- 'knn.png',
- '_play_with_projection.qmd',
- '03_geopandas_tutorial.ipynb',
- 'scatter_numpy.png',
- 'index.ipynb',
- '04a_webscraping_TP.qmd',
- 'cog_2023.csv',
- '07_dask.qmd',
- '02b_pandas_TP.ipynb',
- '02a_pandas_tutorial_files',
- '03_geopandas_tutorial.qmd',
- 'featured_pandas_tutorial.png']</code></pre>
-</div>
-</div>
 </section>
 <section id="import-dun-csv-de-lademe" class="level3">
 <h3 class="anchored" data-anchor-id="import-dun-csv-de-lademe">Import d’un csv de l’Ademe</h3>
 <p>Il est plus pratique lorsque le CSV est disponible directement depuis un lien HTTPS de lire directement les données avec <code>Pandas</code>, sans passer par l’écriture d’un fichier en local. Cela permet de limiter les problèmes d’adhérance à un <em>file system</em>.</p>
 <p>L’URL d’accès aux données peut être conservé dans une variable <em>ad hoc</em> :</p>
-<div id="a24e3fd8" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="a24e3fd8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a24e3fd8-1"><a href="#a24e3fd8-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://koumoul.com/s/data-fair/api/v1/datasets/igt-pouvoir-de-rechauffement-global/convert"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9b22ac87" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="9b22ac87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9b22ac87-1"><a href="#9b22ac87-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://koumoul.com/s/data-fair/api/v1/datasets/igt-pouvoir-de-rechauffement-global/convert"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et utilisé ensuite pour la lecture des données.
 L’objectif du premier exercice est de se familiariser à l’import et l’affichage de données
@@ -1103,7 +1084,7 @@ Indice pour cette question
 </div>
 <p>A la question 5, quand on ordonne les communes exclusivement à partir de la variable
 <code>transports_total</code>, on obtient ainsi:</p>
-<div id="7a6f3f67" class="cell" data-execution_count="10">
+<div id="a2a7fe03" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 <div>
@@ -1157,7 +1138,7 @@ Indice pour cette question
 </div>
 </div>
 <p>A la question 6, on obtient ce classement :</p>
-<div id="a179625e" class="cell" data-execution_count="11">
+<div id="d9188869" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 <div>
@@ -1242,9 +1223,9 @@ après avoir fait <code>import pynsee</code>.
 Celle-ci renvoie un <code>DataFrame</code> dans lequel on peut
 rechercher, par exemple grâce à une recherche
 de mots-clefs :</p>
-<div id="03a55576" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pynsee.get_file_list()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>meta.loc[meta[<span class="st">"label"</span>].<span class="bu">str</span>.contains(<span class="vs">r"Filosofi.*2016"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dac75422" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pynsee.get_file_list()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>meta.loc[meta[<span class="st">"label"</span>].<span class="bu">str</span>.contains(<span class="vs">r"Filosofi.*2016"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 <div>
@@ -1514,13 +1495,13 @@ mais cela permettra tout de même d’illustrer
 les principales fonctionnalités de <code>Pandas</code></p>
 <p>Le point d’entrée principal de la fonction <code>pynsee</code> est la fonction <code>download_file</code>.</p>
 <p>Le code pour télécharger les données est le suivant :</p>
-<div id="8a647519" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="8a647519"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8a647519-1"><a href="#8a647519-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pynsee.download <span class="im">import</span> download_file</span>
-<span id="8a647519-2"><a href="#8a647519-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8a647519-3"><a href="#8a647519-3" aria-hidden="true" tabindex="-1"></a>filosofi <span class="op">=</span> download_file(<span class="st">"FILOSOFI_COM_2016"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d57238e1" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="d57238e1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d57238e1-1"><a href="#d57238e1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pynsee.download <span class="im">import</span> download_file</span>
+<span id="d57238e1-2"><a href="#d57238e1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d57238e1-3"><a href="#d57238e1-3" aria-hidden="true" tabindex="-1"></a>filosofi <span class="op">=</span> download_file(<span class="st">"FILOSOFI_COM_2016"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le <em>DataFrame</em> en question a l’aspect suivant :</p>
-<div id="10f9ce69" class="cell" data-execution_count="14">
+<div id="72b93d14" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 <div>
@@ -1555,12 +1536,60 @@ les principales fonctionnalités de <code>Pandas</code></p>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">807</td>
-<td>02432</td>
-<td>Limé</td>
-<td>77</td>
-<td>180.5</td>
-<td>19918</td>
+<td data-quarto-table-cell-role="th">25898</td>
+<td>66003</td>
+<td>Amélie-les-Bains-Palalda</td>
+<td>2137</td>
+<td>3672.5</td>
+<td>16883</td>
+<td>34</td>
+<td>25</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>35</td>
+<td>...</td>
+<td>53.8</td>
+<td>11</td>
+<td>9.1</td>
+<td>1.4</td>
+<td>4.8</td>
+<td>3</td>
+<td>-13.8</td>
+<td>9192.857142857143</td>
+<td>28360</td>
+<td>3.085003885003885</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">29109</td>
+<td>74112</td>
+<td>Epagny Metz-Tessy</td>
+<td>3237</td>
+<td>7962.5</td>
+<td>27572.5</td>
+<td>66</td>
+<td>5</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>16.3</td>
+<td>10.3</td>
+<td>2.2</td>
+<td>1.2</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>-17.1</td>
+<td>15482.666666666666</td>
+<td>55382.66666666666</td>
+<td>3.577075439200826</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26813</td>
+<td>68187</td>
+<td>Linsdorf</td>
+<td>130</td>
+<td>329</td>
+<td>33398.21428571429</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1579,60 +1608,12 @@ les principales fonctionnalités de <code>Pandas</code></p>
 <td>NaN</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9850</td>
-<td>27610</td>
-<td>Saint-Victor-sur-Avre</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">25236</td>
-<td>64366</td>
-<td>Mascaraàs-Haron</td>
-<td>52</td>
-<td>111</td>
-<td>19699.33333333333</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">15543</td>
-<td>41184</td>
-<td>Prunay-Cassereau</td>
-<td>252</td>
-<td>614.5</td>
-<td>21800.47619047619</td>
+<td data-quarto-table-cell-role="th">32818</td>
+<td>85233</td>
+<td>Saint-Jean-de-Beugné</td>
+<td>242</td>
+<td>602.5</td>
+<td>19535.23809523809</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1651,28 +1632,28 @@ les principales fonctionnalités de <code>Pandas</code></p>
 <td>NaN</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">33270</td>
-<td>87129</td>
-<td>Royères</td>
-<td>371</td>
-<td>907</td>
-<td>21942.38095238095</td>
-<td>NaN</td>
+<td data-quarto-table-cell-role="th">14871</td>
+<td>39367</td>
+<td>Morbier</td>
+<td>997</td>
+<td>2350</td>
+<td>29114.444444444445</td>
+<td>71</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>23.8</td>
+<td>6.5</td>
+<td>1.7</td>
+<td>0.8</td>
+<td>0.5</td>
+<td>0.4</td>
+<td>-18.3</td>
+<td>15759.5</td>
+<td>50911.379310344826</td>
+<td>3.230519960045993</td>
 </tr>
 </tbody>
 </table>
@@ -1684,10 +1665,10 @@ les principales fonctionnalités de <code>Pandas</code></p>
 </div>
 <p><code>Pandas</code> a géré automatiquement les types de variables. Il le fait relativement bien, mais une vérification est toujours utile pour les variables qui ont un statut spécifique.</p>
 <p>Pour les variables qui ne sont pas en type <code>float</code> alors qu’elles devraient l’être, on modifie leur type.</p>
-<div id="0bdea84d" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="0bdea84d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0bdea84d-1"><a href="#0bdea84d-1" aria-hidden="true" tabindex="-1"></a>filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]] <span class="op">=</span> filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]].<span class="bu">apply</span>(</span>
-<span id="0bdea84d-2"><a href="#0bdea84d-2" aria-hidden="true" tabindex="-1"></a>    pd.to_numeric, errors<span class="op">=</span><span class="st">"coerce"</span></span>
-<span id="0bdea84d-3"><a href="#0bdea84d-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e6a7a537" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="e6a7a537"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e6a7a537-1"><a href="#e6a7a537-1" aria-hidden="true" tabindex="-1"></a>filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]] <span class="op">=</span> filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]].<span class="bu">apply</span>(</span>
+<span id="e6a7a537-2"><a href="#e6a7a537-2" aria-hidden="true" tabindex="-1"></a>    pd.to_numeric, errors<span class="op">=</span><span class="st">"coerce"</span></span>
+<span id="e6a7a537-3"><a href="#e6a7a537-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Un simple coup d’oeil sur les données
 donne une idée assez précise de la manière dont les données sont organisées.
@@ -1714,9 +1695,9 @@ exercice illustre cette fonctionnalité.</p>
 <div class="alert alert-success" role="alert">
 <h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 3 : Les indices</h3>
 <p>On suppose ici qu’on peut se fier aux codes communes. En effet, on a un même ordre de grandeur de communes dans les deux bases.</p>
-<div id="ceb38141" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(emissions[[<span class="st">"INSEE commune"</span>, <span class="st">"Commune"</span>]].nunique())</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(filosofi[[<span class="st">"CODGEO"</span>, <span class="st">"LIBGEO"</span>]].nunique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6bc03671" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(emissions[[<span class="st">"INSEE commune"</span>, <span class="st">"Commune"</span>]].nunique())</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(filosofi[[<span class="st">"CODGEO"</span>, <span class="st">"LIBGEO"</span>]].nunique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>INSEE commune    35798
 Commune          33338
@@ -1874,7 +1855,7 @@ de manière minimale.</p>
 </div>
 </div>
 <p>A l’issue de la question 5, le graphique des corrélations est le suivant :</p>
-<div id="63588d27" class="cell" data-execution_count="37">
+<div id="9c03de4f" class="cell" data-execution_count="37">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1884,6 +1865,467 @@ de manière minimale.</p>
 </div>
 </div>
 </section>
+</section>
+<section id="formatter-des-tableaux-de-statistiques-descriptives" class="level2">
+<h2 class="anchored" data-anchor-id="formatter-des-tableaux-de-statistiques-descriptives">Formatter des tableaux de statistiques descriptives</h2>
+<p>De manière automatique un <em>dataframe</em> <code>Pandas</code>
+est mis en forme lorsqu’il est visualisé depuis un <em>notebook</em>.
+Cette mise en forme est pratique pour voir
+les données, une tâche indispensable pour les <em>data scientists</em>
+mais ne permet pas d’aller vraiment au-delà. Dans une phase
+exploratoire, il peut être pratique d’avoir un tableau
+un peu plus complet, intégrant notamment des visualisations
+minimalistes, pour mieux connaître ses données. Dans la phase
+finale d’un projet, lorsqu’on communique sur un projet, il
+est avantageux de disposer d’une visualisation attrative.
+Pour ces deux besoins, les sorties des <em>notebooks</em> sont
+une réponse peu satisfaisante, en plus de nécessiter
+le <em>medium</em> du <em>notebook</em> qui peut en rebuter certains.</p>
+<p>Heureusement, le tout jeune <em>package</em> <a href="https://posit-dev.github.io/great-tables/get-started/"><code>great_tables</code></a> permet, de manière programmatique
+et assez simple, la création de tableaux
+qui n’ont rien à envier à des productions manuelles faites dans <code>Excel</code>
+et difficilement répliquables. <code>great_tables</code> construit des tableaux
+<em>html</em> ce qui offre une grande richesse dans la mise en forme.
+L’exercice suivant proposera de construire un tableau avec
+ce <em>package</em>, pas à pas.</p>
+<p>Afin de se concentrer sur la construction du tableau,
+les préparations de données à faire en amont sont données
+directement. Nous allons repartir de ce jeu de données:</p>
+<div id="6617cfc5" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="6617cfc5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6617cfc5-1"><a href="#6617cfc5-1" aria-hidden="true" tabindex="-1"></a>emissions_merged.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">INSEE commune</th>
+<th data-quarto-table-cell-role="th">Commune</th>
+<th data-quarto-table-cell-role="th">Agriculture</th>
+<th data-quarto-table-cell-role="th">Autres transports</th>
+<th data-quarto-table-cell-role="th">Autres transports international</th>
+<th data-quarto-table-cell-role="th">CO2 biomasse hors-total</th>
+<th data-quarto-table-cell-role="th">Déchets</th>
+<th data-quarto-table-cell-role="th">Energie</th>
+<th data-quarto-table-cell-role="th">Industrie hors-énergie</th>
+<th data-quarto-table-cell-role="th">Résidentiel</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">PPSOC16</th>
+<th data-quarto-table-cell-role="th">PPFAM16</th>
+<th data-quarto-table-cell-role="th">PPMINI16</th>
+<th data-quarto-table-cell-role="th">PPLOGT16</th>
+<th data-quarto-table-cell-role="th">PIMPOT16</th>
+<th data-quarto-table-cell-role="th">D116</th>
+<th data-quarto-table-cell-role="th">D916</th>
+<th data-quarto-table-cell-role="th">RD16</th>
+<th data-quarto-table-cell-role="th">dep_y</th>
+<th data-quarto-table-cell-role="th">empreinte</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>01001</td>
+<td>L'ABERGEMENT-CLEMENCIAT</td>
+<td>3711.425991</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>432.751835</td>
+<td>101.430476</td>
+<td>2.354558</td>
+<td>6.911213</td>
+<td>309.358195</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>01</td>
+<td>7.196009</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>01002</td>
+<td>L'ABERGEMENT-DE-VAREY</td>
+<td>475.330205</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>140.741660</td>
+<td>140.675439</td>
+<td>2.354558</td>
+<td>6.911213</td>
+<td>104.866444</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>01</td>
+<td>5.374240</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>01004</td>
+<td>AMBERIEU-EN-BUGEY</td>
+<td>499.043526</td>
+<td>212.577908</td>
+<td>NaN</td>
+<td>10313.446515</td>
+<td>5314.314445</td>
+<td>998.332482</td>
+<td>2930.354461</td>
+<td>16616.822534</td>
+<td>...</td>
+<td>6.9</td>
+<td>2.8</td>
+<td>2.1</td>
+<td>2.0</td>
+<td>-15.7</td>
+<td>10457.083333</td>
+<td>33880.555556</td>
+<td>3.239962</td>
+<td>01</td>
+<td>4.446141</td>
+</tr>
+</tbody>
+</table>
+
+<p>3 rows × 45 columns</p>
+</div>
+</div>
+</div>
+</div>
+<p>Nous allons construire un tableau de statistiques
+descriptives par département mettant en parallèle
+l’empreinte carbone, le revenu médian et la population
+de chaque département</p>
+<div id="3c6fe672" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="3c6fe672"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3c6fe672-1"><a href="#3c6fe672-1" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> (</span>
+<span id="3c6fe672-2"><a href="#3c6fe672-2" aria-hidden="true" tabindex="-1"></a>    emissions_merged.rename(</span>
+<span id="3c6fe672-3"><a href="#3c6fe672-3" aria-hidden="true" tabindex="-1"></a>        columns<span class="op">=</span>{<span class="st">"dep_y"</span>: <span class="st">"dep"</span>, <span class="st">"NBPERSMENFISC16"</span>: <span class="st">"population"</span>, <span class="st">"MED16"</span>: <span class="st">"revenu"</span>}</span>
+<span id="3c6fe672-4"><a href="#3c6fe672-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="3c6fe672-5"><a href="#3c6fe672-5" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"dep"</span>)</span>
+<span id="3c6fe672-6"><a href="#3c6fe672-6" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="3c6fe672-7"><a href="#3c6fe672-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"empreinte"</span>: <span class="st">"sum"</span>, <span class="st">"revenu"</span>: <span class="st">"median"</span>, <span class="st">"population"</span>: <span class="st">"sum"</span>}</span>
+<span id="3c6fe672-8"><a href="#3c6fe672-8" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># pas vraiment le revenu médian</span></span>
+<span id="3c6fe672-9"><a href="#3c6fe672-9" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="3c6fe672-10"><a href="#3c6fe672-10" aria-hidden="true" tabindex="-1"></a>    .sort_values(by<span class="op">=</span><span class="st">"empreinte"</span>)</span>
+<span id="3c6fe672-11"><a href="#3c6fe672-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dans ce tableau nous allons intégrer des barres horizontales,
+à la manière des exemples présentés <a href="https://posit-dev.github.io/great-tables/examples/">ici</a>. Cela se fait en incluant directement
+le code <em>html</em> dans la colonne du <em>DataFrame</em></p>
+<div id="df424d03" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="df424d03"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="df424d03-1"><a href="#df424d03-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_bar(</span>
+<span id="df424d03-2"><a href="#df424d03-2" aria-hidden="true" tabindex="-1"></a>    prop_fill: <span class="bu">float</span>, max_width: <span class="bu">int</span>, height: <span class="bu">int</span>, color: <span class="bu">str</span> <span class="op">=</span> <span class="st">"green"</span></span>
+<span id="df424d03-3"><a href="#df424d03-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="df424d03-4"><a href="#df424d03-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create divs to represent prop_fill as a bar."""</span></span>
+<span id="df424d03-5"><a href="#df424d03-5" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="bu">round</span>(max_width <span class="op">*</span> prop_fill, <span class="dv">2</span>)</span>
+<span id="df424d03-6"><a href="#df424d03-6" aria-hidden="true" tabindex="-1"></a>    px_width <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>width<span class="sc">}</span><span class="ss">px"</span></span>
+<span id="df424d03-7"><a href="#df424d03-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"""</span><span class="ch">\</span></span>
+<span id="df424d03-8"><a href="#df424d03-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;div style="width: </span><span class="sc">{</span>max_width<span class="sc">}</span><span class="ss">px; background-color: lightgrey;"&gt;</span><span class="ch">\</span></span>
+<span id="df424d03-9"><a href="#df424d03-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        &lt;div style="height:</span><span class="sc">{</span>height<span class="sc">}</span><span class="ss">px;width:</span><span class="sc">{</span>px_width<span class="sc">}</span><span class="ss">;background-color:</span><span class="sc">{</span>color<span class="sc">}</span><span class="ss">;"&gt;&lt;/div&gt;</span><span class="ch">\</span></span>
+<span id="df424d03-10"><a href="#df424d03-10" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;/div&gt;</span><span class="ch">\</span></span>
+<span id="df424d03-11"><a href="#df424d03-11" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="df424d03-12"><a href="#df424d03-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="df424d03-13"><a href="#df424d03-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="df424d03-14"><a href="#df424d03-14" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> {<span class="st">"empreinte"</span>: <span class="st">"green"</span>, <span class="st">"revenu"</span>: <span class="st">"red"</span>, <span class="st">"population"</span>: <span class="st">"blue"</span>}</span>
+<span id="df424d03-15"><a href="#df424d03-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="df424d03-16"><a href="#df424d03-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> variable <span class="kw">in</span> [<span class="st">"empreinte"</span>, <span class="st">"revenu"</span>, <span class="st">"population"</span>]:</span>
+<span id="df424d03-17"><a href="#df424d03-17" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> (</span>
+<span id="df424d03-18"><a href="#df424d03-18" aria-hidden="true" tabindex="-1"></a>        emissions_table[variable] <span class="op">/</span> emissions_table[variable].<span class="bu">max</span>()</span>
+<span id="df424d03-19"><a href="#df424d03-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="df424d03-20"><a href="#df424d03-20" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"bar_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>].<span class="bu">map</span>(</span>
+<span id="df424d03-21"><a href="#df424d03-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">lambda</span> x: create_bar(x, max_width<span class="op">=</span><span class="dv">75</span>, height<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span>colors[variable])</span>
+<span id="df424d03-22"><a href="#df424d03-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nous ne gardons que les 5 plus petites empreintes carbone, et les
+cinq plus importantes.</p>
+<div id="f0f041e7" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="f0f041e7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f0f041e7-1"><a href="#f0f041e7-1" aria-hidden="true" tabindex="-1"></a>emissions_min <span class="op">=</span> (</span>
+<span id="f0f041e7-2"><a href="#f0f041e7-2" aria-hidden="true" tabindex="-1"></a>    emissions_table.head(<span class="dv">5</span>)</span>
+<span id="f0f041e7-3"><a href="#f0f041e7-3" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les moins pollueurs"</span>)</span>
+<span id="f0f041e7-4"><a href="#f0f041e7-4" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="f0f041e7-5"><a href="#f0f041e7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="f0f041e7-6"><a href="#f0f041e7-6" aria-hidden="true" tabindex="-1"></a>emissions_max <span class="op">=</span> (</span>
+<span id="f0f041e7-7"><a href="#f0f041e7-7" aria-hidden="true" tabindex="-1"></a>    emissions_table.tail(<span class="dv">5</span>)</span>
+<span id="f0f041e7-8"><a href="#f0f041e7-8" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les plus pollueurs"</span>)</span>
+<span id="f0f041e7-9"><a href="#f0f041e7-9" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="f0f041e7-10"><a href="#f0f041e7-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="f0f041e7-11"><a href="#f0f041e7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f0f041e7-12"><a href="#f0f041e7-12" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pd.concat([emissions_min, emissions_max])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Enfin, pour pouvoir utiliser quelques fonctions
+pratiques pour sélectionner des colonnes à partir
+de motifs, nous allons convertir les données
+au format <a href="https://pola.rs/"><code>Polars</code></a></p>
+<div id="f28b3610" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="f28b3610"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f28b3610-1"><a href="#f28b3610-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="f28b3610-2"><a href="#f28b3610-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f28b3610-3"><a href="#f28b3610-3" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pl.from_pandas(emissions_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell markdown">
+<div class="alert alert-success" role="alert">
+<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 8: Un beau tableau de statistiques descriptives (exercice libre)</h3>
+<p>En prenant comme base ce tableau</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>GT(emissions_table, groupname_col<span class="op">=</span><span class="st">"grp"</span>, rowname_col<span class="op">=</span><span class="st">"dep"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>construire un tableau dans le style de celui ci-dessous</p>
+</div>
+</div>
+<p>Le tableau à obtenir:</p>
+<div id="39b65442" class="cell" data-execution_count="43">
+<div class="cell-output cell-output-display" data-execution_count="42">
+<div id="aqvirycova" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>
+#aqvirycova table {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#aqvirycova thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#aqvirycova p { margin: 0; padding: 0; }
+ #aqvirycova .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #aqvirycova .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #aqvirycova .gt_title { color: #FFFFFF; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #aqvirycova .gt_subtitle { color: #FFFFFF; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #aqvirycova .gt_heading { background-color: #0c540c; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #aqvirycova .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #aqvirycova .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #aqvirycova .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #aqvirycova .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #aqvirycova .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #aqvirycova .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #aqvirycova .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #aqvirycova .gt_spanner_row { border-bottom-style: hidden; }
+ #aqvirycova .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #aqvirycova .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #aqvirycova .gt_from_md> :first-child { margin-top: 0; }
+ #aqvirycova .gt_from_md> :last-child { margin-bottom: 0; }
+ #aqvirycova .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #aqvirycova .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #aqvirycova .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #aqvirycova .gt_row_group_first td { border-top-width: 2px; }
+ #aqvirycova .gt_row_group_first th { border-top-width: 2px; }
+ #aqvirycova .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #aqvirycova .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #aqvirycova .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #aqvirycova .gt_left { text-align: left; }
+ #aqvirycova .gt_center { text-align: center; }
+ #aqvirycova .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #aqvirycova .gt_font_normal { font-weight: normal; }
+ #aqvirycova .gt_font_bold { font-weight: bold; }
+ #aqvirycova .gt_font_italic { font-style: italic; }
+ #aqvirycova .gt_super { font-size: 65%; }
+ #aqvirycova .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #aqvirycova .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead class="gt_header">
+  <tr>
+    <th colspan="10" class="gt_heading gt_title gt_font_normal"><strong>Empreinte carbone</strong></th>
+  </tr>
+  <tr>
+    <th colspan="10" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border"><em>Premières statistiques descriptives à affiner</em></th>
+  </tr>
+</thead>
+<tbody><tr class="gt_col_headings gt_spanner_row">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id=""></th>
+  <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Empreinte</strong>">
+    <span class="gt_column_spanner"><strong>Empreinte</strong></span>
+  </th>
+  <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Revenu médian</strong>">
+    <span class="gt_column_spanner"><strong>Revenu médian</strong></span>
+  </th>
+  <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Population</strong>">
+    <span class="gt_column_spanner"><strong>Population</strong></span>
+  </th>
+</tr>
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<strong>Empreinte carbone</strong>"><strong>Empreinte carbone</strong></th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<em>(%)</em>*"><em>(%)</em>*</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<strong>Revenu</strong>"><strong>Revenu</strong></th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<em>(%)</em>*"><em>(%)</em>*</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<strong>Population</strong>"><strong>Population</strong></th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<em>(%)</em>*"><em>(%)</em>*</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
+</tr>
+</tbody><tbody class="gt_table_body">
+<tr>
+</tr><tr class="gt_group_heading_row">  <th class="gt_group_heading" colspan="10">5 départements les moins pollueurs</th></tr>
+  <tr><th class="gt_row gt_left gt_stub">75</th>
+  <td class="gt_row gt_right">8.12</td>
+  <td class="gt_row gt_right">0.4%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.32px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">30.5K</td>
+  <td class="gt_row gt_right">100.0%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:75.0px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">2.07M</td>
+  <td class="gt_row gt_right">82.9%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:62.18px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">92</th>
+  <td class="gt_row gt_right">14.72</td>
+  <td class="gt_row gt_right">0.8%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.58px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">28.6K</td>
+  <td class="gt_row gt_right">93.6%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:70.23px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.58M</td>
+  <td class="gt_row gt_right">63.3%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:47.47px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">93</th>
+  <td class="gt_row gt_right">16.79</td>
+  <td class="gt_row gt_right">0.9%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.66px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">17.3K</td>
+  <td class="gt_row gt_right">56.6%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:42.46px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.59M</td>
+  <td class="gt_row gt_right">63.4%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:47.55px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">94</th>
+  <td class="gt_row gt_right">20.72</td>
+  <td class="gt_row gt_right">1.1%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.82px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">22.4K</td>
+  <td class="gt_row gt_right">73.5%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:55.15px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.35M</td>
+  <td class="gt_row gt_right">53.8%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:40.34px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">83</th>
+  <td class="gt_row gt_right">82.37</td>
+  <td class="gt_row gt_right">4.3%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:3.24px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">20.8K</td>
+  <td class="gt_row gt_right">68.3%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:51.23px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.05M</td>
+  <td class="gt_row gt_right">42.0%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:31.5px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+</tr><tr class="gt_group_heading_row">  <th class="gt_group_heading" colspan="10">5 départements les plus pollueurs</th></tr>
+  <tr><th class="gt_row gt_left gt_stub">62</th>
+  <td class="gt_row gt_right">962.41</td>
+  <td class="gt_row gt_right">50.5%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:37.87px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">19.7K</td>
+  <td class="gt_row gt_right">64.5%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:48.35px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.44M</td>
+  <td class="gt_row gt_right">57.5%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:43.14px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">76</th>
+  <td class="gt_row gt_right">966.25</td>
+  <td class="gt_row gt_right">50.7%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:38.02px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">21.0K</td>
+  <td class="gt_row gt_right">69.0%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:51.74px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.21M</td>
+  <td class="gt_row gt_right">48.3%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:36.21px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">80</th>
+  <td class="gt_row gt_right">969.32</td>
+  <td class="gt_row gt_right">50.9%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:38.14px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">20.0K</td>
+  <td class="gt_row gt_right">65.7%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:49.26px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">535.82K</td>
+  <td class="gt_row gt_right">21.4%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:16.06px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">51</th>
+  <td class="gt_row gt_right">983.67</td>
+  <td class="gt_row gt_right">51.6%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:38.7px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">22.6K</td>
+  <td class="gt_row gt_right">74.1%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:55.55px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">531.40K</td>
+  <td class="gt_row gt_right">21.2%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:15.93px;background-color:blue;"></div>    </div>    </td>
+</tr>
+<tr>
+  <th class="gt_row gt_left gt_stub">77</th>
+  <td class="gt_row gt_right">1,906.19</td>
+  <td class="gt_row gt_right">100.0%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:75.0px;background-color:green;"></div>    </div>    </td>
+  <td class="gt_row gt_right">23.8K</td>
+  <td class="gt_row gt_right">77.9%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:58.41px;background-color:red;"></div>    </div>    </td>
+  <td class="gt_row gt_right">1.37M</td>
+  <td class="gt_row gt_right">54.9%</td>
+  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:41.19px;background-color:blue;"></div>    </div>    </td>
+</tr>
+</tbody>
+  <tfoot class="gt_sourcenotes">
+  
+  <tr>
+    <td class="gt_sourcenote" colspan="10"><em>*<strong>Note</strong>: Le revenu médian présenté ici est une approximation du revenu médian du département</em>.</td>
+  </tr>
+
+
+  <tr>
+    <td class="gt_sourcenote" colspan="10"><em><strong>Lecture</strong>: Les colonnes <strong>(%)</strong> présentées ci-dessus sont rapportées à la valeur maximale de la variable</em></td>
+  </tr>
+
+
+  <tr>
+    <td class="gt_sourcenote" colspan="10"><em><strong>Source</strong>: Calculs à partir des données de l'Ademe</em></td>
+  </tr>
+
+</tfoot>
+
+</table>
+
+</div>
+        
+</div>
+</div>
+<p>Grâce à celui-ci, on peut déjà comprendre que notre définition
+de l’empreinte carbone est certainement défaillante. Il apparaît
+peu plausible que les habitants du 77 aient une empreinte 500 fois
+supérieure à celle de Paris intra-muros. La raison principale ?
+On n’est pas sur un concept d’émissions à la consommation mais à la
+production, ce qui pénalise les espaces industriels ou les espaces
+avec des aéroports…</p>
+<p>Pour aller plus loin sur la construction de tableaux
+avec <code>great_tables</code>, vous pouvez répliquer
+cet <a href="https://rgeo.linogaliana.fr/exercises/eval.html">exercice</a>
+de production de tableaux électoraux
+que j’ai proposé pour un cours de <code>R</code> avec <code>gt</code>, l’équivalent
+de <code>great_tables</code> pour <code>R</code>.</p>
 </section>
 <section id="exercices-bonus" class="level2">
 <h2 class="anchored" data-anchor-id="exercices-bonus">Exercices bonus</h2>
@@ -1900,10 +2342,10 @@ de manière minimale.</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-12</p>
+<p>Latest built version: 2024-04-19</p>
 <p>Python version used:</p>
-<div id="50278eb3" class="cell" data-execution_count="39">
-<div class="cell-output cell-output-display" data-execution_count="38">
+<div id="821967e1" class="cell" data-execution_count="45">
+<div class="cell-output cell-output-display" data-execution_count="44">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
 </div>
@@ -1970,108 +2412,116 @@ de manière minimale.</p>
 <td style="text-align: left;">23.2.0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Babel</td>
+<td style="text-align: left;">2.14.0</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">bcrypt</td>
 <td style="text-align: left;">4.1.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">beautifulsoup4</td>
 <td style="text-align: left;">4.12.3</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">black</td>
-<td style="text-align: left;">24.3.0</td>
-</tr>
 <tr class="odd">
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">24.4.0</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">blinker</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">blis</td>
 <td style="text-align: left;">0.7.11</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">bokeh</td>
 <td style="text-align: left;">3.4.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">boltons</td>
 <td style="text-align: left;">23.1.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">boto3</td>
 <td style="text-align: left;">1.34.51</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">botocore</td>
 <td style="text-align: left;">1.34.51</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">branca</td>
 <td style="text-align: left;">0.7.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Brotli</td>
 <td style="text-align: left;">1.1.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cachetools</td>
 <td style="text-align: left;">5.3.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">cartiflette</td>
 <td style="text-align: left;">0.0.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Cartopy</td>
 <td style="text-align: left;">0.23.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">catalogue</td>
 <td style="text-align: left;">2.0.10</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cattrs</td>
 <td style="text-align: left;">23.2.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">certifi</td>
 <td style="text-align: left;">2024.2.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cffi</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">charset-normalizer</td>
 <td style="text-align: left;">3.3.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">click</td>
 <td style="text-align: left;">8.1.7</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">click-plugins</td>
 <td style="text-align: left;">1.1.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cligj</td>
 <td style="text-align: left;">0.7.2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">cloudpathlib</td>
 <td style="text-align: left;">0.16.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cloudpickle</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">colorama</td>
 <td style="text-align: left;">0.4.6</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">comm</td>
 <td style="text-align: left;">0.2.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">commonmark</td>
+<td style="text-align: left;">0.9.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">conda</td>
@@ -2262,12 +2712,20 @@ de manière minimale.</p>
 <td style="text-align: left;">0.20.3</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">great-tables</td>
+<td style="text-align: left;">0.5.0</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">greenlet</td>
 <td style="text-align: left;">3.0.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">gunicorn</td>
 <td style="text-align: left;">21.2.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">htmltools</td>
+<td style="text-align: left;">0.5.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hvac</td>
@@ -2771,7 +3229,7 @@ de manière minimale.</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rasterio</td>
-<td style="text-align: left;">1.3.9</td>
+<td style="text-align: left;">1.3.10</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">referencing</td>
@@ -2927,7 +3385,7 @@ de manière minimale.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tifffile</td>
-<td style="text-align: left;">2024.2.12</td>
+<td style="text-align: left;">2024.4.18</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tomli</td>
@@ -2998,66 +3456,70 @@ de manière minimale.</p>
 <td style="text-align: left;">0.3.4</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">webcolors</td>
+<td style="text-align: left;">1.13</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">webdriver-manager</td>
 <td style="text-align: left;">4.0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">websocket-client</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Werkzeug</td>
 <td style="text-align: left;">3.0.2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wheel</td>
 <td style="text-align: left;">0.43.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">widgetsnbextension</td>
 <td style="text-align: left;">4.0.10</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wordcloud</td>
 <td style="text-align: left;">1.9.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wrapt</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xgboost</td>
 <td style="text-align: left;">2.0.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xlrd</td>
 <td style="text-align: left;">2.0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xyzservices</td>
 <td style="text-align: left;">2024.4.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">yarl</td>
 <td style="text-align: left;">1.9.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">yellowbrick</td>
 <td style="text-align: left;">1.5</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zict</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zipp</td>
 <td style="text-align: left;">3.17.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zstandard</td>
 <td style="text-align: left;">0.22.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"></td>
 </tr>
@@ -3070,7 +3532,7 @@ de manière minimale.</p>
 <p>View file history <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></p>
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="1068" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1067;"><span id="cb8-1068"><a href="#cb8-1068" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`Ce fichier a été modifié __</span><span class="sc">${</span>table_commit<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">__ fois depuis sa création le </span><span class="sc">${</span>creation_string<span class="sc">}</span><span class="vs"> (dernière modification le </span><span class="sc">${</span>last_modification_string<span class="sc">}</span><span class="vs">)`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="1263" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1262;"><span id="cb8-1263"><a href="#cb8-1263" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`Ce fichier a été modifié __</span><span class="sc">${</span>table_commit<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">__ fois depuis sa création le </span><span class="sc">${</span>creation_string<span class="sc">}</span><span class="vs"> (dernière modification le </span><span class="sc">${</span>last_modification_string<span class="sc">}</span><span class="vs">)`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="expression">
 
@@ -3078,25 +3540,25 @@ de manière minimale.</p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="1074" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1073;"><span id="cb9-1074"><a href="#cb9-1074" aria-hidden="true" tabindex="-1"></a>creation <span class="op">=</span> d3<span class="op">.</span><span class="fu">min</span>(</span>
-<span id="cb9-1075"><a href="#cb9-1075" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
-<span id="cb9-1076"><a href="#cb9-1076" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-1077"><a href="#cb9-1077" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-1078"><a href="#cb9-1078" aria-hidden="true" tabindex="-1"></a>last_modification <span class="op">=</span> d3<span class="op">.</span><span class="fu">max</span>(</span>
-<span id="cb9-1079"><a href="#cb9-1079" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
-<span id="cb9-1080"><a href="#cb9-1080" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-1081"><a href="#cb9-1081" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-1082"><a href="#cb9-1082" aria-hidden="true" tabindex="-1"></a>creation_string <span class="op">=</span> creation<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
-<span id="cb9-1083"><a href="#cb9-1083" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
-<span id="cb9-1084"><a href="#cb9-1084" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
-<span id="cb9-1085"><a href="#cb9-1085" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
-<span id="cb9-1086"><a href="#cb9-1086" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb9-1087"><a href="#cb9-1087" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-1088"><a href="#cb9-1088" aria-hidden="true" tabindex="-1"></a>last_modification_string <span class="op">=</span> last_modification<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
-<span id="cb9-1089"><a href="#cb9-1089" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
-<span id="cb9-1090"><a href="#cb9-1090" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
-<span id="cb9-1091"><a href="#cb9-1091" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
-<span id="cb9-1092"><a href="#cb9-1092" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="1269" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1268;"><span id="cb9-1269"><a href="#cb9-1269" aria-hidden="true" tabindex="-1"></a>creation <span class="op">=</span> d3<span class="op">.</span><span class="fu">min</span>(</span>
+<span id="cb9-1270"><a href="#cb9-1270" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
+<span id="cb9-1271"><a href="#cb9-1271" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-1272"><a href="#cb9-1272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-1273"><a href="#cb9-1273" aria-hidden="true" tabindex="-1"></a>last_modification <span class="op">=</span> d3<span class="op">.</span><span class="fu">max</span>(</span>
+<span id="cb9-1274"><a href="#cb9-1274" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
+<span id="cb9-1275"><a href="#cb9-1275" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-1276"><a href="#cb9-1276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-1277"><a href="#cb9-1277" aria-hidden="true" tabindex="-1"></a>creation_string <span class="op">=</span> creation<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
+<span id="cb9-1278"><a href="#cb9-1278" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
+<span id="cb9-1279"><a href="#cb9-1279" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
+<span id="cb9-1280"><a href="#cb9-1280" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
+<span id="cb9-1281"><a href="#cb9-1281" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb9-1282"><a href="#cb9-1282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-1283"><a href="#cb9-1283" aria-hidden="true" tabindex="-1"></a>last_modification_string <span class="op">=</span> last_modification<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
+<span id="cb9-1284"><a href="#cb9-1284" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
+<span id="cb9-1285"><a href="#cb9-1285" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
+<span id="cb9-1286"><a href="#cb9-1286" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
+<span id="cb9-1287"><a href="#cb9-1287" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-4-1" data-nodetype="declaration">
@@ -3127,7 +3589,7 @@ de manière minimale.</p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="1083" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1082;"><span id="cb10-1083"><a href="#cb10-1083" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="1278" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1277;"><span id="cb10-1278"><a href="#cb10-1278" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="expression">
 
@@ -3135,7 +3597,7 @@ de manière minimale.</p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="1103" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1102;"><span id="cb11-1103"><a href="#cb11-1103" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="1298" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1297;"><span id="cb11-1298"><a href="#cb11-1298" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="expression">
 
@@ -3160,6 +3622,20 @@ Description
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/7298c6c">7298c6c</a>
+</td>
+<td>
+2024-04-19 21:34:00
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Exercice great_tables (#489)
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/linogaliana/python-datascientist/commit/c03aa61">c03aa61</a>
@@ -3906,21 +4382,21 @@ Continuer la partie pandas (#13)
 </table>
 </details>
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="1119" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1118;"><span id="cb12-1119"><a href="#cb12-1119" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
-<span id="cb12-1120"><a href="#cb12-1120" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
-<span id="cb12-1121"><a href="#cb12-1121" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb12-1122"><a href="#cb12-1122" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
-<span id="cb12-1123"><a href="#cb12-1123" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
-<span id="cb12-1124"><a href="#cb12-1124" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
-<span id="cb12-1125"><a href="#cb12-1125" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
-<span id="cb12-1126"><a href="#cb12-1126" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
-<span id="cb12-1127"><a href="#cb12-1127" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
-<span id="cb12-1128"><a href="#cb12-1128" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
-<span id="cb12-1129"><a href="#cb12-1129" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
-<span id="cb12-1130"><a href="#cb12-1130" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
-<span id="cb12-1131"><a href="#cb12-1131" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-1132"><a href="#cb12-1132" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb12-1133"><a href="#cb12-1133" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="1314" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1313;"><span id="cb12-1314"><a href="#cb12-1314" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
+<span id="cb12-1315"><a href="#cb12-1315" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
+<span id="cb12-1316"><a href="#cb12-1316" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb12-1317"><a href="#cb12-1317" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
+<span id="cb12-1318"><a href="#cb12-1318" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
+<span id="cb12-1319"><a href="#cb12-1319" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb12-1320"><a href="#cb12-1320" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
+<span id="cb12-1321"><a href="#cb12-1321" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
+<span id="cb12-1322"><a href="#cb12-1322" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
+<span id="cb12-1323"><a href="#cb12-1323" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
+<span id="cb12-1324"><a href="#cb12-1324" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
+<span id="cb12-1325"><a href="#cb12-1325" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
+<span id="cb12-1326"><a href="#cb12-1326" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-1327"><a href="#cb12-1327" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-1328"><a href="#cb12-1328" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display hidden">
 <div id="ojs-cell-7" data-nodetype="declaration">
 
@@ -3928,15 +4404,15 @@ Continuer la partie pandas (#13)
 </div>
 </div>
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="1133" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1132;"><span id="cb13-1133"><a href="#cb13-1133" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb13-1134"><a href="#cb13-1134" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb13-1135"><a href="#cb13-1135" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
-<span id="cb13-1136"><a href="#cb13-1136" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb13-1137"><a href="#cb13-1137" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
-<span id="cb13-1138"><a href="#cb13-1138" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
-<span id="cb13-1139"><a href="#cb13-1139" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
-<span id="cb13-1140"><a href="#cb13-1140" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb13-1141"><a href="#cb13-1141" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="1328" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1327;"><span id="cb13-1328"><a href="#cb13-1328" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb13-1329"><a href="#cb13-1329" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb13-1330"><a href="#cb13-1330" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
+<span id="cb13-1331"><a href="#cb13-1331" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb13-1332"><a href="#cb13-1332" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
+<span id="cb13-1333"><a href="#cb13-1333" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
+<span id="cb13-1334"><a href="#cb13-1334" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
+<span id="cb13-1335"><a href="#cb13-1335" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb13-1336"><a href="#cb13-1336" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display hidden">
 <div id="ojs-cell-8" data-nodetype="declaration">
 
@@ -3944,15 +4420,15 @@ Continuer la partie pandas (#13)
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb14" data-startfrom="1137" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1136;"><span id="cb14-1137"><a href="#cb14-1137" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
-<span id="cb14-1138"><a href="#cb14-1138" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
-<span id="cb14-1139"><a href="#cb14-1139" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
-<span id="cb14-1140"><a href="#cb14-1140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-1141"><a href="#cb14-1141" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
-<span id="cb14-1142"><a href="#cb14-1142" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
-<span id="cb14-1143"><a href="#cb14-1143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-1144"><a href="#cb14-1144" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
-<span id="cb14-1145"><a href="#cb14-1145" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb14" data-startfrom="1332" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1331;"><span id="cb14-1332"><a href="#cb14-1332" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
+<span id="cb14-1333"><a href="#cb14-1333" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
+<span id="cb14-1334"><a href="#cb14-1334" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
+<span id="cb14-1335"><a href="#cb14-1335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-1336"><a href="#cb14-1336" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
+<span id="cb14-1337"><a href="#cb14-1337" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
+<span id="cb14-1338"><a href="#cb14-1338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-1339"><a href="#cb14-1339" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
+<span id="cb14-1340"><a href="#cb14-1340" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-9" data-nodetype="declaration">
 
@@ -3960,7 +4436,7 @@ Continuer la partie pandas (#13)
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb15" data-startfrom="1176" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1175;"><span id="cb15-1176"><a href="#cb15-1176" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb15" data-startfrom="1371" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1370;"><span id="cb15-1371"><a href="#cb15-1371" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-10" data-nodetype="declaration">
 
@@ -3968,41 +4444,41 @@ Continuer la partie pandas (#13)
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb16" data-startfrom="1192" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1191;"><span id="cb16-1192"><a href="#cb16-1192" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
-<span id="cb16-1193"><a href="#cb16-1193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1194"><a href="#cb16-1194" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
-<span id="cb16-1195"><a href="#cb16-1195" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
-<span id="cb16-1196"><a href="#cb16-1196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1197"><a href="#cb16-1197" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
-<span id="cb16-1198"><a href="#cb16-1198" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
-<span id="cb16-1199"><a href="#cb16-1199" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
-<span id="cb16-1200"><a href="#cb16-1200" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb16-1201"><a href="#cb16-1201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1202"><a href="#cb16-1202" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
-<span id="cb16-1203"><a href="#cb16-1203" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb16-1204"><a href="#cb16-1204" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb16-1205"><a href="#cb16-1205" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
-<span id="cb16-1206"><a href="#cb16-1206" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb16-1207"><a href="#cb16-1207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1208"><a href="#cb16-1208" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
-<span id="cb16-1209"><a href="#cb16-1209" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb16-1210"><a href="#cb16-1210" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
-<span id="cb16-1211"><a href="#cb16-1211" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
-<span id="cb16-1212"><a href="#cb16-1212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1213"><a href="#cb16-1213" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
-<span id="cb16-1214"><a href="#cb16-1214" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
-<span id="cb16-1215"><a href="#cb16-1215" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
-<span id="cb16-1216"><a href="#cb16-1216" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
-<span id="cb16-1217"><a href="#cb16-1217" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb16-1218"><a href="#cb16-1218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1219"><a href="#cb16-1219" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
-<span id="cb16-1220"><a href="#cb16-1220" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
-<span id="cb16-1221"><a href="#cb16-1221" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb16-1222"><a href="#cb16-1222" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb16-1223"><a href="#cb16-1223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1224"><a href="#cb16-1224" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
-<span id="cb16-1225"><a href="#cb16-1225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1226"><a href="#cb16-1226" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb16" data-startfrom="1387" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1386;"><span id="cb16-1387"><a href="#cb16-1387" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
+<span id="cb16-1388"><a href="#cb16-1388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1389"><a href="#cb16-1389" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
+<span id="cb16-1390"><a href="#cb16-1390" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
+<span id="cb16-1391"><a href="#cb16-1391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1392"><a href="#cb16-1392" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
+<span id="cb16-1393"><a href="#cb16-1393" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
+<span id="cb16-1394"><a href="#cb16-1394" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
+<span id="cb16-1395"><a href="#cb16-1395" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb16-1396"><a href="#cb16-1396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1397"><a href="#cb16-1397" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
+<span id="cb16-1398"><a href="#cb16-1398" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb16-1399"><a href="#cb16-1399" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb16-1400"><a href="#cb16-1400" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
+<span id="cb16-1401"><a href="#cb16-1401" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-1402"><a href="#cb16-1402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1403"><a href="#cb16-1403" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
+<span id="cb16-1404"><a href="#cb16-1404" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb16-1405"><a href="#cb16-1405" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
+<span id="cb16-1406"><a href="#cb16-1406" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb16-1407"><a href="#cb16-1407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1408"><a href="#cb16-1408" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
+<span id="cb16-1409"><a href="#cb16-1409" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb16-1410"><a href="#cb16-1410" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
+<span id="cb16-1411"><a href="#cb16-1411" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
+<span id="cb16-1412"><a href="#cb16-1412" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb16-1413"><a href="#cb16-1413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1414"><a href="#cb16-1414" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
+<span id="cb16-1415"><a href="#cb16-1415" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
+<span id="cb16-1416"><a href="#cb16-1416" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-1417"><a href="#cb16-1417" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-1418"><a href="#cb16-1418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1419"><a href="#cb16-1419" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
+<span id="cb16-1420"><a href="#cb16-1420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-1421"><a href="#cb16-1421" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-11" data-nodetype="declaration">
 
@@ -4523,7 +4999,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
