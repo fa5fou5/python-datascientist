@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-19">
+<meta name="dcterms.date" content="2024-04-22">
 <meta name="description" content="La classification permet d’attribuer une classe d’appartenance (label dans la terminologie du machine learning) discrète à des données à partir de certaines variables explicatives (features dans la même terminologie). Les algorithmes de classification sont nombreux. L’un des plus intuitifs et les plus fréquemment rencontrés sont les SVM (Support Vector Machine). Ce chapitre illustre les enjeux de la classification à partir de ce modèle sur les données de vote aux élections présidentielles US de 2020.">
 
 <title>Python pour la data science - Classification: premier modèle avec les SVM</title>
@@ -168,7 +168,7 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-19">
+<meta name="citation_online_date" content="2024-04-22">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -214,7 +214,7 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
   </li>  
         <li>
     <a class="dropdown-item" href="../../content/getting-started/03_data_analysis.html">
- <span class="dropdown-text">Comment aborder un jeu de données</span></a>
+ <span class="dropdown-text">Démarche à adopter face à un jeu de données</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../content/getting-started/04_python_practice.html">
@@ -508,7 +508,7 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-19</p>
+        <p class="date">2024-04-22</p>
       </div>
     </div>
     
@@ -585,8 +585,8 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#la-méthode-des-svm-support-vector-machines" id="toc-la-méthode-des-svm-support-vector-machines" class="nav-link active" data-scroll-target="#la-méthode-des-svm-support-vector-machines">La méthode des <em>SVM</em> (<em>Support Vector Machines</em>)</a></li>
-  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
+  <li><a href="#la-méthode-des-svm-support-vector-machines" id="toc-la-méthode-des-svm-support-vector-machines" class="nav-link active" data-scroll-target="#la-méthode-des-svm-support-vector-machines"><span class="header-section-number">0.1</span> La méthode des <em>SVM</em> (<em>Support Vector Machines</em>)</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application"><span class="header-section-number">0.2</span> Application</a></li>
   <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/modelisation/2_SVM.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -789,28 +789,28 @@ de cette partie</a> : les données de vote aux élections présidentielles amér
 croisées à des variables sociodémographiques.
 Le code
 est disponible <a href="https://github.com/linogaliana/python-datascientist/blob/master/content/modelisation/get_data.py">sur Github</a>.</p>
-<div id="d7546a3c" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="d7546a3c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d7546a3c-1"><a href="#d7546a3c-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
-<span id="d7546a3c-2"><a href="#d7546a3c-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b14a9aac" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="b14a9aac"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b14a9aac-1"><a href="#b14a9aac-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
+<span id="b14a9aac-2"><a href="#b14a9aac-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b4351a26" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="b4351a26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b4351a26-1"><a href="#b4351a26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="b4351a26-2"><a href="#b4351a26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b4351a26-3"><a href="#b4351a26-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
-<span id="b4351a26-4"><a href="#b4351a26-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="b4351a26-5"><a href="#b4351a26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
-<span id="b4351a26-6"><a href="#b4351a26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b4351a26-7"><a href="#b4351a26-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="b4351a26-8"><a href="#b4351a26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b4351a26-9"><a href="#b4351a26-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1728e1bc" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="1728e1bc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1728e1bc-1"><a href="#1728e1bc-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="1728e1bc-2"><a href="#1728e1bc-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1728e1bc-3"><a href="#1728e1bc-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
+<span id="1728e1bc-4"><a href="#1728e1bc-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="1728e1bc-5"><a href="#1728e1bc-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
+<span id="1728e1bc-6"><a href="#1728e1bc-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1728e1bc-7"><a href="#1728e1bc-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="1728e1bc-8"><a href="#1728e1bc-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1728e1bc-9"><a href="#1728e1bc-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour ce TP, nous aurons besoin des packages suivants :</p>
-<div id="219022f1" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="219022f1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="219022f1-1"><a href="#219022f1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="219022f1-2"><a href="#219022f1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c43d4f2e" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="c43d4f2e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c43d4f2e-1"><a href="#c43d4f2e-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="c43d4f2e-2"><a href="#c43d4f2e-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="la-méthode-des-svm-support-vector-machines" class="level2">
-<h2 class="anchored" data-anchor-id="la-méthode-des-svm-support-vector-machines">La méthode des <em>SVM</em> (<em>Support Vector Machines</em>)</h2>
+<section id="la-méthode-des-svm-support-vector-machines" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="la-méthode-des-svm-support-vector-machines"><span class="header-section-number">0.1</span> La méthode des <em>SVM</em> (<em>Support Vector Machines</em>)</h2>
 <p>L’une des méthodes de <em>machine learning</em> les
 plus utilisées en classification sont les SVM (<em>Support Vector Machines</em>).
 Il s’agit de trouver, dans un système de projection adéquat (noyau ou <em>kernel</em>),
@@ -858,8 +858,8 @@ il existe une infinité de frontières de décision linéaire séparant les deux
 </div>
 </div>
 </section>
-<section id="application" class="level2">
-<h2 class="anchored" data-anchor-id="application">Application</h2>
+<section id="application" class="level2" data-number="0.2">
+<h2 data-number="0.2" class="anchored" data-anchor-id="application"><span class="header-section-number">0.2</span> Application</h2>
 <p>Pour appliquer un modèle de classification, il nous faut
 trouver une variable dichotomique. Le choix naturel est
 de prendre la variable dichotomique qu’est la victoire ou
@@ -959,9 +959,9 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-19</p>
+<p>Latest built version: 2024-04-22</p>
 <p>Python version used:</p>
-<div id="5da055a7" class="cell" data-execution_count="16">
+<div id="ecb100d9" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1362,7 +1362,7 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">imageio</td>
-<td style="text-align: left;">2.34.0</td>
+<td style="text-align: left;">2.34.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">importlib_metadata</td>
@@ -1910,7 +1910,7 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">scikit-image</td>
-<td style="text-align: left;">0.23.1</td>
+<td style="text-align: left;">0.23.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">scikit-learn</td>
@@ -3376,7 +3376,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom","loop":false});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
