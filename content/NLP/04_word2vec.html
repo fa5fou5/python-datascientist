@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-22">
+<meta name="dcterms.date" content="2024-04-23">
 <meta name="description" content="Pour pouvoir utiliser des données textuelles dans des algorithmes de machine learning, il faut les vectoriser, c’est à dire transformer le texte en données numériques. Dans ce TP, nous allons comparer différentes méthodes de vectorisation, à travers une tâche de prédiction : peut-on prédire un auteur littéraire à partir d’extraits de ses textes ? Parmi ces méthodes, on va notamment explorer le modèle Word2Vec, qui permet d’exploiter les structures latentes d’un texte en construisant des word embeddings (plongements de mots).">
 
 <title>Python pour la data science - Méthodes de vectorisation : comptages et word embeddings</title>
@@ -166,7 +166,7 @@ des word embeddings (plongements de mots).">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-22">
+<meta name="citation_online_date" content="2024-04-23">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -506,7 +506,7 @@ des word embeddings (plongements de mots).">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-22</p>
+        <p class="date">2024-04-23</p>
       </div>
     </div>
     
@@ -565,30 +565,32 @@ des word embeddings (plongements de mots).">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#packages-à-installer" id="toc-packages-à-installer" class="nav-link active" data-scroll-target="#packages-à-installer"><span class="header-section-number">0.1</span> Packages à installer</a></li>
-  <li><a href="#nettoyage-des-données" id="toc-nettoyage-des-données" class="nav-link" data-scroll-target="#nettoyage-des-données"><span class="header-section-number">0.2</span> Nettoyage des données</a>
+  <li><a href="#packages-à-installer" id="toc-packages-à-installer" class="nav-link active" data-scroll-target="#packages-à-installer"><span class="header-section-number">1</span> Packages à installer</a></li>
+  <li><a href="#nettoyage-des-données" id="toc-nettoyage-des-données" class="nav-link" data-scroll-target="#nettoyage-des-données"><span class="header-section-number">2</span> Nettoyage des données</a>
   <ul class="collapse">
-  <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link" data-scroll-target="#preprocessing"><span class="header-section-number">0.2.1</span> Preprocessing</a></li>
-  <li><a href="#encodage-de-la-variable-à-prédire" id="toc-encodage-de-la-variable-à-prédire" class="nav-link" data-scroll-target="#encodage-de-la-variable-à-prédire"><span class="header-section-number">0.2.2</span> Encodage de la variable à prédire</a></li>
-  <li><a href="#construction-des-bases-dentraînement-et-de-test" id="toc-construction-des-bases-dentraînement-et-de-test" class="nav-link" data-scroll-target="#construction-des-bases-dentraînement-et-de-test"><span class="header-section-number">0.2.3</span> Construction des bases d’entraînement et de test</a></li>
+  <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link" data-scroll-target="#preprocessing"><span class="header-section-number">2.1</span> Preprocessing</a></li>
+  <li><a href="#encodage-de-la-variable-à-prédire" id="toc-encodage-de-la-variable-à-prédire" class="nav-link" data-scroll-target="#encodage-de-la-variable-à-prédire"><span class="header-section-number">2.2</span> Encodage de la variable à prédire</a></li>
+  <li><a href="#construction-des-bases-dentraînement-et-de-test" id="toc-construction-des-bases-dentraînement-et-de-test" class="nav-link" data-scroll-target="#construction-des-bases-dentraînement-et-de-test"><span class="header-section-number">2.3</span> Construction des bases d’entraînement et de test</a></li>
   </ul></li>
-  <li><a href="#statistiques-exploratoires" id="toc-statistiques-exploratoires" class="nav-link" data-scroll-target="#statistiques-exploratoires"><span class="header-section-number">0.3</span> Statistiques exploratoires</a>
+  <li><a href="#statistiques-exploratoires" id="toc-statistiques-exploratoires" class="nav-link" data-scroll-target="#statistiques-exploratoires"><span class="header-section-number">3</span> Statistiques exploratoires</a>
   <ul class="collapse">
-  <li><a href="#répartition-des-labels" id="toc-répartition-des-labels" class="nav-link" data-scroll-target="#répartition-des-labels"><span class="header-section-number">0.3.1</span> Répartition des labels</a></li>
-  <li><a href="#mots-les-plus-fréquemment-utilisés-par-chaque-auteur" id="toc-mots-les-plus-fréquemment-utilisés-par-chaque-auteur" class="nav-link" data-scroll-target="#mots-les-plus-fréquemment-utilisés-par-chaque-auteur"><span class="header-section-number">0.3.2</span> Mots les plus fréquemment utilisés par chaque auteur</a></li>
+  <li><a href="#répartition-des-labels" id="toc-répartition-des-labels" class="nav-link" data-scroll-target="#répartition-des-labels"><span class="header-section-number">3.1</span> Répartition des labels</a></li>
+  <li><a href="#mots-les-plus-fréquemment-utilisés-par-chaque-auteur" id="toc-mots-les-plus-fréquemment-utilisés-par-chaque-auteur" class="nav-link" data-scroll-target="#mots-les-plus-fréquemment-utilisés-par-chaque-auteur"><span class="header-section-number">3.2</span> Mots les plus fréquemment utilisés par chaque auteur</a></li>
   </ul></li>
-  <li><a href="#prédiction-sur-le-set-dentraînement" id="toc-prédiction-sur-le-set-dentraînement" class="nav-link" data-scroll-target="#prédiction-sur-le-set-dentraînement"><span class="header-section-number">0.4</span> Prédiction sur le set d’entraînement</a>
+  <li><a href="#prédiction-sur-le-set-dentraînement" id="toc-prédiction-sur-le-set-dentraînement" class="nav-link" data-scroll-target="#prédiction-sur-le-set-dentraînement"><span class="header-section-number">4</span> Prédiction sur le set d’entraînement</a>
   <ul class="collapse">
-  <li><a href="#démarche" id="toc-démarche" class="nav-link" data-scroll-target="#démarche"><span class="header-section-number">0.4.1</span> Démarche</a></li>
-  <li><a href="#pipeline-de-prédiction" id="toc-pipeline-de-prédiction" class="nav-link" data-scroll-target="#pipeline-de-prédiction"><span class="header-section-number">0.4.2</span> Pipeline de prédiction</a></li>
+  <li><a href="#démarche" id="toc-démarche" class="nav-link" data-scroll-target="#démarche"><span class="header-section-number">4.1</span> Démarche</a></li>
+  <li><a href="#pipeline-de-prédiction" id="toc-pipeline-de-prédiction" class="nav-link" data-scroll-target="#pipeline-de-prédiction"><span class="header-section-number">4.2</span> Pipeline de prédiction</a></li>
   </ul></li>
-  <li><a href="#approche-bag-of-words" id="toc-approche-bag-of-words" class="nav-link" data-scroll-target="#approche-bag-of-words"><span class="header-section-number">0.5</span> Approche <em>bag-of-words</em></a></li>
-  <li><a href="#tf-idf" id="toc-tf-idf" class="nav-link" data-scroll-target="#tf-idf"><span class="header-section-number">0.6</span> TF-IDF</a></li>
-  <li><a href="#word2vec-avec-averaging" id="toc-word2vec-avec-averaging" class="nav-link" data-scroll-target="#word2vec-avec-averaging"><span class="header-section-number">0.7</span> Word2vec avec averaging</a></li>
-  <li><a href="#word2vec-pré-entraîné-averaging" id="toc-word2vec-pré-entraîné-averaging" class="nav-link" data-scroll-target="#word2vec-pré-entraîné-averaging"><span class="header-section-number">0.8</span> Word2vec pré-entraîné + averaging</a></li>
-  <li><a href="#contextual-embeddings" id="toc-contextual-embeddings" class="nav-link" data-scroll-target="#contextual-embeddings"><span class="header-section-number">0.9</span> Contextual embeddings</a></li>
-  <li><a href="#aller-plus-loin" id="toc-aller-plus-loin" class="nav-link" data-scroll-target="#aller-plus-loin"><span class="header-section-number">0.10</span> Aller plus loin</a></li>
+  <li><a href="#approche-bag-of-words" id="toc-approche-bag-of-words" class="nav-link" data-scroll-target="#approche-bag-of-words"><span class="header-section-number">5</span> Approche <em>bag-of-words</em></a></li>
+  <li><a href="#tf-idf" id="toc-tf-idf" class="nav-link" data-scroll-target="#tf-idf"><span class="header-section-number">6</span> TF-IDF</a></li>
+  <li><a href="#word2vec-avec-averaging" id="toc-word2vec-avec-averaging" class="nav-link" data-scroll-target="#word2vec-avec-averaging"><span class="header-section-number">7</span> Word2vec avec averaging</a></li>
+  <li><a href="#word2vec-pré-entraîné-averaging" id="toc-word2vec-pré-entraîné-averaging" class="nav-link" data-scroll-target="#word2vec-pré-entraîné-averaging"><span class="header-section-number">8</span> Word2vec pré-entraîné + averaging</a></li>
+  <li><a href="#contextual-embeddings" id="toc-contextual-embeddings" class="nav-link" data-scroll-target="#contextual-embeddings"><span class="header-section-number">9</span> Contextual embeddings</a></li>
+  <li><a href="#aller-plus-loin" id="toc-aller-plus-loin" class="nav-link" data-scroll-target="#aller-plus-loin"><span class="header-section-number">10</span> Aller plus loin</a>
+  <ul class="collapse">
   <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/NLP/04_word2vec.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -629,55 +631,55 @@ avec cette fois des auteurs anglophones :</p>
 et un <a href="https://www.kaggle.com/meiyizi/spooky-nlp-and-topic-modelling-tutorial/notebook">deuxième</a> ;</li>
 <li>Un <a href="https://github.com/GU4243-ADS/spring2018-project1-ginnyqg">dépôt <code>Github</code></a> ;</li>
 </ul>
-<section id="packages-à-installer" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="packages-à-installer"><span class="header-section-number">0.1</span> Packages à installer</h2>
+<section id="packages-à-installer" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Packages à installer</h1>
 <p>Comme dans la <a href="../../content/NLP/02_exoclean.html">partie précédente</a>, il faut télécharger des librairies
 spécialiséees pour le NLP, ainsi que certaines de leurs dépendances.</p>
-<div id="9cc33efa" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="9cc33efa"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9cc33efa-1"><a href="#9cc33efa-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install spacy gensim sentence_transformers pandas matplotlib seaborn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7996c7ab" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="7996c7ab"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7996c7ab-1"><a href="#7996c7ab-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install spacy gensim sentence_transformers pandas matplotlib seaborn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ensuite, comme nous allons utiliser la librairie <code>SpaCy</code> avec un corpus de textes
 en Anglais, il convient de télécharger le modèle NLP pour l’Anglais. Pour cela,
 on peut se référer à <a href="https://spacy.io/usage/models">la documentation de <code>SpaCy</code></a>,
 extrêmement bien faite.</p>
-<div id="2c1203e4" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="2c1203e4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2c1203e4-1"><a href="#2c1203e4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download en_core_web_sm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e87afdac" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="e87afdac"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e87afdac-1"><a href="#e87afdac-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download en_core_web_sm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d7b487dd" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="d7b487dd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d7b487dd-1"><a href="#d7b487dd-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="d7b487dd-2"><a href="#d7b487dd-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d7b487dd-3"><a href="#d7b487dd-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="d7b487dd-4"><a href="#d7b487dd-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="d7b487dd-5"><a href="#d7b487dd-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="d7b487dd-6"><a href="#d7b487dd-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="d7b487dd-7"><a href="#d7b487dd-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim</span>
-<span id="d7b487dd-8"><a href="#d7b487dd-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d7b487dd-9"><a href="#d7b487dd-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
-<span id="d7b487dd-10"><a href="#d7b487dd-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="d7b487dd-11"><a href="#d7b487dd-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
-<span id="d7b487dd-12"><a href="#d7b487dd-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="d7b487dd-13"><a href="#d7b487dd-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> LinearSVC</span>
-<span id="d7b487dd-14"><a href="#d7b487dd-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer, TfidfVectorizer</span>
-<span id="d7b487dd-15"><a href="#d7b487dd-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV, cross_val_score</span>
-<span id="d7b487dd-16"><a href="#d7b487dd-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d7b487dd-17"><a href="#d7b487dd-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models.word2vec <span class="im">import</span> Word2Vec</span>
-<span id="d7b487dd-18"><a href="#d7b487dd-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
-<span id="d7b487dd-19"><a href="#d7b487dd-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e877c6a3" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="e877c6a3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e877c6a3-1"><a href="#e877c6a3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="e877c6a3-2"><a href="#e877c6a3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e877c6a3-3"><a href="#e877c6a3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="e877c6a3-4"><a href="#e877c6a3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="e877c6a3-5"><a href="#e877c6a3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="e877c6a3-6"><a href="#e877c6a3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="e877c6a3-7"><a href="#e877c6a3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim</span>
+<span id="e877c6a3-8"><a href="#e877c6a3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e877c6a3-9"><a href="#e877c6a3-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
+<span id="e877c6a3-10"><a href="#e877c6a3-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="e877c6a3-11"><a href="#e877c6a3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="e877c6a3-12"><a href="#e877c6a3-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="e877c6a3-13"><a href="#e877c6a3-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> LinearSVC</span>
+<span id="e877c6a3-14"><a href="#e877c6a3-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer, TfidfVectorizer</span>
+<span id="e877c6a3-15"><a href="#e877c6a3-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV, cross_val_score</span>
+<span id="e877c6a3-16"><a href="#e877c6a3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e877c6a3-17"><a href="#e877c6a3-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models.word2vec <span class="im">import</span> Word2Vec</span>
+<span id="e877c6a3-18"><a href="#e877c6a3-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
+<span id="e877c6a3-19"><a href="#e877c6a3-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="nettoyage-des-données" class="level2" data-number="0.2">
-<h2 data-number="0.2" class="anchored" data-anchor-id="nettoyage-des-données"><span class="header-section-number">0.2</span> Nettoyage des données</h2>
+<section id="nettoyage-des-données" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Nettoyage des données</h1>
 <p>Nous allons ainsi à nouveau utiliser le jeu de données <code>spooky</code> :</p>
-<div id="5f20a9d4" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="5f20a9d4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5f20a9d4-1"><a href="#5f20a9d4-1" aria-hidden="true" tabindex="-1"></a>data_url <span class="op">=</span> <span class="st">"https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv"</span></span>
-<span id="5f20a9d4-2"><a href="#5f20a9d4-2" aria-hidden="true" tabindex="-1"></a>spooky_df <span class="op">=</span> pd.read_csv(data_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="97b7ef1d" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="97b7ef1d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="97b7ef1d-1"><a href="#97b7ef1d-1" aria-hidden="true" tabindex="-1"></a>data_url <span class="op">=</span> <span class="st">"https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv"</span></span>
+<span id="97b7ef1d-2"><a href="#97b7ef1d-2" aria-hidden="true" tabindex="-1"></a>spooky_df <span class="op">=</span> pd.read_csv(data_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le jeu de données met ainsi en regard un auteur avec une phrase qu’il a écrite :</p>
-<div id="7ffa3c9e" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="7ffa3c9e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7ffa3c9e-1"><a href="#7ffa3c9e-1" aria-hidden="true" tabindex="-1"></a>spooky_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="56a75d86" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="56a75d86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="56a75d86-1"><a href="#56a75d86-1" aria-hidden="true" tabindex="-1"></a>spooky_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="preprocessing" class="level3" data-number="0.2.1">
-<h3 data-number="0.2.1" class="anchored" data-anchor-id="preprocessing"><span class="header-section-number">0.2.1</span> Preprocessing</h3>
+<section id="preprocessing" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="preprocessing"><span class="header-section-number">2.1</span> Preprocessing</h2>
 <p>En NLP, la première étape est souvent celle du <em>preprocessing</em>, qui inclut notamment les étapes de tokenization et de nettoyage du texte. Comme celles-ci ont été vues en détail dans le précédent chapitre, on se contentera ici d’un <em>preprocessing</em> minimaliste : suppression de la ponctuation et des <em>stop words</em> (pour la visualisation et les méthodes de vectorisation basées sur des comptages).</p>
 <p>Jusqu’à présent, nous avons utilisé principalement <code>nltk</code> pour le
 <em>preprocessing</em> de données textuelles. Cette fois, nous proposons
@@ -686,46 +688,46 @@ d’utiliser la librairie <code>spaCy</code> qui permet de mieux automatiser sou
 <p>Pour initialiser le processus de nettoyage,
 on va utiliser le corpus <code>en_core_web_sm</code> (voir plus
 haut pour l’installation de ce corpus):</p>
-<div id="aeb6c40d" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="aeb6c40d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="aeb6c40d-1"><a href="#aeb6c40d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="aeb6c40d-2"><a href="#aeb6c40d-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="aeb6c40d-3"><a href="#aeb6c40d-3" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> spacy.load(<span class="st">"en_core_web_sm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ce8a74ff" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="ce8a74ff"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ce8a74ff-1"><a href="#ce8a74ff-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="ce8a74ff-2"><a href="#ce8a74ff-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ce8a74ff-3"><a href="#ce8a74ff-3" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> spacy.load(<span class="st">"en_core_web_sm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On va utiliser un <code>pipe</code> <code>spacy</code> qui permet d’automatiser, et de paralléliser,
 un certain nombre d’opérations. Les <em>pipes</em> sont l’équivalent, en NLP, de
 nos <em>pipelines</em> <code>scikit</code> ou des <em>pipes</em> <code>pandas</code>. Il s’agit donc d’un outil
 très approprié pour industrialiser un certain nombre d’opérations de
 <em>preprocessing</em> :</p>
-<div id="410c28f7" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="410c28f7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="410c28f7-1"><a href="#410c28f7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_docs(texts, remove_stopwords<span class="op">=</span><span class="va">False</span>, n_process<span class="op">=</span><span class="dv">4</span>):</span>
-<span id="410c28f7-2"><a href="#410c28f7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="410c28f7-3"><a href="#410c28f7-3" aria-hidden="true" tabindex="-1"></a>    docs <span class="op">=</span> nlp.pipe(</span>
-<span id="410c28f7-4"><a href="#410c28f7-4" aria-hidden="true" tabindex="-1"></a>        texts, n_process<span class="op">=</span>n_process, disable<span class="op">=</span>[<span class="st">"parser"</span>, <span class="st">"ner"</span>, <span class="st">"lemmatizer"</span>, <span class="st">"textcat"</span>]</span>
-<span id="410c28f7-5"><a href="#410c28f7-5" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="410c28f7-6"><a href="#410c28f7-6" aria-hidden="true" tabindex="-1"></a>    stopwords <span class="op">=</span> nlp.Defaults.stop_words</span>
-<span id="410c28f7-7"><a href="#410c28f7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="410c28f7-8"><a href="#410c28f7-8" aria-hidden="true" tabindex="-1"></a>    docs_cleaned <span class="op">=</span> []</span>
-<span id="410c28f7-9"><a href="#410c28f7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> doc <span class="kw">in</span> docs:</span>
-<span id="410c28f7-10"><a href="#410c28f7-10" aria-hidden="true" tabindex="-1"></a>        tokens <span class="op">=</span> [tok.text.lower().strip() <span class="cf">for</span> tok <span class="kw">in</span> doc <span class="cf">if</span> <span class="kw">not</span> tok.is_punct]</span>
-<span id="410c28f7-11"><a href="#410c28f7-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> remove_stopwords:</span>
-<span id="410c28f7-12"><a href="#410c28f7-12" aria-hidden="true" tabindex="-1"></a>            tokens <span class="op">=</span> [tok <span class="cf">for</span> tok <span class="kw">in</span> tokens <span class="cf">if</span> tok <span class="kw">not</span> <span class="kw">in</span> stopwords]</span>
-<span id="410c28f7-13"><a href="#410c28f7-13" aria-hidden="true" tabindex="-1"></a>        doc_clean <span class="op">=</span> <span class="st">" "</span>.join(tokens)</span>
-<span id="410c28f7-14"><a href="#410c28f7-14" aria-hidden="true" tabindex="-1"></a>        docs_cleaned.append(doc_clean)</span>
-<span id="410c28f7-15"><a href="#410c28f7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="410c28f7-16"><a href="#410c28f7-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> docs_cleaned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7b5b0eea" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="7b5b0eea"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7b5b0eea-1"><a href="#7b5b0eea-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_docs(texts, remove_stopwords<span class="op">=</span><span class="va">False</span>, n_process<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="7b5b0eea-2"><a href="#7b5b0eea-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b5b0eea-3"><a href="#7b5b0eea-3" aria-hidden="true" tabindex="-1"></a>    docs <span class="op">=</span> nlp.pipe(</span>
+<span id="7b5b0eea-4"><a href="#7b5b0eea-4" aria-hidden="true" tabindex="-1"></a>        texts, n_process<span class="op">=</span>n_process, disable<span class="op">=</span>[<span class="st">"parser"</span>, <span class="st">"ner"</span>, <span class="st">"lemmatizer"</span>, <span class="st">"textcat"</span>]</span>
+<span id="7b5b0eea-5"><a href="#7b5b0eea-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="7b5b0eea-6"><a href="#7b5b0eea-6" aria-hidden="true" tabindex="-1"></a>    stopwords <span class="op">=</span> nlp.Defaults.stop_words</span>
+<span id="7b5b0eea-7"><a href="#7b5b0eea-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b5b0eea-8"><a href="#7b5b0eea-8" aria-hidden="true" tabindex="-1"></a>    docs_cleaned <span class="op">=</span> []</span>
+<span id="7b5b0eea-9"><a href="#7b5b0eea-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> doc <span class="kw">in</span> docs:</span>
+<span id="7b5b0eea-10"><a href="#7b5b0eea-10" aria-hidden="true" tabindex="-1"></a>        tokens <span class="op">=</span> [tok.text.lower().strip() <span class="cf">for</span> tok <span class="kw">in</span> doc <span class="cf">if</span> <span class="kw">not</span> tok.is_punct]</span>
+<span id="7b5b0eea-11"><a href="#7b5b0eea-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> remove_stopwords:</span>
+<span id="7b5b0eea-12"><a href="#7b5b0eea-12" aria-hidden="true" tabindex="-1"></a>            tokens <span class="op">=</span> [tok <span class="cf">for</span> tok <span class="kw">in</span> tokens <span class="cf">if</span> tok <span class="kw">not</span> <span class="kw">in</span> stopwords]</span>
+<span id="7b5b0eea-13"><a href="#7b5b0eea-13" aria-hidden="true" tabindex="-1"></a>        doc_clean <span class="op">=</span> <span class="st">" "</span>.join(tokens)</span>
+<span id="7b5b0eea-14"><a href="#7b5b0eea-14" aria-hidden="true" tabindex="-1"></a>        docs_cleaned.append(doc_clean)</span>
+<span id="7b5b0eea-15"><a href="#7b5b0eea-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7b5b0eea-16"><a href="#7b5b0eea-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> docs_cleaned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On applique la fonction <code>clean_docs</code> à notre colonne <code>pandas</code>.
 Les <code>pandas.Series</code> étant itérables, elles se comportent comme des listes et
 fonctionnent ainsi très bien avec notre <code>pipe</code> <code>spacy</code>.</p>
-<div id="2ec24797" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="2ec24797"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2ec24797-1"><a href="#2ec24797-1" aria-hidden="true" tabindex="-1"></a>spooky_df[<span class="st">"text_clean"</span>] <span class="op">=</span> clean_docs(spooky_df[<span class="st">"text"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="301ad344" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="301ad344"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="301ad344-1"><a href="#301ad344-1" aria-hidden="true" tabindex="-1"></a>spooky_df[<span class="st">"text_clean"</span>] <span class="op">=</span> clean_docs(spooky_df[<span class="st">"text"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cfdbf55d" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cfdbf55d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cfdbf55d-1"><a href="#cfdbf55d-1" aria-hidden="true" tabindex="-1"></a>spooky_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="326c5af3" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="326c5af3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="326c5af3-1"><a href="#326c5af3-1" aria-hidden="true" tabindex="-1"></a>spooky_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="encodage-de-la-variable-à-prédire" class="level3" data-number="0.2.2">
-<h3 data-number="0.2.2" class="anchored" data-anchor-id="encodage-de-la-variable-à-prédire"><span class="header-section-number">0.2.2</span> Encodage de la variable à prédire</h3>
+<section id="encodage-de-la-variable-à-prédire" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="encodage-de-la-variable-à-prédire"><span class="header-section-number">2.2</span> Encodage de la variable à prédire</h2>
 <p>On réalise un simple encodage de la variable à prédire :
 il y a trois catégories (auteurs), représentées par des entiers 0, 1 et 2.</p>
 <p>Pour cela, on utilise le <code>LabelEncoder</code> de <code>scikit</code> déjà présenté
@@ -733,17 +735,17 @@ dans la <a href="#preprocessing">partie modélisation</a>. On va utiliser la mé
 <code>fit_transform</code> qui permet, en un tour de main, d’appliquer à la fois
 l’entraînement (<code>fit</code>), à savoir la création d’une correspondance entre valeurs
 numériques et <em>labels</em>, et l’appliquer (<code>transform</code>) à la même colonne.</p>
-<div id="f2a5a3fd" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="f2a5a3fd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f2a5a3fd-1"><a href="#f2a5a3fd-1" aria-hidden="true" tabindex="-1"></a>le <span class="op">=</span> LabelEncoder()</span>
-<span id="f2a5a3fd-2"><a href="#f2a5a3fd-2" aria-hidden="true" tabindex="-1"></a>spooky_df[<span class="st">"author_encoded"</span>] <span class="op">=</span> le.fit_transform(spooky_df[<span class="st">"author"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f9092506" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="f9092506"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f9092506-1"><a href="#f9092506-1" aria-hidden="true" tabindex="-1"></a>le <span class="op">=</span> LabelEncoder()</span>
+<span id="f9092506-2"><a href="#f9092506-2" aria-hidden="true" tabindex="-1"></a>spooky_df[<span class="st">"author_encoded"</span>] <span class="op">=</span> le.fit_transform(spooky_df[<span class="st">"author"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut vérifier les classes de notre <code>LabelEncoder</code> :</p>
-<div id="c685e4de" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="c685e4de"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c685e4de-1"><a href="#c685e4de-1" aria-hidden="true" tabindex="-1"></a>le.classes_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="07e0eeaa" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="07e0eeaa"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="07e0eeaa-1"><a href="#07e0eeaa-1" aria-hidden="true" tabindex="-1"></a>le.classes_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="construction-des-bases-dentraînement-et-de-test" class="level3" data-number="0.2.3">
-<h3 data-number="0.2.3" class="anchored" data-anchor-id="construction-des-bases-dentraînement-et-de-test"><span class="header-section-number">0.2.3</span> Construction des bases d’entraînement et de test</h3>
+<section id="construction-des-bases-dentraînement-et-de-test" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="construction-des-bases-dentraînement-et-de-test"><span class="header-section-number">2.3</span> Construction des bases d’entraînement et de test</h2>
 <p>On met de côté un échantillon de test (20 %) avant toute analyse (même descriptive).
 Cela permettra d’évaluer nos différents modèles toute à la fin de manière très rigoureuse,
 puisque ces données n’auront jamais utilisées pendant l’entraînement.</p>
@@ -751,38 +753,38 @@ puisque ces données n’auront jamais utilisées pendant l’entraînement.</p>
 certains auteurs que d’autres. Afin d’obtenir un modèle qui soit évalué au mieux, nous allons donc stratifier notre échantillon de manière à obtenir une répartition similaire d’auteurs dans nos
 ensembles d’entraînement et de test.</p>
 <p>Aperçu du premier élément de <code>X_train</code> :</p>
-<div id="652febf1" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="652febf1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="652febf1-1"><a href="#652febf1-1" aria-hidden="true" tabindex="-1"></a>X_train[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="48457eb1" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="48457eb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="48457eb1-1"><a href="#48457eb1-1" aria-hidden="true" tabindex="-1"></a>X_train[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut aussi vérifier qu’on est capable de retrouver
 la correspondance entre nos auteurs initiaux avec
 la méthode <code>inverse_transform</code> :</p>
-<div id="f4bdee1d" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="f4bdee1d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f4bdee1d-1"><a href="#f4bdee1d-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_train[<span class="dv">0</span>], le.inverse_transform([y_train[<span class="dv">0</span>]])[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="80e5f81a" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="80e5f81a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="80e5f81a-1"><a href="#80e5f81a-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_train[<span class="dv">0</span>], le.inverse_transform([y_train[<span class="dv">0</span>]])[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="statistiques-exploratoires" class="level2" data-number="0.3">
-<h2 data-number="0.3" class="anchored" data-anchor-id="statistiques-exploratoires"><span class="header-section-number">0.3</span> Statistiques exploratoires</h2>
-<section id="répartition-des-labels" class="level3" data-number="0.3.1">
-<h3 data-number="0.3.1" class="anchored" data-anchor-id="répartition-des-labels"><span class="header-section-number">0.3.1</span> Répartition des labels</h3>
+<section id="statistiques-exploratoires" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Statistiques exploratoires</h1>
+<section id="répartition-des-labels" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="répartition-des-labels"><span class="header-section-number">3.1</span> Répartition des labels</h2>
 <p>Refaisons un graphique que nous avons déjà produit précédemment pour voir
 la répartition de notre corpus entre auteurs :</p>
-<div id="eac77f7a" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="eac77f7a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eac77f7a-1"><a href="#eac77f7a-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> pd.Series(le.inverse_transform(y_train)).value_counts().plot(kind<span class="op">=</span><span class="st">"bar"</span>)</span>
-<span id="eac77f7a-2"><a href="#eac77f7a-2" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="739a2c9b" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="739a2c9b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="739a2c9b-1"><a href="#739a2c9b-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> pd.Series(le.inverse_transform(y_train)).value_counts().plot(kind<span class="op">=</span><span class="st">"bar"</span>)</span>
+<span id="739a2c9b-2"><a href="#739a2c9b-2" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On observe une petite asymétrie : les passages des livres d’Edgar Allen Poe sont plus nombreux que ceux des autres auteurs dans notre corpus d’entraînement, ce qui peut être problématique dans le cadre d’une tâche de classification.
 L’écart n’est pas dramatique, mais on essaiera d’en tenir compte dans l’analyse en choisissant une métrique d’évaluation pertinente.</p>
 </section>
-<section id="mots-les-plus-fréquemment-utilisés-par-chaque-auteur" class="level3" data-number="0.3.2">
-<h3 data-number="0.3.2" class="anchored" data-anchor-id="mots-les-plus-fréquemment-utilisés-par-chaque-auteur"><span class="header-section-number">0.3.2</span> Mots les plus fréquemment utilisés par chaque auteur</h3>
+<section id="mots-les-plus-fréquemment-utilisés-par-chaque-auteur" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="mots-les-plus-fréquemment-utilisés-par-chaque-auteur"><span class="header-section-number">3.2</span> Mots les plus fréquemment utilisés par chaque auteur</h2>
 <p>On va supprimer les <em>stop words</em> pour réduire le bruit dans notre jeu
 de données.</p>
-<div id="a8d22c08" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="a8d22c08"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a8d22c08-1"><a href="#a8d22c08-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des stop words</span></span>
-<span id="a8d22c08-2"><a href="#a8d22c08-2" aria-hidden="true" tabindex="-1"></a>X_train_no_sw <span class="op">=</span> clean_docs(X_train, remove_stopwords<span class="op">=</span><span class="va">True</span>)</span>
-<span id="a8d22c08-3"><a href="#a8d22c08-3" aria-hidden="true" tabindex="-1"></a>X_train_no_sw <span class="op">=</span> np.array(X_train_no_sw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e4f594ab" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="e4f594ab"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e4f594ab-1"><a href="#e4f594ab-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppression des stop words</span></span>
+<span id="e4f594ab-2"><a href="#e4f594ab-2" aria-hidden="true" tabindex="-1"></a>X_train_no_sw <span class="op">=</span> clean_docs(X_train, remove_stopwords<span class="op">=</span><span class="va">True</span>)</span>
+<span id="e4f594ab-3"><a href="#e4f594ab-3" aria-hidden="true" tabindex="-1"></a>X_train_no_sw <span class="op">=</span> np.array(X_train_no_sw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour visualiser rapidement nos corpus, on peut utiliser la technique des
 nuages de mots déjà vue à plusieurs reprises.</p>
@@ -791,7 +793,7 @@ ou cliquer sur la ligne ci-dessous pour afficher le code ayant
 généré les figures :</p>
 <div class="cell markdown">
 <details><summary><code>Cliquer pour afficher le code</code> 👇</summary>
-<div id="9ab70a2c" class="cell" data-execution_count="18">
+<div id="a88168f7" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_top_words(initials, ax, n_words<span class="op">=</span><span class="dv">20</span>):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcul des mots les plus fréquemment utilisés par l'auteur</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    texts <span class="op">=</span> X_train_no_sw[le.inverse_transform(y_train) <span class="op">==</span> initials]</span>
@@ -804,7 +806,7 @@ généré les figures :</p>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> sns.barplot(ax<span class="op">=</span>ax, x<span class="op">=</span>top_words, y<span class="op">=</span>top_words_counts)</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Most Common Words used by </span><span class="sc">{</span>initials_to_author[initials]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cdcac700" class="cell" data-execution_count="19">
+<div id="c1a59873" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>initials_to_author <span class="op">=</span> {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EAP"</span>: <span class="st">"Edgar Allen Poe"</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"HPL"</span>: <span class="st">"H.P. Lovecraft"</span>,</span>
@@ -830,18 +832,18 @@ ce qui laisse penser qu’il est envisageable de prédire les auteurs à partir
 de leurs textes dans une certaine mesure.</p>
 </section>
 </section>
-<section id="prédiction-sur-le-set-dentraînement" class="level2" data-number="0.4">
-<h2 data-number="0.4" class="anchored" data-anchor-id="prédiction-sur-le-set-dentraînement"><span class="header-section-number">0.4</span> Prédiction sur le set d’entraînement</h2>
+<section id="prédiction-sur-le-set-dentraînement" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Prédiction sur le set d’entraînement</h1>
 <p>Nous allons à présent vérifier cette conjecture en comparant
 plusieurs modèles de vectorisation,
 <em>i.e.</em> de transformation du texte en objets numériques
 pour que l’information contenue soit exploitable dans un modèle de classification.</p>
-<section id="démarche" class="level3" data-number="0.4.1">
-<h3 data-number="0.4.1" class="anchored" data-anchor-id="démarche"><span class="header-section-number">0.4.1</span> Démarche</h3>
+<section id="démarche" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="démarche"><span class="header-section-number">4.1</span> Démarche</h2>
 <p>Comme nous nous intéressons plus à l’effet de la vectorisation qu’à la tâche de classification en elle-même,
 nous allons utiliser un algorithme de classification simple (un SVM linéaire), avec des paramètres non fine-tunés (c’est-à-dire des paramètres pas nécessairement choisis pour être les meilleurs de tous).</p>
-<div id="29983736" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="29983736"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="29983736-1"><a href="#29983736-1" aria-hidden="true" tabindex="-1"></a>clf <span class="op">=</span> LinearSVC(max_iter<span class="op">=</span><span class="dv">10000</span>, C<span class="op">=</span><span class="fl">0.1</span>, dual<span class="op">=</span><span class="st">"auto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f5f4319a" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="f5f4319a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f5f4319a-1"><a href="#f5f4319a-1" aria-hidden="true" tabindex="-1"></a>clf <span class="op">=</span> LinearSVC(max_iter<span class="op">=</span><span class="dv">10000</span>, C<span class="op">=</span><span class="fl">0.1</span>, dual<span class="op">=</span><span class="st">"auto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce modèle est connu pour être très performant sur les tâches de classification de texte, et nous fournira donc un bon modèle de référence (<em>baseline</em>). Cela nous permettra également de comparer de manière objective l’impact des méthodes de vectorisation sur la performance finale.</p>
 <p>Pour les deux premières méthodes de vectorisation
@@ -865,8 +867,8 @@ puis on calcule le <code>score F1</code> sur ces données agrégées.
 L’avantage de ce choix est qu’il permet de tenir compte des différences
 de fréquences des différentes classes.</p>
 </section>
-<section id="pipeline-de-prédiction" class="level3" data-number="0.4.2">
-<h3 data-number="0.4.2" class="anchored" data-anchor-id="pipeline-de-prédiction"><span class="header-section-number">0.4.2</span> Pipeline de prédiction</h3>
+<section id="pipeline-de-prédiction" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="pipeline-de-prédiction"><span class="header-section-number">4.2</span> Pipeline de prédiction</h2>
 <p>On va utiliser un <em>pipeline</em> <code>scikit</code> ce qui va nous permettre d’avoir
 un code très concis pour effectuer cet ensemble de tâches cohérentes.
 De plus, cela va nous assurer de gérer de manière cohérentes nos différentes
@@ -875,68 +877,68 @@ transformations (cf.&nbsp;<a href="#pipelines">partie sur les pipelines</a>)</p>
 intègre dans un <em>pipeline</em> générique une méthode d’estimation <code>scikit</code>
 et fait de la validation croisée en cherchant le meilleur modèle
 (en excluant/incluant les <em>stop words</em> et avec unigrammes/bigrammes)</p>
-<div id="e5f19657" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="e5f19657"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e5f19657-1"><a href="#e5f19657-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_vectorizers(vectorizer):</span>
-<span id="e5f19657-2"><a href="#e5f19657-2" aria-hidden="true" tabindex="-1"></a>    pipeline <span class="op">=</span> Pipeline(</span>
-<span id="e5f19657-3"><a href="#e5f19657-3" aria-hidden="true" tabindex="-1"></a>        [</span>
-<span id="e5f19657-4"><a href="#e5f19657-4" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"vect"</span>, vectorizer()),</span>
-<span id="e5f19657-5"><a href="#e5f19657-5" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"scaling"</span>, StandardScaler(with_mean<span class="op">=</span><span class="va">False</span>)),</span>
-<span id="e5f19657-6"><a href="#e5f19657-6" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"clf"</span>, clf),</span>
-<span id="e5f19657-7"><a href="#e5f19657-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="e5f19657-8"><a href="#e5f19657-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="e5f19657-9"><a href="#e5f19657-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e5f19657-10"><a href="#e5f19657-10" aria-hidden="true" tabindex="-1"></a>    parameters <span class="op">=</span> {</span>
-<span id="e5f19657-11"><a href="#e5f19657-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"vect__ngram_range"</span>: ((<span class="dv">1</span>, <span class="dv">1</span>), (<span class="dv">1</span>, <span class="dv">2</span>)),  <span class="co"># unigrams or bigrams</span></span>
-<span id="e5f19657-12"><a href="#e5f19657-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"vect__stop_words"</span>: (<span class="st">"english"</span>, <span class="va">None</span>),</span>
-<span id="e5f19657-13"><a href="#e5f19657-13" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="e5f19657-14"><a href="#e5f19657-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e5f19657-15"><a href="#e5f19657-15" aria-hidden="true" tabindex="-1"></a>    grid_search <span class="op">=</span> GridSearchCV(</span>
-<span id="e5f19657-16"><a href="#e5f19657-16" aria-hidden="true" tabindex="-1"></a>        pipeline, parameters, scoring<span class="op">=</span><span class="st">"f1_micro"</span>, cv<span class="op">=</span><span class="dv">4</span>, n_jobs<span class="op">=</span><span class="dv">4</span>, verbose<span class="op">=</span><span class="dv">1</span></span>
-<span id="e5f19657-17"><a href="#e5f19657-17" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="e5f19657-18"><a href="#e5f19657-18" aria-hidden="true" tabindex="-1"></a>    grid_search.fit(X_train, y_train)</span>
-<span id="e5f19657-19"><a href="#e5f19657-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e5f19657-20"><a href="#e5f19657-20" aria-hidden="true" tabindex="-1"></a>    best_parameters <span class="op">=</span> grid_search.best_estimator_.get_params()</span>
-<span id="e5f19657-21"><a href="#e5f19657-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> param_name <span class="kw">in</span> <span class="bu">sorted</span>(parameters.keys()):</span>
-<span id="e5f19657-22"><a href="#e5f19657-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="sc">%s</span><span class="st">: </span><span class="sc">%r</span><span class="st">"</span> <span class="op">%</span> (param_name, best_parameters[param_name]))</span>
-<span id="e5f19657-23"><a href="#e5f19657-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e5f19657-24"><a href="#e5f19657-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"CV scores </span><span class="sc">{</span>grid_search<span class="sc">.</span>cv_results_[<span class="st">'mean_test_score'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="e5f19657-25"><a href="#e5f19657-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Mean F1 </span><span class="sc">{</span>np<span class="sc">.</span>mean(grid_search.cv_results_[<span class="st">'mean_test_score'</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="e5f19657-26"><a href="#e5f19657-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e5f19657-27"><a href="#e5f19657-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> grid_search</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3869a540" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="3869a540"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3869a540-1"><a href="#3869a540-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_vectorizers(vectorizer):</span>
+<span id="3869a540-2"><a href="#3869a540-2" aria-hidden="true" tabindex="-1"></a>    pipeline <span class="op">=</span> Pipeline(</span>
+<span id="3869a540-3"><a href="#3869a540-3" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="3869a540-4"><a href="#3869a540-4" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"vect"</span>, vectorizer()),</span>
+<span id="3869a540-5"><a href="#3869a540-5" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"scaling"</span>, StandardScaler(with_mean<span class="op">=</span><span class="va">False</span>)),</span>
+<span id="3869a540-6"><a href="#3869a540-6" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"clf"</span>, clf),</span>
+<span id="3869a540-7"><a href="#3869a540-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="3869a540-8"><a href="#3869a540-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="3869a540-9"><a href="#3869a540-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="3869a540-10"><a href="#3869a540-10" aria-hidden="true" tabindex="-1"></a>    parameters <span class="op">=</span> {</span>
+<span id="3869a540-11"><a href="#3869a540-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"vect__ngram_range"</span>: ((<span class="dv">1</span>, <span class="dv">1</span>), (<span class="dv">1</span>, <span class="dv">2</span>)),  <span class="co"># unigrams or bigrams</span></span>
+<span id="3869a540-12"><a href="#3869a540-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"vect__stop_words"</span>: (<span class="st">"english"</span>, <span class="va">None</span>),</span>
+<span id="3869a540-13"><a href="#3869a540-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="3869a540-14"><a href="#3869a540-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="3869a540-15"><a href="#3869a540-15" aria-hidden="true" tabindex="-1"></a>    grid_search <span class="op">=</span> GridSearchCV(</span>
+<span id="3869a540-16"><a href="#3869a540-16" aria-hidden="true" tabindex="-1"></a>        pipeline, parameters, scoring<span class="op">=</span><span class="st">"f1_micro"</span>, cv<span class="op">=</span><span class="dv">4</span>, n_jobs<span class="op">=</span><span class="dv">4</span>, verbose<span class="op">=</span><span class="dv">1</span></span>
+<span id="3869a540-17"><a href="#3869a540-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="3869a540-18"><a href="#3869a540-18" aria-hidden="true" tabindex="-1"></a>    grid_search.fit(X_train, y_train)</span>
+<span id="3869a540-19"><a href="#3869a540-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="3869a540-20"><a href="#3869a540-20" aria-hidden="true" tabindex="-1"></a>    best_parameters <span class="op">=</span> grid_search.best_estimator_.get_params()</span>
+<span id="3869a540-21"><a href="#3869a540-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> param_name <span class="kw">in</span> <span class="bu">sorted</span>(parameters.keys()):</span>
+<span id="3869a540-22"><a href="#3869a540-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="sc">%s</span><span class="st">: </span><span class="sc">%r</span><span class="st">"</span> <span class="op">%</span> (param_name, best_parameters[param_name]))</span>
+<span id="3869a540-23"><a href="#3869a540-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="3869a540-24"><a href="#3869a540-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"CV scores </span><span class="sc">{</span>grid_search<span class="sc">.</span>cv_results_[<span class="st">'mean_test_score'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="3869a540-25"><a href="#3869a540-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Mean F1 </span><span class="sc">{</span>np<span class="sc">.</span>mean(grid_search.cv_results_[<span class="st">'mean_test_score'</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="3869a540-26"><a href="#3869a540-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="3869a540-27"><a href="#3869a540-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> grid_search</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="approche-bag-of-words" class="level2" data-number="0.5">
-<h2 data-number="0.5" class="anchored" data-anchor-id="approche-bag-of-words"><span class="header-section-number">0.5</span> Approche <em>bag-of-words</em></h2>
+<section id="approche-bag-of-words" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Approche <em>bag-of-words</em></h1>
 <p>On commence par une approche <strong>“bag-of-words”</strong>,
 i.e.&nbsp;qui revient simplement à représenter chaque document par un vecteur
 qui compte le nombre d’apparitions de chaque mot du vocabulaire dans le document.</p>
 <p>Illustrons d’abord le principe à l’aide d’un exemple simple.</p>
-<div id="6499dfd4" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="6499dfd4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6499dfd4-1"><a href="#6499dfd4-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> [</span>
-<span id="6499dfd4-2"><a href="#6499dfd4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un premier document à propos des chats."</span>,</span>
-<span id="6499dfd4-3"><a href="#6499dfd4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un second document qui parle des chiens."</span>,</span>
-<span id="6499dfd4-4"><a href="#6499dfd4-4" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="6499dfd4-5"><a href="#6499dfd4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="6499dfd4-6"><a href="#6499dfd4-6" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> CountVectorizer()</span>
-<span id="6499dfd4-7"><a href="#6499dfd4-7" aria-hidden="true" tabindex="-1"></a>vectorizer.fit(corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4b901155" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="4b901155"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4b901155-1"><a href="#4b901155-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> [</span>
+<span id="4b901155-2"><a href="#4b901155-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un premier document à propos des chats."</span>,</span>
+<span id="4b901155-3"><a href="#4b901155-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un second document qui parle des chiens."</span>,</span>
+<span id="4b901155-4"><a href="#4b901155-4" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="4b901155-5"><a href="#4b901155-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b901155-6"><a href="#4b901155-6" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> CountVectorizer()</span>
+<span id="4b901155-7"><a href="#4b901155-7" aria-hidden="true" tabindex="-1"></a>vectorizer.fit(corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’objet <code>vectorizer</code> a été “entraîné” (<em>fit</em>) sur notre corpus d’exemple contenant deux documents. Il a notamment appris le vocabulaire complet du corpus, dont on peut afficher l’ordre.</p>
-<div id="03c65c50" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="03c65c50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="03c65c50-1"><a href="#03c65c50-1" aria-hidden="true" tabindex="-1"></a>vectorizer.get_feature_names_out()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="546b53e3" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="546b53e3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="546b53e3-1"><a href="#546b53e3-1" aria-hidden="true" tabindex="-1"></a>vectorizer.get_feature_names_out()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’objet <code>vectorizer</code> entraîné peut maintenant vectoriser le corpus initial, selon l’ordre du vocabulaire affiché ci-dessus.</p>
-<div id="8b2b29f6" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="8b2b29f6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8b2b29f6-1"><a href="#8b2b29f6-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> vectorizer.transform(corpus)</span>
-<span id="8b2b29f6-2"><a href="#8b2b29f6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.toarray())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="111ce19f" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="111ce19f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="111ce19f-1"><a href="#111ce19f-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> vectorizer.transform(corpus)</span>
+<span id="111ce19f-2"><a href="#111ce19f-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.toarray())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quel score <code>F1</code> obtient-on finalement avec cette méthode de vectorisation sur notre problème de classification d’auteurs ?</p>
-<div id="39dc4c03" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="39dc4c03"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="39dc4c03-1"><a href="#39dc4c03-1" aria-hidden="true" tabindex="-1"></a>cv_bow <span class="op">=</span> fit_vectorizers(CountVectorizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5092cfd3" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="5092cfd3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5092cfd3-1"><a href="#5092cfd3-1" aria-hidden="true" tabindex="-1"></a>cv_bow <span class="op">=</span> fit_vectorizers(CountVectorizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="tf-idf" class="level2" data-number="0.6">
-<h2 data-number="0.6" class="anchored" data-anchor-id="tf-idf"><span class="header-section-number">0.6</span> TF-IDF</h2>
+<section id="tf-idf" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> TF-IDF</h1>
 <p>On s’intéresse ensuite à l’approche <strong>TF-IDF</strong>,
 qui permet de tenir compte des fréquences <em>relatives</em> des mots.</p>
 <p>Ainsi, pour un mot donné, on va multiplier la fréquence d’apparition du mot dans le document (calculé comme dans la méthode précédente) par un terme qui pénalise une fréquence élevée du mot dans le corpus. L’image ci-dessous, empruntée à Chris Albon, illustre cette mesure:</p>
@@ -945,34 +947,34 @@ qui permet de tenir compte des fréquences <em>relatives</em> des mots.</p>
 <p>La vectorisation <code>TF-IDF</code> permet donc de limiter l’influence des <em>stop-words</em>
 et donc de donner plus de poids aux mots les plus salients d’un document.
 Illustrons cela à nouveau avec notre corpus d’exemple de deux documents.</p>
-<div id="b83d9ac2" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="b83d9ac2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b83d9ac2-1"><a href="#b83d9ac2-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> [</span>
-<span id="b83d9ac2-2"><a href="#b83d9ac2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un premier document à propos des chats."</span>,</span>
-<span id="b83d9ac2-3"><a href="#b83d9ac2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un second document qui parle des chiens."</span>,</span>
-<span id="b83d9ac2-4"><a href="#b83d9ac2-4" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="b83d9ac2-5"><a href="#b83d9ac2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b83d9ac2-6"><a href="#b83d9ac2-6" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> TfidfVectorizer()</span>
-<span id="b83d9ac2-7"><a href="#b83d9ac2-7" aria-hidden="true" tabindex="-1"></a>vectorizer.fit(corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4ee54977" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="4ee54977"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4ee54977-1"><a href="#4ee54977-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> [</span>
+<span id="4ee54977-2"><a href="#4ee54977-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un premier document à propos des chats."</span>,</span>
+<span id="4ee54977-3"><a href="#4ee54977-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Un second document qui parle des chiens."</span>,</span>
+<span id="4ee54977-4"><a href="#4ee54977-4" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="4ee54977-5"><a href="#4ee54977-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4ee54977-6"><a href="#4ee54977-6" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> TfidfVectorizer()</span>
+<span id="4ee54977-7"><a href="#4ee54977-7" aria-hidden="true" tabindex="-1"></a>vectorizer.fit(corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Là encore, le vectoriseur a “appris” le vocabulaire du corpus.</p>
-<div id="a27f6208" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="a27f6208"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a27f6208-1"><a href="#a27f6208-1" aria-hidden="true" tabindex="-1"></a>vectorizer.get_feature_names_out()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="26265faf" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="26265faf"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="26265faf-1"><a href="#26265faf-1" aria-hidden="true" tabindex="-1"></a>vectorizer.get_feature_names_out()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et peut être utilisé pour calculer les scores TF-IDF de chacun des termes des documents.</p>
-<div id="a3d6479d" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="a3d6479d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a3d6479d-1"><a href="#a3d6479d-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> vectorizer.transform(corpus)</span>
-<span id="a3d6479d-2"><a href="#a3d6479d-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.toarray())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1bec7b1c" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="1bec7b1c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1bec7b1c-1"><a href="#1bec7b1c-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> vectorizer.transform(corpus)</span>
+<span id="1bec7b1c-2"><a href="#1bec7b1c-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.toarray())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On remarque que “chats” et “chiens” possèdent les scores les plus élevés, ce sont bien les termes les plus distinctifs. A l’inverse, les termes qui reviennent dans les deux documents (“un”, “document”, “des”) ont un score inférieur, car ils sont beaucoup présents dans le corpus relativement.</p>
 <p>Quel score <code>F1</code> obtient-on avec cette méthode de vectorisation sur notre problème de classification d’auteurs ?</p>
-<div id="815e607a" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="815e607a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="815e607a-1"><a href="#815e607a-1" aria-hidden="true" tabindex="-1"></a>cv_tfidf <span class="op">=</span> fit_vectorizers(TfidfVectorizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="25591ac0" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="25591ac0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="25591ac0-1"><a href="#25591ac0-1" aria-hidden="true" tabindex="-1"></a>cv_tfidf <span class="op">=</span> fit_vectorizers(TfidfVectorizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On observe clairement que la performance de classification est bien supérieure,
 ce qui montre la pertinence de cette technique.</p>
 </section>
-<section id="word2vec-avec-averaging" class="level2" data-number="0.7">
-<h2 data-number="0.7" class="anchored" data-anchor-id="word2vec-avec-averaging"><span class="header-section-number">0.7</span> Word2vec avec averaging</h2>
+<section id="word2vec-avec-averaging" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Word2vec avec averaging</h1>
 <p>On va maintenant explorer les techniques de vectorisation basées sur les
 <em>embeddings</em> de mots, et notamment la plus populaire : <code>Word2Vec</code>.</p>
 <p>L’idée derrière est simple, mais a révolutionné le NLP :
@@ -1014,49 +1016,49 @@ qui apparaissent dans une fenêtre autour du mot cible.</p>
 <p>En répétant cette tâche de nombreuses fois et sur un corpus suffisamment varié,
 on obtient finalement des <em>embeddings</em> pour chaque mot du vocabulaire,
 qui présentent les propriétés discutées précédemment.</p>
-<div id="a04aebed" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="a04aebed"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a04aebed-1"><a href="#a04aebed-1" aria-hidden="true" tabindex="-1"></a>X_train_tokens <span class="op">=</span> [text.split() <span class="cf">for</span> text <span class="kw">in</span> X_train]</span>
-<span id="a04aebed-2"><a href="#a04aebed-2" aria-hidden="true" tabindex="-1"></a>w2v_model <span class="op">=</span> Word2Vec(X_train_tokens, vector_size<span class="op">=</span><span class="dv">200</span>, window<span class="op">=</span><span class="dv">5</span>, min_count<span class="op">=</span><span class="dv">1</span>, workers<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bddc14b4" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="bddc14b4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bddc14b4-1"><a href="#bddc14b4-1" aria-hidden="true" tabindex="-1"></a>X_train_tokens <span class="op">=</span> [text.split() <span class="cf">for</span> text <span class="kw">in</span> X_train]</span>
+<span id="bddc14b4-2"><a href="#bddc14b4-2" aria-hidden="true" tabindex="-1"></a>w2v_model <span class="op">=</span> Word2Vec(X_train_tokens, vector_size<span class="op">=</span><span class="dv">200</span>, window<span class="op">=</span><span class="dv">5</span>, min_count<span class="op">=</span><span class="dv">1</span>, workers<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="36c7bc9e" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="36c7bc9e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="36c7bc9e-1"><a href="#36c7bc9e-1" aria-hidden="true" tabindex="-1"></a>w2v_model.wv.most_similar(<span class="st">"mother"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5901379a" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="5901379a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5901379a-1"><a href="#5901379a-1" aria-hidden="true" tabindex="-1"></a>w2v_model.wv.most_similar(<span class="st">"mother"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On voit que les mots les plus similaires à <em>“mother”</em>
 sont souvent des mots liés à la famille, mais pas toujours.</p>
 <p>C’est lié à la taille très restreinte du corpus sur lequel on entraîne le modèle,
 qui ne permet pas de réaliser des associations toujours pertinentes.</p>
 <p>L’<em>embedding</em> (la représentation vectorielle) de chaque document correspond à la moyenne des <em>word-embeddings</em> des mots qui le composent :</p>
-<div id="2da37990" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="2da37990"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2da37990-1"><a href="#2da37990-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mean_vector(w2v_vectors, words):</span>
-<span id="2da37990-2"><a href="#2da37990-2" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word <span class="kw">in</span> w2v_vectors]</span>
-<span id="2da37990-3"><a href="#2da37990-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> words:</span>
-<span id="2da37990-4"><a href="#2da37990-4" aria-hidden="true" tabindex="-1"></a>        avg_vector <span class="op">=</span> np.mean(w2v_vectors[words], axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="2da37990-5"><a href="#2da37990-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="2da37990-6"><a href="#2da37990-6" aria-hidden="true" tabindex="-1"></a>        avg_vector <span class="op">=</span> np.zeros_like(w2v_vectors[<span class="st">"hi"</span>])</span>
-<span id="2da37990-7"><a href="#2da37990-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> avg_vector</span>
-<span id="2da37990-8"><a href="#2da37990-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2da37990-9"><a href="#2da37990-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2da37990-10"><a href="#2da37990-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_w2v_avg(w2v_vectors):</span>
-<span id="2da37990-11"><a href="#2da37990-11" aria-hidden="true" tabindex="-1"></a>    X_train_vectors <span class="op">=</span> np.array(</span>
-<span id="2da37990-12"><a href="#2da37990-12" aria-hidden="true" tabindex="-1"></a>        [get_mean_vector(w2v_vectors, words) <span class="cf">for</span> words <span class="kw">in</span> X_train_tokens]</span>
-<span id="2da37990-13"><a href="#2da37990-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="2da37990-14"><a href="#2da37990-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2da37990-15"><a href="#2da37990-15" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> cross_val_score(</span>
-<span id="2da37990-16"><a href="#2da37990-16" aria-hidden="true" tabindex="-1"></a>        clf, X_train_vectors, y_train, cv<span class="op">=</span><span class="dv">4</span>, scoring<span class="op">=</span><span class="st">"f1_micro"</span>, n_jobs<span class="op">=</span><span class="dv">4</span></span>
-<span id="2da37990-17"><a href="#2da37990-17" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="2da37990-18"><a href="#2da37990-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2da37990-19"><a href="#2da37990-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"CV scores </span><span class="sc">{</span>scores<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="2da37990-20"><a href="#2da37990-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Mean F1 </span><span class="sc">{</span>np<span class="sc">.</span>mean(scores)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="2da37990-21"><a href="#2da37990-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ae3d1262" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="ae3d1262"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ae3d1262-1"><a href="#ae3d1262-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_mean_vector(w2v_vectors, words):</span>
+<span id="ae3d1262-2"><a href="#ae3d1262-2" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word <span class="kw">in</span> w2v_vectors]</span>
+<span id="ae3d1262-3"><a href="#ae3d1262-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> words:</span>
+<span id="ae3d1262-4"><a href="#ae3d1262-4" aria-hidden="true" tabindex="-1"></a>        avg_vector <span class="op">=</span> np.mean(w2v_vectors[words], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="ae3d1262-5"><a href="#ae3d1262-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="ae3d1262-6"><a href="#ae3d1262-6" aria-hidden="true" tabindex="-1"></a>        avg_vector <span class="op">=</span> np.zeros_like(w2v_vectors[<span class="st">"hi"</span>])</span>
+<span id="ae3d1262-7"><a href="#ae3d1262-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> avg_vector</span>
+<span id="ae3d1262-8"><a href="#ae3d1262-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ae3d1262-9"><a href="#ae3d1262-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ae3d1262-10"><a href="#ae3d1262-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_w2v_avg(w2v_vectors):</span>
+<span id="ae3d1262-11"><a href="#ae3d1262-11" aria-hidden="true" tabindex="-1"></a>    X_train_vectors <span class="op">=</span> np.array(</span>
+<span id="ae3d1262-12"><a href="#ae3d1262-12" aria-hidden="true" tabindex="-1"></a>        [get_mean_vector(w2v_vectors, words) <span class="cf">for</span> words <span class="kw">in</span> X_train_tokens]</span>
+<span id="ae3d1262-13"><a href="#ae3d1262-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="ae3d1262-14"><a href="#ae3d1262-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ae3d1262-15"><a href="#ae3d1262-15" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> cross_val_score(</span>
+<span id="ae3d1262-16"><a href="#ae3d1262-16" aria-hidden="true" tabindex="-1"></a>        clf, X_train_vectors, y_train, cv<span class="op">=</span><span class="dv">4</span>, scoring<span class="op">=</span><span class="st">"f1_micro"</span>, n_jobs<span class="op">=</span><span class="dv">4</span></span>
+<span id="ae3d1262-17"><a href="#ae3d1262-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="ae3d1262-18"><a href="#ae3d1262-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ae3d1262-19"><a href="#ae3d1262-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"CV scores </span><span class="sc">{</span>scores<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="ae3d1262-20"><a href="#ae3d1262-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Mean F1 </span><span class="sc">{</span>np<span class="sc">.</span>mean(scores)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="ae3d1262-21"><a href="#ae3d1262-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0dd1e415" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="0dd1e415"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0dd1e415-1"><a href="#0dd1e415-1" aria-hidden="true" tabindex="-1"></a>cv_w2vec <span class="op">=</span> fit_w2v_avg(w2v_model.wv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dd94ea03" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="dd94ea03"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dd94ea03-1"><a href="#dd94ea03-1" aria-hidden="true" tabindex="-1"></a>cv_w2vec <span class="op">=</span> fit_w2v_avg(w2v_model.wv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La performance chute fortement ;
 la faute à la taille très restreinte du corpus, comme annoncé précédemment.</p>
 </section>
-<section id="word2vec-pré-entraîné-averaging" class="level2" data-number="0.8">
-<h2 data-number="0.8" class="anchored" data-anchor-id="word2vec-pré-entraîné-averaging"><span class="header-section-number">0.8</span> Word2vec pré-entraîné + averaging</h2>
+<section id="word2vec-pré-entraîné-averaging" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Word2vec pré-entraîné + averaging</h1>
 <p>Quand on travaille avec des corpus de taille restreinte,
 c’est généralement une mauvaise idée d’entraîner son propre modèle <code>word2vec</code>.</p>
 <p>Heureusement, des modèles pré-entraînés sur de très gros corpus sont disponibles.
@@ -1069,52 +1071,52 @@ c’est-à-dire de bénéficier de la performance d’un modèle qui a été ent
 <p><em>Source</em> : https://nlp.stanford.edu/projects/glove/</p>
 </blockquote>
 <p>On peut le charger directement grâce à l’instruction suivante :</p>
-<div id="96590a76" class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="96590a76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="96590a76-1"><a href="#96590a76-1" aria-hidden="true" tabindex="-1"></a>glove_model <span class="op">=</span> gensim.downloader.load(<span class="st">"glove-wiki-gigaword-200"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b2aca94d" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="b2aca94d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b2aca94d-1"><a href="#b2aca94d-1" aria-hidden="true" tabindex="-1"></a>glove_model <span class="op">=</span> gensim.downloader.load(<span class="st">"glove-wiki-gigaword-200"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Par exemple, la représentation vectorielle de roi est l’objet
 multidimensionnel suivant :</p>
-<div id="2716b398" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="2716b398"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2716b398-1"><a href="#2716b398-1" aria-hidden="true" tabindex="-1"></a>glove_model[<span class="st">"king"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2ab25707" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="2ab25707"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2ab25707-1"><a href="#2ab25707-1" aria-hidden="true" tabindex="-1"></a>glove_model[<span class="st">"king"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comme elle est peu intelligible, on va plutôt rechercher les termes les
 plus similaires. Par exemple,</p>
-<div id="4de1166b" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="4de1166b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4de1166b-1"><a href="#4de1166b-1" aria-hidden="true" tabindex="-1"></a>glove_model.most_similar(<span class="st">"mother"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d772ff35" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="d772ff35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d772ff35-1"><a href="#d772ff35-1" aria-hidden="true" tabindex="-1"></a>glove_model.most_similar(<span class="st">"mother"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut retrouver notre formule précédente</p>
 <p><span class="math display">\[\text{king} - \text{man} + \text{woman} ≈ \text{queen}\]</span>
 dans ce plongement de mots:</p>
-<div id="30b6482f" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="30b6482f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="30b6482f-1"><a href="#30b6482f-1" aria-hidden="true" tabindex="-1"></a>glove_model.most_similar(positive<span class="op">=</span>[<span class="st">"king"</span>, <span class="st">"woman"</span>], negative<span class="op">=</span>[<span class="st">"man"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="03c066c1" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="03c066c1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="03c066c1-1"><a href="#03c066c1-1" aria-hidden="true" tabindex="-1"></a>glove_model.most_similar(positive<span class="op">=</span>[<span class="st">"king"</span>, <span class="st">"woman"</span>], negative<span class="op">=</span>[<span class="st">"man"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vous pouvez vous référer à <a href="https://jalammar.github.io/illustrated-word2vec/">ce tutoriel</a>
 pour en découvrir plus sur <code>Word2Vec</code>.</p>
 <p>Faisons notre apprentissage par transfert :</p>
-<div id="c34d54a5" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="c34d54a5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c34d54a5-1"><a href="#c34d54a5-1" aria-hidden="true" tabindex="-1"></a>cv_w2vec_transfert <span class="op">=</span> fit_w2v_avg(glove_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="525c114f" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="525c114f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="525c114f-1"><a href="#525c114f-1" aria-hidden="true" tabindex="-1"></a>cv_w2vec_transfert <span class="op">=</span> fit_w2v_avg(glove_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La performance remonte substantiellement.
 Cela étant, on ne parvient pas à faire mieux que les approches basiques,
 on arrive à peine aux performances de la vectorisation par comptage.</p>
 <p>En effet, pour rappel, les performances sont les suivantes :</p>
-<div id="4b647457" class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="4b647457"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4b647457-1"><a href="#4b647457-1" aria-hidden="true" tabindex="-1"></a>perfs <span class="op">=</span> pd.DataFrame(</span>
-<span id="4b647457-2"><a href="#4b647457-2" aria-hidden="true" tabindex="-1"></a>    [</span>
-<span id="4b647457-3"><a href="#4b647457-3" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_bow.cv_results_[<span class="st">"mean_test_score"</span>]),</span>
-<span id="4b647457-4"><a href="#4b647457-4" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_tfidf.cv_results_[<span class="st">"mean_test_score"</span>]),</span>
-<span id="4b647457-5"><a href="#4b647457-5" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_w2vec),</span>
-<span id="4b647457-6"><a href="#4b647457-6" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_w2vec_transfert),</span>
-<span id="4b647457-7"><a href="#4b647457-7" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="4b647457-8"><a href="#4b647457-8" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[</span>
-<span id="4b647457-9"><a href="#4b647457-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Bag-of-Words"</span>,</span>
-<span id="4b647457-10"><a href="#4b647457-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"TF-IDF"</span>,</span>
-<span id="4b647457-11"><a href="#4b647457-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Word2Vec non pré-entraîné"</span>,</span>
-<span id="4b647457-12"><a href="#4b647457-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Word2Vec pré-entraîné"</span>,</span>
-<span id="4b647457-13"><a href="#4b647457-13" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="4b647457-14"><a href="#4b647457-14" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>[<span class="st">"Mean F1 score"</span>],</span>
-<span id="4b647457-15"><a href="#4b647457-15" aria-hidden="true" tabindex="-1"></a>).sort_values(<span class="st">"Mean F1 score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="4b647457-16"><a href="#4b647457-16" aria-hidden="true" tabindex="-1"></a>perfs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a25674d6" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="a25674d6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a25674d6-1"><a href="#a25674d6-1" aria-hidden="true" tabindex="-1"></a>perfs <span class="op">=</span> pd.DataFrame(</span>
+<span id="a25674d6-2"><a href="#a25674d6-2" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="a25674d6-3"><a href="#a25674d6-3" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_bow.cv_results_[<span class="st">"mean_test_score"</span>]),</span>
+<span id="a25674d6-4"><a href="#a25674d6-4" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_tfidf.cv_results_[<span class="st">"mean_test_score"</span>]),</span>
+<span id="a25674d6-5"><a href="#a25674d6-5" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_w2vec),</span>
+<span id="a25674d6-6"><a href="#a25674d6-6" aria-hidden="true" tabindex="-1"></a>        np.mean(cv_w2vec_transfert),</span>
+<span id="a25674d6-7"><a href="#a25674d6-7" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="a25674d6-8"><a href="#a25674d6-8" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[</span>
+<span id="a25674d6-9"><a href="#a25674d6-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Bag-of-Words"</span>,</span>
+<span id="a25674d6-10"><a href="#a25674d6-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"TF-IDF"</span>,</span>
+<span id="a25674d6-11"><a href="#a25674d6-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Word2Vec non pré-entraîné"</span>,</span>
+<span id="a25674d6-12"><a href="#a25674d6-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Word2Vec pré-entraîné"</span>,</span>
+<span id="a25674d6-13"><a href="#a25674d6-13" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="a25674d6-14"><a href="#a25674d6-14" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>[<span class="st">"Mean F1 score"</span>],</span>
+<span id="a25674d6-15"><a href="#a25674d6-15" aria-hidden="true" tabindex="-1"></a>).sort_values(<span class="st">"Mean F1 score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="a25674d6-16"><a href="#a25674d6-16" aria-hidden="true" tabindex="-1"></a>perfs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les performences limitées du modèle <em>Word2Vec</em> sont cette fois certainement dues à la manière dont
 les <em>word-embeddings</em> sont exploités : ils sont moyennés pour décrire chaque document.</p>
@@ -1125,8 +1127,8 @@ les <em>word-embeddings</em> sont exploités : ils sont moyennés pour décrire 
 des représentation bruitées.</li>
 </ul>
 </section>
-<section id="contextual-embeddings" class="level2" data-number="0.9">
-<h2 data-number="0.9" class="anchored" data-anchor-id="contextual-embeddings"><span class="header-section-number">0.9</span> Contextual embeddings</h2>
+<section id="contextual-embeddings" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Contextual embeddings</h1>
 <p>Les <em>embeddings</em> contextuels visent à pallier les limites des <em>embeddings</em>
 traditionnels évoquées précédemment.</p>
 <p>Cette fois, les mots n’ont plus de représentation vectorielle fixe,
@@ -1137,30 +1139,30 @@ qui l’entourent.
 Par exemple, dans les expressions “le président Macron” et “le camembert Président” le mot président n’a pas du tout le même rôle.</p>
 <p>Ces <em>embeddings</em> sont produits par des architectures très complexes,
 de type Transformer (<code>BERT</code>, etc.).</p>
-<div id="21fe88eb" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="21fe88eb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="21fe88eb-1"><a href="#21fe88eb-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SentenceTransformer(<span class="st">"all-mpnet-base-v2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a999e762" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="a999e762"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a999e762-1"><a href="#a999e762-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SentenceTransformer(<span class="st">"all-mpnet-base-v2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="147d310f" class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="147d310f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="147d310f-1"><a href="#147d310f-1" aria-hidden="true" tabindex="-1"></a>X_train_vectors <span class="op">=</span> model.encode(X_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9f443a4a" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="9f443a4a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9f443a4a-1"><a href="#9f443a4a-1" aria-hidden="true" tabindex="-1"></a>X_train_vectors <span class="op">=</span> model.encode(X_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d2d59ed2" class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="d2d59ed2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d2d59ed2-1"><a href="#d2d59ed2-1" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> cross_val_score(</span>
-<span id="d2d59ed2-2"><a href="#d2d59ed2-2" aria-hidden="true" tabindex="-1"></a>    clf, X_train_vectors, y_train, cv<span class="op">=</span><span class="dv">4</span>, scoring<span class="op">=</span><span class="st">"f1_micro"</span>, n_jobs<span class="op">=</span><span class="dv">4</span></span>
-<span id="d2d59ed2-3"><a href="#d2d59ed2-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="d2d59ed2-4"><a href="#d2d59ed2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d2d59ed2-5"><a href="#d2d59ed2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"CV scores </span><span class="sc">{</span>scores<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="d2d59ed2-6"><a href="#d2d59ed2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean F1 </span><span class="sc">{</span>np<span class="sc">.</span>mean(scores)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e761ef4b" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="e761ef4b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e761ef4b-1"><a href="#e761ef4b-1" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> cross_val_score(</span>
+<span id="e761ef4b-2"><a href="#e761ef4b-2" aria-hidden="true" tabindex="-1"></a>    clf, X_train_vectors, y_train, cv<span class="op">=</span><span class="dv">4</span>, scoring<span class="op">=</span><span class="st">"f1_micro"</span>, n_jobs<span class="op">=</span><span class="dv">4</span></span>
+<span id="e761ef4b-3"><a href="#e761ef4b-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="e761ef4b-4"><a href="#e761ef4b-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e761ef4b-5"><a href="#e761ef4b-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"CV scores </span><span class="sc">{</span>scores<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="e761ef4b-6"><a href="#e761ef4b-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean F1 </span><span class="sc">{</span>np<span class="sc">.</span>mean(scores)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="08c1f81a" class="cell" data-execution_count="44">
-<div class="sourceCode cell-code" id="08c1f81a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="08c1f81a-1"><a href="#08c1f81a-1" aria-hidden="true" tabindex="-1"></a>perfs <span class="op">=</span> pd.concat(</span>
-<span id="08c1f81a-2"><a href="#08c1f81a-2" aria-hidden="true" tabindex="-1"></a>    [</span>
-<span id="08c1f81a-3"><a href="#08c1f81a-3" aria-hidden="true" tabindex="-1"></a>        perfs,</span>
-<span id="08c1f81a-4"><a href="#08c1f81a-4" aria-hidden="true" tabindex="-1"></a>        pd.DataFrame(</span>
-<span id="08c1f81a-5"><a href="#08c1f81a-5" aria-hidden="true" tabindex="-1"></a>            [np.mean(scores)], index<span class="op">=</span>[<span class="st">"Contextual Embedding"</span>], columns<span class="op">=</span>[<span class="st">"Mean F1 score"</span>]</span>
-<span id="08c1f81a-6"><a href="#08c1f81a-6" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="08c1f81a-7"><a href="#08c1f81a-7" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="08c1f81a-8"><a href="#08c1f81a-8" aria-hidden="true" tabindex="-1"></a>).sort_values(<span class="st">"Mean F1 score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="08c1f81a-9"><a href="#08c1f81a-9" aria-hidden="true" tabindex="-1"></a>perfs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c9add4e0" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="c9add4e0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c9add4e0-1"><a href="#c9add4e0-1" aria-hidden="true" tabindex="-1"></a>perfs <span class="op">=</span> pd.concat(</span>
+<span id="c9add4e0-2"><a href="#c9add4e0-2" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="c9add4e0-3"><a href="#c9add4e0-3" aria-hidden="true" tabindex="-1"></a>        perfs,</span>
+<span id="c9add4e0-4"><a href="#c9add4e0-4" aria-hidden="true" tabindex="-1"></a>        pd.DataFrame(</span>
+<span id="c9add4e0-5"><a href="#c9add4e0-5" aria-hidden="true" tabindex="-1"></a>            [np.mean(scores)], index<span class="op">=</span>[<span class="st">"Contextual Embedding"</span>], columns<span class="op">=</span>[<span class="st">"Mean F1 score"</span>]</span>
+<span id="c9add4e0-6"><a href="#c9add4e0-6" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="c9add4e0-7"><a href="#c9add4e0-7" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="c9add4e0-8"><a href="#c9add4e0-8" aria-hidden="true" tabindex="-1"></a>).sort_values(<span class="st">"Mean F1 score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="c9add4e0-9"><a href="#c9add4e0-9" aria-hidden="true" tabindex="-1"></a>perfs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Verdict : on fait très légèrement mieux que la vectorisation TF-IDF.
 On voit donc l’importance de tenir compte du contexte.</p>
@@ -1176,15 +1178,14 @@ qui ne fait pas justice aux <em>embeddings</em>. Comme on l’a dit précédemme
 certains mots (noms de personnage, noms de lieux) soient suffisants pour classifier de manière pertinente,
 ce que ne permettent pas de capter les <em>embeddings</em> qui accordent à tous les mots la même importance.</p>
 </section>
-<section id="aller-plus-loin" class="level2" data-number="0.10">
-<h2 data-number="0.10" class="anchored" data-anchor-id="aller-plus-loin"><span class="header-section-number">0.10</span> Aller plus loin</h2>
+<section id="aller-plus-loin" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Aller plus loin</h1>
 <ul>
 <li>Nous avons entraîné différents modèles sur l’échantillon d’entraînement par validation croisée, mais nous n’avons toujours pas utilisé l’échantillon test que nous avons mis de côté au début. Réaliser la prédiction sur les données de test, et vérifier si l’on obtient le même classement des méthodes de vectorisation.</li>
 <li>Faire un <em>vrai</em> split train/test : faire l’entraînement avec des textes de certains auteurs, et faire la prédiction avec des textes d’auteurs différents. Cela permettrait de neutraliser la présence de noms de lieux, de personnages, etc.</li>
 <li>Comparer avec d’autres algorithmes de classification qu’un SVM</li>
 <li>(Avancé) : fine-tuner le modèle d’embeddings contextuels sur la tâche de classification</li>
 </ul>
-</section>
 <section id="informations-additionnelles" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informations-additionnelles">Informations additionnelles</h2>
 <details>
@@ -2503,6 +2504,20 @@ Description
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/06d003a">06d003a</a>
+</td>
+<td>
+2024-04-23 10:09:22
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Continue la restructuration des sous-parties (#492)
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/linogaliana/python-datascientist/commit/005d89b">005d89b</a>
 </td>
 <td>
@@ -3070,6 +3085,7 @@ Lino Galiana
 
 
 </section>
+</section>
 
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
@@ -3542,7 +3558,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

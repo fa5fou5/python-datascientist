@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-22">
+<meta name="dcterms.date" content="2024-04-23">
 <meta name="description" content="La régression linéaire est la première modélisation statistique qu’on découvre dans un cursus quantitatif. Il s’agit en effet d’une méthode très intuitive et très riche. Le Machine Learning permet de l’appréhender d’une autre manière que l’économétrie. Avec scikit et statsmodels, on dispose de tous les outils pour satisfaire à la fois data scientists et économistes.">
 
 <title>Python pour la data science - Régression : une introduction</title>
@@ -166,7 +166,7 @@ data scientists et économistes.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-22">
+<meta name="citation_online_date" content="2024-04-23">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -504,7 +504,7 @@ data scientists et économistes.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-22</p>
+        <p class="date">2024-04-23</p>
       </div>
     </div>
     
@@ -581,13 +581,15 @@ data scientists et économistes.">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#principe-général" id="toc-principe-général" class="nav-link active" data-scroll-target="#principe-général"><span class="header-section-number">0.1</span> Principe général</a>
+  <li><a href="#principe-général" id="toc-principe-général" class="nav-link active" data-scroll-target="#principe-général"><span class="header-section-number">1</span> Principe général</a>
   <ul class="collapse">
-  <li><a href="#la-régression-linéaire" id="toc-la-régression-linéaire" class="nav-link" data-scroll-target="#la-régression-linéaire"><span class="header-section-number">0.1.1</span> La régression linéaire</a></li>
-  <li><a href="#la-régression-logistique" id="toc-la-régression-logistique" class="nav-link" data-scroll-target="#la-régression-logistique"><span class="header-section-number">0.1.2</span> La régression logistique</a></li>
+  <li><a href="#la-régression-linéaire" id="toc-la-régression-linéaire" class="nav-link" data-scroll-target="#la-régression-linéaire"><span class="header-section-number">1.1</span> La régression linéaire</a></li>
+  <li><a href="#la-régression-logistique" id="toc-la-régression-logistique" class="nav-link" data-scroll-target="#la-régression-logistique"><span class="header-section-number">1.2</span> La régression logistique</a></li>
   </ul></li>
-  <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin"><span class="header-section-number">0.2</span> Pour aller plus loin</a></li>
+  <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin"><span class="header-section-number">2</span> Pour aller plus loin</a>
+  <ul class="collapse">
   <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/modelisation/3_regression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -624,35 +626,35 @@ de cette partie</a> : les données de vote aux élections présidentielles amér
 croisées à des variables sociodémographiques.
 Le code
 est disponible <a href="https://github.com/linogaliana/python-datascientist/blob/master/content/modelisation/get_data.py">sur Github</a>.</p>
-<div id="059097f1" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="059097f1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="059097f1-1"><a href="#059097f1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
-<span id="059097f1-2"><a href="#059097f1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ee1f13a4" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="ee1f13a4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ee1f13a4-1"><a href="#ee1f13a4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
+<span id="ee1f13a4-2"><a href="#ee1f13a4-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="22061d78" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="22061d78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="22061d78-1"><a href="#22061d78-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="22061d78-2"><a href="#22061d78-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="22061d78-3"><a href="#22061d78-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
-<span id="22061d78-4"><a href="#22061d78-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="22061d78-5"><a href="#22061d78-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
-<span id="22061d78-6"><a href="#22061d78-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="22061d78-7"><a href="#22061d78-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="22061d78-8"><a href="#22061d78-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="22061d78-9"><a href="#22061d78-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="983d15d0" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="983d15d0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="983d15d0-1"><a href="#983d15d0-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="983d15d0-2"><a href="#983d15d0-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="983d15d0-3"><a href="#983d15d0-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
+<span id="983d15d0-4"><a href="#983d15d0-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="983d15d0-5"><a href="#983d15d0-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
+<span id="983d15d0-6"><a href="#983d15d0-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="983d15d0-7"><a href="#983d15d0-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="983d15d0-8"><a href="#983d15d0-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="983d15d0-9"><a href="#983d15d0-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce chapitre va utiliser plusieurs <em>packages</em>
 de modélisation, les principaux étant <code>Scikit</code> et <code>Statsmodels</code>.
 Voici une suggestion d’import pour tous ces <em>packages</em>.</p>
-<div id="e780d334" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="e780d334"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e780d334-1"><a href="#e780d334-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="e780d334-2"><a href="#e780d334-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="e780d334-3"><a href="#e780d334-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="e780d334-4"><a href="#e780d334-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.metrics</span>
-<span id="e780d334-5"><a href="#e780d334-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="e780d334-6"><a href="#e780d334-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="e780d334-7"><a href="#e780d334-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="de4c209e" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="de4c209e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="de4c209e-1"><a href="#de4c209e-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="de4c209e-2"><a href="#de4c209e-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="de4c209e-3"><a href="#de4c209e-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="de4c209e-4"><a href="#de4c209e-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.metrics</span>
+<span id="de4c209e-5"><a href="#de4c209e-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="de4c209e-6"><a href="#de4c209e-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="de4c209e-7"><a href="#de4c209e-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="principe-général" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="principe-général"><span class="header-section-number">0.1</span> Principe général</h2>
+<section id="principe-général" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Principe général</h1>
 <p>Le principe général de la régression consiste à trouver une loi <span class="math inline">\(h_\theta(X)\)</span>
 telle que</p>
 <p><span class="math display">\[
@@ -664,8 +666,8 @@ par à la régression linéaire.</p>
 de vraisemblance et aux méthodes des moments. La régression est un ensemble
 très vaste de méthodes, selon la famille de modèles
 (paramétriques, non paramétriques, etc.) et la structure de modèles.</p>
-<section id="la-régression-linéaire" class="level3" data-number="0.1.1">
-<h3 data-number="0.1.1" class="anchored" data-anchor-id="la-régression-linéaire"><span class="header-section-number">0.1.1</span> La régression linéaire</h3>
+<section id="la-régression-linéaire" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="la-régression-linéaire"><span class="header-section-number">1.1</span> La régression linéaire</h2>
 <p>C’est la manière la plus simple de représenter la loi <span class="math inline">\(h_\theta(X)\)</span> comme
 combinaison linéaire de variables <span class="math inline">\(X\)</span> et de paramètres <span class="math inline">\(\theta\)</span>. Dans ce
 cas,</p>
@@ -727,7 +729,7 @@ un problème de spécification ?</p></li>
 </div>
 </div>
 <p>Voici le nuage de points de nos erreurs:</p>
-<div id="c140a28d" class="cell" data-execution_count="9">
+<div id="bfd1167b" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 <figure class="figure">
@@ -777,8 +779,8 @@ englober ces modèles.</p>
 </div>
 </div>
 </section>
-<section id="la-régression-logistique" class="level3" data-number="0.1.2">
-<h3 data-number="0.1.2" class="anchored" data-anchor-id="la-régression-logistique"><span class="header-section-number">0.1.2</span> La régression logistique</h3>
+<section id="la-régression-logistique" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="la-régression-logistique"><span class="header-section-number">1.2</span> La régression logistique</h2>
 <p>Ce modèle s’applique à une distribution binaire.
 Dans ce cas, <span class="math inline">\(\mathbb{E}_{\theta} (Y|X) = \mathbb{P}_{\theta} (Y = 1|X)\)</span>.
 La régression logistique peut être vue comme un modèle linéaire en probabilité :</p>
@@ -846,8 +848,8 @@ LR = -2\log\bigg(\frac{\mathcal{L}_{\theta}}{\mathcal{L}_{\theta_0}}\bigg) = -2(
 </div>
 </section>
 </section>
-<section id="pour-aller-plus-loin" class="level2" data-number="0.2">
-<h2 data-number="0.2" class="anchored" data-anchor-id="pour-aller-plus-loin"><span class="header-section-number">0.2</span> Pour aller plus loin</h2>
+<section id="pour-aller-plus-loin" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Pour aller plus loin</h1>
 <p>Ce chapitre n’évoque les enjeux de la régression
 que de manière très introductive. Pour compléter ceci,
 il est recommandé d’explorer les champs suivants:</p>
@@ -860,16 +862,15 @@ aléatoires ;</li>
 <li>Les tests d’hypothèses pour aller plus loin sur ces questions que notre
 test de ratio de vraisemblance.</li>
 </ul>
-</section>
 <section id="informations-additionnelles" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informations-additionnelles">Informations additionnelles</h2>
 <details>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-22</p>
+<p>Latest built version: 2024-04-23</p>
 <p>Python version used:</p>
-<div id="d5b66a57" class="cell" data-execution_count="24">
+<div id="804ee82f" class="cell" data-execution_count="24">
 <div class="cell-output cell-output-display" data-execution_count="23">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -2181,6 +2182,20 @@ Description
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/06d003a">06d003a</a>
+</td>
+<td>
+2024-04-23 10:09:22
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Continue la restructuration des sous-parties (#492)
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/linogaliana/python-datascientist/commit/8c316d0">8c316d0</a>
 </td>
 <td>
@@ -2762,6 +2777,7 @@ Introduction au Machine Learning (#72)
 
 
 </section>
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@book{galiana2023,
   author = {Galiana, Lino},
@@ -3228,7 +3244,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","selector":".lightbox","openEffect":"zoom","loop":false});
+<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

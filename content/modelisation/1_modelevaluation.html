@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-22">
+<meta name="dcterms.date" content="2024-04-23">
 <meta name="description" content="Faire preuve de méthode pour évaluer la qualité d’un modèle permet de proposer des prédictions plus robustes, ayant de meilleures performances sur un nouveau jeu de données (prédictions out-of-sample). Décomposer l’échantillon initial en sous-échantillons d’entraînement et de tests, faire de la validation croisée, utiliser les bonnes mesures de performances peut se faire, grâce à scikit, de manière relativement standardisée. Cette démarche scientifique est essentielle pour assurer la confiance dans la qualité d’un modèle, ce qu’a illustré récemment un cycle de séminaire de Princeton.">
 
 <title>Python pour la data science - Evaluer la qualité d’un modèle</title>
@@ -169,7 +169,7 @@ un cycle de séminaire de Princeton.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-22">
+<meta name="citation_online_date" content="2024-04-23">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -512,7 +512,7 @@ un cycle de séminaire de Princeton.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-22</p>
+        <p class="date">2024-04-23</p>
       </div>
     </div>
     
@@ -589,15 +589,15 @@ un cycle de séminaire de Princeton.">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#découper-léchantillon" id="toc-découper-léchantillon" class="nav-link active" data-scroll-target="#découper-léchantillon"><span class="header-section-number">0.1</span> Découper l’échantillon</a></li>
-  <li><a href="#le-problème-du-sur-apprentissage" id="toc-le-problème-du-sur-apprentissage" class="nav-link" data-scroll-target="#le-problème-du-sur-apprentissage"><span class="header-section-number">0.2</span> Le problème du sur-apprentissage</a></li>
-  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée"><span class="header-section-number">0.3</span> Validation croisée</a></li>
-  <li><a href="#mesurer-la-performance" id="toc-mesurer-la-performance" class="nav-link" data-scroll-target="#mesurer-la-performance"><span class="header-section-number">0.4</span> Mesurer la performance</a>
+  <li><a href="#découper-léchantillon" id="toc-découper-léchantillon" class="nav-link active" data-scroll-target="#découper-léchantillon"><span class="header-section-number">1</span> Découper l’échantillon</a></li>
+  <li><a href="#le-problème-du-sur-apprentissage" id="toc-le-problème-du-sur-apprentissage" class="nav-link" data-scroll-target="#le-problème-du-sur-apprentissage"><span class="header-section-number">2</span> Le problème du sur-apprentissage</a></li>
+  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée"><span class="header-section-number">3</span> Validation croisée</a></li>
+  <li><a href="#mesurer-la-performance" id="toc-mesurer-la-performance" class="nav-link" data-scroll-target="#mesurer-la-performance"><span class="header-section-number">4</span> Mesurer la performance</a>
   <ul class="collapse">
-  <li><a href="#classification" id="toc-classification" class="nav-link" data-scroll-target="#classification"><span class="header-section-number">0.4.1</span> Classification</a></li>
-  <li><a href="#régression" id="toc-régression" class="nav-link" data-scroll-target="#régression"><span class="header-section-number">0.4.2</span> Régression</a></li>
-  </ul></li>
+  <li><a href="#classification" id="toc-classification" class="nav-link" data-scroll-target="#classification"><span class="header-section-number">4.1</span> Classification</a></li>
+  <li><a href="#régression" id="toc-régression" class="nav-link" data-scroll-target="#régression"><span class="header-section-number">4.2</span> Régression</a></li>
   <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/modelisation/1_modelevaluation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -798,8 +798,8 @@ un cycle de séminaire de Princeton.">
 de <em>Machine Learning</em> mobilisé est de qualité. Ce chapitre ne présente pas
 d’exercice ou de code, il est là pour présenter certains concepts
 que nous appliquerons dans les prochains chapitres.</p>
-<section id="découper-léchantillon" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="découper-léchantillon"><span class="header-section-number">0.1</span> Découper l’échantillon</h2>
+<section id="découper-léchantillon" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Découper l’échantillon</h1>
 <p>Le chapitre précédent présentait le <em>pipeline</em> simple ci-dessous
 pour introduire à la notion d’entraînement d’un modèle :</p>
 <p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/scikit_predict.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/scikit_predict.png" class="img-fluid"></a></p>
@@ -818,8 +818,8 @@ qui affectent la prédiction seront pas la suite appelés des
 raffinement de l’approche pour obtenir un <em>pipeline</em> ayant plutôt cet aspect :</p>
 <p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/scikit_predict2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/scikit_predict2.png" class="img-fluid"></a></p>
 </section>
-<section id="le-problème-du-sur-apprentissage" class="level2" data-number="0.2">
-<h2 data-number="0.2" class="anchored" data-anchor-id="le-problème-du-sur-apprentissage"><span class="header-section-number">0.2</span> Le problème du sur-apprentissage</h2>
+<section id="le-problème-du-sur-apprentissage" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Le problème du sur-apprentissage</h1>
 <p>Le but du <em>Machine Learning</em> est de calibrer l’algorithme sur des exemples
 connus (données labellisées) afin de généraliser à des
 exemples nouveaux (éventuellement non labellisés).
@@ -841,10 +841,10 @@ peut décomposer l’erreur d’estimation en deux parties :</p>
 </ol>
 <p>Pour décomposer un modèle en jeu d’estimation et de test,
 la meilleure méthode est d’utiliser les fonctionnalités de <code>scikit</code> de la manière suivante :</p>
-<div id="d309624c" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="d309624c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d309624c-1"><a href="#d309624c-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="d309624c-2"><a href="#d309624c-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d309624c-3"><a href="#d309624c-3" aria-hidden="true" tabindex="-1"></a>xTrain, xTest, yTrain, yTest <span class="op">=</span> train_test_split(x, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="34675fc6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="34675fc6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="34675fc6-1"><a href="#34675fc6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="34675fc6-2"><a href="#34675fc6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="34675fc6-3"><a href="#34675fc6-3" aria-hidden="true" tabindex="-1"></a>xTrain, xTest, yTrain, yTest <span class="op">=</span> train_test_split(x, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La proportion d’observations dans le jeu de test est contrôlée par l’argument <code>test_size</code>.
 La proportion optimale n’existe pas.
@@ -853,7 +853,7 @@ dans l’échantillon de test pour garder suffisamment d’observations
 dans l’échantillon d’estimation.</p>
 <div class="cell markdown">
 <div class="alert alert-warning" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-lightbulb"></i> Hint </h3>
+<h3 class="alert-heading anchored" data-anchor-id="le-problème-du-sur-apprentissage"><i class="fa-solid fa-lightbulb"></i> Hint </h3>
 <p>Lorsqu’on travaille avec des séries temporelles, l’échantillonnage aléatoire des observations n’a pas vraiment de sens. Il vaut mieux tester la qualité de l’observation sur des périodes distinguées.</p>
 </div>
 </div>
@@ -870,8 +870,8 @@ Ce type d’échantillonnage stratifié est également possible avec <code>sciki
 <p>L’<a href="../../content/modelisation/2_SVM.html">exercice sur les SVM</a> illustre cette construction et la manière
 dont elle facilite l’évaluation de la qualité d’un modèle.</p>
 </section>
-<section id="validation-croisée" class="level2" data-number="0.3">
-<h2 data-number="0.3" class="anchored" data-anchor-id="validation-croisée"><span class="header-section-number">0.3</span> Validation croisée</h2>
+<section id="validation-croisée" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Validation croisée</h1>
 <p>Certains algorithmes font intervenir des <strong>hyperparamètres</strong>,
 c’est-à-dire des paramètres exogènes qui déterminent la prédiction mais ne sont pas estimés.
 La <strong>validation croisée</strong> est une méthode permettant de choisir la valeur du paramètre
@@ -880,7 +880,7 @@ des scores de performance sur des découpages différents de l’échantillon d�
 <p>La validation croisée permet d’évaluer les performances de modèles différents (SVM, random forest, etc.) ou, couplé à une stratégie de <em>grid search</em>, de trouver les valeurs des hyperparamètres qui aboutissent à la meilleure prédiction.</p>
 <div class="cell markdown">
 <div class="alert alert-info" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-comment"></i> Note</h3>
+<h3 class="alert-heading anchored" data-anchor-id="validation-croisée"><i class="fa-solid fa-comment"></i> Note</h3>
 <p>L’étape de découpage de l’échantillon de validation croisée est à distinguer de l’étape <code>split_sample_test</code>. A ce stade, on a déjà partitionné les données en échantillon d’apprentissage et test. C’est l’échantillon d’apprentissage qu’on découpe en sous-morceaux.</p>
 </div>
 </div>
@@ -892,8 +892,8 @@ comparés pour plusieurs valeurs des hyperparamètres.</p>
 <p>Il existe d’autres types de validation croisée, notamment la <em>leave one out</em> qui consiste à considérer une fois
 exactement chaque observation comme l’échantillon de test (une <em>n-fold cross validation</em>).</p>
 </section>
-<section id="mesurer-la-performance" class="level2" data-number="0.4">
-<h2 data-number="0.4" class="anchored" data-anchor-id="mesurer-la-performance"><span class="header-section-number">0.4</span> Mesurer la performance</h2>
+<section id="mesurer-la-performance" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Mesurer la performance</h1>
 <p>Jusqu’à présent, nous avons passé sous silence la question du support de <span class="math inline">\(y\)</span>, c’est-à-dire
 de l’étendue des valeurs de notre variable d’intérêt.
 En pratique, la distribution des <span class="math inline">\(y\)</span>
@@ -904,12 +904,12 @@ va néanmoins déterminer deux questions cruciales : la méthode et l’indicate
 <li>Régression : la variable <span class="math inline">\(y\)</span> est continue</li>
 </ul>
 <p>Les deux approches ne sont pas sans lien. On peut par exemple voir le modèle économétrique de choix d’offre de travail comme un problème de classification (participation ou non au marché du travail) ou de régression (régression sur un modèle à variable latente)</p>
-<section id="classification" class="level3" data-number="0.4.1">
-<h3 data-number="0.4.1" class="anchored" data-anchor-id="classification"><span class="header-section-number">0.4.1</span> Classification</h3>
+<section id="classification" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="classification"><span class="header-section-number">4.1</span> Classification</h2>
 <p>La plupart des critères de performance sont construits à partir de la <strong>matrice de confusion</strong> :</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.lebigdata.fr/wp-content/uploads/2018/12/confusion-matrix-exemple-768x432.jpg?ezimgfmt=ng:webp/ngcb1.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="quarto-lightbox-gallery-5" title="Image empruntée à https://www.lebigdata.fr/confusion-matrix-definition"><img src="https://www.lebigdata.fr/wp-content/uploads/2018/12/confusion-matrix-exemple-768x432.jpg?ezimgfmt=ng:webp/ngcb1.png" class="img-fluid figure-img" alt="Image empruntée à https://www.lebigdata.fr/confusion-matrix-definition"></a></p>
+<p><a href="https://www.lebigdata.fr/wp-content/uploads/2018/12/confusion-matrix-exemple-768x432.jpg?ezimgfmt=ng:webp/ngcb1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" data-glightbox="description: .lightbox-desc-5" title="Image empruntée à https://www.lebigdata.fr/confusion-matrix-definition"><img src="https://www.lebigdata.fr/wp-content/uploads/2018/12/confusion-matrix-exemple-768x432.jpg?ezimgfmt=ng:webp/ngcb1.png" class="img-fluid figure-img" alt="Image empruntée à https://www.lebigdata.fr/confusion-matrix-definition"></a></p>
 <figcaption>Image empruntée à https://www.lebigdata.fr/confusion-matrix-definition</figcaption>
 </figure>
 </div>
@@ -967,8 +967,8 @@ informations en faisant varier <span class="math inline">\(c\)</span> de 0 à 1:
 <p>L’aire sous la courbe (<strong>AUC</strong>) permet d’évaluer quantitativement le meilleur modèle au
 sens de ce critère. L’AUC représente la probabilité que le modèle soit capable de distinguer entre la classe positive et négative.</p>
 </section>
-<section id="régression" class="level3" data-number="0.4.2">
-<h3 data-number="0.4.2" class="anchored" data-anchor-id="régression"><span class="header-section-number">0.4.2</span> Régression</h3>
+<section id="régression" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="régression"><span class="header-section-number">4.2</span> Régression</h2>
 <p>En Machine Learning, les indicateurs de performance en régression sont les suivants :</p>
 <table class="table">
 <colgroup>
@@ -1005,16 +1005,15 @@ d’autres critères pour évaluer la qualité d’un modèle (certains, comme l
 à regarder aussi dans une optique <em>Machine Learning</em>) : <span class="math inline">\(R^2\)</span>, <span class="math inline">\(BIC\)</span>,
 <span class="math inline">\(AIC\)</span>, <em>log-likelihood</em>, etc.</p>
 </section>
-</section>
 <section id="informations-additionnelles" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informations-additionnelles">Informations additionnelles</h2>
 <details>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-22</p>
+<p>Latest built version: 2024-04-23</p>
 <p>Python version used:</p>
-<div id="a3ae9372" class="cell" data-execution_count="3">
+<div id="0fa6ba24" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -2326,6 +2325,20 @@ Description
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/06d003a">06d003a</a>
+</td>
+<td>
+2024-04-23 10:09:22
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Continue la restructuration des sous-parties (#492)
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/linogaliana/python-datascientist/commit/005d89b">005d89b</a>
 </td>
 <td>
@@ -2938,6 +2951,7 @@ Introduction au Machine Learning (#72)
 <span class="glightbox-desc lightbox-desc-5">Image empruntée à https://www.lebigdata.fr/confusion-matrix-definition</span>
 </div>
 </section>
+</section>
 
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
@@ -3410,7 +3424,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","loop":false,"descPosition":"bottom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

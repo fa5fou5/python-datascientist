@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-22">
+<meta name="dcterms.date" content="2024-04-23">
 <meta name="description" content="Le clustering consiste à répartir des observations dans des groupes, généralement non observés, en fonction de caractéristiques observables. Il s’agit d’une application classique, en machine learning de méthodes non supervisées puisqu’on ne dispose généralement pas de l’information sur le groupe auquel appartient réellement une observation. Les applications au monde réel sont nombreuses, notamment dans le domaine de la segmentation tarifaire.">
 
 <title>Python pour la data science - Clustering</title>
@@ -191,7 +191,7 @@ segmentation tarifaire.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-22">
+<meta name="citation_online_date" content="2024-04-23">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -562,7 +562,7 @@ segmentation tarifaire.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-22</p>
+        <p class="date">2024-04-23</p>
       </div>
     </div>
     
@@ -639,20 +639,27 @@ segmentation tarifaire.">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction-sur-le-clustering" id="toc-introduction-sur-le-clustering" class="nav-link active" data-scroll-target="#introduction-sur-le-clustering"><span class="header-section-number">0.1</span> Introduction sur le <em>clustering</em></a></li>
-  <li><a href="#les-k-means" id="toc-les-k-means" class="nav-link" data-scroll-target="#les-k-means"><span class="header-section-number">0.2</span> Les k-means</a>
+  <li><a href="#introduction-sur-le-clustering" id="toc-introduction-sur-le-clustering" class="nav-link active" data-scroll-target="#introduction-sur-le-clustering"><span class="header-section-number">1</span> Introduction sur le <em>clustering</em></a></li>
+  <li><a href="#les-k-means" id="toc-les-k-means" class="nav-link" data-scroll-target="#les-k-means"><span class="header-section-number">2</span> Les k-means</a>
   <ul class="collapse">
-  <li><a href="#principe" id="toc-principe" class="nav-link" data-scroll-target="#principe"><span class="header-section-number">0.2.1</span> Principe</a></li>
-  <li><a href="#choisir-le-nombre-de-clusters" id="toc-choisir-le-nombre-de-clusters" class="nav-link" data-scroll-target="#choisir-le-nombre-de-clusters"><span class="header-section-number">0.2.2</span> Choisir le nombre de clusters</a></li>
-  <li><a href="#autres-méthodes-de-clustering" id="toc-autres-méthodes-de-clustering" class="nav-link" data-scroll-target="#autres-méthodes-de-clustering"><span class="header-section-number">0.2.3</span> Autres méthodes de clustering</a></li>
-  </ul></li>
-  <li><a href="#lanalyse-en-composantes-principales" id="toc-lanalyse-en-composantes-principales" class="nav-link" data-scroll-target="#lanalyse-en-composantes-principales"><span class="header-section-number">0.3</span> L’Analyse en Composantes Principales</a>
+  <li><a href="#principe" id="toc-principe" class="nav-link" data-scroll-target="#principe"><span class="header-section-number">2.1</span> Principe</a></li>
+  <li><a href="#choisir-le-nombre-de-clusters" id="toc-choisir-le-nombre-de-clusters" class="nav-link" data-scroll-target="#choisir-le-nombre-de-clusters"><span class="header-section-number">2.2</span> Choisir le nombre de clusters</a></li>
+  <li><a href="#autres-méthodes-de-clustering" id="toc-autres-méthodes-de-clustering" class="nav-link" data-scroll-target="#autres-méthodes-de-clustering"><span class="header-section-number">2.3</span> Autres méthodes de clustering</a>
   <ul class="collapse">
-  <li><a href="#pour-la-visualisation-de-clusters" id="toc-pour-la-visualisation-de-clusters" class="nav-link" data-scroll-target="#pour-la-visualisation-de-clusters"><span class="header-section-number">0.3.1</span> Pour la visualisation de clusters</a></li>
-  <li><a href="#pour-la-réduction-de-dimension" id="toc-pour-la-réduction-de-dimension" class="nav-link" data-scroll-target="#pour-la-réduction-de-dimension"><span class="header-section-number">0.3.2</span> Pour la réduction de dimension</a></li>
+  <li><a href="#clustering-ascendant-hiérarchique-cah" id="toc-clustering-ascendant-hiérarchique-cah" class="nav-link" data-scroll-target="#clustering-ascendant-hiérarchique-cah"><span class="header-section-number">2.3.1</span> Clustering Ascendant Hiérarchique (CAH)</a></li>
+  <li><a href="#dbscan" id="toc-dbscan" class="nav-link" data-scroll-target="#dbscan"><span class="header-section-number">2.3.2</span> DBSCAN</a></li>
+  <li><a href="#les-mélanges-de-gaussiennes" id="toc-les-mélanges-de-gaussiennes" class="nav-link" data-scroll-target="#les-mélanges-de-gaussiennes"><span class="header-section-number">2.3.3</span> Les mélanges de gaussiennes</a></li>
   </ul></li>
-  <li><a href="#références" id="toc-références" class="nav-link" data-scroll-target="#références">Références</a></li>
+  </ul></li>
+  <li><a href="#lanalyse-en-composantes-principales" id="toc-lanalyse-en-composantes-principales" class="nav-link" data-scroll-target="#lanalyse-en-composantes-principales"><span class="header-section-number">3</span> L’Analyse en Composantes Principales</a>
+  <ul class="collapse">
+  <li><a href="#pour-la-visualisation-de-clusters" id="toc-pour-la-visualisation-de-clusters" class="nav-link" data-scroll-target="#pour-la-visualisation-de-clusters"><span class="header-section-number">3.1</span> Pour la visualisation de clusters</a></li>
+  <li><a href="#pour-la-réduction-de-dimension" id="toc-pour-la-réduction-de-dimension" class="nav-link" data-scroll-target="#pour-la-réduction-de-dimension"><span class="header-section-number">3.2</span> Pour la réduction de dimension</a></li>
+  </ul></li>
+  <li><a href="#références" id="toc-références" class="nav-link" data-scroll-target="#références">Références</a>
+  <ul class="collapse">
   <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/modelisation/5_clustering.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -854,28 +861,28 @@ de cette partie</a> : les données de vote aux élections présidentielles amér
 croisées à des variables sociodémographiques.
 Le code
 est disponible <a href="https://github.com/linogaliana/python-datascientist/blob/master/content/modelisation/get_data.py">sur Github</a>.</p>
-<div id="a3478ab6" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="a3478ab6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a3478ab6-1"><a href="#a3478ab6-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
-<span id="a3478ab6-2"><a href="#a3478ab6-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5f855599" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="5f855599"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5f855599-1"><a href="#5f855599-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
+<span id="5f855599-2"><a href="#5f855599-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="66af8018" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="66af8018"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="66af8018-1"><a href="#66af8018-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="66af8018-2"><a href="#66af8018-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="66af8018-3"><a href="#66af8018-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
-<span id="66af8018-4"><a href="#66af8018-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="66af8018-5"><a href="#66af8018-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
-<span id="66af8018-6"><a href="#66af8018-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="66af8018-7"><a href="#66af8018-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="66af8018-8"><a href="#66af8018-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="66af8018-9"><a href="#66af8018-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="455cbf9b" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="455cbf9b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="455cbf9b-1"><a href="#455cbf9b-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="455cbf9b-2"><a href="#455cbf9b-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="455cbf9b-3"><a href="#455cbf9b-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
+<span id="455cbf9b-4"><a href="#455cbf9b-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="455cbf9b-5"><a href="#455cbf9b-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
+<span id="455cbf9b-6"><a href="#455cbf9b-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="455cbf9b-7"><a href="#455cbf9b-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="455cbf9b-8"><a href="#455cbf9b-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="455cbf9b-9"><a href="#455cbf9b-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il peut également être utile d’installer <code>plotnine</code>
 pour réaliser des graphiques simplement:</p>
-<div id="8794f8df" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="8794f8df"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8794f8df-1"><a href="#8794f8df-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install plotnine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3f50ad75" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="3f50ad75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3f50ad75-1"><a href="#3f50ad75-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install plotnine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduction-sur-le-clustering" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="introduction-sur-le-clustering"><span class="header-section-number">0.1</span> Introduction sur le <em>clustering</em></h2>
+<section id="introduction-sur-le-clustering" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction sur le <em>clustering</em></h1>
 <p>Jusqu’à présent, nous avons fait de l’apprentissage supervisé puisque nous
 connaissions la vraie valeur de la variable à expliquer/prédire (<code>y</code>). Ce n’est plus le cas avec
 l’apprentissage non supervisé.</p>
@@ -907,7 +914,7 @@ Dans certaines bases de données, on peut se retrouver avec quelques exemples la
 non labellisés. Les labels ont par exemple été faits manuellement par des experts.</p>
 <div class="cell markdown">
 <div class="alert alert-info" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-comment"></i> Note</h3>
+<h3 class="alert-heading anchored" data-anchor-id="introduction-sur-le-clustering"><i class="fa-solid fa-comment"></i> Note</h3>
 <p>Les méthodes de <em>clustering</em> peuvent aussi intervenir en amont d’un problème de classification (dans des
 problèmes d’apprentissage semi-supervisé).
 Le manuel <em>Hands-on machine learning with scikit-learn, Keras et TensorFlow</em> <span class="citation" data-cites="geron2022hands">(<a href="#ref-geron2022hands" role="doc-biblioref">Géron 2022</a>)</span> présente dans le
@@ -923,10 +930,10 @@ image représentative par groupe, et labelliser ces images représentatives au l
 <p>Les méthodes de <em>clustering</em> sont nombreuses.
 Nous allons nous pencher sur la plus intuitive : les <em>k-means</em>.</p>
 </section>
-<section id="les-k-means" class="level2" data-number="0.2">
-<h2 data-number="0.2" class="anchored" data-anchor-id="les-k-means"><span class="header-section-number">0.2</span> Les k-means</h2>
-<section id="principe" class="level3" data-number="0.2.1">
-<h3 data-number="0.2.1" class="anchored" data-anchor-id="principe"><span class="header-section-number">0.2.1</span> Principe</h3>
+<section id="les-k-means" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Les k-means</h1>
+<section id="principe" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="principe"><span class="header-section-number">2.1</span> Principe</h2>
 <p>L’objectif des <em>k-means</em> est de partitionner l’espace des observations en trouvant des points (<em>centroids</em>) jouant le rôle de centres de gravité pour lesquels les observations proches peuvent être regroupées dans une classe homogène.
 L’algorithme <em>k-means</em> fonctionne par itération, en initialisant les centroïdes puis en les mettant à jour à chaque
 itération, jusqu’à ce que les centroïdes se stabilisent. Quelques exemples de <em>clusters</em> issus de la méthode <em>k-means</em> :</p>
@@ -944,13 +951,13 @@ avec <span class="math inline">\(\mu_i\)</span> la moyenne des <span class="math
 <p>Dans ce chapitre nous allons principalement
 utiliser <code>Scikit</code>. Voici néanmoins une proposition
 d’imports de packages, pour gagner du temps.</p>
-<div id="ccad5ba7" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="ccad5ba7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ccad5ba7-1"><a href="#ccad5ba7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="ccad5ba7-2"><a href="#ccad5ba7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="ccad5ba7-3"><a href="#ccad5ba7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="ccad5ba7-4"><a href="#ccad5ba7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="ccad5ba7-5"><a href="#ccad5ba7-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans  <span class="co"># pour kmeans</span></span>
-<span id="ccad5ba7-6"><a href="#ccad5ba7-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns  <span class="co"># pour scatterplots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f4256caf" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="f4256caf"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f4256caf-1"><a href="#f4256caf-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="f4256caf-2"><a href="#f4256caf-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="f4256caf-3"><a href="#f4256caf-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="f4256caf-4"><a href="#f4256caf-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="f4256caf-5"><a href="#f4256caf-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans  <span class="co"># pour kmeans</span></span>
+<span id="f4256caf-6"><a href="#f4256caf-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns  <span class="co"># pour scatterplots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
@@ -970,7 +977,7 @@ en fonction du label obtenu. Quel est le problème ?</li>
 <p>La carte obtenue à la question 4, qui permet de
 représenter spatialement nos groupes, est
 la suivante :</p>
-<div id="1d72af59" class="cell" data-execution_count="9">
+<div id="4e5fcc38" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 <figure class="figure">
@@ -982,7 +989,7 @@ la suivante :</p>
 <p>Le nuage de point de la question 5, permettant de représenter
 la relation entre <code>Median_Household_Income_2019</code>
 et <code>Unemployment_rate_2019</code>, aura l’aspect suivant :</p>
-<div id="af024568" class="cell" data-execution_count="11">
+<div id="ea8d262d" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -998,7 +1005,7 @@ modèle pour que ce soit normal. C’est probablement le fait
 de la variance forte du revenu par rapport aux autres variables.
 Dans ce type de sitution, comme cela a été évoqué, il est
 recommandé de standardiser les variables.</p>
-<div id="92fb4fe2" class="cell" data-execution_count="13">
+<div id="db8fe49b" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1008,7 +1015,7 @@ recommandé de standardiser les variables.</p>
 </div>
 </div>
 <p>On obtient ainsi la carte suivante à la question 5:</p>
-<div id="0d46d1d9" class="cell" data-execution_count="14">
+<div id="d27ed5dd" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 <figure class="figure">
@@ -1019,7 +1026,7 @@ recommandé de standardiser les variables.</p>
 </div>
 <p>Et le nuage de point de la question 5 présente un aspect moins
 déterministe, ce qui est préférable :</p>
-<div id="c85b4166" class="cell" data-execution_count="15">
+<div id="6d4063cc" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1030,7 +1037,7 @@ déterministe, ce qui est préférable :</p>
 </div>
 <p>Enfin, en ce qui concerne la question 6, on obtient cet
 histogramme des votes pour chaque cluster :</p>
-<div id="8ffe3588" class="cell" data-execution_count="17">
+<div id="31812e6c" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/mamba/lib/python3.11/site-packages/plotnine/stats/stat_bin.py:109: PlotnineWarning: 'stat_bin()' using 'bins = 31'. Pick better value with 'binwidth'.</code></pre>
 </div>
@@ -1059,8 +1066,8 @@ en fonction de l’<em>inertie</em> du modèle, par défaut égale à 10.</li>
 </div>
 </div>
 </section>
-<section id="choisir-le-nombre-de-clusters" class="level3" data-number="0.2.2">
-<h3 data-number="0.2.2" class="anchored" data-anchor-id="choisir-le-nombre-de-clusters"><span class="header-section-number">0.2.2</span> Choisir le nombre de clusters</h3>
+<section id="choisir-le-nombre-de-clusters" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="choisir-le-nombre-de-clusters"><span class="header-section-number">2.2</span> Choisir le nombre de clusters</h2>
 <p>Le nombre de clusters est fixé par le modélisateur.
 Il existe plusieurs façons de fixer ce nombre :</p>
 <ul>
@@ -1098,14 +1105,14 @@ où <code>m_intra_cluster</code> est la moyenne des distances de l’observation
 et <code>m_nearest_cluster</code> est la moyenne des distances de l’observation aux observations du cluster le plus proche.</p>
 <p>Le package <code>yellowbrick</code> fournit une extension utile à <code>scikit</code> pour représenter
 facilement la performance en <em>clustering</em>.</p>
-<div id="bc3ea3b3" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="bc3ea3b3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bc3ea3b3-1"><a href="#bc3ea3b3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
-<span id="bc3ea3b3-2"><a href="#bc3ea3b3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> KElbowVisualizer</span>
-<span id="bc3ea3b3-3"><a href="#bc3ea3b3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="bc3ea3b3-4"><a href="#bc3ea3b3-4" aria-hidden="true" tabindex="-1"></a>visualizer <span class="op">=</span> KElbowVisualizer(model, k<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">12</span>))</span>
-<span id="bc3ea3b3-5"><a href="#bc3ea3b3-5" aria-hidden="true" tabindex="-1"></a>visualizer.fit(df2[xvars])  <span class="co"># Fit the data to the visualizer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="94839e02" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="94839e02"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="94839e02-1"><a href="#94839e02-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="94839e02-2"><a href="#94839e02-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> KElbowVisualizer</span>
+<span id="94839e02-3"><a href="#94839e02-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="94839e02-4"><a href="#94839e02-4" aria-hidden="true" tabindex="-1"></a>visualizer <span class="op">=</span> KElbowVisualizer(model, k<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">12</span>))</span>
+<span id="94839e02-5"><a href="#94839e02-5" aria-hidden="true" tabindex="-1"></a>visualizer.fit(df2[xvars])  <span class="co"># Fit the data to the visualizer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="79e3b1a2" class="cell" data-execution_count="19">
+<div id="6f29720d" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>&lt;Axes: title={'center': 'Distortion Score Elbow for KMeans Clustering'}, xlabel='k', ylabel='distortion score'&gt;</code></pre>
 </div>
@@ -1119,27 +1126,27 @@ de performance du modèle marque un coude léger à <span class="math inline">\(
 semblait donc approprié.</p>
 <p><code>yellowbrick</code> permet également de représenter des silhouettes mais
 l’interprétation est moins aisée et le coût computationnel plus élevé :</p>
-<div id="fe84038e" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="fe84038e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fe84038e-1"><a href="#fe84038e-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> SilhouetteVisualizer</span>
-<span id="fe84038e-2"><a href="#fe84038e-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="fe84038e-3"><a href="#fe84038e-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">8</span>))</span>
-<span id="fe84038e-4"><a href="#fe84038e-4" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> <span class="dv">0</span></span>
-<span id="fe84038e-5"><a href="#fe84038e-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">10</span>]:</span>
-<span id="fe84038e-6"><a href="#fe84038e-6" aria-hidden="true" tabindex="-1"></a>    j <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="fe84038e-7"><a href="#fe84038e-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="fe84038e-8"><a href="#fe84038e-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Create KMeans instance for different number of clusters</span></span>
-<span id="fe84038e-9"><a href="#fe84038e-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="fe84038e-10"><a href="#fe84038e-10" aria-hidden="true" tabindex="-1"></a>    km <span class="op">=</span> KMeans(</span>
-<span id="fe84038e-11"><a href="#fe84038e-11" aria-hidden="true" tabindex="-1"></a>        n_clusters<span class="op">=</span>i, init<span class="op">=</span><span class="st">"k-means++"</span>, n_init<span class="op">=</span><span class="dv">10</span>, max_iter<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="fe84038e-12"><a href="#fe84038e-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="fe84038e-13"><a href="#fe84038e-13" aria-hidden="true" tabindex="-1"></a>    q, mod <span class="op">=</span> <span class="bu">divmod</span>(j, <span class="dv">2</span>)</span>
-<span id="fe84038e-14"><a href="#fe84038e-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="fe84038e-15"><a href="#fe84038e-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Create SilhouetteVisualizer instance with KMeans instance</span></span>
-<span id="fe84038e-16"><a href="#fe84038e-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Fit the visualizer</span></span>
-<span id="fe84038e-17"><a href="#fe84038e-17" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="fe84038e-18"><a href="#fe84038e-18" aria-hidden="true" tabindex="-1"></a>    visualizer <span class="op">=</span> SilhouetteVisualizer(km, colors<span class="op">=</span><span class="st">"yellowbrick"</span>, ax<span class="op">=</span>ax[q <span class="op">-</span> <span class="dv">1</span>][mod])</span>
-<span id="fe84038e-19"><a href="#fe84038e-19" aria-hidden="true" tabindex="-1"></a>    ax[q <span class="op">-</span> <span class="dv">1</span>][mod].set_title(<span class="st">"k = "</span> <span class="op">+</span> <span class="bu">str</span>(i))</span>
-<span id="fe84038e-20"><a href="#fe84038e-20" aria-hidden="true" tabindex="-1"></a>    visualizer.fit(df2[xvars])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f6b0ee6d" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="f6b0ee6d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f6b0ee6d-1"><a href="#f6b0ee6d-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> SilhouetteVisualizer</span>
+<span id="f6b0ee6d-2"><a href="#f6b0ee6d-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f6b0ee6d-3"><a href="#f6b0ee6d-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">8</span>))</span>
+<span id="f6b0ee6d-4"><a href="#f6b0ee6d-4" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> <span class="dv">0</span></span>
+<span id="f6b0ee6d-5"><a href="#f6b0ee6d-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">10</span>]:</span>
+<span id="f6b0ee6d-6"><a href="#f6b0ee6d-6" aria-hidden="true" tabindex="-1"></a>    j <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="f6b0ee6d-7"><a href="#f6b0ee6d-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="f6b0ee6d-8"><a href="#f6b0ee6d-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Create KMeans instance for different number of clusters</span></span>
+<span id="f6b0ee6d-9"><a href="#f6b0ee6d-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="f6b0ee6d-10"><a href="#f6b0ee6d-10" aria-hidden="true" tabindex="-1"></a>    km <span class="op">=</span> KMeans(</span>
+<span id="f6b0ee6d-11"><a href="#f6b0ee6d-11" aria-hidden="true" tabindex="-1"></a>        n_clusters<span class="op">=</span>i, init<span class="op">=</span><span class="st">"k-means++"</span>, n_init<span class="op">=</span><span class="dv">10</span>, max_iter<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="f6b0ee6d-12"><a href="#f6b0ee6d-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="f6b0ee6d-13"><a href="#f6b0ee6d-13" aria-hidden="true" tabindex="-1"></a>    q, mod <span class="op">=</span> <span class="bu">divmod</span>(j, <span class="dv">2</span>)</span>
+<span id="f6b0ee6d-14"><a href="#f6b0ee6d-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="f6b0ee6d-15"><a href="#f6b0ee6d-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Create SilhouetteVisualizer instance with KMeans instance</span></span>
+<span id="f6b0ee6d-16"><a href="#f6b0ee6d-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Fit the visualizer</span></span>
+<span id="f6b0ee6d-17"><a href="#f6b0ee6d-17" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="f6b0ee6d-18"><a href="#f6b0ee6d-18" aria-hidden="true" tabindex="-1"></a>    visualizer <span class="op">=</span> SilhouetteVisualizer(km, colors<span class="op">=</span><span class="st">"yellowbrick"</span>, ax<span class="op">=</span>ax[q <span class="op">-</span> <span class="dv">1</span>][mod])</span>
+<span id="f6b0ee6d-19"><a href="#f6b0ee6d-19" aria-hidden="true" tabindex="-1"></a>    ax[q <span class="op">-</span> <span class="dv">1</span>][mod].set_title(<span class="st">"k = "</span> <span class="op">+</span> <span class="bu">str</span>(i))</span>
+<span id="f6b0ee6d-20"><a href="#f6b0ee6d-20" aria-hidden="true" tabindex="-1"></a>    visualizer.fit(df2[xvars])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><a href="silhouette-yellowbrick.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="silhouette-yellowbrick.png" class="img-fluid"></a></p>
 <p>Le score de silhouette offre une représentation plus riche que la courbe coudée.</p>
@@ -1160,16 +1167,16 @@ Cela peut nous permettre de choisir des clusters de tailles homogènes ou non.</
 aux observations du cluster le plus proche est inférieure à la moyenne des distances de l’observation aux
 observations de son cluster. Cela signifie que l’observation est mal classée.</p>
 </section>
-<section id="autres-méthodes-de-clustering" class="level3" data-number="0.2.3">
-<h3 data-number="0.2.3" class="anchored" data-anchor-id="autres-méthodes-de-clustering"><span class="header-section-number">0.2.3</span> Autres méthodes de clustering</h3>
+<section id="autres-méthodes-de-clustering" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="autres-méthodes-de-clustering"><span class="header-section-number">2.3</span> Autres méthodes de clustering</h2>
 <p>Il existe de nombreuses autres méthodes de clustering. Parmi les plus connues, on peut citer trois exemples en particulier :</p>
 <ul>
 <li>Le clustering ascendant hiérarchique</li>
 <li>DBSCAN</li>
 <li>les mélanges de Gaussiennes</li>
 </ul>
-<section id="clustering-ascendant-hiérarchique-cah" class="level4" data-number="0.2.3.1">
-<h4 data-number="0.2.3.1" class="anchored" data-anchor-id="clustering-ascendant-hiérarchique-cah"><span class="header-section-number">0.2.3.1</span> Clustering Ascendant Hiérarchique (CAH)</h4>
+<section id="clustering-ascendant-hiérarchique-cah" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="clustering-ascendant-hiérarchique-cah"><span class="header-section-number">2.3.1</span> Clustering Ascendant Hiérarchique (CAH)</h3>
 <p>Quel est le principe ?</p>
 <ul>
 <li>On commence par calculer la dissimilarité entre nos <em>N</em> individus, <em>i.e</em>. leur distance deux à deux dans l’espace de nos variables</li>
@@ -1181,8 +1188,8 @@ observations de son cluster. Cela signifie que l’observation est mal classée.
 <p>Ces regroupements successifs produisent un arbre binaire de classification (dendrogramme), dont la racine correspond à la classe regroupant l’ensemble des individus. Ce dendrogramme représente une hiérarchie de partitions. On peut alors choisir une partition en tronquant l’arbre à un niveau donné, le niveau dépendant soit des contraintes de l’utilisateur, soit de critères plus objectifs.</p>
 <p>Plus d’informations <a href="https://www.xlstat.com/fr/solutions/fonctionnalites/classification-ascendante-hierarchique-cah">ici</a>.</p>
 </section>
-<section id="dbscan" class="level4" data-number="0.2.3.2">
-<h4 data-number="0.2.3.2" class="anchored" data-anchor-id="dbscan"><span class="header-section-number">0.2.3.2</span> DBSCAN</h4>
+<section id="dbscan" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="dbscan"><span class="header-section-number">2.3.2</span> DBSCAN</h3>
 <p>L’<a href="https://fr.wikipedia.org/wiki/DBSCAN">algorithme DBSCAN</a> est implémenté dans <code>sklearn.cluster</code>.
 Il peut être utilisé pour faire de la détection d’anomalies
 notamment.
@@ -1193,8 +1200,8 @@ moins <code>min_samples</code> voisins, alors l’observation sera une <em>core 
 <p>Les observations qui ne sont pas des <em>core instances</em> et qui n’en ont pas dans leur voisinage selon une distance espilon
 vont être détectées comme des anomalies.</p>
 </section>
-<section id="les-mélanges-de-gaussiennes" class="level4" data-number="0.2.3.3">
-<h4 data-number="0.2.3.3" class="anchored"><span class="header-section-number">0.2.3.3</span> Les mélanges de gaussiennes</h4>
+<section id="les-mélanges-de-gaussiennes" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="les-mélanges-de-gaussiennes"><span class="header-section-number">2.3.3</span> Les mélanges de gaussiennes</h3>
 <p>En ce qui concerne la théorie, voir le cours <a href="https://perso.lpsm.paris/~rebafka/#enseignement">Probabilités numériques et statistiques computationnelles, M1 Jussieu, V.Lemaire et T.Rebafka</a>
 Se référer notamment aux notebooks pour l’algorithme EM pour mélange gaussien.</p>
 <p>Dans <code>sklearn</code>, les mélanges gaussiens sont implémentés dans <code>sklearn.mixture</code> comme <code>GaussianMixture</code>.
@@ -1202,7 +1209,7 @@ Les paramètres importants sont alors le nombre de gaussiennes <code>n_component
 Il est possible de faire de la détection d’anomalie savec les mélanges de gaussiennes.</p>
 <div class="cell markdown">
 <div class="alert alert-warning" role="alert">
-<h3 class="alert-heading anchored" data-anchor-id="les-mélanges-de-gaussiennes"><i class="fa-solid fa-pencil"></i> Pour aller plus loin</h3>
+<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Pour aller plus loin</h3>
 <p>Il existe de nombreuses autres méthodes de clustering :</p>
 <ul>
 <li>Local outlier factor ;</li>
@@ -1215,10 +1222,10 @@ Il est possible de faire de la détection d’anomalie savec les mélanges de ga
 </section>
 </section>
 </section>
-<section id="lanalyse-en-composantes-principales" class="level2" data-number="0.3">
-<h2 data-number="0.3" class="anchored" data-anchor-id="lanalyse-en-composantes-principales"><span class="header-section-number">0.3</span> L’Analyse en Composantes Principales</h2>
-<section id="pour-la-visualisation-de-clusters" class="level3" data-number="0.3.1">
-<h3 data-number="0.3.1" class="anchored" data-anchor-id="pour-la-visualisation-de-clusters"><span class="header-section-number">0.3.1</span> Pour la visualisation de clusters</h3>
+<section id="lanalyse-en-composantes-principales" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> L’Analyse en Composantes Principales</h1>
+<section id="pour-la-visualisation-de-clusters" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="pour-la-visualisation-de-clusters"><span class="header-section-number">3.1</span> Pour la visualisation de clusters</h2>
 <p>La méthode la plus simple pour visualiser les <em>clusters</em>, peu importe la méthode avec laquelles ils ont été obtenus, serait de représenter chaque individu dans l’espace à <em>N</em> dimensions des variables de la table, et colorier chaque individu en fonction de son cluster.
 On pourrait alors bien différencier les variables les plus discrimantes et les différents groupes.
 Un seul problème ici : dès que <em>N &gt; 3</em>, nous avons du mal à représenter le résultat de façon intelligible…</p>
@@ -1233,24 +1240,23 @@ En effet, la combinaison linéaire des colonnes donnant naissance à nos nouveau
 </ul>
 <p>Pour mettre en pratique les méthodes de création de clusters, de la base brute jusqu’à la visualisation par ACP, vous pouvez consulter la partie 2 du sujet 3 du funathon 2023, <em>Explorer les habitudes alimentaires de nos compatriotes</em>, sur le <a href="https://www.sspcloud.fr/formation?search=funath&amp;path=%5B%22Funathon%202023%22%5D">SSP Cloud</a> ou sur <a href="https://github.com/InseeFrLab/funathon2023_sujet3/">Github</a>.</p>
 </section>
-<section id="pour-la-réduction-de-dimension" class="level3" data-number="0.3.2">
-<h3 data-number="0.3.2" class="anchored" data-anchor-id="pour-la-réduction-de-dimension"><span class="header-section-number">0.3.2</span> Pour la réduction de dimension</h3>
+<section id="pour-la-réduction-de-dimension" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="pour-la-réduction-de-dimension"><span class="header-section-number">3.2</span> Pour la réduction de dimension</h2>
 <p>L’ACP est également très utile dans le champ de la réduction du nombre de variables pour de nombreux types de modélisations, comme par exemple les régressions linéaires.
 Il est ainsi possible de projeter l’espace des variables explicatives dans un espace de dimension donnée plus faible, pour notamment limiter les risques d’<em>overfitting</em>.</p>
 </section>
 </section>
-<section id="références" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="références">Références</h2>
-</section>
+<section id="références" class="level1 unnumbered">
+<h1 class="unnumbered">Références</h1>
 <section id="informations-additionnelles" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informations-additionnelles">Informations additionnelles</h2>
 <details>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-22</p>
+<p>Latest built version: 2024-04-23</p>
 <p>Python version used:</p>
-<div id="6128668a" class="cell" data-execution_count="23">
+<div id="4ccf3730" class="cell" data-execution_count="23">
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -2562,6 +2568,20 @@ Description
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/06d003a">06d003a</a>
+</td>
+<td>
+2024-04-23 10:09:22
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Continue la restructuration des sous-parties (#492)
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/linogaliana/python-datascientist/commit/005d89b">005d89b</a>
 </td>
 <td>
@@ -3186,6 +3206,7 @@ Suite de la partie machine learning (#78)
 
 
 </section>
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-geron2022hands" class="csl-entry" role="listitem">
@@ -3656,7 +3677,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","openEffect":"zoom","selector":".lightbox","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","loop":false,"selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
