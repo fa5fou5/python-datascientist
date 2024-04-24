@@ -114,6 +114,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         background: #e9f3fa;
       }
 </style>
+<script id="toggle-light-dark-elements" type="application/javascript">
+// Extend Quarto theme toggling to allow elements to be displayed/hidden in light/dark themes
+
+// Replicated from https://github.com/quarto-dev/quarto-cli/blob/84d4659/src/resources/formats/html/templates/quarto-html.ejs
+const getColorSchemeSentinel = () => {
+  const localAlternateSentinel = 'default';
+  if (window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    return storageValue != null ? storageValue : localAlternateSentinel;
+  } else {
+    return localAlternateSentinel;
+  }
+};
+
+// Function to toggle light and dark elements based on color scheme
+const toggleColorSchemeElements = () => {
+  const scheme = getColorSchemeSentinel();
+  const lightElements = document.getElementsByClassName('only-light');
+  const darkElements = document.getElementsByClassName('only-dark');
+
+  for (var i = 0; i < lightElements.length; i++) {
+    lightElements[i].style.display = scheme == 'default' ? 'block' : 'none';
+  }
+  for (var i = 0; i < darkElements.length; i++) {
+    darkElements[i].style.display = scheme == 'default' ? 'none' : 'block';
+  }
+};
+
+// Function to check if the user's browser prefers dark themes
+const prefersDarkTheme = () => {
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
+document.addEventListener('readystatechange', function() {
+  // Set the default color scheme based on browser preference
+  if (document.readyState === 'interactive' && window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    if (storageValue == null && prefersDarkTheme()) {
+      window.localStorage.setItem('quarto-color-scheme', 'alternate');
+    }
+  }
+  // Add event listener for when the readyState is complete (and default toggler is set)
+  if (document.readyState === 'complete') {
+    // Toggle scheme once
+    toggleColorSchemeElements();
+    // Append our toggle function to the old one
+    const oldToggle = window.quartoToggleColorScheme;
+    window.quartoToggleColorScheme = () => {
+      oldToggle();
+      toggleColorSchemeElements();
+    }
+  }
+});
+
+</script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
@@ -171,21 +229,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Python pour la data science</span>
-    </a>
-  </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Introduction</span>
@@ -781,13 +830,13 @@ mis à disposition sur <a href="https://dvf-simple-api.lab.sspcloud.fr/">https:/
 La documentation de l’API est disponible <a href="https://dvf-simple-api.lab.sspcloud.fr/docs">ici</a>.</p>
 <p>Cette API est utilisable dans plusieurs langages.</p>
 <p>En <code>Python</code>, par exemple, cela donnera:</p>
-<div id="8a6a6520" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="8a6a6520"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8a6a6520-1"><a href="#8a6a6520-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="8a6a6520-2"><a href="#8a6a6520-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8a6a6520-3"><a href="#8a6a6520-3" aria-hidden="true" tabindex="-1"></a>pieces_principales <span class="op">=</span> <span class="dv">6</span></span>
-<span id="8a6a6520-4"><a href="#8a6a6520-4" aria-hidden="true" tabindex="-1"></a>surface <span class="op">=</span> <span class="dv">50</span></span>
-<span id="8a6a6520-5"><a href="#8a6a6520-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"https://dvf-simple-api.lab.sspcloud.fr/predict?month=4&amp;nombre_lots=1&amp;code_type_local=2&amp;nombre_pieces_principales=</span><span class="sc">{</span>pieces_principales<span class="sc">}</span><span class="ss">&amp;surface=</span><span class="sc">{</span>surface<span class="sc">}</span><span class="ss">"</span></span>
-<span id="8a6a6520-6"><a href="#8a6a6520-6" aria-hidden="true" tabindex="-1"></a>requests.get(url).json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3d878c03" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="3d878c03"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3d878c03-1"><a href="#3d878c03-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="3d878c03-2"><a href="#3d878c03-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="3d878c03-3"><a href="#3d878c03-3" aria-hidden="true" tabindex="-1"></a>pieces_principales <span class="op">=</span> <span class="dv">6</span></span>
+<span id="3d878c03-4"><a href="#3d878c03-4" aria-hidden="true" tabindex="-1"></a>surface <span class="op">=</span> <span class="dv">50</span></span>
+<span id="3d878c03-5"><a href="#3d878c03-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"https://dvf-simple-api.lab.sspcloud.fr/predict?month=4&amp;nombre_lots=1&amp;code_type_local=2&amp;nombre_pieces_principales=</span><span class="sc">{</span>pieces_principales<span class="sc">}</span><span class="ss">&amp;surface=</span><span class="sc">{</span>surface<span class="sc">}</span><span class="ss">"</span></span>
+<span id="3d878c03-6"><a href="#3d878c03-6" aria-hidden="true" tabindex="-1"></a>requests.get(url).json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>728358.5461884077</code></pre>
 </div>
@@ -946,7 +995,7 @@ suit:</p>
 <li><p>Ajouter <code>model.joblib</code> au <code>.gitignore</code> <em>(si vous utilisez <code>Git</code>)</em></p></li>
 <li><p>Créer un script <code>test.py</code> qui contient la fonction suivante et la teste après avoir importé votre modèle (<code>load('pipe.joblib')</code> en n’oubliant pas <code>from joblib import load</code>):</p></li>
 </ul>
-<div id="89d1a329" class="cell" data-execution_count="2">
+<div id="5f65ffc5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1039,7 +1088,7 @@ d’un cours dédié en 3e année de l’ENSAE: <a href="https://ensae-reproduct
 </summary>
 <p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="9d6ba7f0" class="cell" data-execution_count="4">
+<div id="182bdddb" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>

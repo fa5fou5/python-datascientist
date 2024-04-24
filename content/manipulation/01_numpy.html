@@ -118,6 +118,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         background: #e9f3fa;
       }
 </style>
+<script id="toggle-light-dark-elements" type="application/javascript">
+// Extend Quarto theme toggling to allow elements to be displayed/hidden in light/dark themes
+
+// Replicated from https://github.com/quarto-dev/quarto-cli/blob/84d4659/src/resources/formats/html/templates/quarto-html.ejs
+const getColorSchemeSentinel = () => {
+  const localAlternateSentinel = 'default';
+  if (window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    return storageValue != null ? storageValue : localAlternateSentinel;
+  } else {
+    return localAlternateSentinel;
+  }
+};
+
+// Function to toggle light and dark elements based on color scheme
+const toggleColorSchemeElements = () => {
+  const scheme = getColorSchemeSentinel();
+  const lightElements = document.getElementsByClassName('only-light');
+  const darkElements = document.getElementsByClassName('only-dark');
+
+  for (var i = 0; i < lightElements.length; i++) {
+    lightElements[i].style.display = scheme == 'default' ? 'block' : 'none';
+  }
+  for (var i = 0; i < darkElements.length; i++) {
+    darkElements[i].style.display = scheme == 'default' ? 'none' : 'block';
+  }
+};
+
+// Function to check if the user's browser prefers dark themes
+const prefersDarkTheme = () => {
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
+document.addEventListener('readystatechange', function() {
+  // Set the default color scheme based on browser preference
+  if (document.readyState === 'interactive' && window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    if (storageValue == null && prefersDarkTheme()) {
+      window.localStorage.setItem('quarto-color-scheme', 'alternate');
+    }
+  }
+  // Add event listener for when the readyState is complete (and default toggler is set)
+  if (document.readyState === 'complete') {
+    // Toggle scheme once
+    toggleColorSchemeElements();
+    // Append our toggle function to the old one
+    const oldToggle = window.quartoToggleColorScheme;
+    window.quartoToggleColorScheme = () => {
+      oldToggle();
+      toggleColorSchemeElements();
+    }
+  }
+});
+
+</script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
@@ -179,21 +237,12 @@ d’aller plus loin.">
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Python pour la data science</span>
-    </a>
-  </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Introduction</span>
@@ -635,13 +684,13 @@ sur une fonction.</p>
 <p>Dans ce chapitre, on ne dérogera pas à la convention qui s’est imposée
 d’importer <code>Numpy</code> de la
 manière suivante :</p>
-<div id="61ff1f0a" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="61ff1f0a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="61ff1f0a-1"><a href="#61ff1f0a-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7dd7e82b" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="7dd7e82b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7dd7e82b-1"><a href="#7dd7e82b-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nous allons également fixer la racine du générateur aléatoire de nombres
 afin d’avoir des résultats reproductibles :</p>
-<div id="8e849ee4" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="8e849ee4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8e849ee4-1"><a href="#8e849ee4-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">12345</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0196edc5" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="0196edc5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0196edc5-1"><a href="#0196edc5-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">12345</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-info" role="alert">
@@ -709,15 +758,15 @@ cette complexité accrue.</p>
 <h2 data-number="2.1" class="anchored" data-anchor-id="créer-un-array"><span class="header-section-number">2.1</span> Créer un array</h2>
 <p>On peut créer un <em>array</em> de plusieurs manières. Pour créer un <em>array</em> à partir d’une liste,
 il suffit d’utiliser la méthode <code>array</code>:</p>
-<div id="0ce5494b" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="0ce5494b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0ce5494b-1"><a href="#0ce5494b-1" aria-hidden="true" tabindex="-1"></a>np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ba3e6546" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="ba3e6546"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ba3e6546-1"><a href="#ba3e6546-1" aria-hidden="true" tabindex="-1"></a>np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>array([1, 2, 5])</code></pre>
 </div>
 </div>
 <p>Il est possible d’ajouter un argument <code>dtype</code> pour contraindre le type du <em>array</em> :</p>
-<div id="3dd699b1" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="3dd699b1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3dd699b1-1"><a href="#3dd699b1-1" aria-hidden="true" tabindex="-1"></a>np.array([[<span class="st">"a"</span>, <span class="st">"z"</span>, <span class="st">"e"</span>], [<span class="st">"r"</span>, <span class="st">"t"</span>], [<span class="st">"y"</span>]], dtype<span class="op">=</span><span class="st">"object"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="95e7cb11" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="95e7cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="95e7cb11-1"><a href="#95e7cb11-1" aria-hidden="true" tabindex="-1"></a>np.array([[<span class="st">"a"</span>, <span class="st">"z"</span>, <span class="st">"e"</span>], [<span class="st">"r"</span>, <span class="st">"t"</span>], [<span class="st">"y"</span>]], dtype<span class="op">=</span><span class="st">"object"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>array([list(['a', 'z', 'e']), list(['r', 't']), list(['y'])], dtype=object)</code></pre>
 </div>
@@ -730,34 +779,34 @@ il suffit d’utiliser la méthode <code>array</code>:</p>
 <li>tableau sous forme de matrice identité : <code>np.eye</code></li>
 </ul>
 <p>Ceci donne ainsi, pour les séquences logiques:</p>
-<div id="49dcdb4f" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="49dcdb4f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="49dcdb4f-1"><a href="#49dcdb4f-1" aria-hidden="true" tabindex="-1"></a>np.arange(<span class="dv">0</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e5ffe147" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="e5ffe147"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e5ffe147-1"><a href="#e5ffe147-1" aria-hidden="true" tabindex="-1"></a>np.arange(<span class="dv">0</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])</code></pre>
 </div>
 </div>
-<div id="d0b416d6" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="d0b416d6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d0b416d6-1"><a href="#d0b416d6-1" aria-hidden="true" tabindex="-1"></a>np.arange(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dffb88b8" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="dffb88b8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dffb88b8-1"><a href="#dffb88b8-1" aria-hidden="true" tabindex="-1"></a>np.arange(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>array([0, 3, 6, 9])</code></pre>
 </div>
 </div>
-<div id="f75b200a" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="f75b200a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f75b200a-1"><a href="#f75b200a-1" aria-hidden="true" tabindex="-1"></a>np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="58c273ca" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="58c273ca"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="58c273ca-1"><a href="#58c273ca-1" aria-hidden="true" tabindex="-1"></a>np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>array([0.  , 0.25, 0.5 , 0.75, 1.  ])</code></pre>
 </div>
 </div>
 <p>Pour un <em>array</em> initialisé à 0:</p>
-<div id="938ace57" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="938ace57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="938ace57-1"><a href="#938ace57-1" aria-hidden="true" tabindex="-1"></a>np.zeros(<span class="dv">10</span>, dtype<span class="op">=</span><span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a02c69cb" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="a02c69cb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a02c69cb-1"><a href="#a02c69cb-1" aria-hidden="true" tabindex="-1"></a>np.zeros(<span class="dv">10</span>, dtype<span class="op">=</span><span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])</code></pre>
 </div>
 </div>
 <p>ou initialisé à 1:</p>
-<div id="75a2413e" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="75a2413e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="75a2413e-1"><a href="#75a2413e-1" aria-hidden="true" tabindex="-1"></a>np.ones((<span class="dv">3</span>, <span class="dv">5</span>), dtype<span class="op">=</span><span class="bu">float</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a66249b4" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="a66249b4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a66249b4-1"><a href="#a66249b4-1" aria-hidden="true" tabindex="-1"></a>np.ones((<span class="dv">3</span>, <span class="dv">5</span>), dtype<span class="op">=</span><span class="bu">float</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>array([[1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
@@ -765,7 +814,7 @@ il suffit d’utiliser la méthode <code>array</code>:</p>
 </div>
 </div>
 <p>ou encore initialisé à 3.14:</p>
-<div id="4649593f" class="cell" data-execution_count="11">
+<div id="1a330c6a" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>array([[3.14, 3.14, 3.14, 3.14, 3.14],
        [3.14, 3.14, 3.14, 3.14, 3.14],
@@ -773,8 +822,8 @@ il suffit d’utiliser la méthode <code>array</code>:</p>
 </div>
 </div>
 <p>Enfin, pour créer la matrice <span class="math inline">\(I_3\)</span>:</p>
-<div id="bc6f0903" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="bc6f0903"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bc6f0903-1"><a href="#bc6f0903-1" aria-hidden="true" tabindex="-1"></a>np.eye(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1789eafe" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="1789eafe"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1789eafe-1"><a href="#1789eafe-1" aria-hidden="true" tabindex="-1"></a>np.eye(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>array([[1., 0., 0.],
        [0., 1., 0.],
@@ -799,9 +848,9 @@ il suffit d’utiliser la méthode <code>array</code>:</p>
 <section id="logique-dans-le-cas-dun-array-unidimensionnel" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="logique-dans-le-cas-dun-array-unidimensionnel"><span class="header-section-number">3.1</span> Logique dans le cas d’un array unidimensionnel</h2>
 <p>La structure la plus simple est l’<em>array</em> unidimensionnel:</p>
-<div id="6c98b099" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="6c98b099"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6c98b099-1"><a href="#6c98b099-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">10</span>)</span>
-<span id="6c98b099-2"><a href="#6c98b099-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="688cebbe" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="688cebbe"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="688cebbe-1"><a href="#688cebbe-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">10</span>)</span>
+<span id="688cebbe-2"><a href="#688cebbe-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0 1 2 3 4 5 6 7 8 9]</code></pre>
 </div>
@@ -819,9 +868,9 @@ Par exemple, pour garder les <em>K</em> premiers éléments d’un <em>array</em
 <p>En l’occurrence, on sélectionne le K<span class="math inline">\(^{eme}\)</span> élément en utilisant</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x[K <span class="op">-</span> <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Pour sélectionner uniquement un élément, on fera ainsi:</p>
-<div id="33cc9e02" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="33cc9e02"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="33cc9e02-1"><a href="#33cc9e02-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">10</span>)</span>
-<span id="33cc9e02-2"><a href="#33cc9e02-2" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="54a58c3e" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="54a58c3e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="54a58c3e-1"><a href="#54a58c3e-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">10</span>)</span>
+<span id="54a58c3e-2"><a href="#54a58c3e-2" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>2</code></pre>
 </div>
@@ -862,20 +911,20 @@ effectuer des opérations de filtre sur les données.</p>
 <p>Pour des opérations de comparaison simples, les comparateurs logiques peuvent être suffisants.
 Ces comparaisons fonctionnent aussi sur les tableaux multidimensionnels grâce au
 <em>broadcasting</em> sur lequel nous reviendrons :</p>
-<div id="6bd6be8d" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="6bd6be8d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6bd6be8d-1"><a href="#6bd6be8d-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">10</span>)</span>
-<span id="6bd6be8d-2"><a href="#6bd6be8d-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> np.array([[<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>], [<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">0</span>]])</span>
-<span id="6bd6be8d-3"><a href="#6bd6be8d-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span>
-<span id="6bd6be8d-4"><a href="#6bd6be8d-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9f72ff6e" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="9f72ff6e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9f72ff6e-1"><a href="#9f72ff6e-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">10</span>)</span>
+<span id="9f72ff6e-2"><a href="#9f72ff6e-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> np.array([[<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>], [<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">0</span>]])</span>
+<span id="9f72ff6e-3"><a href="#9f72ff6e-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span>
+<span id="9f72ff6e-4"><a href="#9f72ff6e-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0 1 2 3 4 5 6 7 8 9]
 [[-1  1 -2]
  [-3  2  0]]</code></pre>
 </div>
 </div>
-<div id="e9c1018d" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="e9c1018d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e9c1018d-1"><a href="#e9c1018d-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">==</span> <span class="dv">2</span></span>
-<span id="e9c1018d-2"><a href="#e9c1018d-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">&lt;</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="19e5c705" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="19e5c705"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="19e5c705-1"><a href="#19e5c705-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">==</span> <span class="dv">2</span></span>
+<span id="19e5c705-2"><a href="#19e5c705-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">&lt;</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>array([[ True, False,  True],
        [ True, False, False]])</code></pre>
@@ -906,12 +955,12 @@ Parmi elles, on peut retrouver:</p>
 <li><code>np.array_equal</code> pour vérifier, élément par élément, l’égalité</li>
 </ul>
 <p>Soit</p>
-<div id="3b8f81a6" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="3b8f81a6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3b8f81a6-1"><a href="#3b8f81a6-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(<span class="dv">0</span>, size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="54dd684d" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="54dd684d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="54dd684d-1"><a href="#54dd684d-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(<span class="dv">0</span>, size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>un <em>array</em> multidimensionnel et</p>
-<div id="543e396a" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="543e396a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="543e396a-1"><a href="#543e396a-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([np.nan, <span class="dv">0</span>, <span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f77aa569" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="f77aa569"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f77aa569-1"><a href="#f77aa569-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([np.nan, <span class="dv">0</span>, <span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>un <em>array</em> unidimensionnel présentant une valeur manquante.</p>
 <div class="cell markdown">
@@ -935,8 +984,8 @@ Aide
 <section id="manipuler-un-array" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Manipuler un <em>array</em></h1>
 <p>Dans cette section, on utilisera un array multidimensionnel:</p>
-<div id="17a345d5" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="17a345d5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="17a345d5-1"><a href="#17a345d5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(<span class="dv">0</span>, size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7c6e1ffe" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="7c6e1ffe"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7c6e1ffe-1"><a href="#7c6e1ffe-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(<span class="dv">0</span>, size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="statistiques-sur-un-array" class="level3" data-number="4.0.1">
 <h3 data-number="4.0.1" class="anchored" data-anchor-id="statistiques-sur-un-array"><span class="header-section-number">4.0.1</span> Statistiques sur un <em>array</em></h3>
@@ -995,21 +1044,21 @@ L’appliquer sur <code>x</code> en jouant avec l’argument <em>axis</em></li>
 <p>Pour combiner des array, on peut utiliser, selon les cas,
 les fonctions <code>np.concatenate</code>, <code>np.vstack</code> ou la méthode <code>.r_</code> (concaténation <em>rowwise</em>).
 <code>np.hstack</code> ou la méthode <code>.column_stack</code> ou <code>.c_</code> (concaténation <em>column-wise</em>)</p>
-<div id="e59f1a01" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="e59f1a01"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e59f1a01-1"><a href="#e59f1a01-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(size<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c333ca22" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="c333ca22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c333ca22-1"><a href="#c333ca22-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.random.normal(size<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour ordonner un array, on utilise <code>np.sort</code></p>
-<div id="e53b2fe8" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="e53b2fe8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e53b2fe8-1"><a href="#e53b2fe8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">7</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>])</span>
-<span id="e53b2fe8-2"><a href="#e53b2fe8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e53b2fe8-3"><a href="#e53b2fe8-3" aria-hidden="true" tabindex="-1"></a>np.sort(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b954e82f" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="b954e82f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b954e82f-1"><a href="#b954e82f-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">7</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>])</span>
+<span id="b954e82f-2"><a href="#b954e82f-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b954e82f-3"><a href="#b954e82f-3" aria-hidden="true" tabindex="-1"></a>np.sort(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>array([1, 2, 3, 4, 5, 6, 7])</code></pre>
 </div>
 </div>
 <p>Si on désire faire un ré-ordonnement partiel pour trouver les <em>k</em> valeurs les plus petites d’un <code>array</code> sans les ordonner, on utilise <code>partition</code>:</p>
-<div id="caa5207b" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="caa5207b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="caa5207b-1"><a href="#caa5207b-1" aria-hidden="true" tabindex="-1"></a>np.partition(x, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="50241d6c" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="50241d6c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="50241d6c-1"><a href="#50241d6c-1" aria-hidden="true" tabindex="-1"></a>np.partition(x, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>array([2, 1, 3, 4, 6, 5, 7])</code></pre>
 </div>
@@ -1023,13 +1072,13 @@ d’appliquer des opérations sur des tableaux de dimensions différentes. En pr
 cela consiste généralement à appliquer une seule opération à l’ensemble des membres d’un tableau <code>numpy</code>.</p>
 <p>La différence peut être comprise à partir de l’exemple suivant. Le <em>broadcasting</em> permet
 de transformer le scalaire <code>5</code> en <em>array</em> de dimension 3:</p>
-<div id="c2e70c22" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="c2e70c22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c2e70c22-1"><a href="#c2e70c22-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>])</span>
-<span id="c2e70c22-2"><a href="#c2e70c22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c2e70c22-3"><a href="#c2e70c22-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>])</span>
-<span id="c2e70c22-4"><a href="#c2e70c22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c2e70c22-5"><a href="#c2e70c22-5" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b</span>
-<span id="c2e70c22-6"><a href="#c2e70c22-6" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8f979d69" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="8f979d69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8f979d69-1"><a href="#8f979d69-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>])</span>
+<span id="8f979d69-2"><a href="#8f979d69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8f979d69-3"><a href="#8f979d69-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>])</span>
+<span id="8f979d69-4"><a href="#8f979d69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8f979d69-5"><a href="#8f979d69-5" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b</span>
+<span id="8f979d69-6"><a href="#8f979d69-6" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="29">
 <pre><code>array([5, 6, 7])</code></pre>
 </div>
@@ -1083,7 +1132,7 @@ et 2 colonnes. Les nombres dans le tableau sont aléatoires.</li>
 </details>
 </div>
 <p>Pour la question 2, vous devriez obtenir un graphique ayant cet aspect :</p>
-<div id="84e5c164" class="cell" data-execution_count="31">
+<div id="792540c2" class="cell" data-execution_count="31">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1093,7 +1142,7 @@ et 2 colonnes. Les nombres dans le tableau sont aléatoires.</li>
 </div>
 </div>
 <p>Le résultat de la question 7 est le suivant :</p>
-<div id="6b9dc4b2" class="cell" data-execution_count="33">
+<div id="0124a9c1" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1146,7 +1195,7 @@ sur votre matrice.</li>
 </ol>
 </div>
 </div>
-<div id="e651fc01" class="cell" data-execution_count="35">
+<div id="9ee4e7d0" class="cell" data-execution_count="35">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1157,7 +1206,7 @@ sur votre matrice.</li>
 </div>
 <p>Le site 1 est assez central car il est référencé 2 fois. Le site
 5 est lui également central puisqu’il est référencé par le site 1.</p>
-<div id="7d6c528f" class="cell" data-execution_count="37">
+<div id="36d3a262" class="cell" data-execution_count="37">
 <div class="cell-output cell-output-display" data-execution_count="37">
 <pre><code>array([[0.25419178],
        [0.13803151],
@@ -1174,7 +1223,7 @@ sur votre matrice.</li>
 </summary>
 <p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="08c70258" class="cell" data-execution_count="39">
+<div id="7c21bc43" class="cell" data-execution_count="39">
 <div class="cell-output cell-output-display" data-execution_count="39">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -4018,7 +4067,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"selector":".lightbox","openEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

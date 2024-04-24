@@ -115,6 +115,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         background: #e9f3fa;
       }
 </style>
+<script id="toggle-light-dark-elements" type="application/javascript">
+// Extend Quarto theme toggling to allow elements to be displayed/hidden in light/dark themes
+
+// Replicated from https://github.com/quarto-dev/quarto-cli/blob/84d4659/src/resources/formats/html/templates/quarto-html.ejs
+const getColorSchemeSentinel = () => {
+  const localAlternateSentinel = 'default';
+  if (window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    return storageValue != null ? storageValue : localAlternateSentinel;
+  } else {
+    return localAlternateSentinel;
+  }
+};
+
+// Function to toggle light and dark elements based on color scheme
+const toggleColorSchemeElements = () => {
+  const scheme = getColorSchemeSentinel();
+  const lightElements = document.getElementsByClassName('only-light');
+  const darkElements = document.getElementsByClassName('only-dark');
+
+  for (var i = 0; i < lightElements.length; i++) {
+    lightElements[i].style.display = scheme == 'default' ? 'block' : 'none';
+  }
+  for (var i = 0; i < darkElements.length; i++) {
+    darkElements[i].style.display = scheme == 'default' ? 'none' : 'block';
+  }
+};
+
+// Function to check if the user's browser prefers dark themes
+const prefersDarkTheme = () => {
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
+document.addEventListener('readystatechange', function() {
+  // Set the default color scheme based on browser preference
+  if (document.readyState === 'interactive' && window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    if (storageValue == null && prefersDarkTheme()) {
+      window.localStorage.setItem('quarto-color-scheme', 'alternate');
+    }
+  }
+  // Add event listener for when the readyState is complete (and default toggler is set)
+  if (document.readyState === 'complete') {
+    // Toggle scheme once
+    toggleColorSchemeElements();
+    // Append our toggle function to the old one
+    const oldToggle = window.quartoToggleColorScheme;
+    window.quartoToggleColorScheme = () => {
+      oldToggle();
+      toggleColorSchemeElements();
+    }
+  }
+});
+
+</script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
@@ -145,21 +203,12 @@ les méthodes, etc.">
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Python pour la data science</span>
-    </a>
-  </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Introduction</span>
@@ -817,32 +866,32 @@ pour afficher la dernière figure générée par <code>matplotlib</code>)</p>
 </div>
 <section id="le-print" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="le-print"><span class="header-section-number">2.1</span> Le <code>print</code></h2>
-<div id="faf1eae1" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="faf1eae1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="faf1eae1-1"><a href="#faf1eae1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># on calcule : dans le cas d'une opération par exemple une somme</span></span>
-<span id="faf1eae1-2"><a href="#faf1eae1-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>  <span class="co"># Python calcule le résultat mais n'affiche rien dans la sortie</span></span>
-<span id="faf1eae1-3"><a href="#faf1eae1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="faf1eae1-4"><a href="#faf1eae1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># le print : on affiche</span></span>
-<span id="faf1eae1-5"><a href="#faf1eae1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="faf1eae1-6"><a href="#faf1eae1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)  <span class="co"># Python calcule et on lui demande juste de l'afficher</span></span>
-<span id="faf1eae1-7"><a href="#faf1eae1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># le résultat est en dessous du code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="faa2ec9d" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="faa2ec9d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="faa2ec9d-1"><a href="#faa2ec9d-1" aria-hidden="true" tabindex="-1"></a><span class="co"># on calcule : dans le cas d'une opération par exemple une somme</span></span>
+<span id="faa2ec9d-2"><a href="#faa2ec9d-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>  <span class="co"># Python calcule le résultat mais n'affiche rien dans la sortie</span></span>
+<span id="faa2ec9d-3"><a href="#faa2ec9d-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="faa2ec9d-4"><a href="#faa2ec9d-4" aria-hidden="true" tabindex="-1"></a><span class="co"># le print : on affiche</span></span>
+<span id="faa2ec9d-5"><a href="#faa2ec9d-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="faa2ec9d-6"><a href="#faa2ec9d-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)  <span class="co"># Python calcule et on lui demande juste de l'afficher</span></span>
+<span id="faa2ec9d-7"><a href="#faa2ec9d-7" aria-hidden="true" tabindex="-1"></a><span class="co"># le résultat est en dessous du code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5</code></pre>
 </div>
 </div>
-<div id="44700385" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="44700385"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="44700385-1"><a href="#44700385-1" aria-hidden="true" tabindex="-1"></a><span class="co"># le print dans une fonction</span></span>
-<span id="44700385-2"><a href="#44700385-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="44700385-3"><a href="#44700385-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="44700385-4"><a href="#44700385-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> addition_v1(a, b):</span>
-<span id="44700385-5"><a href="#44700385-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(a <span class="op">+</span> b)</span>
-<span id="44700385-6"><a href="#44700385-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="44700385-7"><a href="#44700385-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="44700385-8"><a href="#44700385-8" aria-hidden="true" tabindex="-1"></a>resultat_print <span class="op">=</span> addition_v1(<span class="dv">2</span>, <span class="dv">0</span>)</span>
-<span id="44700385-9"><a href="#44700385-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(resultat_print))</span>
-<span id="44700385-10"><a href="#44700385-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="44700385-11"><a href="#44700385-11" aria-hidden="true" tabindex="-1"></a><span class="co"># dans la sortie on a l'affichage du résultat, car la sortie de la fonction est un print</span></span>
-<span id="44700385-12"><a href="#44700385-12" aria-hidden="true" tabindex="-1"></a><span class="co"># en plus on lui demande quel est le type du résultat. Un print ne renvoie aucun type, ce n'est ni un numérique,</span></span>
-<span id="44700385-13"><a href="#44700385-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ni une chaine de charactères, le résultat d'un print n'est pas un format utilisable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="76cd64af" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="76cd64af"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="76cd64af-1"><a href="#76cd64af-1" aria-hidden="true" tabindex="-1"></a><span class="co"># le print dans une fonction</span></span>
+<span id="76cd64af-2"><a href="#76cd64af-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76cd64af-3"><a href="#76cd64af-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76cd64af-4"><a href="#76cd64af-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> addition_v1(a, b):</span>
+<span id="76cd64af-5"><a href="#76cd64af-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(a <span class="op">+</span> b)</span>
+<span id="76cd64af-6"><a href="#76cd64af-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76cd64af-7"><a href="#76cd64af-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76cd64af-8"><a href="#76cd64af-8" aria-hidden="true" tabindex="-1"></a>resultat_print <span class="op">=</span> addition_v1(<span class="dv">2</span>, <span class="dv">0</span>)</span>
+<span id="76cd64af-9"><a href="#76cd64af-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(resultat_print))</span>
+<span id="76cd64af-10"><a href="#76cd64af-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76cd64af-11"><a href="#76cd64af-11" aria-hidden="true" tabindex="-1"></a><span class="co"># dans la sortie on a l'affichage du résultat, car la sortie de la fonction est un print</span></span>
+<span id="76cd64af-12"><a href="#76cd64af-12" aria-hidden="true" tabindex="-1"></a><span class="co"># en plus on lui demande quel est le type du résultat. Un print ne renvoie aucun type, ce n'est ni un numérique,</span></span>
+<span id="76cd64af-13"><a href="#76cd64af-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ni une chaine de charactères, le résultat d'un print n'est pas un format utilisable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2
 &lt;class 'NoneType'&gt;</code></pre>
@@ -856,15 +905,15 @@ ce n’est qu’un affichage.</p>
 <section id="le-return" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="le-return"><span class="header-section-number">2.2</span> Le <code>return</code></h2>
 <p>Pour créer un objet avec le résultat de la fonction, il faut utiliser <strong><code>return</code></strong></p>
-<div id="5557bcef" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="5557bcef"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5557bcef-1"><a href="#5557bcef-1" aria-hidden="true" tabindex="-1"></a><span class="co"># le return dans une fonction</span></span>
-<span id="5557bcef-2"><a href="#5557bcef-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> addition_v2(a, b):</span>
-<span id="5557bcef-3"><a href="#5557bcef-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
-<span id="5557bcef-4"><a href="#5557bcef-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5557bcef-5"><a href="#5557bcef-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5557bcef-6"><a href="#5557bcef-6" aria-hidden="true" tabindex="-1"></a>resultat_return <span class="op">=</span> addition_v2(<span class="dv">2</span>, <span class="dv">5</span>)  <span class="co">#</span></span>
-<span id="5557bcef-7"><a href="#5557bcef-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(resultat_return))</span>
-<span id="5557bcef-8"><a href="#5557bcef-8" aria-hidden="true" tabindex="-1"></a><span class="co">## là on a bien un résultat qui est du type "entier"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7af63004" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="7af63004"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7af63004-1"><a href="#7af63004-1" aria-hidden="true" tabindex="-1"></a><span class="co"># le return dans une fonction</span></span>
+<span id="7af63004-2"><a href="#7af63004-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> addition_v2(a, b):</span>
+<span id="7af63004-3"><a href="#7af63004-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="7af63004-4"><a href="#7af63004-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7af63004-5"><a href="#7af63004-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7af63004-6"><a href="#7af63004-6" aria-hidden="true" tabindex="-1"></a>resultat_return <span class="op">=</span> addition_v2(<span class="dv">2</span>, <span class="dv">5</span>)  <span class="co">#</span></span>
+<span id="7af63004-7"><a href="#7af63004-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(resultat_return))</span>
+<span id="7af63004-8"><a href="#7af63004-8" aria-hidden="true" tabindex="-1"></a><span class="co">## là on a bien un résultat qui est du type "entier"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'int'&gt;</code></pre>
 </div>
@@ -893,15 +942,15 @@ modifiés et les <strong>modifiables</strong> (<em>mutables</em>)</p>
 <li><code>str</code> : une chaine de caractères</li>
 <li><code>tuple</code> : un vecteur</li>
 </ul>
-<div id="1be473ac" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="1be473ac"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1be473ac-1"><a href="#1be473ac-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">3</span>  <span class="co"># entier = type numérique (type int)</span></span>
-<span id="1be473ac-2"><a href="#1be473ac-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">3.3</span>  <span class="co"># réel   = type numérique (type float)</span></span>
-<span id="1be473ac-3"><a href="#1be473ac-3" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"exemple"</span>  <span class="co"># chaîne de caractères = type str</span></span>
-<span id="1be473ac-4"><a href="#1be473ac-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="va">None</span>  <span class="co"># None signifie que la variable existe mais qu'elle ne contient rien</span></span>
-<span id="1be473ac-5"><a href="#1be473ac-5" aria-hidden="true" tabindex="-1"></a><span class="co"># elle est souvent utilisée pour signifier qu'il n'y a pas de résultat</span></span>
-<span id="1be473ac-6"><a href="#1be473ac-6" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> (<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># tuple</span></span>
-<span id="1be473ac-7"><a href="#1be473ac-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1be473ac-8"><a href="#1be473ac-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(i, r, s, n, a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="06eed7c7" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="06eed7c7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="06eed7c7-1"><a href="#06eed7c7-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">3</span>  <span class="co"># entier = type numérique (type int)</span></span>
+<span id="06eed7c7-2"><a href="#06eed7c7-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">3.3</span>  <span class="co"># réel   = type numérique (type float)</span></span>
+<span id="06eed7c7-3"><a href="#06eed7c7-3" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"exemple"</span>  <span class="co"># chaîne de caractères = type str</span></span>
+<span id="06eed7c7-4"><a href="#06eed7c7-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="va">None</span>  <span class="co"># None signifie que la variable existe mais qu'elle ne contient rien</span></span>
+<span id="06eed7c7-5"><a href="#06eed7c7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># elle est souvent utilisée pour signifier qu'il n'y a pas de résultat</span></span>
+<span id="06eed7c7-6"><a href="#06eed7c7-6" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> (<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># tuple</span></span>
+<span id="06eed7c7-7"><a href="#06eed7c7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="06eed7c7-8"><a href="#06eed7c7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(i, r, s, n, a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3 3.3 exemple None (1, 2)</code></pre>
 </div>
@@ -910,8 +959,8 @@ modifiés et les <strong>modifiables</strong> (<em>mutables</em>)</p>
 <p>Par exemple si on voulait mettre une majuscule à <em>“exemple”</em>,
 on aurait envie d’écrire que le premier élément de la chaine <code>s</code> est “E” majuscule</p>
 <p>Mais <code>Python</code> ne va pas nous laisser faire, il nous dit que les objets “chaine de caractère” ne peuvent être modifiés</p>
-<div id="a42f3801" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="a42f3801"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a42f3801-1"><a href="#a42f3801-1" aria-hidden="true" tabindex="-1"></a>s[<span class="dv">0</span>] <span class="op">=</span> <span class="st">"E"</span>  <span class="co"># déclenche une exception</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a170aac0" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="a170aac0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a170aac0-1"><a href="#a170aac0-1" aria-hidden="true" tabindex="-1"></a>s[<span class="dv">0</span>] <span class="op">=</span> <span class="st">"E"</span>  <span class="co"># déclenche une exception</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>TypeError: 'str' object does not support item assignment</code></pre>
 </div>
@@ -919,21 +968,21 @@ on aurait envie d’écrire que le premier élément de la chaine <code>s</code>
 <p>Tout ce qu’on peut faire avec une variable immuable,
 c’est la réaffecter à une autre valeur : elle ne peut pas être modifiée.</p>
 <p>Pour s’en convaincre, utilisons la fonction <code>id()</code> qui donne un identifiant à chaque objet.</p>
-<div id="3bdc4ebe" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="3bdc4ebe"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3bdc4ebe-1"><a href="#3bdc4ebe-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span>
-<span id="3bdc4ebe-2"><a href="#3bdc4ebe-2" aria-hidden="true" tabindex="-1"></a><span class="bu">id</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="467e1352" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="467e1352"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="467e1352-1"><a href="#467e1352-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span>
+<span id="467e1352-2"><a href="#467e1352-2" aria-hidden="true" tabindex="-1"></a><span class="bu">id</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>exemple</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>139789125552944</code></pre>
+<pre><code>140629760115312</code></pre>
 </div>
 </div>
-<div id="63bdcaf7" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="63bdcaf7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="63bdcaf7-1"><a href="#63bdcaf7-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"autre_mot"</span></span>
-<span id="63bdcaf7-2"><a href="#63bdcaf7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">id</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c23dfb6b" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="c23dfb6b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c23dfb6b-1"><a href="#c23dfb6b-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"autre_mot"</span></span>
+<span id="c23dfb6b-2"><a href="#c23dfb6b-2" aria-hidden="true" tabindex="-1"></a><span class="bu">id</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>139787638611440</code></pre>
+<pre><code>140628374107696</code></pre>
 </div>
 </div>
 <p>On voit bien que <code>s</code> a changé d’identifiant : il peut avoir le même nom, ce n’est plus le même objet</p>
@@ -945,14 +994,14 @@ c’est la réaffecter à une autre valeur : elle ne peut pas être modifiée.</
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="les-listes---elles-sécrivent-entre"><span class="header-section-number">3.2.1</span> Les listes - elles s’écrivent entre <code>[ ]</code></h3>
 <p>Les listes sont des élements très utiles, notamment quand vous souhaitez faire des boucles.</p>
 <p>Pour faire appel aux élements d’une liste, on donne leur position dans la liste : le 1er est le 0, le 2ème est le 1 …</p>
-<div id="c706baa2" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="c706baa2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c706baa2-1"><a href="#c706baa2-1" aria-hidden="true" tabindex="-1"></a>ma_liste <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</span>
-<span id="c706baa2-2"><a href="#c706baa2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c706baa2-3"><a href="#c706baa2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c706baa2-4"><a href="#c706baa2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"La longueur de ma liste est de"</span>, <span class="bu">len</span>(ma_liste))</span>
-<span id="c706baa2-5"><a href="#c706baa2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Le premier élément de ma liste est :"</span>, ma_liste[<span class="dv">0</span>])</span>
-<span id="c706baa2-6"><a href="#c706baa2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Le dernier élément de ma liste est :"</span>, ma_liste[<span class="dv">3</span>])</span>
-<span id="c706baa2-7"><a href="#c706baa2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Le dernier élément de ma liste est :"</span>, ma_liste[<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d1c39554" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="d1c39554"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d1c39554-1"><a href="#d1c39554-1" aria-hidden="true" tabindex="-1"></a>ma_liste <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</span>
+<span id="d1c39554-2"><a href="#d1c39554-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d1c39554-3"><a href="#d1c39554-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d1c39554-4"><a href="#d1c39554-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"La longueur de ma liste est de"</span>, <span class="bu">len</span>(ma_liste))</span>
+<span id="d1c39554-5"><a href="#d1c39554-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Le premier élément de ma liste est :"</span>, ma_liste[<span class="dv">0</span>])</span>
+<span id="d1c39554-6"><a href="#d1c39554-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Le dernier élément de ma liste est :"</span>, ma_liste[<span class="dv">3</span>])</span>
+<span id="d1c39554-7"><a href="#d1c39554-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Le dernier élément de ma liste est :"</span>, ma_liste[<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>La longueur de ma liste est de 4
 Le premier élément de ma liste est : 1
@@ -965,25 +1014,25 @@ est d’utiliser les <code>list comprehension</code>. Cette approche consiste
 à itérer les éléments d’une liste à la volée.</p>
 <p>Par exemple, si on reprend <a href="https://www.w3schools.com/python/python_lists_comprehension.asp">cet exemple</a>,
 un code qui repose sur les <code>list comprehension</code> sera le suivant :</p>
-<div id="e2bf566f" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="e2bf566f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e2bf566f-1"><a href="#e2bf566f-1" aria-hidden="true" tabindex="-1"></a>fruits <span class="op">=</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>, <span class="st">"kiwi"</span>, <span class="st">"mango"</span>]</span>
-<span id="e2bf566f-2"><a href="#e2bf566f-2" aria-hidden="true" tabindex="-1"></a>newlist <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> fruits <span class="cf">if</span> <span class="st">"a"</span> <span class="kw">in</span> x]</span>
-<span id="e2bf566f-3"><a href="#e2bf566f-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(newlist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="56f015d6" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="56f015d6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="56f015d6-1"><a href="#56f015d6-1" aria-hidden="true" tabindex="-1"></a>fruits <span class="op">=</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>, <span class="st">"kiwi"</span>, <span class="st">"mango"</span>]</span>
+<span id="56f015d6-2"><a href="#56f015d6-2" aria-hidden="true" tabindex="-1"></a>newlist <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> fruits <span class="cf">if</span> <span class="st">"a"</span> <span class="kw">in</span> x]</span>
+<span id="56f015d6-3"><a href="#56f015d6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(newlist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['apple', 'banana', 'mango']</code></pre>
 </div>
 </div>
 <p>Le même code, ne reposant pas sur les compréhensions de liste, sera beaucoup
 moins concis et ainsi inutilement verbeux:</p>
-<div id="30cb2eec" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="30cb2eec"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="30cb2eec-1"><a href="#30cb2eec-1" aria-hidden="true" tabindex="-1"></a>fruits <span class="op">=</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>, <span class="st">"kiwi"</span>, <span class="st">"mango"</span>]</span>
-<span id="30cb2eec-2"><a href="#30cb2eec-2" aria-hidden="true" tabindex="-1"></a>newlist <span class="op">=</span> []</span>
-<span id="30cb2eec-3"><a href="#30cb2eec-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="30cb2eec-4"><a href="#30cb2eec-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> fruits:</span>
-<span id="30cb2eec-5"><a href="#30cb2eec-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"a"</span> <span class="kw">in</span> x:</span>
-<span id="30cb2eec-6"><a href="#30cb2eec-6" aria-hidden="true" tabindex="-1"></a>        newlist.append(x)</span>
-<span id="30cb2eec-7"><a href="#30cb2eec-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="30cb2eec-8"><a href="#30cb2eec-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(newlist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a6efa2ae" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="a6efa2ae"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a6efa2ae-1"><a href="#a6efa2ae-1" aria-hidden="true" tabindex="-1"></a>fruits <span class="op">=</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>, <span class="st">"kiwi"</span>, <span class="st">"mango"</span>]</span>
+<span id="a6efa2ae-2"><a href="#a6efa2ae-2" aria-hidden="true" tabindex="-1"></a>newlist <span class="op">=</span> []</span>
+<span id="a6efa2ae-3"><a href="#a6efa2ae-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a6efa2ae-4"><a href="#a6efa2ae-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> fruits:</span>
+<span id="a6efa2ae-5"><a href="#a6efa2ae-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"a"</span> <span class="kw">in</span> x:</span>
+<span id="a6efa2ae-6"><a href="#a6efa2ae-6" aria-hidden="true" tabindex="-1"></a>        newlist.append(x)</span>
+<span id="a6efa2ae-7"><a href="#a6efa2ae-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a6efa2ae-8"><a href="#a6efa2ae-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(newlist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['apple', 'banana', 'mango']</code></pre>
 </div>
@@ -1000,12 +1049,12 @@ hiérarchisée.</p>
 <section id="dictionnaire-avec-des-valeurs-int" class="level3" data-number="3.2.3">
 <h3 data-number="3.2.3" class="anchored" data-anchor-id="dictionnaire-avec-des-valeurs-int"><span class="header-section-number">3.2.3</span> Dictionnaire avec des valeurs int</h3>
 <p>On peut par exemple associer à un nom, un nombre</p>
-<div id="33929fb5" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="33929fb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="33929fb5-1"><a href="#33929fb5-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire_notes <span class="op">=</span> {<span class="st">"Nicolas"</span>: <span class="dv">18</span>, <span class="st">"Pimprenelle"</span>: <span class="dv">15</span>}</span>
-<span id="33929fb5-2"><a href="#33929fb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># un dictionnaire qui à chaque nom associe un nombre</span></span>
-<span id="33929fb5-3"><a href="#33929fb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># à Nicolas, on associe 18</span></span>
-<span id="33929fb5-4"><a href="#33929fb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="33929fb5-5"><a href="#33929fb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_notes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1109f45d" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="1109f45d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1109f45d-1"><a href="#1109f45d-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire_notes <span class="op">=</span> {<span class="st">"Nicolas"</span>: <span class="dv">18</span>, <span class="st">"Pimprenelle"</span>: <span class="dv">15</span>}</span>
+<span id="1109f45d-2"><a href="#1109f45d-2" aria-hidden="true" tabindex="-1"></a><span class="co"># un dictionnaire qui à chaque nom associe un nombre</span></span>
+<span id="1109f45d-3"><a href="#1109f45d-3" aria-hidden="true" tabindex="-1"></a><span class="co"># à Nicolas, on associe 18</span></span>
+<span id="1109f45d-4"><a href="#1109f45d-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1109f45d-5"><a href="#1109f45d-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_notes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'Nicolas': 18, 'Pimprenelle': 15}</code></pre>
 </div>
@@ -1015,40 +1064,40 @@ hiérarchisée.</p>
 <h3 data-number="3.2.4" class="anchored" data-anchor-id="dictionnaire-avec-des-valeurs-qui-sont-des-listes"><span class="header-section-number">3.2.4</span> Dictionnaire avec des valeurs qui sont des listes</h3>
 <p>Pour chaque clé d’un dictionnaire, il ne faut pas forcément garder la même forme de valeur</p>
 <p>Dans l’exemple, la valeur de la clé “Nicolas” est une liste, alors que celle de “Philou” est une liste de liste</p>
-<div id="49f4f58b" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="49f4f58b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="49f4f58b-1"><a href="#49f4f58b-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire_loisirs <span class="op">=</span> {</span>
-<span id="49f4f58b-2"><a href="#49f4f58b-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nicolas"</span>: [<span class="st">"Rugby"</span>, <span class="st">"Pastis"</span>, <span class="st">"Belote"</span>],</span>
-<span id="49f4f58b-3"><a href="#49f4f58b-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pimprenelle"</span>: [<span class="st">"Gin Rami"</span>, <span class="st">"Tisane"</span>, <span class="st">"Tara Jarmon"</span>, <span class="st">"Barcelone"</span>, <span class="st">"Mickey Mouse"</span>],</span>
-<span id="49f4f58b-4"><a href="#49f4f58b-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Philou"</span>: [[<span class="st">"Maths"</span>, <span class="st">"Jeux"</span>], [<span class="st">"Guillaume"</span>, <span class="st">"Jeanne"</span>, <span class="st">"Thimothée"</span>, <span class="st">"Adrien"</span>]],</span>
-<span id="49f4f58b-5"><a href="#49f4f58b-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="33c78a98" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="33c78a98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="33c78a98-1"><a href="#33c78a98-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire_loisirs <span class="op">=</span> {</span>
+<span id="33c78a98-2"><a href="#33c78a98-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nicolas"</span>: [<span class="st">"Rugby"</span>, <span class="st">"Pastis"</span>, <span class="st">"Belote"</span>],</span>
+<span id="33c78a98-3"><a href="#33c78a98-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pimprenelle"</span>: [<span class="st">"Gin Rami"</span>, <span class="st">"Tisane"</span>, <span class="st">"Tara Jarmon"</span>, <span class="st">"Barcelone"</span>, <span class="st">"Mickey Mouse"</span>],</span>
+<span id="33c78a98-4"><a href="#33c78a98-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Philou"</span>: [[<span class="st">"Maths"</span>, <span class="st">"Jeux"</span>], [<span class="st">"Guillaume"</span>, <span class="st">"Jeanne"</span>, <span class="st">"Thimothée"</span>, <span class="st">"Adrien"</span>]],</span>
+<span id="33c78a98-5"><a href="#33c78a98-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour accéder à un élément du dictionnaire, on fait appel à la clé et non plus à la position, comme c’était le cas dans les listes.
 C’est beaucoup plus pratique pour rechercher de l’information:</p>
-<div id="271a6881" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="271a6881"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="271a6881-1"><a href="#271a6881-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_loisirs[<span class="st">"Nicolas"</span>])  <span class="co"># on affiche une liste</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1116d7d4" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="1116d7d4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1116d7d4-1"><a href="#1116d7d4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_loisirs[<span class="st">"Nicolas"</span>])  <span class="co"># on affiche une liste</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Rugby', 'Pastis', 'Belote']</code></pre>
 </div>
 </div>
-<div id="fe6b3b6c" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="fe6b3b6c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fe6b3b6c-1"><a href="#fe6b3b6c-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_loisirs[<span class="st">"Philou"</span>])  <span class="co"># on affiche une liste de listes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3c1934ec" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="3c1934ec"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3c1934ec-1"><a href="#3c1934ec-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_loisirs[<span class="st">"Philou"</span>])  <span class="co"># on affiche une liste de listes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[['Maths', 'Jeux'], ['Guillaume', 'Jeanne', 'Thimothée', 'Adrien']]</code></pre>
 </div>
 </div>
 <p>Si on ne veut avoir que la première liste des loisirs de Philou, on demande le premier élément de la liste</p>
-<div id="07e930d7" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="07e930d7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="07e930d7-1"><a href="#07e930d7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_loisirs[<span class="st">"Philou"</span>][<span class="dv">0</span>])  <span class="co"># on affiche alors juste la première liste</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="91baa28a" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="91baa28a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="91baa28a-1"><a href="#91baa28a-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire_loisirs[<span class="st">"Philou"</span>][<span class="dv">0</span>])  <span class="co"># on affiche alors juste la première liste</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Maths', 'Jeux']</code></pre>
 </div>
 </div>
 <p>On peut aussi avoir des valeurs qui sont des <code>int</code> et des <code>list</code></p>
-<div id="3dbabafc" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="3dbabafc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3dbabafc-1"><a href="#3dbabafc-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire_patchwork_good <span class="op">=</span> {</span>
-<span id="3dbabafc-2"><a href="#3dbabafc-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nicolas"</span>: [<span class="st">"Rugby"</span>, <span class="st">"Pastis"</span>, <span class="st">"Belote"</span>],</span>
-<span id="3dbabafc-3"><a href="#3dbabafc-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pimprenelle"</span>: <span class="dv">18</span>,</span>
-<span id="3dbabafc-4"><a href="#3dbabafc-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="74ead662" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="74ead662"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="74ead662-1"><a href="#74ead662-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire_patchwork_good <span class="op">=</span> {</span>
+<span id="74ead662-2"><a href="#74ead662-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nicolas"</span>: [<span class="st">"Rugby"</span>, <span class="st">"Pastis"</span>, <span class="st">"Belote"</span>],</span>
+<span id="74ead662-3"><a href="#74ead662-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pimprenelle"</span>: <span class="dv">18</span>,</span>
+<span id="74ead662-4"><a href="#74ead662-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1069,13 +1118,13 @@ C’est beaucoup plus pratique pour rechercher de l’information:</p>
 <ol type="1">
 <li>Quelle est la position de 7 dans la liste suivante</li>
 </ol>
-<div id="de573bd8" class="cell" data-execution_count="17">
+<div id="f7ad12ac" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>liste_nombres <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Combien de clés a ce dictionnaire ?</li>
 </ol>
-<div id="72bcf634" class="cell" data-execution_count="18">
+<div id="aef01e57" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dictionnaire_evangile <span class="op">=</span> {</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Marc"</span>: <span class="st">"Lion"</span>,</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Matthieu"</span>: [<span class="st">"Ange"</span>, <span class="st">"Homme ailé"</span>],</span>
@@ -1112,12 +1161,12 @@ La même méthode (par exemple <code>append</code>) fonctionnera ainsi de maniè
 <section id="une-méthode-pour-les-listes" class="level3" data-number="5.1.1">
 <h3 data-number="5.1.1" class="anchored" data-anchor-id="une-méthode-pour-les-listes"><span class="header-section-number">5.1.1</span> Une méthode pour les listes</h3>
 <p>Pour ajouter un élément (<code>item</code>) dans une liste : on va utiliser la méthode <em><code>.append()</code></em></p>
-<div id="0d57e053" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="0d57e053"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0d57e053-1"><a href="#0d57e053-1" aria-hidden="true" tabindex="-1"></a>ma_liste <span class="op">=</span> [<span class="st">"Nicolas"</span>, <span class="st">"Michel"</span>, <span class="st">"Bernard"</span>]</span>
-<span id="0d57e053-2"><a href="#0d57e053-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0d57e053-3"><a href="#0d57e053-3" aria-hidden="true" tabindex="-1"></a>ma_liste.append(<span class="st">"Philippe"</span>)</span>
-<span id="0d57e053-4"><a href="#0d57e053-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0d57e053-5"><a href="#0d57e053-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ma_liste)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8118873b" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="8118873b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8118873b-1"><a href="#8118873b-1" aria-hidden="true" tabindex="-1"></a>ma_liste <span class="op">=</span> [<span class="st">"Nicolas"</span>, <span class="st">"Michel"</span>, <span class="st">"Bernard"</span>]</span>
+<span id="8118873b-2"><a href="#8118873b-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8118873b-3"><a href="#8118873b-3" aria-hidden="true" tabindex="-1"></a>ma_liste.append(<span class="st">"Philippe"</span>)</span>
+<span id="8118873b-4"><a href="#8118873b-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8118873b-5"><a href="#8118873b-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ma_liste)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Nicolas', 'Michel', 'Bernard', 'Philippe']</code></pre>
 </div>
@@ -1126,15 +1175,15 @@ La même méthode (par exemple <code>append</code>) fonctionnera ainsi de maniè
 <section id="une-méthode-pour-les-dictionnaires" class="level3" data-number="5.1.2">
 <h3 data-number="5.1.2" class="anchored" data-anchor-id="une-méthode-pour-les-dictionnaires"><span class="header-section-number">5.1.2</span> Une méthode pour les dictionnaires</h3>
 <p>Pour connaitre l’ensemble des clés d’un dictionnaire, on appelle la méthode <em><code>.keys()</code></em></p>
-<div id="4db3559a" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="4db3559a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4db3559a-1"><a href="#4db3559a-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire <span class="op">=</span> {</span>
-<span id="4db3559a-2"><a href="#4db3559a-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Marc"</span>: <span class="st">"Lion"</span>,</span>
-<span id="4db3559a-3"><a href="#4db3559a-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Matthieu"</span>: [<span class="st">"Ange"</span>, <span class="st">"Homme ailé"</span>],</span>
-<span id="4db3559a-4"><a href="#4db3559a-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Jean"</span>: <span class="st">"Aigle"</span>,</span>
-<span id="4db3559a-5"><a href="#4db3559a-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Luc"</span>: <span class="st">"Taureau"</span>,</span>
-<span id="4db3559a-6"><a href="#4db3559a-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="4db3559a-7"><a href="#4db3559a-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4db3559a-8"><a href="#4db3559a-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire.keys())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b7f09781" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="b7f09781"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b7f09781-1"><a href="#b7f09781-1" aria-hidden="true" tabindex="-1"></a>mon_dictionnaire <span class="op">=</span> {</span>
+<span id="b7f09781-2"><a href="#b7f09781-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Marc"</span>: <span class="st">"Lion"</span>,</span>
+<span id="b7f09781-3"><a href="#b7f09781-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Matthieu"</span>: [<span class="st">"Ange"</span>, <span class="st">"Homme ailé"</span>],</span>
+<span id="b7f09781-4"><a href="#b7f09781-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Jean"</span>: <span class="st">"Aigle"</span>,</span>
+<span id="b7f09781-5"><a href="#b7f09781-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Luc"</span>: <span class="st">"Taureau"</span>,</span>
+<span id="b7f09781-6"><a href="#b7f09781-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="b7f09781-7"><a href="#b7f09781-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b7f09781-8"><a href="#b7f09781-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mon_dictionnaire.keys())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>dict_keys(['Marc', 'Matthieu', 'Jean', 'Luc'])</code></pre>
 </div>
@@ -1157,28 +1206,28 @@ des méthodes possibles.</li>
 <section id="créer-une-liste" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="créer-une-liste"><span class="header-section-number">6.1</span> Créer une liste</h2>
 <p>Pour créer un objet de la classe <code>list</code>, il suffit de le déclarer. Ici on affecte à <strong><code>x</code></strong> une liste</p>
-<div id="0d16cd3b" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="0d16cd3b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0d16cd3b-1"><a href="#0d16cd3b-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">5</span>]  <span class="co"># création d’une liste composée de deux entiers</span></span>
-<span id="0d16cd3b-2"><a href="#0d16cd3b-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="st">"un"</span>, <span class="dv">1</span>, <span class="st">"deux"</span>, <span class="dv">2</span>]  <span class="co"># création d’une liste composée de 2 chaînes de caractères</span></span>
-<span id="0d16cd3b-3"><a href="#0d16cd3b-3" aria-hidden="true" tabindex="-1"></a><span class="co"># et de deux entiers, l’ordre d’écriture est important</span></span>
-<span id="0d16cd3b-4"><a href="#0d16cd3b-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="dv">3</span>]  <span class="co"># création d’une liste d’un élément, sans la virgule,</span></span>
-<span id="0d16cd3b-5"><a href="#0d16cd3b-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> []  <span class="co"># crée une liste vide</span></span>
-<span id="0d16cd3b-6"><a href="#0d16cd3b-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="bu">list</span>()  <span class="co"># crée une liste vide</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eeef5ab0" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="eeef5ab0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eeef5ab0-1"><a href="#eeef5ab0-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">5</span>]  <span class="co"># création d’une liste composée de deux entiers</span></span>
+<span id="eeef5ab0-2"><a href="#eeef5ab0-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="st">"un"</span>, <span class="dv">1</span>, <span class="st">"deux"</span>, <span class="dv">2</span>]  <span class="co"># création d’une liste composée de 2 chaînes de caractères</span></span>
+<span id="eeef5ab0-3"><a href="#eeef5ab0-3" aria-hidden="true" tabindex="-1"></a><span class="co"># et de deux entiers, l’ordre d’écriture est important</span></span>
+<span id="eeef5ab0-4"><a href="#eeef5ab0-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="dv">3</span>]  <span class="co"># création d’une liste d’un élément, sans la virgule,</span></span>
+<span id="eeef5ab0-5"><a href="#eeef5ab0-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> []  <span class="co"># crée une liste vide</span></span>
+<span id="eeef5ab0-6"><a href="#eeef5ab0-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="bu">list</span>()  <span class="co"># crée une liste vide</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="un-premier-test-sur-les-listes" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="un-premier-test-sur-les-listes"><span class="header-section-number">6.2</span> Un premier test sur les listes</h2>
 <p>Si on veut tester la présence d’un élément dans une liste, on l’écrit de la manière suivante :</p>
-<div id="466d0957" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="466d0957"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="466d0957-1"><a href="#466d0957-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exemple</span></span>
-<span id="466d0957-2"><a href="#466d0957-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="466d0957-3"><a href="#466d0957-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"Marcel"</span></span>
-<span id="466d0957-4"><a href="#466d0957-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="466d0957-5"><a href="#466d0957-5" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> [<span class="st">"Marcel"</span>, <span class="st">"Edith"</span>, <span class="st">"Maurice"</span>, <span class="st">"Jean"</span>]</span>
-<span id="466d0957-6"><a href="#466d0957-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="466d0957-7"><a href="#466d0957-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x <span class="kw">in</span> l)</span>
-<span id="466d0957-8"><a href="#466d0957-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="466d0957-9"><a href="#466d0957-9" aria-hidden="true" tabindex="-1"></a><span class="co"># vrai si x est un des éléments de l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="464bed1e" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="464bed1e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="464bed1e-1"><a href="#464bed1e-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exemple</span></span>
+<span id="464bed1e-2"><a href="#464bed1e-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="464bed1e-3"><a href="#464bed1e-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"Marcel"</span></span>
+<span id="464bed1e-4"><a href="#464bed1e-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="464bed1e-5"><a href="#464bed1e-5" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> [<span class="st">"Marcel"</span>, <span class="st">"Edith"</span>, <span class="st">"Maurice"</span>, <span class="st">"Jean"</span>]</span>
+<span id="464bed1e-6"><a href="#464bed1e-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="464bed1e-7"><a href="#464bed1e-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x <span class="kw">in</span> l)</span>
+<span id="464bed1e-8"><a href="#464bed1e-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="464bed1e-9"><a href="#464bed1e-9" aria-hidden="true" tabindex="-1"></a><span class="co"># vrai si x est un des éléments de l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>True</code></pre>
 </div>
@@ -1187,9 +1236,9 @@ des méthodes possibles.</li>
 <section id="une-méthode-pour-concaténer-deux-listes" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="une-méthode-pour-concaténer-deux-listes"><span class="header-section-number">6.3</span> <code>+</code>: une méthode pour concaténer deux listes</h2>
 <p>On utilise le symbole <code>+</code></p>
-<div id="a6959664" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="a6959664"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a6959664-1"><a href="#a6959664-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> [<span class="st">"Antoine"</span>, <span class="st">"David"</span>]</span>
-<span id="a6959664-2"><a href="#a6959664-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(l <span class="op">+</span> t)  <span class="co"># concaténation de l et t</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0342ee0d" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="0342ee0d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0342ee0d-1"><a href="#0342ee0d-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> [<span class="st">"Antoine"</span>, <span class="st">"David"</span>]</span>
+<span id="0342ee0d-2"><a href="#0342ee0d-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(l <span class="op">+</span> t)  <span class="co"># concaténation de l et t</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Marcel', 'Edith', 'Maurice', 'Jean', 'Antoine', 'David']</code></pre>
 </div>
@@ -1198,14 +1247,14 @@ des méthodes possibles.</li>
 <section id="pour-trouver-certains-éléments-dune-liste" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="pour-trouver-certains-éléments-dune-liste"><span class="header-section-number">6.4</span> Pour trouver certains éléments d’une liste</h2>
 <p>Pour chercher des élements dans une liste, on utilise la position dans la liste.</p>
-<div id="c18f3f68" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="c18f3f68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c18f3f68-1"><a href="#c18f3f68-1" aria-hidden="true" tabindex="-1"></a>l[<span class="dv">1</span>]  <span class="co"># donne l'élément qui est en 2ème position de la liste</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9c92fc96" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="9c92fc96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9c92fc96-1"><a href="#9c92fc96-1" aria-hidden="true" tabindex="-1"></a>l[<span class="dv">1</span>]  <span class="co"># donne l'élément qui est en 2ème position de la liste</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>'Edith'</code></pre>
 </div>
 </div>
-<div id="3c8205d5" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="3c8205d5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3c8205d5-1"><a href="#3c8205d5-1" aria-hidden="true" tabindex="-1"></a>l[<span class="dv">1</span>:<span class="dv">3</span>]  <span class="co"># donne les éléments de la 2ème position de la liste à la 4ème exclue</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="86e91828" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="86e91828"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="86e91828-1"><a href="#86e91828-1" aria-hidden="true" tabindex="-1"></a>l[<span class="dv">1</span>:<span class="dv">3</span>]  <span class="co"># donne les éléments de la 2ème position de la liste à la 4ème exclue</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
 <pre><code>['Edith', 'Maurice']</code></pre>
 </div>
@@ -1217,18 +1266,18 @@ des méthodes possibles.</li>
 qui sont pratiques. Cependant, pour avoir certaines informations
 sur une liste, il faut parfois plutôt passer par
 des fonctions natives comme les suivantes :</p>
-<div id="13606e19" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="13606e19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="13606e19-1"><a href="#13606e19-1" aria-hidden="true" tabindex="-1"></a>longueur <span class="op">=</span> <span class="bu">len</span>(l)  <span class="co"># nombre d’éléments de l</span></span>
-<span id="13606e19-2"><a href="#13606e19-2" aria-hidden="true" tabindex="-1"></a>minimum <span class="op">=</span> <span class="bu">min</span>(l)  <span class="co"># plus petit élément de l, ici par ordre alphabétique</span></span>
-<span id="13606e19-3"><a href="#13606e19-3" aria-hidden="true" tabindex="-1"></a>maximum <span class="op">=</span> <span class="bu">max</span>(l)  <span class="co"># plus grand élément de l, ici par ordre alphabétique</span></span>
-<span id="13606e19-4"><a href="#13606e19-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(longueur, minimum, maximum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="54499168" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="54499168"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="54499168-1"><a href="#54499168-1" aria-hidden="true" tabindex="-1"></a>longueur <span class="op">=</span> <span class="bu">len</span>(l)  <span class="co"># nombre d’éléments de l</span></span>
+<span id="54499168-2"><a href="#54499168-2" aria-hidden="true" tabindex="-1"></a>minimum <span class="op">=</span> <span class="bu">min</span>(l)  <span class="co"># plus petit élément de l, ici par ordre alphabétique</span></span>
+<span id="54499168-3"><a href="#54499168-3" aria-hidden="true" tabindex="-1"></a>maximum <span class="op">=</span> <span class="bu">max</span>(l)  <span class="co"># plus grand élément de l, ici par ordre alphabétique</span></span>
+<span id="54499168-4"><a href="#54499168-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(longueur, minimum, maximum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4 Edith Maurice</code></pre>
 </div>
 </div>
-<div id="d326f504" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="d326f504"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d326f504-1"><a href="#d326f504-1" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> l[<span class="dv">0</span>:<span class="dv">2</span>]  <span class="co"># supprime les éléments entre la position 0 et 2 exclue</span></span>
-<span id="d326f504-2"><a href="#d326f504-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="603d6e34" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="603d6e34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="603d6e34-1"><a href="#603d6e34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> l[<span class="dv">0</span>:<span class="dv">2</span>]  <span class="co"># supprime les éléments entre la position 0 et 2 exclue</span></span>
+<span id="603d6e34-2"><a href="#603d6e34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Maurice', 'Jean']</code></pre>
 </div>
@@ -1240,8 +1289,8 @@ des fonctions natives comme les suivantes :</p>
 On distingue les méthodes et les méthodes spéciales : visuellement,
 les méthodes spéciales sont celles qui précédées et suivis de deux caractères de soulignement,
 les autres sont des méthodes classiques.</p>
-<div id="023e02be" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="023e02be"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="023e02be-1"><a href="#023e02be-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="23d2c88f" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="23d2c88f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="23d2c88f-1"><a href="#23d2c88f-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Help on list object:
 
@@ -1437,19 +1486,19 @@ class list(object)
 <p>Supposons que la variable <code>data</code> est une liste qui contient nos données.</p>
 <p>Une observation correspond à un dictionnaire qui contient le nom, le type, l’ambiance et la note d’un restaurant.</p>
 <p>Il est aisé de transformer cette liste en dataframe grâce à la fonction ‘DataFrame’.</p>
-<div id="c83dc9da" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="c83dc9da"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c83dc9da-1"><a href="#c83dc9da-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas</span>
-<span id="c83dc9da-2"><a href="#c83dc9da-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c83dc9da-3"><a href="#c83dc9da-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
-<span id="c83dc9da-4"><a href="#c83dc9da-4" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"nom"</span>: <span class="st">"Little Pub"</span>, <span class="st">"type"</span>: <span class="st">"Bar"</span>, <span class="st">"ambiance"</span>: <span class="dv">9</span>, <span class="st">"note"</span>: <span class="dv">7</span>},</span>
-<span id="c83dc9da-5"><a href="#c83dc9da-5" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"nom"</span>: <span class="st">"Le Corse"</span>, <span class="st">"type"</span>: <span class="st">"Sandwicherie"</span>, <span class="st">"ambiance"</span>: <span class="dv">2</span>, <span class="st">"note"</span>: <span class="dv">8</span>},</span>
-<span id="c83dc9da-6"><a href="#c83dc9da-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"nom"</span>: <span class="st">"Café Caumartin"</span>, <span class="st">"type"</span>: <span class="st">"Bar"</span>, <span class="st">"ambiance"</span>: <span class="dv">1</span>},</span>
-<span id="c83dc9da-7"><a href="#c83dc9da-7" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="c83dc9da-8"><a href="#c83dc9da-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c83dc9da-9"><a href="#c83dc9da-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pandas.DataFrame(data)</span>
-<span id="c83dc9da-10"><a href="#c83dc9da-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c83dc9da-11"><a href="#c83dc9da-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data)</span>
-<span id="c83dc9da-12"><a href="#c83dc9da-12" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1161c5f2" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="1161c5f2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1161c5f2-1"><a href="#1161c5f2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas</span>
+<span id="1161c5f2-2"><a href="#1161c5f2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1161c5f2-3"><a href="#1161c5f2-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
+<span id="1161c5f2-4"><a href="#1161c5f2-4" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"nom"</span>: <span class="st">"Little Pub"</span>, <span class="st">"type"</span>: <span class="st">"Bar"</span>, <span class="st">"ambiance"</span>: <span class="dv">9</span>, <span class="st">"note"</span>: <span class="dv">7</span>},</span>
+<span id="1161c5f2-5"><a href="#1161c5f2-5" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"nom"</span>: <span class="st">"Le Corse"</span>, <span class="st">"type"</span>: <span class="st">"Sandwicherie"</span>, <span class="st">"ambiance"</span>: <span class="dv">2</span>, <span class="st">"note"</span>: <span class="dv">8</span>},</span>
+<span id="1161c5f2-6"><a href="#1161c5f2-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"nom"</span>: <span class="st">"Café Caumartin"</span>, <span class="st">"type"</span>: <span class="st">"Bar"</span>, <span class="st">"ambiance"</span>: <span class="dv">1</span>},</span>
+<span id="1161c5f2-7"><a href="#1161c5f2-7" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="1161c5f2-8"><a href="#1161c5f2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1161c5f2-9"><a href="#1161c5f2-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pandas.DataFrame(data)</span>
+<span id="1161c5f2-10"><a href="#1161c5f2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1161c5f2-11"><a href="#1161c5f2-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data)</span>
+<span id="1161c5f2-12"><a href="#1161c5f2-12" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[{'nom': 'Little Pub', 'type': 'Bar', 'ambiance': 9, 'note': 7}, {'nom': 'Le Corse', 'type': 'Sandwicherie', 'ambiance': 2, 'note': 8}, {'nom': 'Café Caumartin', 'type': 'Bar', 'ambiance': 1}]</code></pre>
 </div>
@@ -1505,7 +1554,7 @@ class list(object)
 </summary>
 <p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="f7058741" class="cell" data-execution_count="36">
+<div id="32bcabb2" class="cell" data-execution_count="36">
 <div class="cell-output cell-output-display" data-execution_count="32">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>

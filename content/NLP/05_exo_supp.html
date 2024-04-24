@@ -114,6 +114,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         background: #e9f3fa;
       }
 </style>
+<script id="toggle-light-dark-elements" type="application/javascript">
+// Extend Quarto theme toggling to allow elements to be displayed/hidden in light/dark themes
+
+// Replicated from https://github.com/quarto-dev/quarto-cli/blob/84d4659/src/resources/formats/html/templates/quarto-html.ejs
+const getColorSchemeSentinel = () => {
+  const localAlternateSentinel = 'default';
+  if (window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    return storageValue != null ? storageValue : localAlternateSentinel;
+  } else {
+    return localAlternateSentinel;
+  }
+};
+
+// Function to toggle light and dark elements based on color scheme
+const toggleColorSchemeElements = () => {
+  const scheme = getColorSchemeSentinel();
+  const lightElements = document.getElementsByClassName('only-light');
+  const darkElements = document.getElementsByClassName('only-dark');
+
+  for (var i = 0; i < lightElements.length; i++) {
+    lightElements[i].style.display = scheme == 'default' ? 'block' : 'none';
+  }
+  for (var i = 0; i < darkElements.length; i++) {
+    darkElements[i].style.display = scheme == 'default' ? 'none' : 'block';
+  }
+};
+
+// Function to check if the user's browser prefers dark themes
+const prefersDarkTheme = () => {
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
+document.addEventListener('readystatechange', function() {
+  // Set the default color scheme based on browser preference
+  if (document.readyState === 'interactive' && window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    if (storageValue == null && prefersDarkTheme()) {
+      window.localStorage.setItem('quarto-color-scheme', 'alternate');
+    }
+  }
+  // Add event listener for when the readyState is complete (and default toggler is set)
+  if (document.readyState === 'complete') {
+    // Toggle scheme once
+    toggleColorSchemeElements();
+    // Append our toggle function to the old one
+    const oldToggle = window.quartoToggleColorScheme;
+    window.quartoToggleColorScheme = () => {
+      oldToggle();
+      toggleColorSchemeElements();
+    }
+  }
+});
+
+</script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
@@ -140,21 +198,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Python pour la data science</span>
-    </a>
-  </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Introduction</span>
@@ -735,44 +784,44 @@ Pour pouvoir utiliser les modèles pré-entraînés de <code>spaCy</code>, il fa
 <li>Importer le modèle de reconnaissance de langage qui sera utilisé par la suite
 ainsi que le corpus Français utilisé par <code>spacy</code></li>
 </ol>
-<div id="5a8457bd" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="5a8457bd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5a8457bd-1"><a href="#5a8457bd-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="5a8457bd-2"><a href="#5a8457bd-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="5a8457bd-3"><a href="#5a8457bd-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="5a8457bd-4"><a href="#5a8457bd-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5a8457bd-5"><a href="#5a8457bd-5" aria-hidden="true" tabindex="-1"></a>temp_dir <span class="op">=</span> tempfile.NamedTemporaryFile()</span>
-<span id="5a8457bd-6"><a href="#5a8457bd-6" aria-hidden="true" tabindex="-1"></a>temp_dir <span class="op">=</span> temp_dir.name</span>
-<span id="5a8457bd-7"><a href="#5a8457bd-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5a8457bd-8"><a href="#5a8457bd-8" aria-hidden="true" tabindex="-1"></a>os.system(</span>
-<span id="5a8457bd-9"><a href="#5a8457bd-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"wget -O </span><span class="sc">{}</span><span class="st"> https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin"</span>.<span class="bu">format</span>(</span>
-<span id="5a8457bd-10"><a href="#5a8457bd-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"</span><span class="sc">%s</span><span class="st">.model.bin"</span> <span class="op">%</span> temp_dir</span>
-<span id="5a8457bd-11"><a href="#5a8457bd-11" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="5a8457bd-12"><a href="#5a8457bd-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="5a8457bd-13"><a href="#5a8457bd-13" aria-hidden="true" tabindex="-1"></a>spacy.cli.download(<span class="st">"fr_core_news_sm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4534f19f" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="4534f19f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4534f19f-1"><a href="#4534f19f-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
+<span id="4534f19f-2"><a href="#4534f19f-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="4534f19f-3"><a href="#4534f19f-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="4534f19f-4"><a href="#4534f19f-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4534f19f-5"><a href="#4534f19f-5" aria-hidden="true" tabindex="-1"></a>temp_dir <span class="op">=</span> tempfile.NamedTemporaryFile()</span>
+<span id="4534f19f-6"><a href="#4534f19f-6" aria-hidden="true" tabindex="-1"></a>temp_dir <span class="op">=</span> temp_dir.name</span>
+<span id="4534f19f-7"><a href="#4534f19f-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4534f19f-8"><a href="#4534f19f-8" aria-hidden="true" tabindex="-1"></a>os.system(</span>
+<span id="4534f19f-9"><a href="#4534f19f-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"wget -O </span><span class="sc">{}</span><span class="st"> https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin"</span>.<span class="bu">format</span>(</span>
+<span id="4534f19f-10"><a href="#4534f19f-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"</span><span class="sc">%s</span><span class="st">.model.bin"</span> <span class="op">%</span> temp_dir</span>
+<span id="4534f19f-11"><a href="#4534f19f-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="4534f19f-12"><a href="#4534f19f-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="4534f19f-13"><a href="#4534f19f-13" aria-hidden="true" tabindex="-1"></a>spacy.cli.download(<span class="st">"fr_core_news_sm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Importer les données de l’<a href="https://fr.openfoodfacts.org/data">openfood database</a> à partir du code suivant</li>
 </ol>
-<div id="cfd381c9" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cfd381c9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cfd381c9-1"><a href="#cfd381c9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cfd381c9-2"><a href="#cfd381c9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
-<span id="cfd381c9-3"><a href="#cfd381c9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cfd381c9-4"><a href="#cfd381c9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cfd381c9-5"><a href="#cfd381c9-5" aria-hidden="true" tabindex="-1"></a>urllib.request.urlretrieve(</span>
-<span id="cfd381c9-6"><a href="#cfd381c9-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv"</span>,</span>
-<span id="cfd381c9-7"><a href="#cfd381c9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">%s</span><span class="st">.openfood.csv"</span> <span class="op">%</span> temp_dir,</span>
-<span id="cfd381c9-8"><a href="#cfd381c9-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cfd381c9-9"><a href="#cfd381c9-9" aria-hidden="true" tabindex="-1"></a>df_openfood <span class="op">=</span> pd.read_csv(</span>
-<span id="cfd381c9-10"><a href="#cfd381c9-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">%s</span><span class="st">.openfood.csv"</span> <span class="op">%</span> temp_dir,</span>
-<span id="cfd381c9-11"><a href="#cfd381c9-11" aria-hidden="true" tabindex="-1"></a>    delimiter<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>,</span>
-<span id="cfd381c9-12"><a href="#cfd381c9-12" aria-hidden="true" tabindex="-1"></a>    usecols<span class="op">=</span>[<span class="st">"product_name"</span>],</span>
-<span id="cfd381c9-13"><a href="#cfd381c9-13" aria-hidden="true" tabindex="-1"></a>    encoding<span class="op">=</span><span class="st">"utf-8"</span>,</span>
-<span id="cfd381c9-14"><a href="#cfd381c9-14" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span><span class="st">"str"</span>,</span>
-<span id="cfd381c9-15"><a href="#cfd381c9-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="60158831" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="60158831"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="60158831-1"><a href="#60158831-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="60158831-2"><a href="#60158831-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="60158831-3"><a href="#60158831-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="60158831-4"><a href="#60158831-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="60158831-5"><a href="#60158831-5" aria-hidden="true" tabindex="-1"></a>urllib.request.urlretrieve(</span>
+<span id="60158831-6"><a href="#60158831-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv"</span>,</span>
+<span id="60158831-7"><a href="#60158831-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">%s</span><span class="st">.openfood.csv"</span> <span class="op">%</span> temp_dir,</span>
+<span id="60158831-8"><a href="#60158831-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="60158831-9"><a href="#60158831-9" aria-hidden="true" tabindex="-1"></a>df_openfood <span class="op">=</span> pd.read_csv(</span>
+<span id="60158831-10"><a href="#60158831-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">%s</span><span class="st">.openfood.csv"</span> <span class="op">%</span> temp_dir,</span>
+<span id="60158831-11"><a href="#60158831-11" aria-hidden="true" tabindex="-1"></a>    delimiter<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>,</span>
+<span id="60158831-12"><a href="#60158831-12" aria-hidden="true" tabindex="-1"></a>    usecols<span class="op">=</span>[<span class="st">"product_name"</span>],</span>
+<span id="60158831-13"><a href="#60158831-13" aria-hidden="true" tabindex="-1"></a>    encoding<span class="op">=</span><span class="st">"utf-8"</span>,</span>
+<span id="60158831-14"><a href="#60158831-14" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span><span class="st">"str"</span>,</span>
+<span id="60158831-15"><a href="#60158831-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ces données devraient avoir l’aspect suivant :</p>
-<div id="6965baf4" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="6965baf4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6965baf4-1"><a href="#6965baf4-1" aria-hidden="true" tabindex="-1"></a>df_openfood.iloc[:<span class="dv">2</span>, :<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7b0ae5d1" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="7b0ae5d1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7b0ae5d1-1"><a href="#7b0ae5d1-1" aria-hidden="true" tabindex="-1"></a>df_openfood.iloc[:<span class="dv">2</span>, :<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
 <li>Créer une fonction de nettoyage des noms de produits effectuant les
@@ -789,53 +838,53 @@ ainsi que le corpus Français utilisé par <code>spacy</code></li>
 pour comprendre la structure du corpus en question.
 Le résultat devrait avoir l’apparence suivante</li>
 </ol>
-<div id="be7124d4" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="be7124d4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="be7124d4-1"><a href="#be7124d4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud <span class="im">as</span> wc</span>
-<span id="be7124d4-2"><a href="#be7124d4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="be7124d4-3"><a href="#be7124d4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-4"><a href="#be7124d4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-5"><a href="#be7124d4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> graph_wordcloud(data, by<span class="op">=</span><span class="va">None</span>, valueby<span class="op">=</span><span class="va">None</span>, yvar<span class="op">=</span><span class="st">"Text"</span>):</span>
-<span id="be7124d4-6"><a href="#be7124d4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (by <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>) <span class="op">&amp;</span> (valueby <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
-<span id="be7124d4-7"><a href="#be7124d4-7" aria-hidden="true" tabindex="-1"></a>        txt <span class="op">=</span> data[data[by] <span class="op">==</span> valueby][yvar].astype(<span class="bu">str</span>)</span>
-<span id="be7124d4-8"><a href="#be7124d4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="be7124d4-9"><a href="#be7124d4-9" aria-hidden="true" tabindex="-1"></a>        txt <span class="op">=</span> data[yvar].astype(<span class="bu">str</span>)</span>
-<span id="be7124d4-10"><a href="#be7124d4-10" aria-hidden="true" tabindex="-1"></a>    all_text <span class="op">=</span> <span class="st">" "</span>.join([text <span class="cf">for</span> text <span class="kw">in</span> txt])</span>
-<span id="be7124d4-11"><a href="#be7124d4-11" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> wc.WordCloud(</span>
-<span id="be7124d4-12"><a href="#be7124d4-12" aria-hidden="true" tabindex="-1"></a>        width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">500</span>, random_state<span class="op">=</span><span class="dv">21</span>, max_words<span class="op">=</span><span class="dv">2000</span></span>
-<span id="be7124d4-13"><a href="#be7124d4-13" aria-hidden="true" tabindex="-1"></a>    ).generate(all_text)</span>
-<span id="be7124d4-14"><a href="#be7124d4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wordcloud</span>
-<span id="be7124d4-15"><a href="#be7124d4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-16"><a href="#be7124d4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-17"><a href="#be7124d4-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> graph_wordcloud_by(data, by, yvar<span class="op">=</span><span class="st">"Text"</span>):</span>
-<span id="be7124d4-18"><a href="#be7124d4-18" aria-hidden="true" tabindex="-1"></a>    n_topics <span class="op">=</span> data[by].unique().tolist()</span>
-<span id="be7124d4-19"><a href="#be7124d4-19" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="dv">20</span></span>
-<span id="be7124d4-20"><a href="#be7124d4-20" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="dv">80</span></span>
-<span id="be7124d4-21"><a href="#be7124d4-21" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> <span class="bu">len</span>(n_topics) <span class="op">//</span> <span class="dv">2</span></span>
-<span id="be7124d4-22"><a href="#be7124d4-22" aria-hidden="true" tabindex="-1"></a>    cols <span class="op">=</span> <span class="dv">2</span></span>
-<span id="be7124d4-23"><a href="#be7124d4-23" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(width, height))</span>
-<span id="be7124d4-24"><a href="#be7124d4-24" aria-hidden="true" tabindex="-1"></a>    axes <span class="op">=</span> []</span>
-<span id="be7124d4-25"><a href="#be7124d4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(cols <span class="op">*</span> rows):</span>
-<span id="be7124d4-26"><a href="#be7124d4-26" aria-hidden="true" tabindex="-1"></a>        b <span class="op">=</span> graph_wordcloud(data, by<span class="op">=</span>by, valueby<span class="op">=</span>n_topics[i], yvar<span class="op">=</span>yvar)</span>
-<span id="be7124d4-27"><a href="#be7124d4-27" aria-hidden="true" tabindex="-1"></a>        axes.append(fig.add_subplot(rows, cols, i <span class="op">+</span> <span class="dv">1</span>))</span>
-<span id="be7124d4-28"><a href="#be7124d4-28" aria-hidden="true" tabindex="-1"></a>        axes[<span class="op">-</span><span class="dv">1</span>].set_title(<span class="st">"</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(n_topics[i]))</span>
-<span id="be7124d4-29"><a href="#be7124d4-29" aria-hidden="true" tabindex="-1"></a>        plt.imshow(b)</span>
-<span id="be7124d4-30"><a href="#be7124d4-30" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)</span>
-<span id="be7124d4-31"><a href="#be7124d4-31" aria-hidden="true" tabindex="-1"></a>        plt.savefig(<span class="st">"</span><span class="sc">{}</span><span class="st">.png"</span>.<span class="bu">format</span>(yvar), bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="be7124d4-32"><a href="#be7124d4-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-33"><a href="#be7124d4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-34"><a href="#be7124d4-34" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wordcount_words(data, yvar, by<span class="op">=</span><span class="va">None</span>):</span>
-<span id="be7124d4-35"><a href="#be7124d4-35" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">15</span>))</span>
-<span id="be7124d4-36"><a href="#be7124d4-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> by <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="be7124d4-37"><a href="#be7124d4-37" aria-hidden="true" tabindex="-1"></a>        wordcloud <span class="op">=</span> graph_wordcloud(data, yvar<span class="op">=</span>yvar, by<span class="op">=</span>by)</span>
-<span id="be7124d4-38"><a href="#be7124d4-38" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud)</span>
-<span id="be7124d4-39"><a href="#be7124d4-39" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)</span>
-<span id="be7124d4-40"><a href="#be7124d4-40" aria-hidden="true" tabindex="-1"></a>        plt.savefig(<span class="st">"</span><span class="sc">{}</span><span class="st">.png"</span>.<span class="bu">format</span>(yvar), bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="be7124d4-41"><a href="#be7124d4-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="be7124d4-42"><a href="#be7124d4-42" aria-hidden="true" tabindex="-1"></a>        graph_wordcloud_by(data, by<span class="op">=</span>by, yvar<span class="op">=</span>yvar)</span>
-<span id="be7124d4-43"><a href="#be7124d4-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-44"><a href="#be7124d4-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be7124d4-45"><a href="#be7124d4-45" aria-hidden="true" tabindex="-1"></a>wordcount_words(df_openfood, yvar<span class="op">=</span><span class="st">"product_name"</span>)</span>
-<span id="be7124d4-46"><a href="#be7124d4-46" aria-hidden="true" tabindex="-1"></a>wordcount_words(df_openfood, <span class="st">"tokenized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7e7a0f98" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="7e7a0f98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7e7a0f98-1"><a href="#7e7a0f98-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud <span class="im">as</span> wc</span>
+<span id="7e7a0f98-2"><a href="#7e7a0f98-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="7e7a0f98-3"><a href="#7e7a0f98-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-4"><a href="#7e7a0f98-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-5"><a href="#7e7a0f98-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> graph_wordcloud(data, by<span class="op">=</span><span class="va">None</span>, valueby<span class="op">=</span><span class="va">None</span>, yvar<span class="op">=</span><span class="st">"Text"</span>):</span>
+<span id="7e7a0f98-6"><a href="#7e7a0f98-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (by <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>) <span class="op">&amp;</span> (valueby <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
+<span id="7e7a0f98-7"><a href="#7e7a0f98-7" aria-hidden="true" tabindex="-1"></a>        txt <span class="op">=</span> data[data[by] <span class="op">==</span> valueby][yvar].astype(<span class="bu">str</span>)</span>
+<span id="7e7a0f98-8"><a href="#7e7a0f98-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="7e7a0f98-9"><a href="#7e7a0f98-9" aria-hidden="true" tabindex="-1"></a>        txt <span class="op">=</span> data[yvar].astype(<span class="bu">str</span>)</span>
+<span id="7e7a0f98-10"><a href="#7e7a0f98-10" aria-hidden="true" tabindex="-1"></a>    all_text <span class="op">=</span> <span class="st">" "</span>.join([text <span class="cf">for</span> text <span class="kw">in</span> txt])</span>
+<span id="7e7a0f98-11"><a href="#7e7a0f98-11" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> wc.WordCloud(</span>
+<span id="7e7a0f98-12"><a href="#7e7a0f98-12" aria-hidden="true" tabindex="-1"></a>        width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">500</span>, random_state<span class="op">=</span><span class="dv">21</span>, max_words<span class="op">=</span><span class="dv">2000</span></span>
+<span id="7e7a0f98-13"><a href="#7e7a0f98-13" aria-hidden="true" tabindex="-1"></a>    ).generate(all_text)</span>
+<span id="7e7a0f98-14"><a href="#7e7a0f98-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wordcloud</span>
+<span id="7e7a0f98-15"><a href="#7e7a0f98-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-16"><a href="#7e7a0f98-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-17"><a href="#7e7a0f98-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> graph_wordcloud_by(data, by, yvar<span class="op">=</span><span class="st">"Text"</span>):</span>
+<span id="7e7a0f98-18"><a href="#7e7a0f98-18" aria-hidden="true" tabindex="-1"></a>    n_topics <span class="op">=</span> data[by].unique().tolist()</span>
+<span id="7e7a0f98-19"><a href="#7e7a0f98-19" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="dv">20</span></span>
+<span id="7e7a0f98-20"><a href="#7e7a0f98-20" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="dv">80</span></span>
+<span id="7e7a0f98-21"><a href="#7e7a0f98-21" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> <span class="bu">len</span>(n_topics) <span class="op">//</span> <span class="dv">2</span></span>
+<span id="7e7a0f98-22"><a href="#7e7a0f98-22" aria-hidden="true" tabindex="-1"></a>    cols <span class="op">=</span> <span class="dv">2</span></span>
+<span id="7e7a0f98-23"><a href="#7e7a0f98-23" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(width, height))</span>
+<span id="7e7a0f98-24"><a href="#7e7a0f98-24" aria-hidden="true" tabindex="-1"></a>    axes <span class="op">=</span> []</span>
+<span id="7e7a0f98-25"><a href="#7e7a0f98-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(cols <span class="op">*</span> rows):</span>
+<span id="7e7a0f98-26"><a href="#7e7a0f98-26" aria-hidden="true" tabindex="-1"></a>        b <span class="op">=</span> graph_wordcloud(data, by<span class="op">=</span>by, valueby<span class="op">=</span>n_topics[i], yvar<span class="op">=</span>yvar)</span>
+<span id="7e7a0f98-27"><a href="#7e7a0f98-27" aria-hidden="true" tabindex="-1"></a>        axes.append(fig.add_subplot(rows, cols, i <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="7e7a0f98-28"><a href="#7e7a0f98-28" aria-hidden="true" tabindex="-1"></a>        axes[<span class="op">-</span><span class="dv">1</span>].set_title(<span class="st">"</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(n_topics[i]))</span>
+<span id="7e7a0f98-29"><a href="#7e7a0f98-29" aria-hidden="true" tabindex="-1"></a>        plt.imshow(b)</span>
+<span id="7e7a0f98-30"><a href="#7e7a0f98-30" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)</span>
+<span id="7e7a0f98-31"><a href="#7e7a0f98-31" aria-hidden="true" tabindex="-1"></a>        plt.savefig(<span class="st">"</span><span class="sc">{}</span><span class="st">.png"</span>.<span class="bu">format</span>(yvar), bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="7e7a0f98-32"><a href="#7e7a0f98-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-33"><a href="#7e7a0f98-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-34"><a href="#7e7a0f98-34" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wordcount_words(data, yvar, by<span class="op">=</span><span class="va">None</span>):</span>
+<span id="7e7a0f98-35"><a href="#7e7a0f98-35" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">15</span>))</span>
+<span id="7e7a0f98-36"><a href="#7e7a0f98-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> by <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="7e7a0f98-37"><a href="#7e7a0f98-37" aria-hidden="true" tabindex="-1"></a>        wordcloud <span class="op">=</span> graph_wordcloud(data, yvar<span class="op">=</span>yvar, by<span class="op">=</span>by)</span>
+<span id="7e7a0f98-38"><a href="#7e7a0f98-38" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud)</span>
+<span id="7e7a0f98-39"><a href="#7e7a0f98-39" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)</span>
+<span id="7e7a0f98-40"><a href="#7e7a0f98-40" aria-hidden="true" tabindex="-1"></a>        plt.savefig(<span class="st">"</span><span class="sc">{}</span><span class="st">.png"</span>.<span class="bu">format</span>(yvar), bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="7e7a0f98-41"><a href="#7e7a0f98-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="7e7a0f98-42"><a href="#7e7a0f98-42" aria-hidden="true" tabindex="-1"></a>        graph_wordcloud_by(data, by<span class="op">=</span>by, yvar<span class="op">=</span>yvar)</span>
+<span id="7e7a0f98-43"><a href="#7e7a0f98-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-44"><a href="#7e7a0f98-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7e7a0f98-45"><a href="#7e7a0f98-45" aria-hidden="true" tabindex="-1"></a>wordcount_words(df_openfood, yvar<span class="op">=</span><span class="st">"product_name"</span>)</span>
+<span id="7e7a0f98-46"><a href="#7e7a0f98-46" aria-hidden="true" tabindex="-1"></a>wordcount_words(df_openfood, <span class="st">"tokenized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="5" type="1">
 <li>Utiliser la librairie <code>Fasttext</code> pour extraire les noms de produits
@@ -845,57 +894,57 @@ français</li>
 <li>Appliquer le modèle téléchargé précédemment pour déterminer le langage</li>
 <li>Ne récupérer que les libellés français</li>
 </ul>
-<div id="adfe9aa4" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="adfe9aa4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="adfe9aa4-1"><a href="#adfe9aa4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fasttext</span>
-<span id="adfe9aa4-2"><a href="#adfe9aa4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="adfe9aa4-3"><a href="#adfe9aa4-3" aria-hidden="true" tabindex="-1"></a>PRETRAINED_MODEL_PATH <span class="op">=</span> <span class="st">"</span><span class="sc">%s</span><span class="st">.model.bin"</span> <span class="op">%</span> temp_dir</span>
-<span id="adfe9aa4-4"><a href="#adfe9aa4-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> fasttext.load_model(PRETRAINED_MODEL_PATH)</span>
-<span id="adfe9aa4-5"><a href="#adfe9aa4-5" aria-hidden="true" tabindex="-1"></a>newcols <span class="op">=</span> [<span class="st">"language"</span>, <span class="st">"score_language"</span>]</span>
-<span id="adfe9aa4-6"><a href="#adfe9aa4-6" aria-hidden="true" tabindex="-1"></a>df_openfood[newcols] <span class="op">=</span> pd.DataFrame(</span>
-<span id="adfe9aa4-7"><a href="#adfe9aa4-7" aria-hidden="true" tabindex="-1"></a>    df_openfood[<span class="st">"product_name"</span>]</span>
-<span id="adfe9aa4-8"><a href="#adfe9aa4-8" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">str</span>)</span>
-<span id="adfe9aa4-9"><a href="#adfe9aa4-9" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="bu">list</span>(model.predict(s)))</span>
-<span id="adfe9aa4-10"><a href="#adfe9aa4-10" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> l: [l[<span class="dv">0</span>][<span class="dv">0</span>], l[<span class="dv">1</span>][<span class="dv">0</span>]])</span>
-<span id="adfe9aa4-11"><a href="#adfe9aa4-11" aria-hidden="true" tabindex="-1"></a>    .tolist(),</span>
-<span id="adfe9aa4-12"><a href="#adfe9aa4-12" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>newcols,</span>
-<span id="adfe9aa4-13"><a href="#adfe9aa4-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="adfe9aa4-14"><a href="#adfe9aa4-14" aria-hidden="true" tabindex="-1"></a>df_openfood[<span class="st">"language"</span>] <span class="op">=</span> df_openfood[<span class="st">"language"</span>].<span class="bu">str</span>.replace(<span class="st">"__label__"</span>, <span class="st">""</span>)</span>
-<span id="adfe9aa4-15"><a href="#adfe9aa4-15" aria-hidden="true" tabindex="-1"></a>df_openfood_french <span class="op">=</span> df_openfood[df_openfood[<span class="st">"language"</span>] <span class="op">==</span> <span class="st">"fr"</span>]</span>
-<span id="adfe9aa4-16"><a href="#adfe9aa4-16" aria-hidden="true" tabindex="-1"></a>df_openfood_french.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="64ddd334" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="64ddd334"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="64ddd334-1"><a href="#64ddd334-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fasttext</span>
+<span id="64ddd334-2"><a href="#64ddd334-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="64ddd334-3"><a href="#64ddd334-3" aria-hidden="true" tabindex="-1"></a>PRETRAINED_MODEL_PATH <span class="op">=</span> <span class="st">"</span><span class="sc">%s</span><span class="st">.model.bin"</span> <span class="op">%</span> temp_dir</span>
+<span id="64ddd334-4"><a href="#64ddd334-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> fasttext.load_model(PRETRAINED_MODEL_PATH)</span>
+<span id="64ddd334-5"><a href="#64ddd334-5" aria-hidden="true" tabindex="-1"></a>newcols <span class="op">=</span> [<span class="st">"language"</span>, <span class="st">"score_language"</span>]</span>
+<span id="64ddd334-6"><a href="#64ddd334-6" aria-hidden="true" tabindex="-1"></a>df_openfood[newcols] <span class="op">=</span> pd.DataFrame(</span>
+<span id="64ddd334-7"><a href="#64ddd334-7" aria-hidden="true" tabindex="-1"></a>    df_openfood[<span class="st">"product_name"</span>]</span>
+<span id="64ddd334-8"><a href="#64ddd334-8" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">str</span>)</span>
+<span id="64ddd334-9"><a href="#64ddd334-9" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="bu">list</span>(model.predict(s)))</span>
+<span id="64ddd334-10"><a href="#64ddd334-10" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> l: [l[<span class="dv">0</span>][<span class="dv">0</span>], l[<span class="dv">1</span>][<span class="dv">0</span>]])</span>
+<span id="64ddd334-11"><a href="#64ddd334-11" aria-hidden="true" tabindex="-1"></a>    .tolist(),</span>
+<span id="64ddd334-12"><a href="#64ddd334-12" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>newcols,</span>
+<span id="64ddd334-13"><a href="#64ddd334-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="64ddd334-14"><a href="#64ddd334-14" aria-hidden="true" tabindex="-1"></a>df_openfood[<span class="st">"language"</span>] <span class="op">=</span> df_openfood[<span class="st">"language"</span>].<span class="bu">str</span>.replace(<span class="st">"__label__"</span>, <span class="st">""</span>)</span>
+<span id="64ddd334-15"><a href="#64ddd334-15" aria-hidden="true" tabindex="-1"></a>df_openfood_french <span class="op">=</span> df_openfood[df_openfood[<span class="st">"language"</span>] <span class="op">==</span> <span class="st">"fr"</span>]</span>
+<span id="64ddd334-16"><a href="#64ddd334-16" aria-hidden="true" tabindex="-1"></a>df_openfood_french.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="6" type="1">
 <li>Visualiser avec <code>spacy.displacy</code> le résultat d’une reconnaissance
 d’entités nommées sur 50 données aléatoires. Cela vous semble-t-il satisfaisant ?</li>
 </ol>
-<div id="da19efe7" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="da19efe7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="da19efe7-1"><a href="#da19efe7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="da19efe7-2"><a href="#da19efe7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fr_core_news_sm</span>
-<span id="da19efe7-3"><a href="#da19efe7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="da19efe7-4"><a href="#da19efe7-4" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> fr_core_news_sm.load()</span>
-<span id="da19efe7-5"><a href="#da19efe7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="da19efe7-6"><a href="#da19efe7-6" aria-hidden="true" tabindex="-1"></a>example <span class="op">=</span> <span class="st">" </span><span class="ch">\n</span><span class="st"> "</span>.join(df_openfood_french[<span class="st">"product_name"</span>].astype(<span class="st">"str"</span>).sample(<span class="dv">50</span>))</span>
-<span id="da19efe7-7"><a href="#da19efe7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="da19efe7-8"><a href="#da19efe7-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
-<span id="da19efe7-9"><a href="#da19efe7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="da19efe7-10"><a href="#da19efe7-10" aria-hidden="true" tabindex="-1"></a>html <span class="op">=</span> displacy.render(nlp(example), style<span class="op">=</span><span class="st">"ent"</span>, page<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d0f660dd" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="d0f660dd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d0f660dd-1"><a href="#d0f660dd-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="d0f660dd-2"><a href="#d0f660dd-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fr_core_news_sm</span>
+<span id="d0f660dd-3"><a href="#d0f660dd-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d0f660dd-4"><a href="#d0f660dd-4" aria-hidden="true" tabindex="-1"></a>nlp <span class="op">=</span> fr_core_news_sm.load()</span>
+<span id="d0f660dd-5"><a href="#d0f660dd-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d0f660dd-6"><a href="#d0f660dd-6" aria-hidden="true" tabindex="-1"></a>example <span class="op">=</span> <span class="st">" </span><span class="ch">\n</span><span class="st"> "</span>.join(df_openfood_french[<span class="st">"product_name"</span>].astype(<span class="st">"str"</span>).sample(<span class="dv">50</span>))</span>
+<span id="d0f660dd-7"><a href="#d0f660dd-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d0f660dd-8"><a href="#d0f660dd-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
+<span id="d0f660dd-9"><a href="#d0f660dd-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d0f660dd-10"><a href="#d0f660dd-10" aria-hidden="true" tabindex="-1"></a>html <span class="op">=</span> displacy.render(nlp(example), style<span class="op">=</span><span class="st">"ent"</span>, page<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d517452a" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="d517452a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d517452a-1"><a href="#d517452a-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(html)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="89c3da77" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="89c3da77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="89c3da77-1"><a href="#89c3da77-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(html)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="7" type="1">
 <li>Récupérer dans un vecteur les entités nommées reconnues par <code>spaCy</code>.
 Regarder les entités reconnues dans les 20 premiers libellés de produits</li>
 </ol>
-<div id="45874fd5" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="45874fd5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="45874fd5-1"><a href="#45874fd5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> []</span>
-<span id="45874fd5-2"><a href="#45874fd5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> doc <span class="kw">in</span> nlp.pipe(</span>
-<span id="45874fd5-3"><a href="#45874fd5-3" aria-hidden="true" tabindex="-1"></a>    df_openfood_french.head(<span class="dv">20</span>)[<span class="st">"product_name"</span>].astype(<span class="st">"unicode"</span>),</span>
-<span id="45874fd5-4"><a href="#45874fd5-4" aria-hidden="true" tabindex="-1"></a>    disable<span class="op">=</span>[<span class="st">"tok2vec"</span>, <span class="st">"tagger"</span>, <span class="st">"parser"</span>, <span class="st">"attribute_ruler"</span>, <span class="st">"lemmatizer"</span>],</span>
-<span id="45874fd5-5"><a href="#45874fd5-5" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="45874fd5-6"><a href="#45874fd5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Do something with the doc here</span></span>
-<span id="45874fd5-7"><a href="#45874fd5-7" aria-hidden="true" tabindex="-1"></a>    x.append([(ent.text, ent.label_) <span class="cf">for</span> ent <span class="kw">in</span> doc.ents])</span>
-<span id="45874fd5-8"><a href="#45874fd5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="45874fd5-9"><a href="#45874fd5-9" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fa22e3d6" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="fa22e3d6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fa22e3d6-1"><a href="#fa22e3d6-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> []</span>
+<span id="fa22e3d6-2"><a href="#fa22e3d6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> doc <span class="kw">in</span> nlp.pipe(</span>
+<span id="fa22e3d6-3"><a href="#fa22e3d6-3" aria-hidden="true" tabindex="-1"></a>    df_openfood_french.head(<span class="dv">20</span>)[<span class="st">"product_name"</span>].astype(<span class="st">"unicode"</span>),</span>
+<span id="fa22e3d6-4"><a href="#fa22e3d6-4" aria-hidden="true" tabindex="-1"></a>    disable<span class="op">=</span>[<span class="st">"tok2vec"</span>, <span class="st">"tagger"</span>, <span class="st">"parser"</span>, <span class="st">"attribute_ruler"</span>, <span class="st">"lemmatizer"</span>],</span>
+<span id="fa22e3d6-5"><a href="#fa22e3d6-5" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="fa22e3d6-6"><a href="#fa22e3d6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Do something with the doc here</span></span>
+<span id="fa22e3d6-7"><a href="#fa22e3d6-7" aria-hidden="true" tabindex="-1"></a>    x.append([(ent.text, ent.label_) <span class="cf">for</span> ent <span class="kw">in</span> doc.ents])</span>
+<span id="fa22e3d6-8"><a href="#fa22e3d6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="fa22e3d6-9"><a href="#fa22e3d6-9" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!----
 # State of the union address

@@ -117,6 +117,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         background: #e9f3fa;
       }
 </style>
+<script id="toggle-light-dark-elements" type="application/javascript">
+// Extend Quarto theme toggling to allow elements to be displayed/hidden in light/dark themes
+
+// Replicated from https://github.com/quarto-dev/quarto-cli/blob/84d4659/src/resources/formats/html/templates/quarto-html.ejs
+const getColorSchemeSentinel = () => {
+  const localAlternateSentinel = 'default';
+  if (window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    return storageValue != null ? storageValue : localAlternateSentinel;
+  } else {
+    return localAlternateSentinel;
+  }
+};
+
+// Function to toggle light and dark elements based on color scheme
+const toggleColorSchemeElements = () => {
+  const scheme = getColorSchemeSentinel();
+  const lightElements = document.getElementsByClassName('only-light');
+  const darkElements = document.getElementsByClassName('only-dark');
+
+  for (var i = 0; i < lightElements.length; i++) {
+    lightElements[i].style.display = scheme == 'default' ? 'block' : 'none';
+  }
+  for (var i = 0; i < darkElements.length; i++) {
+    darkElements[i].style.display = scheme == 'default' ? 'none' : 'block';
+  }
+};
+
+// Function to check if the user's browser prefers dark themes
+const prefersDarkTheme = () => {
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
+document.addEventListener('readystatechange', function() {
+  // Set the default color scheme based on browser preference
+  if (document.readyState === 'interactive' && window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    if (storageValue == null && prefersDarkTheme()) {
+      window.localStorage.setItem('quarto-color-scheme', 'alternate');
+    }
+  }
+  // Add event listener for when the readyState is complete (and default toggler is set)
+  if (document.readyState === 'complete') {
+    // Toggle scheme once
+    toggleColorSchemeElements();
+    // Append our toggle function to the old one
+    const oldToggle = window.quartoToggleColorScheme;
+    window.quartoToggleColorScheme = () => {
+      oldToggle();
+      toggleColorSchemeElements();
+    }
+  }
+});
+
+</script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
@@ -149,21 +207,12 @@ ou le nettoyage de données textuelles.">
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Python pour la data science</span>
-    </a>
-  </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Introduction</span>
@@ -763,9 +812,9 @@ très pédagogique sur les regex.</p>
 <p>Nous allons utiliser le <em>package</em> <code>re</code> pour illustrer nos exemples d’expressions
 régulières. Il s’agit du package de référence, qui est utilisé, en arrière-plan,
 par <code>Pandas</code> pour vectoriser les recherches textuelles.</p>
-<div id="5bd795e5" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="5bd795e5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5bd795e5-1"><a href="#5bd795e5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="5bd795e5-2"><a href="#5bd795e5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e4f28f12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="e4f28f12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e4f28f12-1"><a href="#e4f28f12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="e4f28f12-2"><a href="#e4f28f12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-warning" role="alert">
@@ -790,10 +839,10 @@ et vous propose avec aplomb une regex totalement fausse…</p>
 <p>Par exemple, <code>"ch.+n"</code> est une expression régulière qui décrit le motif suivant : la chaîne littérale <code>ch</code>, suivi de n’importe quelle chaîne d’au moins un caractère (<code>.+</code>), suivie de la lettre <code>n</code>. Dans la chaîne <code>"J'ai un chien."</code>, la sous-chaîne <code>"chien"</code> correspond à ce motif. De même pour <code>"chapeau ron"</code> dans <code>"J'ai un chapeau rond"</code>. En revanche, dans la chaîne <code>"La soupe est chaude."</code>, aucune sous-chaîne ne correpsond à ce motif (car aucun <code>n</code> n’apparaît après le <code>ch</code>).</p>
 <p>Pour s’en convaincre, nous pouvons déjà regarder
 les deux premiers cas:</p>
-<div id="c37bcb73" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="c37bcb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c37bcb73-1"><a href="#c37bcb73-1" aria-hidden="true" tabindex="-1"></a>pattern <span class="op">=</span> <span class="st">"ch.+n"</span></span>
-<span id="c37bcb73-2"><a href="#c37bcb73-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chien."</span>))</span>
-<span id="c37bcb73-3"><a href="#c37bcb73-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chapeau rond."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7244853e" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="7244853e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7244853e-1"><a href="#7244853e-1" aria-hidden="true" tabindex="-1"></a>pattern <span class="op">=</span> <span class="st">"ch.+n"</span></span>
+<span id="7244853e-2"><a href="#7244853e-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chien."</span>))</span>
+<span id="7244853e-3"><a href="#7244853e-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chapeau rond."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;re.Match object; span=(8, 13), match='chien'&gt;
 &lt;re.Match object; span=(8, 19), match='chapeau ron'&gt;</code></pre>
@@ -801,8 +850,8 @@ les deux premiers cas:</p>
 </div>
 <p>Cependant, dans le dernier cas, nous ne trouvons pas
 le <em>pattern</em> recherché :</p>
-<div id="9aa85ca7" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="9aa85ca7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9aa85ca7-1"><a href="#9aa85ca7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"La soupe est chaude."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8f45cda6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="8f45cda6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8f45cda6-1"><a href="#8f45cda6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"La soupe est chaude."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>None</code></pre>
 </div>
@@ -822,9 +871,9 @@ nous retrouvions deux quantifieurs accolés <code>.+</code>. Le premier (<code>.
 Dans notre cas, la combinaison <code>.+</code> permet ainsi de répéter n’importe quel caractère avant de trouver un <em>n</em>.
 Le nombre de fois est indeterminé : cela peut ne pas être pas nécessaire d’intercaler des caractères avant le <em>n</em>
 ou cela peut être nécessaire d’en intercepter plusieurs :</p>
-<div id="e9469d66" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="e9469d66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e9469d66-1"><a href="#e9469d66-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chino"</span>))</span>
-<span id="e9469d66-2"><a href="#e9469d66-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chiot très mignon."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="204cd22f" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="204cd22f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="204cd22f-1"><a href="#204cd22f-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chino"</span>))</span>
+<span id="204cd22f-2"><a href="#204cd22f-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.search(pattern, <span class="st">"J'ai un chiot très mignon."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;re.Match object; span=(8, 12), match='chin'&gt;
 &lt;re.Match object; span=(8, 25), match='chiot très mignon'&gt;</code></pre>
@@ -838,8 +887,8 @@ ou cela peut être nécessaire d’en intercepter plusieurs :</p>
 exemple, si on désire trouver tous les <em>pattern</em> qui commencent par un <code>c</code> suivi
 d’un <code>h</code> puis d’une voyelle (a, e, i, o, u), on peut essayer
 cette expression régulière.</p>
-<div id="0043084a" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="0043084a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0043084a-1"><a href="#0043084a-1" aria-hidden="true" tabindex="-1"></a>re.findall(<span class="st">"[c][h][aeiou]"</span>, <span class="st">"chat, chien, veau, vache, chèvre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="28e93b1b" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="28e93b1b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="28e93b1b-1"><a href="#28e93b1b-1" aria-hidden="true" tabindex="-1"></a>re.findall(<span class="st">"[c][h][aeiou]"</span>, <span class="st">"chat, chien, veau, vache, chèvre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>['cha', 'chi', 'che']</code></pre>
 </div>
@@ -847,11 +896,11 @@ cette expression régulière.</p>
 <p>Il serait plus pratique d’utiliser <code>Pandas</code> dans ce cas pour isoler les
 lignes qui répondent à la condition logique (en ajoutant les accents
 qui ne sont pas compris sinon):</p>
-<div id="a7eb94d1" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="a7eb94d1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a7eb94d1-1"><a href="#a7eb94d1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="a7eb94d1-2"><a href="#a7eb94d1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a7eb94d1-3"><a href="#a7eb94d1-3" aria-hidden="true" tabindex="-1"></a>txt <span class="op">=</span> pd.Series(<span class="st">"chat, chien, veau, vache, chèvre"</span>.split(<span class="st">", "</span>))</span>
-<span id="a7eb94d1-4"><a href="#a7eb94d1-4" aria-hidden="true" tabindex="-1"></a>txt.<span class="bu">str</span>.match(<span class="st">"ch[aeéèiou]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f7410867" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="f7410867"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f7410867-1"><a href="#f7410867-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="f7410867-2"><a href="#f7410867-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f7410867-3"><a href="#f7410867-3" aria-hidden="true" tabindex="-1"></a>txt <span class="op">=</span> pd.Series(<span class="st">"chat, chien, veau, vache, chèvre"</span>.split(<span class="st">", "</span>))</span>
+<span id="f7410867-4"><a href="#f7410867-4" aria-hidden="true" tabindex="-1"></a>txt.<span class="bu">str</span>.match(<span class="st">"ch[aeéèiou]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>0     True
 1     True
@@ -881,8 +930,8 @@ qu’un <em>pattern</em> est rencontré.</p>
 <li><code>*</code> : 0 or more matches.</li>
 </ul>
 <p>Par exemple, <code>colou?r</code> permettra de matcher à la fois l’écriture américaine et anglaise</p>
-<div id="ea7cfc76" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="ea7cfc76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ea7cfc76-1"><a href="#ea7cfc76-1" aria-hidden="true" tabindex="-1"></a>re.findall(<span class="st">"colou?r"</span>, <span class="st">"Did you write color or colour?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9b2695c9" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="9b2695c9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9b2695c9-1"><a href="#9b2695c9-1" aria-hidden="true" tabindex="-1"></a>re.findall(<span class="st">"colou?r"</span>, <span class="st">"Did you write color or colour?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>['color', 'colour']</code></pre>
 </div>
@@ -904,8 +953,8 @@ avec <code>{}</code>:</p>
 ne s’applique par défaut qu’au dernier
 caractère précédent le quantifier.
 On peut s’en convaincre avec l’exemple ci-dessus:</p>
-<div id="eafea967" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="eafea967"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eafea967-1"><a href="#eafea967-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"toc</span><span class="sc">{4}</span><span class="st">"</span>, <span class="st">"toctoctoctoc"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a30a8f93" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="a30a8f93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a30a8f93-1"><a href="#a30a8f93-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"toc</span><span class="sc">{4}</span><span class="st">"</span>, <span class="st">"toctoctoctoc"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>None</code></pre>
 </div>
@@ -915,10 +964,10 @@ Le principe est le même qu’avec les règles numériques:
 les parenthèses permettent d’introduire une hiérarchie.
 Pour reprendre l’exemple précédent, on obtient
 bien le résultat attendu grâce aux parenthèses:</p>
-<div id="05ce0ee2" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="05ce0ee2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="05ce0ee2-1"><a href="#05ce0ee2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"(toc)</span><span class="sc">{4}</span><span class="st">"</span>, <span class="st">"toctoctoctoc"</span>))</span>
-<span id="05ce0ee2-2"><a href="#05ce0ee2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"(toc)</span><span class="sc">{5}</span><span class="st">"</span>, <span class="st">"toctoctoctoc"</span>))</span>
-<span id="05ce0ee2-3"><a href="#05ce0ee2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"(toc){2,4}"</span>, <span class="st">"toctoctoctoc"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5308ec9f" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="5308ec9f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5308ec9f-1"><a href="#5308ec9f-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"(toc)</span><span class="sc">{4}</span><span class="st">"</span>, <span class="st">"toctoctoctoc"</span>))</span>
+<span id="5308ec9f-2"><a href="#5308ec9f-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"(toc)</span><span class="sc">{5}</span><span class="st">"</span>, <span class="st">"toctoctoctoc"</span>))</span>
+<span id="5308ec9f-3"><a href="#5308ec9f-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="st">"(toc){2,4}"</span>, <span class="st">"toctoctoctoc"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;re.Match object; span=(0, 12), match='toctoctoctoc'&gt;
 None
@@ -930,7 +979,7 @@ None
 <h3 class="alert-heading anchored"><i class="fa-solid fa-comment"></i> Note</h3>
 <p>L’algorithme des expressions régulières essaye toujours de faire correspondre le plus grand morceau à l’expression régulière.</p>
 <p>Par exemple, soit une chaine de caractère HTML:</p>
-<div id="7f686baa" class="cell" data-execution_count="10">
+<div id="09d23820" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"&lt;h1&gt;Super titre HTML&lt;/h1&gt;"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’expression régulière <code>re.findall("&lt;.*&gt;", s)</code> correspond, potentiellement,
@@ -944,7 +993,7 @@ None
 sélectionner le plus petit,
 il faudra écrire les multiplicateurs comme ceci : <code>*?</code>, <code>+?</code>.
 En voici quelques exemples:</p>
-<div id="d7c39fd6" class="cell" data-execution_count="11">
+<div id="4ae82c5b" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"&lt;h1&gt;Super titre HTML&lt;/h1&gt;</span><span class="ch">\n</span><span class="st">&lt;p&gt;&lt;code&gt;Python&lt;/code&gt; est un langage très flexible&lt;/p&gt;"</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.findall(<span class="st">"&lt;.*&gt;"</span>, s))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.findall(<span class="st">"&lt;p&gt;.*&lt;/p&gt;"</span>, s))</span>
@@ -1151,12 +1200,12 @@ les exemples précédents sur une <code>regex</code> un peu plus complète.
 Cet exercice ne nécessite pas la connaissance des subtilités
 du <em>package</em> <code>re</code>, vous n’aurez besoin que de <code>re.findall</code>.</p>
 <p>Cet exercice utilisera la chaine de caractère suivante :</p>
-<div id="2527bc56" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="2527bc56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2527bc56-1"><a href="#2527bc56-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"""date 0 : 14/9/2000</span></span>
-<span id="2527bc56-2"><a href="#2527bc56-2" aria-hidden="true" tabindex="-1"></a><span class="st">date 1 : 20/04/1971     date 2 : 14/09/1913     date 3 : 2/3/1978</span></span>
-<span id="2527bc56-3"><a href="#2527bc56-3" aria-hidden="true" tabindex="-1"></a><span class="st">date 4 : 1/7/1986     date 5 : 7/3/47     date 6 : 15/10/1914</span></span>
-<span id="2527bc56-4"><a href="#2527bc56-4" aria-hidden="true" tabindex="-1"></a><span class="st">date 7 : 08/03/1941     date 8 : 8/1/1980     date 9 : 30/6/1976"""</span></span>
-<span id="2527bc56-5"><a href="#2527bc56-5" aria-hidden="true" tabindex="-1"></a>s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="95a6c5d7" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="95a6c5d7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="95a6c5d7-1"><a href="#95a6c5d7-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"""date 0 : 14/9/2000</span></span>
+<span id="95a6c5d7-2"><a href="#95a6c5d7-2" aria-hidden="true" tabindex="-1"></a><span class="st">date 1 : 20/04/1971     date 2 : 14/09/1913     date 3 : 2/3/1978</span></span>
+<span id="95a6c5d7-3"><a href="#95a6c5d7-3" aria-hidden="true" tabindex="-1"></a><span class="st">date 4 : 1/7/1986     date 5 : 7/3/47     date 6 : 15/10/1914</span></span>
+<span id="95a6c5d7-4"><a href="#95a6c5d7-4" aria-hidden="true" tabindex="-1"></a><span class="st">date 7 : 08/03/1941     date 8 : 8/1/1980     date 9 : 30/6/1976"""</span></span>
+<span id="95a6c5d7-5"><a href="#95a6c5d7-5" aria-hidden="true" tabindex="-1"></a>s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>'date 0 : 14/9/2000\ndate 1 : 20/04/1971     date 2 : 14/09/1913     date 3 : 2/3/1978\ndate 4 : 1/7/1986     date 5 : 7/3/47     date 6 : 15/10/1914\ndate 7 : 08/03/1941     date 8 : 8/1/1980     date 9 : 30/6/1976'</code></pre>
 </div>
@@ -1190,7 +1239,7 @@ capturer les dates de type <code>YYYY/MM/DD</code> ? Tester sur <code>1998/07/12
 </div>
 </div>
 <p>A l’issue de la question 1, vous devriez avoir ce résultat :</p>
-<div id="d11a955f" class="cell" data-execution_count="13">
+<div id="fd5ad5d3" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>['14/',
  '9/',
@@ -1216,7 +1265,7 @@ capturer les dates de type <code>YYYY/MM/DD</code> ? Tester sur <code>1998/07/12
 </div>
 <p>A l’issue de la question 2, vous devriez avoir ce résultat, qui
 commence à prendre forme:</p>
-<div id="fcf006d4" class="cell" data-execution_count="14">
+<div id="a82b2923" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>['14/9',
  '20/04',
@@ -1232,7 +1281,7 @@ commence à prendre forme:</p>
 </div>
 <p>A l’issue de la question 3, on parvient bien
 à extraire les dates :</p>
-<div id="e364fb75" class="cell" data-execution_count="15">
+<div id="3df50fbe" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>['14/9/2000',
  '20/04/1971',
@@ -1248,7 +1297,7 @@ commence à prendre forme:</p>
 </div>
 <p>Si tout va bien, à la question 5, votre regex devrait
 fonctionner:</p>
-<div id="542b0c86" class="cell" data-execution_count="17">
+<div id="b323252f" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>['14/9/2000',
  '20/04/1971',
@@ -1315,7 +1364,7 @@ cas précis être utiles.</p>
 <p><code>re.match</code> ne peut servir qu’à capturer un <em>pattern</em> en début
 de <em>string</em>. Son utilité est donc limitée.
 Capturons néanmoins <code>toto</code> :</p>
-<div id="a1928fd3" class="cell" data-execution_count="18">
+<div id="59123083" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>re.match(<span class="st">"(to)</span><span class="sc">{2}</span><span class="st">"</span>, <span class="st">"toto à la plage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>&lt;re.Match object; span=(0, 4), match='toto'&gt;</code></pre>
@@ -1328,7 +1377,7 @@ Capturons néanmoins <code>toto</code> :</p>
 <p><code>re.search</code> est plus puissant que <code>re.match</code>, on peut
 capturer des termes quelle que soit leur position
 dans un <em>string</em>. Par exemple, pour capturer <em>age</em> :</p>
-<div id="90d5b730" class="cell" data-execution_count="19">
+<div id="5b1b5459" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>re.search(<span class="st">"age"</span>, <span class="st">"toto a l'age d'aller à la plage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>&lt;re.Match object; span=(9, 12), match='age'&gt;</code></pre>
@@ -1336,7 +1385,7 @@ dans un <em>string</em>. Par exemple, pour capturer <em>age</em> :</p>
 </div>
 <p>Et pour capturer exclusivement <em>“age”</em> en fin
 de <em>string</em> :</p>
-<div id="052c912c" class="cell" data-execution_count="20">
+<div id="f86a6217" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>re.search(<span class="st">"age$"</span>, <span class="st">"toto a l'age d'aller à la plage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>&lt;re.Match object; span=(28, 31), match='age'&gt;</code></pre>
@@ -1350,7 +1399,7 @@ de <em>string</em> :</p>
 moins pratique que <code>re.findall</code>. Son utilité
 principale par rapport à <code>re.findall</code>
 est de capturer la position dans un champ textuel:</p>
-<div id="233ac70c" class="cell" data-execution_count="21">
+<div id="8eed84ef" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"toto a l'age d'aller à la plage"</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> match <span class="kw">in</span> re.finditer(<span class="st">"age"</span>, s):</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> match.start()</span>
@@ -1370,7 +1419,7 @@ Par exemple, remplaçons <em>“age”</em> par <em>“âge”</em>. Mais attent
 il ne faut pas le faire lorsque le motif est présent dans <em>“plage”</em>.
 On va donc mettre une condition négative: capturer <em>“age”</em> seulement
 s’il n’est pas en fin de <em>string</em> (ce qui se traduit en <em>regex</em> par <code>?!$</code>)</p>
-<div id="53ccdcac" class="cell" data-execution_count="22">
+<div id="002d1823" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>re.sub(<span class="st">"age(?!$)"</span>, <span class="st">"âge"</span>, <span class="st">"toto a l'age d'aller à la plage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>"toto a l'âge d'aller à la plage"</code></pre>
@@ -1445,7 +1494,7 @@ sont à bannir car très peu efficaces.</p>
 <details><summary>Exemple de <code>str.count</code> 👇</summary>
 <p>On peut compter le nombre de fois qu’un <em>pattern</em> apparaît avec
 <code>str.count</code></p>
-<div id="c5484e6c" class="cell" data-execution_count="23">
+<div id="0c6148b8" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"a"</span>: [<span class="st">"toto"</span>, <span class="st">"titi"</span>]})</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"a"</span>].<span class="bu">str</span>.count(<span class="st">"to"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="23">
@@ -1459,7 +1508,7 @@ Name: a, dtype: int64</code></pre>
 <div class="cell markdown">
 <details><summary>Exemple de <code>str.replace</code> 👇</summary>
 <p>Remplaçons le motif <em>“ti”</em> en fin de phrase</p>
-<div id="0bac8435" class="cell" data-execution_count="24">
+<div id="e2e30d0b" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"a"</span>: [<span class="st">"toto"</span>, <span class="st">"titi"</span>]})</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"a"</span>].<span class="bu">str</span>.replace(<span class="st">"ti$"</span>, <span class="st">" punch"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
@@ -1473,7 +1522,7 @@ Name: a, dtype: object</code></pre>
 <div class="cell markdown">
 <details><summary>Exemple de <code>str.contains</code> 👇</summary>
 <p>Vérifions les cas où notre ligne termine par <em>“ti”</em> :</p>
-<div id="9e4a49f5" class="cell" data-execution_count="25">
+<div id="672185b3" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"a"</span>: [<span class="st">"toto"</span>, <span class="st">"titi"</span>]})</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"a"</span>].<span class="bu">str</span>.contains(<span class="st">"ti$"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
@@ -1486,7 +1535,7 @@ Name: a, dtype: bool</code></pre>
 </div>
 <div class="cell markdown">
 <details><summary>Exemple de <code>str.findall</code> 👇</summary>
-<div id="4a45a833" class="cell" data-execution_count="26">
+<div id="46c419a9" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"a"</span>: [<span class="st">"toto"</span>, <span class="st">"titi"</span>]})</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"a"</span>].<span class="bu">str</span>.findall(<span class="st">"to"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
@@ -1522,10 +1571,10 @@ Cela peut valoir le coup de s’habituer à l’ajouter.</p>
 <section id="extraction-dadresses-email" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="extraction-dadresses-email"><span class="header-section-number">6.1</span> Extraction d’adresses email</h2>
 <p>Il s’agit d’un usage classique des <em>regex</em></p>
-<div id="9b588336" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="9b588336"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9b588336-1"><a href="#9b588336-1" aria-hidden="true" tabindex="-1"></a>text_emails <span class="op">=</span> (</span>
-<span id="9b588336-2"><a href="#9b588336-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Hello from toto@gmail.com to titi.grominet@yahoo.com about the meeting @2PM"</span></span>
-<span id="9b588336-3"><a href="#9b588336-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="557e8253" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="557e8253"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="557e8253-1"><a href="#557e8253-1" aria-hidden="true" tabindex="-1"></a>text_emails <span class="op">=</span> (</span>
+<span id="557e8253-2"><a href="#557e8253-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Hello from toto@gmail.com to titi.grominet@yahoo.com about the meeting @2PM"</span></span>
+<span id="557e8253-3"><a href="#557e8253-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
@@ -1534,7 +1583,7 @@ Cela peut valoir le coup de s’habituer à l’ajouter.</p>
 ce contenu</p>
 </div>
 </div>
-<div id="a1cb0c57" class="cell" data-execution_count="28">
+<div id="b47cc4a0" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-stdout">
 <pre><code>['toto@gmail.com', 'titi.grominet@yahoo.com']</code></pre>
 </div>
@@ -1568,7 +1617,7 @@ Utiliser la méthode <code>str.extract()</code> avec l’argument <code>expand =
 </details></div>
 </div>
 <p>Voici par exemple le problème qu’on demande de détecter à la question 3 :</p>
-<div id="c63bb6e6" class="cell" data-execution_count="31">
+<div id="2c6f98e6" class="cell" data-execution_count="31">
 <div class="cell-output cell-output-display" data-execution_count="31">
 <div>
 <div>
@@ -1625,13 +1674,13 @@ Utiliser la méthode <code>str.extract()</code> avec l’argument <code>expand =
 </div>
 </div>
 </div>
-<div id="67d8ea5a" class="cell" data-execution_count="32">
+<div id="f4c8facf" class="cell" data-execution_count="32">
 <div class="cell-output cell-output-display" data-execution_count="32">
 <pre><code>181</code></pre>
 </div>
 </div>
 <p>Grâce à notre regex (question 5), on obtient ainsi un <code>DataFrame</code> plus conforme à nos attentes</p>
-<div id="322a7115" class="cell" data-execution_count="33">
+<div id="9479524f" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-display" data-execution_count="33">
 <div>
 <div>
@@ -1711,7 +1760,7 @@ Utiliser la méthode <code>str.extract()</code> avec l’argument <code>expand =
 </div>
 <p>Quant aux nouveaux <code>NaN</code>,
 il s’agit de lignes qui ne contenaient pas de chaînes de caractères qui ressemblaient à des années :</p>
-<div id="6b4ed971" class="cell" data-execution_count="34">
+<div id="347420dc" class="cell" data-execution_count="34">
 <div class="cell-output cell-output-display" data-execution_count="34">
 <div>
 <div>
@@ -1744,7 +1793,7 @@ il s’agit de lignes qui ne contenaient pas de chaînes de caractères qui ress
 </div>
 </div>
 <p>Enfin, on obtient l’histogramme suivant des dates de publications:</p>
-<div id="32157785" class="cell" data-execution_count="35">
+<div id="759f66cf" class="cell" data-execution_count="35">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1762,7 +1811,7 @@ il s’agit de lignes qui ne contenaient pas de chaînes de caractères qui ress
 </summary>
 <p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="9dfb0792" class="cell" data-execution_count="37">
+<div id="7d3a10dc" class="cell" data-execution_count="37">
 <div class="cell-output cell-output-display" data-execution_count="37">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -4249,7 +4298,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","loop":false,"openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

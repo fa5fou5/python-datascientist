@@ -118,6 +118,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         background: #e9f3fa;
       }
 </style>
+<script id="toggle-light-dark-elements" type="application/javascript">
+// Extend Quarto theme toggling to allow elements to be displayed/hidden in light/dark themes
+
+// Replicated from https://github.com/quarto-dev/quarto-cli/blob/84d4659/src/resources/formats/html/templates/quarto-html.ejs
+const getColorSchemeSentinel = () => {
+  const localAlternateSentinel = 'default';
+  if (window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    return storageValue != null ? storageValue : localAlternateSentinel;
+  } else {
+    return localAlternateSentinel;
+  }
+};
+
+// Function to toggle light and dark elements based on color scheme
+const toggleColorSchemeElements = () => {
+  const scheme = getColorSchemeSentinel();
+  const lightElements = document.getElementsByClassName('only-light');
+  const darkElements = document.getElementsByClassName('only-dark');
+
+  for (var i = 0; i < lightElements.length; i++) {
+    lightElements[i].style.display = scheme == 'default' ? 'block' : 'none';
+  }
+  for (var i = 0; i < darkElements.length; i++) {
+    darkElements[i].style.display = scheme == 'default' ? 'none' : 'block';
+  }
+};
+
+// Function to check if the user's browser prefers dark themes
+const prefersDarkTheme = () => {
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
+
+document.addEventListener('readystatechange', function() {
+  // Set the default color scheme based on browser preference
+  if (document.readyState === 'interactive' && window.location.protocol !== 'file:') {
+    const storageValue = window.localStorage.getItem('quarto-color-scheme');
+    if (storageValue == null && prefersDarkTheme()) {
+      window.localStorage.setItem('quarto-color-scheme', 'alternate');
+    }
+  }
+  // Add event listener for when the readyState is complete (and default toggler is set)
+  if (document.readyState === 'complete') {
+    // Toggle scheme once
+    toggleColorSchemeElements();
+    // Append our toggle function to the old one
+    const oldToggle = window.quartoToggleColorScheme;
+    window.quartoToggleColorScheme = () => {
+      oldToggle();
+      toggleColorSchemeElements();
+    }
+  }
+});
+
+</script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
@@ -179,21 +237,12 @@ de l’Ademe.">
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Python pour la data science</span>
-    </a>
-  </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introduction" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Introduction</span>
@@ -801,20 +850,20 @@ produit par l’Insee utilisé pour identifier les communes à partir d’un cod
 </ul>
 <p>La librairie <code>pynsee</code> n’est pas installée par défaut avec <code>Python</code>. Avant de pouvoir l’utiliser,
 il est nécessaire de l’installer :</p>
-<div id="63a7f787" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="63a7f787"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="63a7f787-1"><a href="#63a7f787-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span>
-<span id="63a7f787-2"><a href="#63a7f787-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pynsee</span>
-<span id="63a7f787-3"><a href="#63a7f787-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install great_tables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="90dcdc51" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="90dcdc51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="90dcdc51-1"><a href="#90dcdc51-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span>
+<span id="90dcdc51-2"><a href="#90dcdc51-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pynsee</span>
+<span id="90dcdc51-3"><a href="#90dcdc51-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install great_tables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Toutes les dépendances indispensables étant installées, il suffit
 maintenant d’importer les librairies qui seront utilisées
 pendant ces exercices :</p>
-<div id="b29910d9" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="b29910d9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b29910d9-1"><a href="#b29910d9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="b29910d9-2"><a href="#b29910d9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="b29910d9-3"><a href="#b29910d9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="b29910d9-4"><a href="#b29910d9-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee</span>
-<span id="b29910d9-5"><a href="#b29910d9-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee.download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e1981154" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="e1981154"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e1981154-1"><a href="#e1981154-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="e1981154-2"><a href="#e1981154-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="e1981154-3"><a href="#e1981154-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="e1981154-4"><a href="#e1981154-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee</span>
+<span id="e1981154-5"><a href="#e1981154-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee.download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="importer-les-données" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Importer les données</h1>
@@ -824,18 +873,18 @@ pendant ces exercices :</p>
 plutôt qu’un chemin absolu.</p>
 <p>Pour préparer cet exercice, le code suivant permettra de
 télécharger des données qu’on va écrire en local</p>
-<div id="81fa137a" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="81fa137a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="81fa137a-1"><a href="#81fa137a-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="81fa137a-2"><a href="#81fa137a-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="81fa137a-3"><a href="#81fa137a-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.insee.fr/fr/statistiques/fichier/6800675/v_commune_2023.csv"</span></span>
-<span id="81fa137a-4"><a href="#81fa137a-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="81fa137a-5"><a href="#81fa137a-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="81fa137a-6"><a href="#81fa137a-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assurez-vous que la requête a réussi</span></span>
-<span id="81fa137a-7"><a href="#81fa137a-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
-<span id="81fa137a-8"><a href="#81fa137a-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"cog_2023.csv"</span>, <span class="st">"wb"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
-<span id="81fa137a-9"><a href="#81fa137a-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">file</span>.write(response.content)</span>
-<span id="81fa137a-10"><a href="#81fa137a-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="81fa137a-11"><a href="#81fa137a-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Échec du téléchargement du fichier. Statut HTTP :"</span>, response.status_code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5273fbb3" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="5273fbb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5273fbb3-1"><a href="#5273fbb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="5273fbb3-2"><a href="#5273fbb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="5273fbb3-3"><a href="#5273fbb3-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.insee.fr/fr/statistiques/fichier/6800675/v_commune_2023.csv"</span></span>
+<span id="5273fbb3-4"><a href="#5273fbb3-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="5273fbb3-5"><a href="#5273fbb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="5273fbb3-6"><a href="#5273fbb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assurez-vous que la requête a réussi</span></span>
+<span id="5273fbb3-7"><a href="#5273fbb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="5273fbb3-8"><a href="#5273fbb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"cog_2023.csv"</span>, <span class="st">"wb"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="5273fbb3-9"><a href="#5273fbb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">file</span>.write(response.content)</span>
+<span id="5273fbb3-10"><a href="#5273fbb3-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="5273fbb3-11"><a href="#5273fbb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Échec du téléchargement du fichier. Statut HTTP :"</span>, response.status_code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
@@ -847,7 +896,7 @@ télécharger des données qu’on va écrire en local</p>
 </ol>
 </div>
 </div>
-<div id="f51457c4" class="cell" data-execution_count="4">
+<div id="59a254a1" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 <div>
@@ -914,8 +963,8 @@ télécharger des données qu’on va écrire en local</p>
 <h2 data-number="1.2" class="anchored" data-anchor-id="importer-et-découvrir-des-données-depuis-un-csv"><span class="header-section-number">1.2</span> Importer et découvrir des données depuis un CSV</h2>
 <p>Il est plus pratique lorsque le CSV est disponible directement depuis un lien HTTPS de lire directement les données avec <code>Pandas</code>, sans passer par l’écriture d’un fichier en local. Cela permet de limiter les problèmes d’adhérance à un <em>file system</em>.</p>
 <p>L’URL d’accès aux données peut être conservé dans une variable <em>ad hoc</em> :</p>
-<div id="4d6cb35e" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="4d6cb35e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4d6cb35e-1"><a href="#4d6cb35e-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://koumoul.com/s/data-fair/api/v1/datasets/igt-pouvoir-de-rechauffement-global/convert"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c6c55242" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="c6c55242"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c6c55242-1"><a href="#c6c55242-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://koumoul.com/s/data-fair/api/v1/datasets/igt-pouvoir-de-rechauffement-global/convert"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et utilisé ensuite pour la lecture des données.
 L’objectif du premier exercice est de se familiariser à l’import et l’affichage de données
@@ -1065,7 +1114,7 @@ Indice pour cette question
 </div>
 <p>A la question 5, quand on ordonne les communes exclusivement à partir de la variable
 <code>transports_total</code>, on obtient ainsi:</p>
-<div id="7378842c" class="cell" data-execution_count="10">
+<div id="74f7b608" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 <div>
@@ -1119,7 +1168,7 @@ Indice pour cette question
 </div>
 </div>
 <p>A la question 6, on obtient ce classement :</p>
-<div id="75b9abec" class="cell" data-execution_count="11">
+<div id="16e7b217" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 <div>
@@ -1204,7 +1253,7 @@ après avoir fait <code>import pynsee</code>.
 Celle-ci renvoie un <code>DataFrame</code> dans lequel on peut
 rechercher, par exemple grâce à une recherche
 de mots-clefs :</p>
-<div id="74fdff61" class="cell" data-execution_count="12">
+<div id="094b8657" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pynsee.get_file_list()</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>meta.loc[meta[<span class="st">"label"</span>].<span class="bu">str</span>.contains(<span class="vs">r"Filosofi.*2016"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
@@ -1476,13 +1525,13 @@ mais cela permettra tout de même d’illustrer
 les principales fonctionnalités de <code>Pandas</code></p>
 <p>Le point d’entrée principal de la fonction <code>pynsee</code> est la fonction <code>download_file</code>.</p>
 <p>Le code pour télécharger les données est le suivant :</p>
-<div id="e336ec62" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="e336ec62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e336ec62-1"><a href="#e336ec62-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pynsee.download <span class="im">import</span> download_file</span>
-<span id="e336ec62-2"><a href="#e336ec62-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e336ec62-3"><a href="#e336ec62-3" aria-hidden="true" tabindex="-1"></a>filosofi <span class="op">=</span> download_file(<span class="st">"FILOSOFI_COM_2016"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="433c5dc7" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="433c5dc7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="433c5dc7-1"><a href="#433c5dc7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pynsee.download <span class="im">import</span> download_file</span>
+<span id="433c5dc7-2"><a href="#433c5dc7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="433c5dc7-3"><a href="#433c5dc7-3" aria-hidden="true" tabindex="-1"></a>filosofi <span class="op">=</span> download_file(<span class="st">"FILOSOFI_COM_2016"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le <em>DataFrame</em> en question a l’aspect suivant :</p>
-<div id="94bb6dfb" class="cell" data-execution_count="14">
+<div id="1ceccd2e" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 <div>
@@ -1517,60 +1566,12 @@ les principales fonctionnalités de <code>Pandas</code></p>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">12284</td>
-<td>32430</td>
-<td>Sère</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">2740</td>
-<td>08418</td>
-<td>Sévigny-Waleppe</td>
-<td>91</td>
-<td>226</td>
-<td>17715</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">872</td>
-<td>02502</td>
-<td>Montcornet</td>
-<td>538</td>
-<td>1178</td>
-<td>16472.666666666664</td>
+<td data-quarto-table-cell-role="th">26439</td>
+<td>67346</td>
+<td>Oberlauterbach</td>
+<td>215</td>
+<td>545</td>
+<td>27191.42857142857</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1589,12 +1590,12 @@ les principales fonctionnalités de <code>Pandas</code></p>
 <td>NaN</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">11402</td>
-<td>31128</td>
-<td>Caujac</td>
-<td>307</td>
-<td>861.5</td>
-<td>21647.6</td>
+<td data-quarto-table-cell-role="th">28304</td>
+<td>71508</td>
+<td>Savigny-sur-Seille</td>
+<td>183</td>
+<td>408</td>
+<td>18332.222222222223</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1613,12 +1614,60 @@ les principales fonctionnalités de <code>Pandas</code></p>
 <td>NaN</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">32141</td>
-<td>82018</td>
-<td>Bioule</td>
-<td>437</td>
-<td>1121.5</td>
-<td>20090.555555555555</td>
+<td data-quarto-table-cell-role="th">25963</td>
+<td>66069</td>
+<td>Espira-de-l'Agly</td>
+<td>1326</td>
+<td>3327.5</td>
+<td>18614.666666666668</td>
+<td>43</td>
+<td>17</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>28.5</td>
+<td>9.4</td>
+<td>7.9</td>
+<td>3.2</td>
+<td>2.9</td>
+<td>1.8</td>
+<td>-14.5</td>
+<td>10418.181818181818</td>
+<td>29898.73015873016</td>
+<td>2.8698606609601374</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25981</td>
+<td>66088</td>
+<td>Ille-sur-Têt</td>
+<td>2448</td>
+<td>5341.5</td>
+<td>16989.2</td>
+<td>34</td>
+<td>23</td>
+<td>NaN</td>
+<td>31</td>
+<td>23</td>
+<td>...</td>
+<td>35.8</td>
+<td>9.6</td>
+<td>8.8</td>
+<td>2.6</td>
+<td>3.7</td>
+<td>2.5</td>
+<td>-13.3</td>
+<td>9538.571428571428</td>
+<td>29124</td>
+<td>3.05328740452299</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34354</td>
+<td>90086</td>
+<td>Romagny-sous-Rougemont</td>
+<td>92</td>
+<td>220.5</td>
+<td>22649.5</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1646,10 +1695,10 @@ les principales fonctionnalités de <code>Pandas</code></p>
 </div>
 <p><code>Pandas</code> a géré automatiquement les types de variables. Il le fait relativement bien, mais une vérification est toujours utile pour les variables qui ont un statut spécifique.</p>
 <p>Pour les variables qui ne sont pas en type <code>float</code> alors qu’elles devraient l’être, on modifie leur type.</p>
-<div id="c1d97355" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="c1d97355"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c1d97355-1"><a href="#c1d97355-1" aria-hidden="true" tabindex="-1"></a>filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]] <span class="op">=</span> filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]].<span class="bu">apply</span>(</span>
-<span id="c1d97355-2"><a href="#c1d97355-2" aria-hidden="true" tabindex="-1"></a>    pd.to_numeric, errors<span class="op">=</span><span class="st">"coerce"</span></span>
-<span id="c1d97355-3"><a href="#c1d97355-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d7c8a654" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="d7c8a654"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d7c8a654-1"><a href="#d7c8a654-1" aria-hidden="true" tabindex="-1"></a>filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]] <span class="op">=</span> filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]].<span class="bu">apply</span>(</span>
+<span id="d7c8a654-2"><a href="#d7c8a654-2" aria-hidden="true" tabindex="-1"></a>    pd.to_numeric, errors<span class="op">=</span><span class="st">"coerce"</span></span>
+<span id="d7c8a654-3"><a href="#d7c8a654-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Un simple coup d’oeil sur les données
 donne une idée assez précise de la manière dont les données sont organisées.
@@ -1676,7 +1725,7 @@ exercice illustre cette fonctionnalité.</p>
 <div class="alert alert-success" role="alert">
 <h3 class="alert-heading anchored" data-anchor-id="les-indices"><i class="fa-solid fa-pencil"></i> Exercice 3 : Les indices</h3>
 <p>On suppose ici qu’on peut se fier aux codes communes. En effet, on a un même ordre de grandeur de communes dans les deux bases.</p>
-<div id="8235d048" class="cell" data-execution_count="16">
+<div id="e1eb52df" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(emissions[[<span class="st">"INSEE commune"</span>, <span class="st">"Commune"</span>]].nunique())</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(filosofi[[<span class="st">"CODGEO"</span>, <span class="st">"LIBGEO"</span>]].nunique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1836,7 +1885,7 @@ de manière minimale.</p>
 </div>
 </div>
 <p>A l’issue de la question 5, le graphique des corrélations est le suivant :</p>
-<div id="5c213787" class="cell" data-execution_count="37">
+<div id="b3928b16" class="cell" data-execution_count="37">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1872,8 +1921,8 @@ ce <em>package</em>, pas à pas.</p>
 <p>Afin de se concentrer sur la construction du tableau,
 les préparations de données à faire en amont sont données
 directement. Nous allons repartir de ce jeu de données:</p>
-<div id="2bda38a3" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="2bda38a3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2bda38a3-1"><a href="#2bda38a3-1" aria-hidden="true" tabindex="-1"></a>emissions_merged.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="15364356" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="15364356"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="15364356-1"><a href="#15364356-1" aria-hidden="true" tabindex="-1"></a>emissions_merged.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="37">
 <div>
 <div>
@@ -1991,70 +2040,70 @@ directement. Nous allons repartir de ce jeu de données:</p>
 descriptives par département mettant en parallèle
 l’empreinte carbone, le revenu médian et la population
 de chaque département</p>
-<div id="d83723b8" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="d83723b8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d83723b8-1"><a href="#d83723b8-1" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> (</span>
-<span id="d83723b8-2"><a href="#d83723b8-2" aria-hidden="true" tabindex="-1"></a>    emissions_merged.rename(</span>
-<span id="d83723b8-3"><a href="#d83723b8-3" aria-hidden="true" tabindex="-1"></a>        columns<span class="op">=</span>{<span class="st">"dep_y"</span>: <span class="st">"dep"</span>, <span class="st">"NBPERSMENFISC16"</span>: <span class="st">"population"</span>, <span class="st">"MED16"</span>: <span class="st">"revenu"</span>}</span>
-<span id="d83723b8-4"><a href="#d83723b8-4" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="d83723b8-5"><a href="#d83723b8-5" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"dep"</span>)</span>
-<span id="d83723b8-6"><a href="#d83723b8-6" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
-<span id="d83723b8-7"><a href="#d83723b8-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"empreinte"</span>: <span class="st">"sum"</span>, <span class="st">"revenu"</span>: <span class="st">"median"</span>, <span class="st">"population"</span>: <span class="st">"sum"</span>}</span>
-<span id="d83723b8-8"><a href="#d83723b8-8" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># pas vraiment le revenu médian</span></span>
-<span id="d83723b8-9"><a href="#d83723b8-9" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
-<span id="d83723b8-10"><a href="#d83723b8-10" aria-hidden="true" tabindex="-1"></a>    .sort_values(by<span class="op">=</span><span class="st">"empreinte"</span>)</span>
-<span id="d83723b8-11"><a href="#d83723b8-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="86d63fa1" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="86d63fa1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="86d63fa1-1"><a href="#86d63fa1-1" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> (</span>
+<span id="86d63fa1-2"><a href="#86d63fa1-2" aria-hidden="true" tabindex="-1"></a>    emissions_merged.rename(</span>
+<span id="86d63fa1-3"><a href="#86d63fa1-3" aria-hidden="true" tabindex="-1"></a>        columns<span class="op">=</span>{<span class="st">"dep_y"</span>: <span class="st">"dep"</span>, <span class="st">"NBPERSMENFISC16"</span>: <span class="st">"population"</span>, <span class="st">"MED16"</span>: <span class="st">"revenu"</span>}</span>
+<span id="86d63fa1-4"><a href="#86d63fa1-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="86d63fa1-5"><a href="#86d63fa1-5" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"dep"</span>)</span>
+<span id="86d63fa1-6"><a href="#86d63fa1-6" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="86d63fa1-7"><a href="#86d63fa1-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"empreinte"</span>: <span class="st">"sum"</span>, <span class="st">"revenu"</span>: <span class="st">"median"</span>, <span class="st">"population"</span>: <span class="st">"sum"</span>}</span>
+<span id="86d63fa1-8"><a href="#86d63fa1-8" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># pas vraiment le revenu médian</span></span>
+<span id="86d63fa1-9"><a href="#86d63fa1-9" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="86d63fa1-10"><a href="#86d63fa1-10" aria-hidden="true" tabindex="-1"></a>    .sort_values(by<span class="op">=</span><span class="st">"empreinte"</span>)</span>
+<span id="86d63fa1-11"><a href="#86d63fa1-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans ce tableau nous allons intégrer des barres horizontales,
 à la manière des exemples présentés <a href="https://posit-dev.github.io/great-tables/examples/">ici</a>. Cela se fait en incluant directement
 le code <em>html</em> dans la colonne du <em>DataFrame</em></p>
-<div id="36bd7e0e" class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="36bd7e0e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="36bd7e0e-1"><a href="#36bd7e0e-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_bar(</span>
-<span id="36bd7e0e-2"><a href="#36bd7e0e-2" aria-hidden="true" tabindex="-1"></a>    prop_fill: <span class="bu">float</span>, max_width: <span class="bu">int</span>, height: <span class="bu">int</span>, color: <span class="bu">str</span> <span class="op">=</span> <span class="st">"green"</span></span>
-<span id="36bd7e0e-3"><a href="#36bd7e0e-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="36bd7e0e-4"><a href="#36bd7e0e-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create divs to represent prop_fill as a bar."""</span></span>
-<span id="36bd7e0e-5"><a href="#36bd7e0e-5" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="bu">round</span>(max_width <span class="op">*</span> prop_fill, <span class="dv">2</span>)</span>
-<span id="36bd7e0e-6"><a href="#36bd7e0e-6" aria-hidden="true" tabindex="-1"></a>    px_width <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>width<span class="sc">}</span><span class="ss">px"</span></span>
-<span id="36bd7e0e-7"><a href="#36bd7e0e-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"""</span><span class="ch">\</span></span>
-<span id="36bd7e0e-8"><a href="#36bd7e0e-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;div style="width: </span><span class="sc">{</span>max_width<span class="sc">}</span><span class="ss">px; background-color: lightgrey;"&gt;</span><span class="ch">\</span></span>
-<span id="36bd7e0e-9"><a href="#36bd7e0e-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        &lt;div style="height:</span><span class="sc">{</span>height<span class="sc">}</span><span class="ss">px;width:</span><span class="sc">{</span>px_width<span class="sc">}</span><span class="ss">;background-color:</span><span class="sc">{</span>color<span class="sc">}</span><span class="ss">;"&gt;&lt;/div&gt;</span><span class="ch">\</span></span>
-<span id="36bd7e0e-10"><a href="#36bd7e0e-10" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;/div&gt;</span><span class="ch">\</span></span>
-<span id="36bd7e0e-11"><a href="#36bd7e0e-11" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
-<span id="36bd7e0e-12"><a href="#36bd7e0e-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="36bd7e0e-13"><a href="#36bd7e0e-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="36bd7e0e-14"><a href="#36bd7e0e-14" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> {<span class="st">"empreinte"</span>: <span class="st">"green"</span>, <span class="st">"revenu"</span>: <span class="st">"red"</span>, <span class="st">"population"</span>: <span class="st">"blue"</span>}</span>
-<span id="36bd7e0e-15"><a href="#36bd7e0e-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="36bd7e0e-16"><a href="#36bd7e0e-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> variable <span class="kw">in</span> [<span class="st">"empreinte"</span>, <span class="st">"revenu"</span>, <span class="st">"population"</span>]:</span>
-<span id="36bd7e0e-17"><a href="#36bd7e0e-17" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> (</span>
-<span id="36bd7e0e-18"><a href="#36bd7e0e-18" aria-hidden="true" tabindex="-1"></a>        emissions_table[variable] <span class="op">/</span> emissions_table[variable].<span class="bu">max</span>()</span>
-<span id="36bd7e0e-19"><a href="#36bd7e0e-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="36bd7e0e-20"><a href="#36bd7e0e-20" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"bar_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>].<span class="bu">map</span>(</span>
-<span id="36bd7e0e-21"><a href="#36bd7e0e-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">lambda</span> x: create_bar(x, max_width<span class="op">=</span><span class="dv">75</span>, height<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span>colors[variable])</span>
-<span id="36bd7e0e-22"><a href="#36bd7e0e-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4dfcb707" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="4dfcb707"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4dfcb707-1"><a href="#4dfcb707-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_bar(</span>
+<span id="4dfcb707-2"><a href="#4dfcb707-2" aria-hidden="true" tabindex="-1"></a>    prop_fill: <span class="bu">float</span>, max_width: <span class="bu">int</span>, height: <span class="bu">int</span>, color: <span class="bu">str</span> <span class="op">=</span> <span class="st">"green"</span></span>
+<span id="4dfcb707-3"><a href="#4dfcb707-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="4dfcb707-4"><a href="#4dfcb707-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create divs to represent prop_fill as a bar."""</span></span>
+<span id="4dfcb707-5"><a href="#4dfcb707-5" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="bu">round</span>(max_width <span class="op">*</span> prop_fill, <span class="dv">2</span>)</span>
+<span id="4dfcb707-6"><a href="#4dfcb707-6" aria-hidden="true" tabindex="-1"></a>    px_width <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>width<span class="sc">}</span><span class="ss">px"</span></span>
+<span id="4dfcb707-7"><a href="#4dfcb707-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"""</span><span class="ch">\</span></span>
+<span id="4dfcb707-8"><a href="#4dfcb707-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;div style="width: </span><span class="sc">{</span>max_width<span class="sc">}</span><span class="ss">px; background-color: lightgrey;"&gt;</span><span class="ch">\</span></span>
+<span id="4dfcb707-9"><a href="#4dfcb707-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        &lt;div style="height:</span><span class="sc">{</span>height<span class="sc">}</span><span class="ss">px;width:</span><span class="sc">{</span>px_width<span class="sc">}</span><span class="ss">;background-color:</span><span class="sc">{</span>color<span class="sc">}</span><span class="ss">;"&gt;&lt;/div&gt;</span><span class="ch">\</span></span>
+<span id="4dfcb707-10"><a href="#4dfcb707-10" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;/div&gt;</span><span class="ch">\</span></span>
+<span id="4dfcb707-11"><a href="#4dfcb707-11" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="4dfcb707-12"><a href="#4dfcb707-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4dfcb707-13"><a href="#4dfcb707-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4dfcb707-14"><a href="#4dfcb707-14" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> {<span class="st">"empreinte"</span>: <span class="st">"green"</span>, <span class="st">"revenu"</span>: <span class="st">"red"</span>, <span class="st">"population"</span>: <span class="st">"blue"</span>}</span>
+<span id="4dfcb707-15"><a href="#4dfcb707-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4dfcb707-16"><a href="#4dfcb707-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> variable <span class="kw">in</span> [<span class="st">"empreinte"</span>, <span class="st">"revenu"</span>, <span class="st">"population"</span>]:</span>
+<span id="4dfcb707-17"><a href="#4dfcb707-17" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> (</span>
+<span id="4dfcb707-18"><a href="#4dfcb707-18" aria-hidden="true" tabindex="-1"></a>        emissions_table[variable] <span class="op">/</span> emissions_table[variable].<span class="bu">max</span>()</span>
+<span id="4dfcb707-19"><a href="#4dfcb707-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="4dfcb707-20"><a href="#4dfcb707-20" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"bar_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>].<span class="bu">map</span>(</span>
+<span id="4dfcb707-21"><a href="#4dfcb707-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">lambda</span> x: create_bar(x, max_width<span class="op">=</span><span class="dv">75</span>, height<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span>colors[variable])</span>
+<span id="4dfcb707-22"><a href="#4dfcb707-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nous ne gardons que les 5 plus petites empreintes carbone, et les
 cinq plus importantes.</p>
-<div id="a6e9b037" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="a6e9b037"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a6e9b037-1"><a href="#a6e9b037-1" aria-hidden="true" tabindex="-1"></a>emissions_min <span class="op">=</span> (</span>
-<span id="a6e9b037-2"><a href="#a6e9b037-2" aria-hidden="true" tabindex="-1"></a>    emissions_table.head(<span class="dv">5</span>)</span>
-<span id="a6e9b037-3"><a href="#a6e9b037-3" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les moins pollueurs"</span>)</span>
-<span id="a6e9b037-4"><a href="#a6e9b037-4" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
-<span id="a6e9b037-5"><a href="#a6e9b037-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="a6e9b037-6"><a href="#a6e9b037-6" aria-hidden="true" tabindex="-1"></a>emissions_max <span class="op">=</span> (</span>
-<span id="a6e9b037-7"><a href="#a6e9b037-7" aria-hidden="true" tabindex="-1"></a>    emissions_table.tail(<span class="dv">5</span>)</span>
-<span id="a6e9b037-8"><a href="#a6e9b037-8" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les plus pollueurs"</span>)</span>
-<span id="a6e9b037-9"><a href="#a6e9b037-9" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
-<span id="a6e9b037-10"><a href="#a6e9b037-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="a6e9b037-11"><a href="#a6e9b037-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a6e9b037-12"><a href="#a6e9b037-12" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pd.concat([emissions_min, emissions_max])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2eee7c01" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="2eee7c01"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2eee7c01-1"><a href="#2eee7c01-1" aria-hidden="true" tabindex="-1"></a>emissions_min <span class="op">=</span> (</span>
+<span id="2eee7c01-2"><a href="#2eee7c01-2" aria-hidden="true" tabindex="-1"></a>    emissions_table.head(<span class="dv">5</span>)</span>
+<span id="2eee7c01-3"><a href="#2eee7c01-3" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les moins pollueurs"</span>)</span>
+<span id="2eee7c01-4"><a href="#2eee7c01-4" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="2eee7c01-5"><a href="#2eee7c01-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="2eee7c01-6"><a href="#2eee7c01-6" aria-hidden="true" tabindex="-1"></a>emissions_max <span class="op">=</span> (</span>
+<span id="2eee7c01-7"><a href="#2eee7c01-7" aria-hidden="true" tabindex="-1"></a>    emissions_table.tail(<span class="dv">5</span>)</span>
+<span id="2eee7c01-8"><a href="#2eee7c01-8" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les plus pollueurs"</span>)</span>
+<span id="2eee7c01-9"><a href="#2eee7c01-9" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="2eee7c01-10"><a href="#2eee7c01-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="2eee7c01-11"><a href="#2eee7c01-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="2eee7c01-12"><a href="#2eee7c01-12" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pd.concat([emissions_min, emissions_max])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, pour pouvoir utiliser quelques fonctions
 pratiques pour sélectionner des colonnes à partir
 de motifs, nous allons convertir les données
 au format <a href="https://pola.rs/"><code>Polars</code></a></p>
-<div id="5f7a9c45" class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="5f7a9c45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5f7a9c45-1"><a href="#5f7a9c45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
-<span id="5f7a9c45-2"><a href="#5f7a9c45-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5f7a9c45-3"><a href="#5f7a9c45-3" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pl.from_pandas(emissions_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="09c89bdf" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="09c89bdf"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="09c89bdf-1"><a href="#09c89bdf-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="09c89bdf-2"><a href="#09c89bdf-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="09c89bdf-3"><a href="#09c89bdf-3" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pl.from_pandas(emissions_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
@@ -2065,53 +2114,53 @@ au format <a href="https://pola.rs/"><code>Polars</code></a></p>
 </div>
 </div>
 <p>Le tableau à obtenir:</p>
-<div id="72e1be28" class="cell" data-execution_count="43">
+<div id="3e6dfe74" class="cell" data-execution_count="43">
 <div class="cell-output cell-output-display" data-execution_count="42">
-<div id="nuqteafejc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="qiwmnmfetg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#nuqteafejc table {
+#qiwmnmfetg table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#nuqteafejc thead, tbody, tfoot, tr, td, th { border-style: none; }
+#qiwmnmfetg thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#nuqteafejc p { margin: 0; padding: 0; }
- #nuqteafejc .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #nuqteafejc .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #nuqteafejc .gt_title { color: #FFFFFF; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #nuqteafejc .gt_subtitle { color: #FFFFFF; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #nuqteafejc .gt_heading { background-color: #0c540c; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #nuqteafejc .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #nuqteafejc .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #nuqteafejc .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #nuqteafejc .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #nuqteafejc .gt_column_spanner_outer:first-child { padding-left: 0; }
- #nuqteafejc .gt_column_spanner_outer:last-child { padding-right: 0; }
- #nuqteafejc .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #nuqteafejc .gt_spanner_row { border-bottom-style: hidden; }
- #nuqteafejc .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #nuqteafejc .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #nuqteafejc .gt_from_md> :first-child { margin-top: 0; }
- #nuqteafejc .gt_from_md> :last-child { margin-bottom: 0; }
- #nuqteafejc .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #nuqteafejc .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #nuqteafejc .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #nuqteafejc .gt_row_group_first td { border-top-width: 2px; }
- #nuqteafejc .gt_row_group_first th { border-top-width: 2px; }
- #nuqteafejc .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #nuqteafejc .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #nuqteafejc .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #nuqteafejc .gt_left { text-align: left; }
- #nuqteafejc .gt_center { text-align: center; }
- #nuqteafejc .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #nuqteafejc .gt_font_normal { font-weight: normal; }
- #nuqteafejc .gt_font_bold { font-weight: bold; }
- #nuqteafejc .gt_font_italic { font-style: italic; }
- #nuqteafejc .gt_super { font-size: 65%; }
- #nuqteafejc .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #nuqteafejc .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#qiwmnmfetg p { margin: 0; padding: 0; }
+ #qiwmnmfetg .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #qiwmnmfetg .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #qiwmnmfetg .gt_title { color: #FFFFFF; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #qiwmnmfetg .gt_subtitle { color: #FFFFFF; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #qiwmnmfetg .gt_heading { background-color: #0c540c; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #qiwmnmfetg .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #qiwmnmfetg .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #qiwmnmfetg .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #qiwmnmfetg .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #qiwmnmfetg .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #qiwmnmfetg .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #qiwmnmfetg .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #qiwmnmfetg .gt_spanner_row { border-bottom-style: hidden; }
+ #qiwmnmfetg .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #qiwmnmfetg .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #qiwmnmfetg .gt_from_md> :first-child { margin-top: 0; }
+ #qiwmnmfetg .gt_from_md> :last-child { margin-bottom: 0; }
+ #qiwmnmfetg .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #qiwmnmfetg .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #qiwmnmfetg .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #qiwmnmfetg .gt_row_group_first td { border-top-width: 2px; }
+ #qiwmnmfetg .gt_row_group_first th { border-top-width: 2px; }
+ #qiwmnmfetg .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #qiwmnmfetg .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #qiwmnmfetg .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #qiwmnmfetg .gt_left { text-align: left; }
+ #qiwmnmfetg .gt_center { text-align: center; }
+ #qiwmnmfetg .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #qiwmnmfetg .gt_font_normal { font-weight: normal; }
+ #qiwmnmfetg .gt_font_bold { font-weight: bold; }
+ #qiwmnmfetg .gt_font_italic { font-style: italic; }
+ #qiwmnmfetg .gt_super { font-size: 65%; }
+ #qiwmnmfetg .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #qiwmnmfetg .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
@@ -2324,7 +2373,7 @@ de <code>great_tables</code> pour <code>R</code>.</p>
 </summary>
 <p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="ba603dd4" class="cell" data-execution_count="45">
+<div id="c5fa0b3a" class="cell" data-execution_count="45">
 <div class="cell-output cell-output-display" data-execution_count="44">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -5160,7 +5209,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","loop":false,"openEffect":"zoom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","selector":".lightbox","loop":false,"descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
