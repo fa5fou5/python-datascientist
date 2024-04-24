@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-23">
+<meta name="dcterms.date" content="2024-04-24">
 <meta name="description" content="La hype autour du modèle de génération d’image Dall-E a amené une grande attention sur les modèles autogénératifs de contenu. Dall-E est, à l’heure actuelle, le modèle le plus célèbre de génération d’image à partir de texte. Il est maintenant possible de créer, depuis Python grâce à l’implémentation de StableDiffusion, soit-même ses propres images rigolotes.">
 
 <title>Python pour la data science - Génération d’images avec Python, DALL-E et StableDiffusion</title>
@@ -94,10 +94,12 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
@@ -159,7 +161,7 @@ ses propres images rigolotes.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-23">
+<meta name="citation_online_date" content="2024-04-24">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -463,17 +465,9 @@ ses propres images rigolotes.">
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
-    <div class="dropdown">
-      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/linogaliana/python-datascientist">
-            Code source
-            </a>
-          </li>
-      </ul>
-    </div>
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/linogaliana/python-datascientist" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -532,7 +526,7 @@ ses propres images rigolotes.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-23</p>
+        <p class="date">2024-04-24</p>
       </div>
     </div>
     
@@ -942,22 +936,22 @@ le tutoriel du site <a href="https://realpython.com/generate-images-with-dalle-o
 L’utilisation de <code>Dall-E</code> sera faite via le package <code>openai</code> qui donne
 accès à l’<a href="https://beta.openai.com/docs/api-reference?lang=python">API d’OpenAI</a>.
 Pour l’installer depuis la cellule d’un <code>Notebook</code>:</p>
-<div id="6c47a31e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="6c47a31e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6c47a31e-1"><a href="#6c47a31e-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install openai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d12cd0eb" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="d12cd0eb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d12cd0eb-1"><a href="#d12cd0eb-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install openai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Après avoir obtenu votre <a href="https://realpython.com/generate-images-with-dalle-openai-api/#get-your-openai-api-key">clé d’API</a>, on va supposer que celle-ci
 est stockée dans une variable <code>key</code>:</p>
-<div id="a072955f" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="a072955f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a072955f-1"><a href="#a072955f-1" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> <span class="st">"sk-XXXXXXXXXX"</span>  <span class="co"># remplacer avec votre clé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ef61e8e9" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="ef61e8e9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ef61e8e9-1"><a href="#ef61e8e9-1" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> <span class="st">"sk-XXXXXXXXXX"</span>  <span class="co"># remplacer avec votre clé</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ensuite, l’utilisation de l’API est assez directe:</p>
-<div id="e9205243" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="e9205243"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e9205243-1"><a href="#e9205243-1" aria-hidden="true" tabindex="-1"></a>openai.api_key <span class="op">=</span> key</span>
-<span id="e9205243-2"><a href="#e9205243-2" aria-hidden="true" tabindex="-1"></a>openai.Image.create(</span>
-<span id="e9205243-3"><a href="#e9205243-3" aria-hidden="true" tabindex="-1"></a>    prompt<span class="op">=</span><span class="st">"Teddy bears working on new AI research underwater with 1990s technology"</span>,</span>
-<span id="e9205243-4"><a href="#e9205243-4" aria-hidden="true" tabindex="-1"></a>    n<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="e9205243-5"><a href="#e9205243-5" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="st">"1024x1024"</span>,</span>
-<span id="e9205243-6"><a href="#e9205243-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="583be8a1" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="583be8a1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="583be8a1-1"><a href="#583be8a1-1" aria-hidden="true" tabindex="-1"></a>openai.api_key <span class="op">=</span> key</span>
+<span id="583be8a1-2"><a href="#583be8a1-2" aria-hidden="true" tabindex="-1"></a>openai.Image.create(</span>
+<span id="583be8a1-3"><a href="#583be8a1-3" aria-hidden="true" tabindex="-1"></a>    prompt<span class="op">=</span><span class="st">"Teddy bears working on new AI research underwater with 1990s technology"</span>,</span>
+<span id="583be8a1-4"><a href="#583be8a1-4" aria-hidden="true" tabindex="-1"></a>    n<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="583be8a1-5"><a href="#583be8a1-5" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="st">"1024x1024"</span>,</span>
+<span id="583be8a1-6"><a href="#583be8a1-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’<em>output</em> est un JSON avec les URL des images générées.
 Voici les deux images générées :</p>
@@ -1006,9 +1000,9 @@ suivante :</p>
 développée par <code>Meta</code>, il suffit de suivre les recommandations
 sur le <a href="https://pytorch.org/">site web officiel</a>.
 Dans un <code>Notebook</code>, cela prendra la forme suivante :</p>
-<div id="aac2017d" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="aac2017d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="aac2017d-1"><a href="#aac2017d-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>conda install mamba</span>
-<span id="aac2017d-2"><a href="#aac2017d-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mamba install pytorch torchvision torchaudio cudatoolkit<span class="op">=</span><span class="fl">10.2</span> <span class="op">-</span>c pytorch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9881d193" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="9881d193"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9881d193-1"><a href="#9881d193-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>conda install mamba</span>
+<span id="9881d193-2"><a href="#9881d193-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>mamba install pytorch torchvision torchaudio cudatoolkit<span class="op">=</span><span class="fl">10.2</span> <span class="op">-</span>c pytorch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-info" role="alert">
@@ -1032,8 +1026,8 @@ de <code>HuggingFace</code> pour s’authentifier.</p>
 package <a href="https://huggingface.co/docs/transformers/installation"><code>diffusers</code></a>.
 Dans un <code>Notebook</code>, le code suivant permet d’installer la librairie
 requise:</p>
-<div id="edc0afdc" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="edc0afdc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="edc0afdc-1"><a href="#edc0afdc-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade diffusers transformers scipy accelerate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b968e0e4" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="b968e0e4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b968e0e4-1"><a href="#b968e0e4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade diffusers transformers scipy accelerate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-info" role="alert">
@@ -1050,10 +1044,10 @@ d’environnement, créez une cellule qui crée la variable
 de partager votre token.</p>
 </div>
 </div>
-<div id="91434a8e" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="91434a8e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="91434a8e-1"><a href="#91434a8e-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="91434a8e-2"><a href="#91434a8e-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="91434a8e-3"><a href="#91434a8e-3" aria-hidden="true" tabindex="-1"></a>HF_TOKEN <span class="op">=</span> os.getenv(<span class="st">"HF_PAT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9597a99c" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="9597a99c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9597a99c-1"><a href="#9597a99c-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="9597a99c-2"><a href="#9597a99c-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="9597a99c-3"><a href="#9597a99c-3" aria-hidden="true" tabindex="-1"></a>HF_TOKEN <span class="op">=</span> os.getenv(<span class="st">"HF_PAT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1073,52 +1067,52 @@ nous allons fixer
 la racine du générateur aléatoire.</p>
 </div>
 </div>
-<div id="84a44b51" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="84a44b51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="84a44b51-1"><a href="#84a44b51-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="84a44b51-2"><a href="#84a44b51-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="84a44b51-3"><a href="#84a44b51-3" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.Generator(<span class="st">"cuda"</span>).manual_seed(<span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="efb753f0" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="efb753f0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="efb753f0-1"><a href="#efb753f0-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="efb753f0-2"><a href="#efb753f0-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="efb753f0-3"><a href="#efb753f0-3" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.Generator(<span class="st">"cuda"</span>).manual_seed(<span class="dv">123</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si vous voulez vous amuser à explorer différents résultats
 pour un même texte, vous pouvez ne pas fixer de racine aléatoire.
 Dans ce cas, retirer l’argument <code>generator</code> des codes présentés
 ultérieurement.</p>
 <p>Nous allons donc utiliser l’instruction suivante :</p>
-<div id="02190eee" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="02190eee"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="02190eee-1"><a href="#02190eee-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> (</span>
-<span id="02190eee-2"><a href="#02190eee-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chuck Norris fighting against Zeus on Mount Olympus in an epic Mortal Kombat scene"</span></span>
-<span id="02190eee-3"><a href="#02190eee-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3396ad3d" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="3396ad3d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3396ad3d-1"><a href="#3396ad3d-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> (</span>
+<span id="3396ad3d-2"><a href="#3396ad3d-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chuck Norris fighting against Zeus on Mount Olympus in an epic Mortal Kombat scene"</span></span>
+<span id="3396ad3d-3"><a href="#3396ad3d-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’initialisation du modèle se fait de la manière
 suivante :</p>
-<div id="3abda2f9" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="3abda2f9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3abda2f9-1"><a href="#3abda2f9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="3abda2f9-2"><a href="#3abda2f9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> autocast</span>
-<span id="3abda2f9-3"><a href="#3abda2f9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> diffusers <span class="im">import</span> StableDiffusionPipeline</span>
-<span id="3abda2f9-4"><a href="#3abda2f9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3abda2f9-5"><a href="#3abda2f9-5" aria-hidden="true" tabindex="-1"></a>model_id <span class="op">=</span> <span class="st">"CompVis/stable-diffusion-v1-4"</span></span>
-<span id="3abda2f9-6"><a href="#3abda2f9-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span></span>
-<span id="3abda2f9-7"><a href="#3abda2f9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3abda2f9-8"><a href="#3abda2f9-8" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.Generator(<span class="st">"cuda"</span>).manual_seed(<span class="dv">1024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="04259dd7" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="04259dd7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="04259dd7-1"><a href="#04259dd7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="04259dd7-2"><a href="#04259dd7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> autocast</span>
+<span id="04259dd7-3"><a href="#04259dd7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> diffusers <span class="im">import</span> StableDiffusionPipeline</span>
+<span id="04259dd7-4"><a href="#04259dd7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="04259dd7-5"><a href="#04259dd7-5" aria-hidden="true" tabindex="-1"></a>model_id <span class="op">=</span> <span class="st">"CompVis/stable-diffusion-v1-4"</span></span>
+<span id="04259dd7-6"><a href="#04259dd7-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span></span>
+<span id="04259dd7-7"><a href="#04259dd7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="04259dd7-8"><a href="#04259dd7-8" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.Generator(<span class="st">"cuda"</span>).manual_seed(<span class="dv">1024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Enfin, pour générer l’image:</p>
-<div id="3d4b0eff" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="3d4b0eff"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3d4b0eff-1"><a href="#3d4b0eff-1" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> StableDiffusionPipeline.from_pretrained(</span>
-<span id="3d4b0eff-2"><a href="#3d4b0eff-2" aria-hidden="true" tabindex="-1"></a>    model_id, use_auth_token<span class="op">=</span>HF_TOKEN, generator<span class="op">=</span>generator</span>
-<span id="3d4b0eff-3"><a href="#3d4b0eff-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="3d4b0eff-4"><a href="#3d4b0eff-4" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> pipe.to(device)</span>
-<span id="3d4b0eff-5"><a href="#3d4b0eff-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3d4b0eff-6"><a href="#3d4b0eff-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> autocast(<span class="st">"cuda"</span>):</span>
-<span id="3d4b0eff-7"><a href="#3d4b0eff-7" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> pipe(prompt, guidance_scale<span class="op">=</span><span class="fl">7.5</span>, generator<span class="op">=</span>generator)[<span class="st">"images"</span>][<span class="dv">0</span>]</span>
-<span id="3d4b0eff-8"><a href="#3d4b0eff-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3d4b0eff-9"><a href="#3d4b0eff-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3d4b0eff-10"><a href="#3d4b0eff-10" aria-hidden="true" tabindex="-1"></a>image.save(<span class="st">"featured.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f16bf4cd" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="f16bf4cd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f16bf4cd-1"><a href="#f16bf4cd-1" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> StableDiffusionPipeline.from_pretrained(</span>
+<span id="f16bf4cd-2"><a href="#f16bf4cd-2" aria-hidden="true" tabindex="-1"></a>    model_id, use_auth_token<span class="op">=</span>HF_TOKEN, generator<span class="op">=</span>generator</span>
+<span id="f16bf4cd-3"><a href="#f16bf4cd-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="f16bf4cd-4"><a href="#f16bf4cd-4" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> pipe.to(device)</span>
+<span id="f16bf4cd-5"><a href="#f16bf4cd-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f16bf4cd-6"><a href="#f16bf4cd-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> autocast(<span class="st">"cuda"</span>):</span>
+<span id="f16bf4cd-7"><a href="#f16bf4cd-7" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> pipe(prompt, guidance_scale<span class="op">=</span><span class="fl">7.5</span>, generator<span class="op">=</span>generator)[<span class="st">"images"</span>][<span class="dv">0</span>]</span>
+<span id="f16bf4cd-8"><a href="#f16bf4cd-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f16bf4cd-9"><a href="#f16bf4cd-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f16bf4cd-10"><a href="#f16bf4cd-10" aria-hidden="true" tabindex="-1"></a>image.save(<span class="st">"featured.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Qui peut être visualisé avec le code suivant, dans un <code>notebook</code>:</p>
-<div id="b92db37d" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="b92db37d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b92db37d-1"><a href="#b92db37d-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
-<span id="b92db37d-2"><a href="#b92db37d-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b92db37d-3"><a href="#b92db37d-3" aria-hidden="true" tabindex="-1"></a>pil_img <span class="op">=</span> Image(filename<span class="op">=</span><span class="st">"featured.png"</span>)</span>
-<span id="b92db37d-4"><a href="#b92db37d-4" aria-hidden="true" tabindex="-1"></a>display(pil_img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="90b422f9" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="90b422f9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="90b422f9-1"><a href="#90b422f9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
+<span id="90b422f9-2"><a href="#90b422f9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="90b422f9-3"><a href="#90b422f9-3" aria-hidden="true" tabindex="-1"></a>pil_img <span class="op">=</span> Image(filename<span class="op">=</span><span class="st">"featured.png"</span>)</span>
+<span id="90b422f9-4"><a href="#90b422f9-4" aria-hidden="true" tabindex="-1"></a>display(pil_img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/featured.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/featured.png" class="img-fluid"></a></p>
 <p>C’est une représentation assez fidèle du
@@ -1137,29 +1131,29 @@ en réduisant le poids des vecteurs numériques comme proposé dans le <em>post<
 <h1 data-number="5"><span class="header-section-number">5</span> Bonus</h1>
 <p>Pour le plaisir, voici <code>PuppyMan</code>, le dernier né du Marvel Universe:</p>
 <p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/puppyman.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/puppyman.png" class="img-fluid"></a></p>
-<div id="88d1b6d6" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="88d1b6d6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="88d1b6d6-1"><a href="#88d1b6d6-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"In a new Marvel film we discover puppyman a new super hero that is half man half bulldog"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4a6788a4" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="4a6788a4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4a6788a4-1"><a href="#4a6788a4-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"In a new Marvel film we discover puppyman a new super hero that is half man half bulldog"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="af491cc6" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="af491cc6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="af491cc6-1"><a href="#af491cc6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="af491cc6-2"><a href="#af491cc6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> autocast</span>
-<span id="af491cc6-3"><a href="#af491cc6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> diffusers <span class="im">import</span> StableDiffusionPipeline</span>
-<span id="af491cc6-4"><a href="#af491cc6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af491cc6-5"><a href="#af491cc6-5" aria-hidden="true" tabindex="-1"></a>model_id <span class="op">=</span> <span class="st">"CompVis/stable-diffusion-v1-4"</span></span>
-<span id="af491cc6-6"><a href="#af491cc6-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span></span>
-<span id="af491cc6-7"><a href="#af491cc6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af491cc6-8"><a href="#af491cc6-8" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.Generator(<span class="st">"cuda"</span>).manual_seed(<span class="dv">1024</span>)</span>
-<span id="af491cc6-9"><a href="#af491cc6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af491cc6-10"><a href="#af491cc6-10" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> StableDiffusionPipeline.from_pretrained(</span>
-<span id="af491cc6-11"><a href="#af491cc6-11" aria-hidden="true" tabindex="-1"></a>    model_id, use_auth_token<span class="op">=</span>HF_TOKEN, generator<span class="op">=</span>generator</span>
-<span id="af491cc6-12"><a href="#af491cc6-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="af491cc6-13"><a href="#af491cc6-13" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> pipe.to(device)</span>
-<span id="af491cc6-14"><a href="#af491cc6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af491cc6-15"><a href="#af491cc6-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> autocast(<span class="st">"cuda"</span>):</span>
-<span id="af491cc6-16"><a href="#af491cc6-16" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> pipe(prompt, guidance_scale<span class="op">=</span><span class="fl">7.5</span>, generator<span class="op">=</span>generator)[<span class="st">"images"</span>][<span class="dv">0</span>]</span>
-<span id="af491cc6-17"><a href="#af491cc6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af491cc6-18"><a href="#af491cc6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af491cc6-19"><a href="#af491cc6-19" aria-hidden="true" tabindex="-1"></a>image.save(<span class="st">"puppyman.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8438dc0c" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="8438dc0c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8438dc0c-1"><a href="#8438dc0c-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="8438dc0c-2"><a href="#8438dc0c-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> autocast</span>
+<span id="8438dc0c-3"><a href="#8438dc0c-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> diffusers <span class="im">import</span> StableDiffusionPipeline</span>
+<span id="8438dc0c-4"><a href="#8438dc0c-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8438dc0c-5"><a href="#8438dc0c-5" aria-hidden="true" tabindex="-1"></a>model_id <span class="op">=</span> <span class="st">"CompVis/stable-diffusion-v1-4"</span></span>
+<span id="8438dc0c-6"><a href="#8438dc0c-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span></span>
+<span id="8438dc0c-7"><a href="#8438dc0c-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8438dc0c-8"><a href="#8438dc0c-8" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.Generator(<span class="st">"cuda"</span>).manual_seed(<span class="dv">1024</span>)</span>
+<span id="8438dc0c-9"><a href="#8438dc0c-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8438dc0c-10"><a href="#8438dc0c-10" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> StableDiffusionPipeline.from_pretrained(</span>
+<span id="8438dc0c-11"><a href="#8438dc0c-11" aria-hidden="true" tabindex="-1"></a>    model_id, use_auth_token<span class="op">=</span>HF_TOKEN, generator<span class="op">=</span>generator</span>
+<span id="8438dc0c-12"><a href="#8438dc0c-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="8438dc0c-13"><a href="#8438dc0c-13" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> pipe.to(device)</span>
+<span id="8438dc0c-14"><a href="#8438dc0c-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8438dc0c-15"><a href="#8438dc0c-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> autocast(<span class="st">"cuda"</span>):</span>
+<span id="8438dc0c-16"><a href="#8438dc0c-16" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> pipe(prompt, guidance_scale<span class="op">=</span><span class="fl">7.5</span>, generator<span class="op">=</span>generator)[<span class="st">"images"</span>][<span class="dv">0</span>]</span>
+<span id="8438dc0c-17"><a href="#8438dc0c-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8438dc0c-18"><a href="#8438dc0c-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8438dc0c-19"><a href="#8438dc0c-19" aria-hidden="true" tabindex="-1"></a>image.save(<span class="st">"puppyman.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La moitié humain semble être son costume de super-héros, pas la bipédie.
 Mais le rendu
@@ -1179,9 +1173,9 @@ Rombach, Robin, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Omm
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-23</p>
+<p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="268787f9" class="cell" data-execution_count="15">
+<div id="1563ee19" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1682,43 +1676,51 @@ Rombach, Robin, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Omm
 </tr>
 <tr class="even">
 <td style="text-align: left;">langcodes</td>
-<td style="text-align: left;">3.3.0</td>
+<td style="text-align: left;">3.4.0</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">language_data</td>
+<td style="text-align: left;">1.2.0</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">lazy_loader</td>
 <td style="text-align: left;">0.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">libmambapy</td>
 <td style="text-align: left;">1.5.7</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">llvmlite</td>
 <td style="text-align: left;">0.42.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">locket</td>
 <td style="text-align: left;">1.0.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">lxml</td>
 <td style="text-align: left;">5.2.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">lz4</td>
 <td style="text-align: left;">4.3.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Mako</td>
 <td style="text-align: left;">1.3.2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">mamba</td>
 <td style="text-align: left;">1.5.7</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mapclassify</td>
 <td style="text-align: left;">2.6.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">marisa-trie</td>
+<td style="text-align: left;">1.1.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Markdown</td>
@@ -2933,6 +2935,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -3356,7 +3502,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","selector":".lightbox","openEffect":"zoom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

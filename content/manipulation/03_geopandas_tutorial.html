@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-23">
+<meta name="dcterms.date" content="2024-04-24">
 <meta name="description" content="Les données géolocalisées se sont multipliées depuis quelques années, qu’il s’agisse de données open-data ou de traces numériques géolocalisées de type big-data. Pour les données spatiales, le package GeoPandas étend les fonctionalités de l’écosystème Pandas afin de permettre de manipuler des données géographiques complexes de manière simple.">
 
 <title>Python pour la data science - Données spatiales : découverte de geopandas</title>
@@ -74,10 +74,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
@@ -168,7 +170,7 @@ de manipuler des données géographiques complexes de manière simple.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-23">
+<meta name="citation_online_date" content="2024-04-24">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -441,17 +443,9 @@ de manipuler des données géographiques complexes de manière simple.">
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
-    <div class="dropdown">
-      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/linogaliana/python-datascientist">
-            Code source
-            </a>
-          </li>
-      </ul>
-    </div>
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/linogaliana/python-datascientist" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -505,7 +499,7 @@ de manipuler des données géographiques complexes de manière simple.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-23</p>
+        <p class="date">2024-04-24</p>
       </div>
     </div>
     
@@ -821,18 +815,18 @@ l’objet de ce chapitre porte davantage sur la manipulation des données géogr
 <a href="https://www.book.utilitr.org/fiche_donnees_spatiales">dans la documentation <code>utilitr</code></a>.
 Il peut servir de pendant à celui-ci pour l’utilisateur de <code>R</code>.</p>
 <p>Quelques installations préalables sont nécessaires :</p>
-<div id="bfc1c671" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="bfc1c671"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bfc1c671-1"><a href="#bfc1c671-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas fiona shapely pyproj rtree <span class="co"># à faire obligatoirement en premier pour utiliser rtree ou pygeos pour les jointures spatiales</span></span>
-<span id="bfc1c671-2"><a href="#bfc1c671-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install contextily</span>
-<span id="bfc1c671-3"><a href="#bfc1c671-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span>
-<span id="bfc1c671-4"><a href="#bfc1c671-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install topojson</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a971708a" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="a971708a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a971708a-1"><a href="#a971708a-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas fiona shapely pyproj rtree <span class="co"># à faire obligatoirement en premier pour utiliser rtree ou pygeos pour les jointures spatiales</span></span>
+<span id="a971708a-2"><a href="#a971708a-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install contextily</span>
+<span id="a971708a-3"><a href="#a971708a-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span>
+<span id="a971708a-4"><a href="#a971708a-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install topojson</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour être en mesure d’exécuter ce tutoriel, les imports suivants
 seront utiles.</p>
-<div id="f5a28d76" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="f5a28d76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f5a28d76-1"><a href="#f5a28d76-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="f5a28d76-2"><a href="#f5a28d76-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextily <span class="im">as</span> ctx</span>
-<span id="f5a28d76-3"><a href="#f5a28d76-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="13046de3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="13046de3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="13046de3-1"><a href="#13046de3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="13046de3-2"><a href="#13046de3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextily <span class="im">as</span> ctx</span>
+<span id="13046de3-3"><a href="#13046de3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="données-spatiales" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Données spatiales</h1>
@@ -1223,7 +1217,7 @@ contours géographiques.</p>
 <p>Pour installer <code>cartiflette</code>, il est nécessaire d’utiliser les commandes suivantes
 depuis un <code>Jupyter Notebook</code> (si vous utilisez la ligne de commande directement,
 vous pouvez retirer les <code>!</code> en début de ligne):</p>
-<div id="df088f47" class="cell" data-execution_count="3">
+<div id="8935cebe" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install requests py7zr geopandas openpyxl tqdm s3fs PyYAML xlrd</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>inseefrlab<span class="op">/</span>cartiflette</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1245,21 +1239,21 @@ de carte consolidés comme celui dont on a besoin ici : arrondissements
 dans Paris, communes ailleurs. Comme cela est expliqué dans un encadré à part,
 il s’agirait d’une opération pénible à mettre en oeuvre sans <code>cartiflette</code>.</p>
 <p>Les contours de cet espace peuvent être récupérés de la manière suivante :</p>
-<div id="f8153924" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="f8153924"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f8153924-1"><a href="#f8153924-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
-<span id="f8153924-2"><a href="#f8153924-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="f8153924-3"><a href="#f8153924-3" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> carti_download(</span>
-<span id="f8153924-4"><a href="#f8153924-4" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
-<span id="f8153924-5"><a href="#f8153924-5" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"75"</span>, <span class="st">"92"</span>, <span class="st">"93"</span>, <span class="st">"94"</span>],</span>
-<span id="f8153924-6"><a href="#f8153924-6" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"COMMUNE_ARRONDISSEMENT"</span>,</span>
-<span id="f8153924-7"><a href="#f8153924-7" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
-<span id="f8153924-8"><a href="#f8153924-8" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
-<span id="f8153924-9"><a href="#f8153924-9" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
-<span id="f8153924-10"><a href="#f8153924-10" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
-<span id="f8153924-11"><a href="#f8153924-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="91cced11" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="91cced11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="91cced11-1"><a href="#91cced11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
+<span id="91cced11-2"><a href="#91cced11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="91cced11-3"><a href="#91cced11-3" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> carti_download(</span>
+<span id="91cced11-4"><a href="#91cced11-4" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
+<span id="91cced11-5"><a href="#91cced11-5" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"75"</span>, <span class="st">"92"</span>, <span class="st">"93"</span>, <span class="st">"94"</span>],</span>
+<span id="91cced11-6"><a href="#91cced11-6" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"COMMUNE_ARRONDISSEMENT"</span>,</span>
+<span id="91cced11-7"><a href="#91cced11-7" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
+<span id="91cced11-8"><a href="#91cced11-8" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
+<span id="91cced11-9"><a href="#91cced11-9" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="91cced11-10"><a href="#91cced11-10" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
+<span id="91cced11-11"><a href="#91cced11-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="966a92f1" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="966a92f1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="966a92f1-1"><a href="#966a92f1-1" aria-hidden="true" tabindex="-1"></a>shp_communes.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1e84df85" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="1e84df85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1e84df85-1"><a href="#1e84df85-1" aria-hidden="true" tabindex="-1"></a>shp_communes.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
@@ -1379,8 +1373,8 @@ observation.</p>
 <p>Comme vu précédemment, le système de projection est un élément important. Il permet à <code>Python</code>
 d’interpréter les valeurs des points (deux dimensions) en position sur
 la terre, qui n’est pas un espace plan.</p>
-<div id="be8f54c7" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="be8f54c7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="be8f54c7-1"><a href="#be8f54c7-1" aria-hidden="true" tabindex="-1"></a>shp_communes.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b6118193" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="b6118193"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b6118193-1"><a href="#b6118193-1" aria-hidden="true" tabindex="-1"></a>shp_communes.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>&lt;Geographic 2D CRS: EPSG:4326&gt;
 Name: WGS 84
@@ -1404,9 +1398,9 @@ métropolitaine.</p>
 on peut représenter graphiquement
 les contours grâce à la méthode <code>plot</code> sur laquelle nous
 reviendrons :</p>
-<div id="a968551c" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="a968551c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a968551c-1"><a href="#a968551c-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> shp_communes.boundary.plot()</span>
-<span id="a968551c-2"><a href="#a968551c-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b24f037e" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="b24f037e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b24f037e-1"><a href="#b24f037e-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> shp_communes.boundary.plot()</span>
+<span id="b24f037e-2"><a href="#b24f037e-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1423,7 +1417,7 @@ il est nécessaire de mettre en oeuvre une construction du fond de
 carte en plusieurs phases. C’est une opération un petit peu pénible, source d’erreur potentielle. Elle est illustrée ci-dessous mais il est donc recommandé de privilégier le niveau
 <code>COMMUNE_ARRONDISSEMENT</code> qui a été construit pour cela.</p>
 <p>En premier lieu, il est nécessaire de récupérer le niveau des communes.</p>
-<div id="e4b32139" class="cell" data-execution_count="8">
+<div id="73385803" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> carti_download(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"75"</span>, <span class="st">"92"</span>, <span class="st">"93"</span>, <span class="st">"94"</span>],</span>
@@ -1434,7 +1428,7 @@ carte en plusieurs phases. C’est une opération un petit peu pénible, source 
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="05a2184a" class="cell" data-execution_count="9">
+<div id="3fe42cec" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>shp_communes.head(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
@@ -1573,7 +1567,7 @@ carte en plusieurs phases. C’est une opération un petit peu pénible, source 
 </div>
 </div>
 </div>
-<div id="e506dd53" class="cell" data-execution_count="10">
+<div id="be3bb4a7" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> shp_communes.boundary.plot()</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1587,7 +1581,7 @@ carte en plusieurs phases. C’est une opération un petit peu pénible, source 
 <p>On peut remarquer que la ville de Paris ne comporte pas d’arrondissements
 sur cette carte. Pour vous en convaincre, vous pouvez exécuter la
 commande :</p>
-<div id="b7f3b4d2" class="cell" data-execution_count="11">
+<div id="d78fcde7" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> shp_communes.loc[shp_communes[<span class="st">"INSEE_DEP"</span>] <span class="op">==</span> <span class="st">"75"</span>].boundary.plot()</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1604,7 +1598,7 @@ produit par l’IGN séparemment des contours de communes.
 Les contours d’arrondissements sont également
 disponibles
 grâce à <code>cartiflette</code>:</p>
-<div id="e5f159f7" class="cell" data-execution_count="12">
+<div id="b9c8dbba" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>arrondissements <span class="op">=</span> carti_download(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"75"</span>],</span>
@@ -1615,7 +1609,7 @@ grâce à <code>cartiflette</code>:</p>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="9db1753d" class="cell" data-execution_count="13">
+<div id="25d8b3c8" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> arrondissements.boundary.plot(alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">"k"</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1632,7 +1626,7 @@ Pour cela, on peut utiliser les méthodes
 vues dans le chapitre <code>Pandas</code> relatives
 aux filtres et à la concaténation
 de plusieurs <code>DataFrames</code>:</p>
-<div id="e7042088" class="cell" data-execution_count="14">
+<div id="38b517bf" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> pd.concat(</span>
@@ -1642,7 +1636,7 @@ de plusieurs <code>DataFrames</code>:</p>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6f16ea65" class="cell" data-execution_count="15">
+<div id="a50fd090" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> shp_communes.boundary.plot(alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">"k"</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1672,10 +1666,10 @@ stations velib,
 disponibles <a href="https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/table/">sur le site d’open data de la ville de Paris</a> et
 requêtables directement par l’url
 <a href="https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/download/?format=geojson&amp;timezone=Europe/Berlin&amp;lang=fr" class="uri">https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/download/?format=geojson&amp;timezone=Europe/Berlin&amp;lang=fr</a></p>
-<div id="3912f57f" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="3912f57f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3912f57f-1"><a href="#3912f57f-1" aria-hidden="true" tabindex="-1"></a>velib_data <span class="op">=</span> <span class="st">"https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/download/?format=geojson&amp;timezone=Europe/Berlin&amp;lang=fr"</span></span>
-<span id="3912f57f-2"><a href="#3912f57f-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> gpd.read_file(velib_data)</span>
-<span id="3912f57f-3"><a href="#3912f57f-3" aria-hidden="true" tabindex="-1"></a>stations.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8e4ffd6a" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="8e4ffd6a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8e4ffd6a-1"><a href="#8e4ffd6a-1" aria-hidden="true" tabindex="-1"></a>velib_data <span class="op">=</span> <span class="st">"https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/download/?format=geojson&amp;timezone=Europe/Berlin&amp;lang=fr"</span></span>
+<span id="8e4ffd6a-2"><a href="#8e4ffd6a-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> gpd.read_file(velib_data)</span>
+<span id="8e4ffd6a-3"><a href="#8e4ffd6a-3" aria-hidden="true" tabindex="-1"></a>stations.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>&lt;Geographic 2D CRS: EPSG:4326&gt;
 Name: WGS 84
@@ -1703,14 +1697,14 @@ de la petite couronne. Il s’agit donc d’enrichir la carte
 précédente d’une couche supplémentaire, à savoir la localisation
 des stations. Au passage, on va utiliser un fond de carte
 plus esthétique:</p>
-<div id="3bc2157b" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="3bc2157b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3bc2157b-1"><a href="#3bc2157b-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="3bc2157b-2"><a href="#3bc2157b-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="3bc2157b-3"><a href="#3bc2157b-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
-<span id="3bc2157b-4"><a href="#3bc2157b-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
-<span id="3bc2157b-5"><a href="#3bc2157b-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="3bc2157b-6"><a href="#3bc2157b-6" aria-hidden="true" tabindex="-1"></a>ctx.add_basemap(ax, source<span class="op">=</span>ctx.providers.OpenStreetMap.Mapnik)</span>
-<span id="3bc2157b-7"><a href="#3bc2157b-7" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="230fb9d4" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="230fb9d4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="230fb9d4-1"><a href="#230fb9d4-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="230fb9d4-2"><a href="#230fb9d4-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="230fb9d4-3"><a href="#230fb9d4-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
+<span id="230fb9d4-4"><a href="#230fb9d4-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
+<span id="230fb9d4-5"><a href="#230fb9d4-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="230fb9d4-6"><a href="#230fb9d4-6" aria-hidden="true" tabindex="-1"></a>ctx.add_basemap(ax, source<span class="op">=</span>ctx.providers.OpenStreetMap.Mapnik)</span>
+<span id="230fb9d4-7"><a href="#230fb9d4-7" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1722,26 +1716,26 @@ plus esthétique:</p>
 <p>Découvrez ci-dessous par étape les différentes lignes de commandes permettant d’afficher cette carte complète,
 étape par étape :</p>
 <p>1️⃣ Afficher le nuage de points de 200 stations vélibs prises au hasard</p>
-<div id="f7c1716c" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="f7c1716c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f7c1716c-1"><a href="#f7c1716c-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="f7c1716c-2"><a href="#f7c1716c-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f214a283" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="f214a283"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f214a283-1"><a href="#f214a283-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="f214a283-2"><a href="#f214a283-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="03_geopandas_tutorial_files/figure-html/cell-20-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="03_geopandas_tutorial_files/figure-html/cell-20-output-1.png" width="832" height="673" class="figure-img"></a></p>
+<p><a href="03_geopandas_tutorial_files/figure-html/cell-20-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="03_geopandas_tutorial_files/figure-html/cell-20-output-1.png" width="811" height="603" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>2️⃣ Ajouter à cette couche, en-dessous, les contours des communes</p>
-<div id="1c379f63" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="1c379f63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1c379f63-1"><a href="#1c379f63-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="1c379f63-2"><a href="#1c379f63-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="1c379f63-3"><a href="#1c379f63-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
-<span id="1c379f63-4"><a href="#1c379f63-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
-<span id="1c379f63-5"><a href="#1c379f63-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1bae7d12" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="1bae7d12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1bae7d12-1"><a href="#1bae7d12-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="1bae7d12-2"><a href="#1bae7d12-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="1bae7d12-3"><a href="#1bae7d12-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
+<span id="1bae7d12-4"><a href="#1bae7d12-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
+<span id="1bae7d12-5"><a href="#1bae7d12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="690ee669" class="cell" data-execution_count="21">
+<div id="72cb6680" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-display" data-execution_count="20">
 <div>
 <figure class="figure">
@@ -1752,15 +1746,15 @@ plus esthétique:</p>
 </div>
 <p>3️⃣ Ajouter un fond de carte de type <em>open street map</em> grâce au package
 <code>contextily</code></p>
-<div id="7f62dddb" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="7f62dddb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7f62dddb-1"><a href="#7f62dddb-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="7f62dddb-2"><a href="#7f62dddb-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="7f62dddb-3"><a href="#7f62dddb-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
-<span id="7f62dddb-4"><a href="#7f62dddb-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
-<span id="7f62dddb-5"><a href="#7f62dddb-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="7f62dddb-6"><a href="#7f62dddb-6" aria-hidden="true" tabindex="-1"></a>ctx.add_basemap(ax, source<span class="op">=</span>ctx.providers.OpenStreetMap.Mapnik)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="daa7a043" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="daa7a043"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="daa7a043-1"><a href="#daa7a043-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="daa7a043-2"><a href="#daa7a043-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="daa7a043-3"><a href="#daa7a043-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
+<span id="daa7a043-4"><a href="#daa7a043-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
+<span id="daa7a043-5"><a href="#daa7a043-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="daa7a043-6"><a href="#daa7a043-6" aria-hidden="true" tabindex="-1"></a>ctx.add_basemap(ax, source<span class="op">=</span>ctx.providers.OpenStreetMap.Mapnik)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d2f863f7" class="cell" data-execution_count="23">
+<div id="825b6e52" class="cell" data-execution_count="23">
 <div class="cell-output cell-output-display" data-execution_count="22">
 <div>
 <figure class="figure">
@@ -1772,17 +1766,17 @@ plus esthétique:</p>
 <p>4️⃣
 Il ne reste plus qu’à retirer l’axe des coordonnées, qui n’est pas très
 esthétique.</p>
-<div id="a16f41fb" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="a16f41fb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a16f41fb-1"><a href="#a16f41fb-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="a16f41fb-2"><a href="#a16f41fb-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="a16f41fb-3"><a href="#a16f41fb-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
-<span id="a16f41fb-4"><a href="#a16f41fb-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
-<span id="a16f41fb-5"><a href="#a16f41fb-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="a16f41fb-6"><a href="#a16f41fb-6" aria-hidden="true" tabindex="-1"></a>ctx.add_basemap(ax, source<span class="op">=</span>ctx.providers.OpenStreetMap.Mapnik)</span>
-<span id="a16f41fb-7"><a href="#a16f41fb-7" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
-<span id="a16f41fb-8"><a href="#a16f41fb-8" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="202de9b3" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="202de9b3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="202de9b3-1"><a href="#202de9b3-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="202de9b3-2"><a href="#202de9b3-2" aria-hidden="true" tabindex="-1"></a>stations.sample(<span class="dv">200</span>).to_crs(<span class="dv">3857</span>).plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="202de9b3-3"><a href="#202de9b3-3" aria-hidden="true" tabindex="-1"></a>shp_communes.to_crs(<span class="dv">3857</span>).plot(</span>
+<span id="202de9b3-4"><a href="#202de9b3-4" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
+<span id="202de9b3-5"><a href="#202de9b3-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="202de9b3-6"><a href="#202de9b3-6" aria-hidden="true" tabindex="-1"></a>ctx.add_basemap(ax, source<span class="op">=</span>ctx.providers.OpenStreetMap.Mapnik)</span>
+<span id="202de9b3-7"><a href="#202de9b3-7" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="202de9b3-8"><a href="#202de9b3-8" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2e403fdf" class="cell" data-execution_count="25">
+<div id="bcb627ec" class="cell" data-execution_count="25">
 <div class="cell-output cell-output-display" data-execution_count="24">
 <div>
 <figure class="figure">
@@ -1801,8 +1795,8 @@ on parlera d’opérations sur les attributs.</p>
 <p>Par exemple, si on désire
 connaître quelques statistiques sur la taille des stations, l’approche
 est identique à si on avait un objet <code>Pandas</code> classique :</p>
-<div id="0d373e48" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="0d373e48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0d373e48-1"><a href="#0d373e48-1" aria-hidden="true" tabindex="-1"></a>stations.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c591f120" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="c591f120"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c591f120-1"><a href="#c591f120-1" aria-hidden="true" tabindex="-1"></a>stations.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <div>
 <div>
@@ -1822,11 +1816,11 @@ est identique à si on avait un objet <code>Pandas</code> classique :</p>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">mean</td>
-<td>31.145095</td>
+<td>31.169619</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">std</td>
-<td>12.264637</td>
+<td>12.282984</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">min</td>
@@ -1867,15 +1861,15 @@ des contours communaux
 légère qui utilise pleinement les fonctionnalités de <code>cartiflette</code>).</p></li>
 <li><p>Calculons la surface totale de ce territoire (méthode <code>area</code> sur un objet <code>GeoPandas.GeoDataFrame</code> ramenée en km², attention néamoins au système de projection comme cela est expliqué plus bas)</p></li>
 </ol>
-<div id="548a6e0c" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="548a6e0c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="548a6e0c-1"><a href="#548a6e0c-1" aria-hidden="true" tabindex="-1"></a>shp_communes[<span class="st">"surface"</span>] <span class="op">=</span> shp_communes.area.div(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c4daf344" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="c4daf344"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c4daf344-1"><a href="#c4daf344-1" aria-hidden="true" tabindex="-1"></a>shp_communes[<span class="st">"surface"</span>] <span class="op">=</span> shp_communes.area.div(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les plus grands départements s’obtiennent par une agrégation des
 surfaces communales :</p>
-<div id="5672eabf" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="5672eabf"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5672eabf-1"><a href="#5672eabf-1" aria-hidden="true" tabindex="-1"></a>shp_communes.groupby(<span class="st">"INSEE_DEP"</span>).<span class="bu">sum</span>(numeric_only<span class="op">=</span><span class="va">True</span>).sort_values(</span>
-<span id="5672eabf-2"><a href="#5672eabf-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"surface"</span>, ascending<span class="op">=</span><span class="va">False</span></span>
-<span id="5672eabf-3"><a href="#5672eabf-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7d0bb606" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="7d0bb606"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7d0bb606-1"><a href="#7d0bb606-1" aria-hidden="true" tabindex="-1"></a>shp_communes.groupby(<span class="st">"INSEE_DEP"</span>).<span class="bu">sum</span>(numeric_only<span class="op">=</span><span class="va">True</span>).sort_values(</span>
+<span id="7d0bb606-2"><a href="#7d0bb606-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"surface"</span>, ascending<span class="op">=</span><span class="va">False</span></span>
+<span id="7d0bb606-3"><a href="#7d0bb606-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <div>
 <div>
@@ -1966,8 +1960,8 @@ surfaces communales :</p>
 </div>
 <p>Si on veut directement les plus
 grandes communes de la petite couronne parisienne :</p>
-<div id="2562252d" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="2562252d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2562252d-1"><a href="#2562252d-1" aria-hidden="true" tabindex="-1"></a>shp_communes.sort_values(<span class="st">"surface"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="375bf99e" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="375bf99e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="375bf99e-1"><a href="#375bf99e-1" aria-hidden="true" tabindex="-1"></a>shp_communes.sort_values(<span class="st">"surface"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
 <div>
 <div>
@@ -2255,11 +2249,11 @@ le combo <code>groupby(...).sum(...)</code> , on perd
 la dimension géographique.</p>
 <p>Il est néanmoins possible d’aggréger à la fois les géométries et les
 attribus avec la méthode <code>dissolve</code>:</p>
-<div id="ece90f6d" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="ece90f6d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ece90f6d-1"><a href="#ece90f6d-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="ece90f6d-2"><a href="#ece90f6d-2" aria-hidden="true" tabindex="-1"></a>shp_communes.dissolve(by<span class="op">=</span><span class="st">"INSEE_DEP"</span>, aggfunc<span class="op">=</span><span class="st">"sum"</span>).plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">"surface"</span>)</span>
-<span id="ece90f6d-3"><a href="#ece90f6d-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
-<span id="ece90f6d-4"><a href="#ece90f6d-4" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8c504766" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="8c504766"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8c504766-1"><a href="#8c504766-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="8c504766-2"><a href="#8c504766-2" aria-hidden="true" tabindex="-1"></a>shp_communes.dissolve(by<span class="op">=</span><span class="st">"INSEE_DEP"</span>, aggfunc<span class="op">=</span><span class="st">"sum"</span>).plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">"surface"</span>)</span>
+<span id="8c504766-3"><a href="#8c504766-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="8c504766-4"><a href="#8c504766-4" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2271,25 +2265,25 @@ attribus avec la méthode <code>dissolve</code>:</p>
 <p>Pour produire l’équivalent de cette carte à un niveau France entière, il est néanmoins plus simple de directement
 récupérer les fonds officiels des départements plutôt que d’agréger les
 contours des communes:</p>
-<div id="208e9faf" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="208e9faf"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="208e9faf-1"><a href="#208e9faf-1" aria-hidden="true" tabindex="-1"></a>dep <span class="op">=</span> carti_download(</span>
-<span id="208e9faf-2"><a href="#208e9faf-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"France"</span>],</span>
-<span id="208e9faf-3"><a href="#208e9faf-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
-<span id="208e9faf-4"><a href="#208e9faf-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
-<span id="208e9faf-5"><a href="#208e9faf-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
-<span id="208e9faf-6"><a href="#208e9faf-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"FRANCE_ENTIERE"</span>,</span>
-<span id="208e9faf-7"><a href="#208e9faf-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
-<span id="208e9faf-8"><a href="#208e9faf-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
-<span id="208e9faf-9"><a href="#208e9faf-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="208e9faf-10"><a href="#208e9faf-10" aria-hidden="true" tabindex="-1"></a>dep <span class="op">=</span> dep.loc[dep[<span class="st">"INSEE_DEP"</span>].<span class="bu">str</span>.<span class="bu">len</span>() <span class="op">==</span> <span class="dv">2</span>]</span>
-<span id="208e9faf-11"><a href="#208e9faf-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="208e9faf-12"><a href="#208e9faf-12" aria-hidden="true" tabindex="-1"></a>dep[<span class="st">"area"</span>] <span class="op">=</span> dep.to_crs(<span class="dv">2154</span>).area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eccbf812" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="eccbf812"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eccbf812-1"><a href="#eccbf812-1" aria-hidden="true" tabindex="-1"></a>dep <span class="op">=</span> carti_download(</span>
+<span id="eccbf812-2"><a href="#eccbf812-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"France"</span>],</span>
+<span id="eccbf812-3"><a href="#eccbf812-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
+<span id="eccbf812-4"><a href="#eccbf812-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
+<span id="eccbf812-5"><a href="#eccbf812-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
+<span id="eccbf812-6"><a href="#eccbf812-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"FRANCE_ENTIERE"</span>,</span>
+<span id="eccbf812-7"><a href="#eccbf812-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="eccbf812-8"><a href="#eccbf812-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
+<span id="eccbf812-9"><a href="#eccbf812-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="eccbf812-10"><a href="#eccbf812-10" aria-hidden="true" tabindex="-1"></a>dep <span class="op">=</span> dep.loc[dep[<span class="st">"INSEE_DEP"</span>].<span class="bu">str</span>.<span class="bu">len</span>() <span class="op">==</span> <span class="dv">2</span>]</span>
+<span id="eccbf812-11"><a href="#eccbf812-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="eccbf812-12"><a href="#eccbf812-12" aria-hidden="true" tabindex="-1"></a>dep[<span class="st">"area"</span>] <span class="op">=</span> dep.to_crs(<span class="dv">2154</span>).area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Avant de calculer les surfaces des départements, pour éviter les déformations liées au
 système <code>Mercator</code>, nous faisons une reprojection des données à la volée. Plus de détails
 par la suite.</p>
-<div id="49518f56" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="49518f56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="49518f56-1"><a href="#49518f56-1" aria-hidden="true" tabindex="-1"></a>dep.sort_values(<span class="st">"area"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="52189800" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="52189800"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="52189800-1"><a href="#52189800-1" aria-hidden="true" tabindex="-1"></a>dep.sort_values(<span class="st">"area"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="31">
 <div>
 <div>
@@ -2346,9 +2340,9 @@ par la suite.</p>
 </div>
 </div>
 </div>
-<div id="4d6bf6ee" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="4d6bf6ee"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4d6bf6ee-1"><a href="#4d6bf6ee-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> dep.plot(column<span class="op">=</span><span class="st">"area"</span>)</span>
-<span id="4d6bf6ee-2"><a href="#4d6bf6ee-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ef221711" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="ef221711"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ef221711-1"><a href="#ef221711-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> dep.plot(column<span class="op">=</span><span class="st">"area"</span>)</span>
+<span id="ef221711-2"><a href="#ef221711-2" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2382,16 +2376,16 @@ dans la projection officielle pour la métropole, le Lambert 93
 <p>Comme indiqué ci-dessus, nous reprojetons les données
 dans le système Lambert 93 qui ne fausse pas les
 calculs de distance et d’aires.</p>
-<div id="779b9b0b" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="779b9b0b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="779b9b0b-1"><a href="#779b9b0b-1" aria-hidden="true" tabindex="-1"></a>communes <span class="op">=</span> shp_communes.to_crs(<span class="dv">2154</span>)</span>
-<span id="779b9b0b-2"><a href="#779b9b0b-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> stations.to_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ff9516e3" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="ff9516e3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ff9516e3-1"><a href="#ff9516e3-1" aria-hidden="true" tabindex="-1"></a>communes <span class="op">=</span> shp_communes.to_crs(<span class="dv">2154</span>)</span>
+<span id="ff9516e3-2"><a href="#ff9516e3-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> stations.to_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Par exemple, on peut recalculer la taille d’une commune ou d’arrondissement
 avec la méthode <code>area</code> (et diviser par <span class="math inline">\(10^6\)</span> pour avoir des <span class="math inline">\(km^2\)</span> au lieu
 des <span class="math inline">\(m^2\)</span>):</p>
-<div id="ceae3603" class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="ceae3603"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ceae3603-1"><a href="#ceae3603-1" aria-hidden="true" tabindex="-1"></a>communes[<span class="st">"superficie"</span>] <span class="op">=</span> communes.area.div(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span>)</span>
-<span id="ceae3603-2"><a href="#ceae3603-2" aria-hidden="true" tabindex="-1"></a>communes.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4310c0ea" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="4310c0ea"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4310c0ea-1"><a href="#4310c0ea-1" aria-hidden="true" tabindex="-1"></a>communes[<span class="st">"superficie"</span>] <span class="op">=</span> communes.area.div(<span class="dv">10</span><span class="op">**</span><span class="dv">6</span>)</span>
+<span id="4310c0ea-2"><a href="#4310c0ea-2" aria-hidden="true" tabindex="-1"></a>communes.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="34">
 <div>
 <div>
@@ -2511,31 +2505,31 @@ surfaciques en données ponctuelles. Par exemple, pour
 représenter approximativement les centres des villages de la
 Haute-Garonne (31), après avoir téléchargé le fonds de carte adapté,
 fera</p>
-<div id="ab0e962f" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="ab0e962f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ab0e962f-1"><a href="#ab0e962f-1" aria-hidden="true" tabindex="-1"></a>communes_31 <span class="op">=</span> carti_download(</span>
-<span id="ab0e962f-2"><a href="#ab0e962f-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"31"</span>],</span>
-<span id="ab0e962f-3"><a href="#ab0e962f-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
-<span id="ab0e962f-4"><a href="#ab0e962f-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"COMMUNE"</span>,</span>
-<span id="ab0e962f-5"><a href="#ab0e962f-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
-<span id="ab0e962f-6"><a href="#ab0e962f-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
-<span id="ab0e962f-7"><a href="#ab0e962f-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
-<span id="ab0e962f-8"><a href="#ab0e962f-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
-<span id="ab0e962f-9"><a href="#ab0e962f-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="ab0e962f-10"><a href="#ab0e962f-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="ab0e962f-11"><a href="#ab0e962f-11" aria-hidden="true" tabindex="-1"></a><span class="co"># on reprojete en 3857 pour le fond de carte</span></span>
-<span id="ab0e962f-12"><a href="#ab0e962f-12" aria-hidden="true" tabindex="-1"></a>communes_31 <span class="op">=</span> communes_31.to_crs(<span class="dv">3857</span>)</span>
-<span id="ab0e962f-13"><a href="#ab0e962f-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="ab0e962f-14"><a href="#ab0e962f-14" aria-hidden="true" tabindex="-1"></a><span class="co"># on calcule le centroide</span></span>
-<span id="ab0e962f-15"><a href="#ab0e962f-15" aria-hidden="true" tabindex="-1"></a>dep_31 <span class="op">=</span> communes_31.copy()</span>
-<span id="ab0e962f-16"><a href="#ab0e962f-16" aria-hidden="true" tabindex="-1"></a>communes_31[<span class="st">"geometry"</span>] <span class="op">=</span> communes_31[<span class="st">"geometry"</span>].centroid</span>
-<span id="ab0e962f-17"><a href="#ab0e962f-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="ab0e962f-18"><a href="#ab0e962f-18" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> communes_31.plot(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>), color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="ab0e962f-19"><a href="#ab0e962f-19" aria-hidden="true" tabindex="-1"></a>dep_31.to_crs(<span class="dv">3857</span>).plot(</span>
-<span id="ab0e962f-20"><a href="#ab0e962f-20" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
-<span id="ab0e962f-21"><a href="#ab0e962f-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="ab0e962f-22"><a href="#ab0e962f-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ctx.add_basemap(ax, source = ctx.providers.Stamen.Toner)</span></span>
-<span id="ab0e962f-23"><a href="#ab0e962f-23" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
-<span id="ab0e962f-24"><a href="#ab0e962f-24" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fbb1ac16" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="fbb1ac16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fbb1ac16-1"><a href="#fbb1ac16-1" aria-hidden="true" tabindex="-1"></a>communes_31 <span class="op">=</span> carti_download(</span>
+<span id="fbb1ac16-2"><a href="#fbb1ac16-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"31"</span>],</span>
+<span id="fbb1ac16-3"><a href="#fbb1ac16-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
+<span id="fbb1ac16-4"><a href="#fbb1ac16-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"COMMUNE"</span>,</span>
+<span id="fbb1ac16-5"><a href="#fbb1ac16-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
+<span id="fbb1ac16-6"><a href="#fbb1ac16-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
+<span id="fbb1ac16-7"><a href="#fbb1ac16-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="fbb1ac16-8"><a href="#fbb1ac16-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
+<span id="fbb1ac16-9"><a href="#fbb1ac16-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="fbb1ac16-10"><a href="#fbb1ac16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="fbb1ac16-11"><a href="#fbb1ac16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># on reprojete en 3857 pour le fond de carte</span></span>
+<span id="fbb1ac16-12"><a href="#fbb1ac16-12" aria-hidden="true" tabindex="-1"></a>communes_31 <span class="op">=</span> communes_31.to_crs(<span class="dv">3857</span>)</span>
+<span id="fbb1ac16-13"><a href="#fbb1ac16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="fbb1ac16-14"><a href="#fbb1ac16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># on calcule le centroide</span></span>
+<span id="fbb1ac16-15"><a href="#fbb1ac16-15" aria-hidden="true" tabindex="-1"></a>dep_31 <span class="op">=</span> communes_31.copy()</span>
+<span id="fbb1ac16-16"><a href="#fbb1ac16-16" aria-hidden="true" tabindex="-1"></a>communes_31[<span class="st">"geometry"</span>] <span class="op">=</span> communes_31[<span class="st">"geometry"</span>].centroid</span>
+<span id="fbb1ac16-17"><a href="#fbb1ac16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="fbb1ac16-18"><a href="#fbb1ac16-18" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> communes_31.plot(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>), color<span class="op">=</span><span class="st">"red"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="fbb1ac16-19"><a href="#fbb1ac16-19" aria-hidden="true" tabindex="-1"></a>dep_31.to_crs(<span class="dv">3857</span>).plot(</span>
+<span id="fbb1ac16-20"><a href="#fbb1ac16-20" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, zorder<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, color<span class="op">=</span><span class="va">None</span></span>
+<span id="fbb1ac16-21"><a href="#fbb1ac16-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="fbb1ac16-22"><a href="#fbb1ac16-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ctx.add_basemap(ax, source = ctx.providers.Stamen.Toner)</span></span>
+<span id="fbb1ac16-23"><a href="#fbb1ac16-23" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="fbb1ac16-24"><a href="#fbb1ac16-24" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2551,9 +2545,9 @@ fera</p>
 <p>Précédemment, nous avons appliqué une méthode <code>to_crs</code> pour reprojeter
 les données dans un système de projection différent de celui du fichier
 d’origine :</p>
-<div id="ef1eca10" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="ef1eca10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ef1eca10-1"><a href="#ef1eca10-1" aria-hidden="true" tabindex="-1"></a>communes <span class="op">=</span> communes.to_crs(<span class="dv">2154</span>)</span>
-<span id="ef1eca10-2"><a href="#ef1eca10-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> stations.to_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="333aa83a" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="333aa83a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="333aa83a-1"><a href="#333aa83a-1" aria-hidden="true" tabindex="-1"></a>communes <span class="op">=</span> communes.to_crs(<span class="dv">2154</span>)</span>
+<span id="333aa83a-2"><a href="#333aa83a-2" aria-hidden="true" tabindex="-1"></a>stations <span class="op">=</span> stations.to_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Concernant la gestion des projections avec <code>GeoPandas</code>,
 la <a href="https://geopandas.org/projections.html">documentation officielle</a> est très bien
@@ -2570,8 +2564,8 @@ bon d’avoir en tête :</p>
 </figure>
 </div>
 <p>Pour déterminer le système de projection d’une base de données, on peut vérifier l’attribut <code>crs</code> :</p>
-<div id="e55813c0" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="e55813c0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e55813c0-1"><a href="#e55813c0-1" aria-hidden="true" tabindex="-1"></a>communes.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5a142c5c" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="5a142c5c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5a142c5c-1"><a href="#5a142c5c-1" aria-hidden="true" tabindex="-1"></a>communes.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="37">
 <pre><code>&lt;Projected CRS: EPSG:2154&gt;
 Name: RGF93 v1 / Lambert-93
@@ -2598,20 +2592,20 @@ Datum: Reseau Geodesique Francais 1993 v1
 <p>La définition du système de projection se fait de la manière suivante (:warning: avant de le faire, se souvenir de l’avertissement !) :</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>communes <span class="op">=</span> communes.set_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Alors que la reprojection (projection Albers : <code>5070</code>) s’obtient de la manière suivante :</p>
-<div id="e66ad9a0" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="e66ad9a0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e66ad9a0-1"><a href="#e66ad9a0-1" aria-hidden="true" tabindex="-1"></a>shp_region <span class="op">=</span> carti_download(</span>
-<span id="e66ad9a0-2"><a href="#e66ad9a0-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"France"</span>],</span>
-<span id="e66ad9a0-3"><a href="#e66ad9a0-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
-<span id="e66ad9a0-4"><a href="#e66ad9a0-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"REGION"</span>,</span>
-<span id="e66ad9a0-5"><a href="#e66ad9a0-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
-<span id="e66ad9a0-6"><a href="#e66ad9a0-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"FRANCE_ENTIERE"</span>,</span>
-<span id="e66ad9a0-7"><a href="#e66ad9a0-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
-<span id="e66ad9a0-8"><a href="#e66ad9a0-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
-<span id="e66ad9a0-9"><a href="#e66ad9a0-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="e66ad9a0-10"><a href="#e66ad9a0-10" aria-hidden="true" tabindex="-1"></a>shp_region <span class="op">=</span> shp_region.loc[shp_region[<span class="st">"INSEE_REG"</span>] <span class="op">&gt;</span> <span class="dv">10</span>]</span>
-<span id="e66ad9a0-11"><a href="#e66ad9a0-11" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="e66ad9a0-12"><a href="#e66ad9a0-12" aria-hidden="true" tabindex="-1"></a>shp_region.to_crs(<span class="dv">5070</span>).plot(ax<span class="op">=</span>ax)</span>
-<span id="e66ad9a0-13"><a href="#e66ad9a0-13" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9aa50934" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="9aa50934"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9aa50934-1"><a href="#9aa50934-1" aria-hidden="true" tabindex="-1"></a>shp_region <span class="op">=</span> carti_download(</span>
+<span id="9aa50934-2"><a href="#9aa50934-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"France"</span>],</span>
+<span id="9aa50934-3"><a href="#9aa50934-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
+<span id="9aa50934-4"><a href="#9aa50934-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"REGION"</span>,</span>
+<span id="9aa50934-5"><a href="#9aa50934-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
+<span id="9aa50934-6"><a href="#9aa50934-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"FRANCE_ENTIERE"</span>,</span>
+<span id="9aa50934-7"><a href="#9aa50934-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="9aa50934-8"><a href="#9aa50934-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
+<span id="9aa50934-9"><a href="#9aa50934-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="9aa50934-10"><a href="#9aa50934-10" aria-hidden="true" tabindex="-1"></a>shp_region <span class="op">=</span> shp_region.loc[shp_region[<span class="st">"INSEE_REG"</span>] <span class="op">&gt;</span> <span class="dv">10</span>]</span>
+<span id="9aa50934-11"><a href="#9aa50934-11" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="9aa50934-12"><a href="#9aa50934-12" aria-hidden="true" tabindex="-1"></a>shp_region.to_crs(<span class="dv">5070</span>).plot(ax<span class="op">=</span>ax)</span>
+<span id="9aa50934-13"><a href="#9aa50934-13" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2620,7 +2614,7 @@ Datum: Reseau Geodesique Francais 1993 v1
 </div>
 </div>
 </div>
-<div id="3d97c2c7" class="cell" data-execution_count="40">
+<div id="9e65d818" class="cell" data-execution_count="40">
 <div class="cell-output cell-output-display">
 <pre><code>&lt;Figure size 672x480 with 0 Axes&gt;</code></pre>
 </div>
@@ -2629,14 +2623,14 @@ Datum: Reseau Geodesique Francais 1993 v1
 Clairement, cette projection n’est pas adaptée aux longitudes et latitudes françaises.
 C’est normal, il s’agit d’une projection adaptée au continent
 nord-américain (et encore, pas dans son ensemble !).</p>
-<div id="14769907" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="14769907"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="14769907-1"><a href="#14769907-1" aria-hidden="true" tabindex="-1"></a>world <span class="op">=</span> gpd.read_file(gpd.datasets.get_path(<span class="st">"naturalearth_lowres"</span>))</span>
-<span id="14769907-2"><a href="#14769907-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="14769907-3"><a href="#14769907-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="14769907-4"><a href="#14769907-4" aria-hidden="true" tabindex="-1"></a>world[world.continent <span class="op">==</span> <span class="st">"North America"</span>].to_crs(<span class="dv">5070</span>).plot(</span>
-<span id="14769907-5"><a href="#14769907-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.2</span>, edgecolor<span class="op">=</span><span class="st">"k"</span>, ax<span class="op">=</span>ax</span>
-<span id="14769907-6"><a href="#14769907-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="14769907-7"><a href="#14769907-7" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="00bb6f27" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="00bb6f27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="00bb6f27-1"><a href="#00bb6f27-1" aria-hidden="true" tabindex="-1"></a>world <span class="op">=</span> gpd.read_file(gpd.datasets.get_path(<span class="st">"naturalearth_lowres"</span>))</span>
+<span id="00bb6f27-2"><a href="#00bb6f27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="00bb6f27-3"><a href="#00bb6f27-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="00bb6f27-4"><a href="#00bb6f27-4" aria-hidden="true" tabindex="-1"></a>world[world.continent <span class="op">==</span> <span class="st">"North America"</span>].to_crs(<span class="dv">5070</span>).plot(</span>
+<span id="00bb6f27-5"><a href="#00bb6f27-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.2</span>, edgecolor<span class="op">=</span><span class="st">"k"</span>, ax<span class="op">=</span>ax</span>
+<span id="00bb6f27-6"><a href="#00bb6f27-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="00bb6f27-7"><a href="#00bb6f27-7" aria-hidden="true" tabindex="-1"></a>ax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -2645,7 +2639,7 @@ nord-américain (et encore, pas dans son ensemble !).</p>
 </div>
 </div>
 </div>
-<div id="f401dd72" class="cell" data-execution_count="42">
+<div id="39bea5b1" class="cell" data-execution_count="42">
 <div class="cell-output cell-output-display">
 <pre><code>&lt;Figure size 672x480 with 0 Axes&gt;</code></pre>
 </div>
@@ -2689,9 +2683,9 @@ jointures géographiques.</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-23</p>
+<p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="d1930e75" class="cell" data-execution_count="44">
+<div id="4596598f" class="cell" data-execution_count="44">
 <div class="cell-output cell-output-display" data-execution_count="43">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -3180,43 +3174,51 @@ jointures géographiques.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">langcodes</td>
-<td style="text-align: left;">3.3.0</td>
+<td style="text-align: left;">3.4.0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">language_data</td>
+<td style="text-align: left;">1.2.0</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">lazy_loader</td>
 <td style="text-align: left;">0.4</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">libmambapy</td>
 <td style="text-align: left;">1.5.7</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">llvmlite</td>
 <td style="text-align: left;">0.42.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">locket</td>
 <td style="text-align: left;">1.0.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">lxml</td>
 <td style="text-align: left;">5.2.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">lz4</td>
 <td style="text-align: left;">4.3.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Mako</td>
 <td style="text-align: left;">1.3.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mamba</td>
 <td style="text-align: left;">1.5.7</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">mapclassify</td>
 <td style="text-align: left;">2.6.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">marisa-trie</td>
+<td style="text-align: left;">1.1.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Markdown</td>
@@ -4820,6 +4822,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -5243,7 +5389,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"closeEffect":"zoom","openEffect":"zoom","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

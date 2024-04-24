@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-23">
+<meta name="dcterms.date" content="2024-04-24">
 <meta name="description" content="Les corpus textuels étant des objets de très grande dimension où le ratio signal/bruit est faible, il est nécessaire de mettre en oeuvre une série d’étapes de nettoyage de texte. Ce chapitre va explorer quelques méthodes classiques de nettoyage en s’appuyant sur le Comte de Monte Cristo d’Alexandre Dumas.">
 
 <title>Python pour la data science - Quelques éléments pour comprendre les enjeux du NLP</title>
@@ -94,10 +94,12 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
@@ -186,7 +188,7 @@ sur le Comte de Monte Cristo d’Alexandre Dumas.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-23">
+<meta name="citation_online_date" content="2024-04-24">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -490,17 +492,9 @@ sur le Comte de Monte Cristo d’Alexandre Dumas.">
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
-    <div class="dropdown">
-      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/linogaliana/python-datascientist">
-            Code source
-            </a>
-          </li>
-      </ul>
-    </div>
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/linogaliana/python-datascientist" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -554,7 +548,7 @@ sur le Comte de Monte Cristo d’Alexandre Dumas.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-23</p>
+        <p class="date">2024-04-24</p>
       </div>
     </div>
     
@@ -845,33 +839,33 @@ d’autres livres du domaine public.</p>
 <p>La manière la plus simple de le récupérer
 est de télécharger avec le <em>package</em> <code>Request</code> le fichier texte et le retravailler
 légèrement pour ne conserver que le corpus du livre :</p>
-<div id="4cec5c38" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="4cec5c38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4cec5c38-1"><a href="#4cec5c38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib <span class="im">import</span> request</span>
-<span id="4cec5c38-2"><a href="#4cec5c38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-3"><a href="#4cec5c38-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/files/17989/17989-0.txt"</span></span>
-<span id="4cec5c38-4"><a href="#4cec5c38-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> request.urlopen(url)</span>
-<span id="4cec5c38-5"><a href="#4cec5c38-5" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read().decode(<span class="st">"utf8"</span>)</span>
-<span id="4cec5c38-6"><a href="#4cec5c38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-7"><a href="#4cec5c38-7" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> raw.split(</span>
-<span id="4cec5c38-8"><a href="#4cec5c38-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** START OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
-<span id="4cec5c38-9"><a href="#4cec5c38-9" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span>].split(</span>
-<span id="4cec5c38-10"><a href="#4cec5c38-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** END OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
-<span id="4cec5c38-11"><a href="#4cec5c38-11" aria-hidden="true" tabindex="-1"></a>)[</span>
-<span id="4cec5c38-12"><a href="#4cec5c38-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="4cec5c38-13"><a href="#4cec5c38-13" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="4cec5c38-14"><a href="#4cec5c38-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-15"><a href="#4cec5c38-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="4cec5c38-16"><a href="#4cec5c38-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-17"><a href="#4cec5c38-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-18"><a href="#4cec5c38-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
-<span id="4cec5c38-19"><a href="#4cec5c38-19" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()  <span class="co"># mettre les mots en minuscule</span></span>
-<span id="4cec5c38-20"><a href="#4cec5c38-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="st">" "</span>.join(text.split())</span>
-<span id="4cec5c38-21"><a href="#4cec5c38-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span>
-<span id="4cec5c38-22"><a href="#4cec5c38-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-23"><a href="#4cec5c38-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-24"><a href="#4cec5c38-24" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> clean_text(dumas)</span>
-<span id="4cec5c38-25"><a href="#4cec5c38-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4cec5c38-26"><a href="#4cec5c38-26" aria-hidden="true" tabindex="-1"></a>dumas[<span class="dv">10000</span>:<span class="dv">10500</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4b0030c3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="4b0030c3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4b0030c3-1"><a href="#4b0030c3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib <span class="im">import</span> request</span>
+<span id="4b0030c3-2"><a href="#4b0030c3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-3"><a href="#4b0030c3-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/files/17989/17989-0.txt"</span></span>
+<span id="4b0030c3-4"><a href="#4b0030c3-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> request.urlopen(url)</span>
+<span id="4b0030c3-5"><a href="#4b0030c3-5" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read().decode(<span class="st">"utf8"</span>)</span>
+<span id="4b0030c3-6"><a href="#4b0030c3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-7"><a href="#4b0030c3-7" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> raw.split(</span>
+<span id="4b0030c3-8"><a href="#4b0030c3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** START OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
+<span id="4b0030c3-9"><a href="#4b0030c3-9" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span>].split(</span>
+<span id="4b0030c3-10"><a href="#4b0030c3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** END OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
+<span id="4b0030c3-11"><a href="#4b0030c3-11" aria-hidden="true" tabindex="-1"></a>)[</span>
+<span id="4b0030c3-12"><a href="#4b0030c3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="4b0030c3-13"><a href="#4b0030c3-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="4b0030c3-14"><a href="#4b0030c3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-15"><a href="#4b0030c3-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="4b0030c3-16"><a href="#4b0030c3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-17"><a href="#4b0030c3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-18"><a href="#4b0030c3-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="4b0030c3-19"><a href="#4b0030c3-19" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()  <span class="co"># mettre les mots en minuscule</span></span>
+<span id="4b0030c3-20"><a href="#4b0030c3-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="st">" "</span>.join(text.split())</span>
+<span id="4b0030c3-21"><a href="#4b0030c3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span>
+<span id="4b0030c3-22"><a href="#4b0030c3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-23"><a href="#4b0030c3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-24"><a href="#4b0030c3-24" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> clean_text(dumas)</span>
+<span id="4b0030c3-25"><a href="#4b0030c3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4b0030c3-26"><a href="#4b0030c3-26" aria-hidden="true" tabindex="-1"></a>dumas[<span class="dv">10000</span>:<span class="dv">10500</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>" mes yeux. --vous avez donc vu l'empereur aussi? --il est entré chez le maréchal pendant que j'y étais. --et vous lui avez parlé? --c'est-à-dire que c'est lui qui m'a parlé, monsieur, dit dantès en souriant. --et que vous a-t-il dit? --il m'a fait des questions sur le bâtiment, sur l'époque de son départ pour marseille, sur la route qu'il avait suivie et sur la cargaison qu'il portait. je crois que s'il eût été vide, et que j'en eusse été le maître, son intention eût été de l'acheter; mais je lu"</code></pre>
 </div>
@@ -920,31 +914,31 @@ Les <em>wordclouds</em> sont très simples à implémenter en <code>Python</code
 avec le module <code>Wordcloud</code>. Quelques paramètres de mise en forme
 permettent même d’ajuster la forme du nuage à
 une image :</p>
-<div id="abfb8224" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="abfb8224"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="abfb8224-1"><a href="#abfb8224-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud</span>
-<span id="abfb8224-2"><a href="#abfb8224-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="abfb8224-3"><a href="#abfb8224-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
-<span id="abfb8224-4"><a href="#abfb8224-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="abfb8224-5"><a href="#abfb8224-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> PIL</span>
-<span id="abfb8224-6"><a href="#abfb8224-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="abfb8224-7"><a href="#abfb8224-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="abfb8224-8"><a href="#abfb8224-8" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/book.png"</span></span>
-<span id="abfb8224-9"><a href="#abfb8224-9" aria-hidden="true" tabindex="-1"></a>book_mask <span class="op">=</span> np.array(PIL.Image.<span class="bu">open</span>(io.BytesIO(requests.get(img).content)))</span>
-<span id="abfb8224-10"><a href="#abfb8224-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="abfb8224-11"><a href="#abfb8224-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="abfb8224-12"><a href="#abfb8224-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_wordcloud(corpus):</span>
-<span id="abfb8224-13"><a href="#abfb8224-13" aria-hidden="true" tabindex="-1"></a>    wc <span class="op">=</span> wordcloud.WordCloud(</span>
-<span id="abfb8224-14"><a href="#abfb8224-14" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="abfb8224-15"><a href="#abfb8224-15" aria-hidden="true" tabindex="-1"></a>        max_words<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="abfb8224-16"><a href="#abfb8224-16" aria-hidden="true" tabindex="-1"></a>        mask<span class="op">=</span>book_mask,</span>
-<span id="abfb8224-17"><a href="#abfb8224-17" aria-hidden="true" tabindex="-1"></a>        contour_width<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="abfb8224-18"><a href="#abfb8224-18" aria-hidden="true" tabindex="-1"></a>        contour_color<span class="op">=</span><span class="st">"steelblue"</span>,</span>
-<span id="abfb8224-19"><a href="#abfb8224-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="abfb8224-20"><a href="#abfb8224-20" aria-hidden="true" tabindex="-1"></a>    wc.generate(corpus)</span>
-<span id="abfb8224-21"><a href="#abfb8224-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wc</span>
-<span id="abfb8224-22"><a href="#abfb8224-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="abfb8224-23"><a href="#abfb8224-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="abfb8224-24"><a href="#abfb8224-24" aria-hidden="true" tabindex="-1"></a>wordcloud_dumas <span class="op">=</span> make_wordcloud(dumas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e200b3a5" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="e200b3a5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e200b3a5-1"><a href="#e200b3a5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud</span>
+<span id="e200b3a5-2"><a href="#e200b3a5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="e200b3a5-3"><a href="#e200b3a5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="e200b3a5-4"><a href="#e200b3a5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="e200b3a5-5"><a href="#e200b3a5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> PIL</span>
+<span id="e200b3a5-6"><a href="#e200b3a5-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="e200b3a5-7"><a href="#e200b3a5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e200b3a5-8"><a href="#e200b3a5-8" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/book.png"</span></span>
+<span id="e200b3a5-9"><a href="#e200b3a5-9" aria-hidden="true" tabindex="-1"></a>book_mask <span class="op">=</span> np.array(PIL.Image.<span class="bu">open</span>(io.BytesIO(requests.get(img).content)))</span>
+<span id="e200b3a5-10"><a href="#e200b3a5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e200b3a5-11"><a href="#e200b3a5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e200b3a5-12"><a href="#e200b3a5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_wordcloud(corpus):</span>
+<span id="e200b3a5-13"><a href="#e200b3a5-13" aria-hidden="true" tabindex="-1"></a>    wc <span class="op">=</span> wordcloud.WordCloud(</span>
+<span id="e200b3a5-14"><a href="#e200b3a5-14" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="e200b3a5-15"><a href="#e200b3a5-15" aria-hidden="true" tabindex="-1"></a>        max_words<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="e200b3a5-16"><a href="#e200b3a5-16" aria-hidden="true" tabindex="-1"></a>        mask<span class="op">=</span>book_mask,</span>
+<span id="e200b3a5-17"><a href="#e200b3a5-17" aria-hidden="true" tabindex="-1"></a>        contour_width<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="e200b3a5-18"><a href="#e200b3a5-18" aria-hidden="true" tabindex="-1"></a>        contour_color<span class="op">=</span><span class="st">"steelblue"</span>,</span>
+<span id="e200b3a5-19"><a href="#e200b3a5-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="e200b3a5-20"><a href="#e200b3a5-20" aria-hidden="true" tabindex="-1"></a>    wc.generate(corpus)</span>
+<span id="e200b3a5-21"><a href="#e200b3a5-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wc</span>
+<span id="e200b3a5-22"><a href="#e200b3a5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e200b3a5-23"><a href="#e200b3a5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e200b3a5-24"><a href="#e200b3a5-24" aria-hidden="true" tabindex="-1"></a>wordcloud_dumas <span class="op">=</span> make_wordcloud(dumas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-fig-wordcloud-dumas" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cell-fig-wordcloud-dumas"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cell-fig-wordcloud-dumas-1"><a href="#cell-fig-wordcloud-dumas-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(wordcloud_dumas, interpolation<span class="op">=</span><span class="st">"bilinear"</span>)</span>
@@ -953,7 +947,7 @@ une image :</p>
 <div id="fig-wordcloud-dumas" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-wordcloud-dumas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="01_intro_files/figure-html/fig-wordcloud-dumas-output-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="01_intro_files/figure-html/fig-wordcloud-dumas-output-1.png" width="540" height="305" class="figure-img"></a>
+<a href="01_intro_files/figure-html/fig-wordcloud-dumas-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1"><img src="01_intro_files/figure-html/fig-wordcloud-dumas-output-1.png" width="540" height="305" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wordcloud-dumas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3.1: Nuage de mot produit à partir du Comte de Monte Cristo
@@ -990,7 +984,7 @@ mesure de les comparer.</p>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_start.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2" title="OpenFoodFacts avant nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_start.png" class="img-fluid figure-img" alt="OpenFoodFacts avant nettoyage"></a></p>
+<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_start.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" data-glightbox="description: .lightbox-desc-2" title="OpenFoodFacts avant nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_start.png" class="img-fluid figure-img" alt="OpenFoodFacts avant nettoyage"></a></p>
 <figcaption><code>OpenFoodFacts</code> avant nettoyage</figcaption>
 </figure>
 </div>
@@ -998,7 +992,7 @@ mesure de les comparer.</p>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_start.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3" title="Scanner-data avant nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_start.png" class="img-fluid figure-img" alt="Scanner-data avant nettoyage"></a></p>
+<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_start.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3" title="Scanner-data avant nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_start.png" class="img-fluid figure-img" alt="Scanner-data avant nettoyage"></a></p>
 <figcaption><em>Scanner-data</em> avant nettoyage</figcaption>
 </figure>
 </div>
@@ -1013,7 +1007,7 @@ mesure de les comparer.</p>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_clean.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="quarto-lightbox-gallery-4" title="OpenFoodFacts après nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_clean.png" class="img-fluid figure-img" alt="OpenFoodFacts après nettoyage"></a></p>
+<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_clean.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" data-glightbox="description: .lightbox-desc-4" title="OpenFoodFacts après nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_openfood_clean.png" class="img-fluid figure-img" alt="OpenFoodFacts après nettoyage"></a></p>
 <figcaption><code>OpenFoodFacts</code> après nettoyage</figcaption>
 </figure>
 </div>
@@ -1021,7 +1015,7 @@ mesure de les comparer.</p>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_clean.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="quarto-lightbox-gallery-5" title="Scanner-data après nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_clean.png" class="img-fluid figure-img" alt="Scanner-data après nettoyage"></a></p>
+<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_clean.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" data-glightbox="description: .lightbox-desc-5" title="Scanner-data après nettoyage"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/wordcloud_relevanc_clean.png" class="img-fluid figure-img" alt="Scanner-data après nettoyage"></a></p>
 <figcaption><em>Scanner-data</em> après nettoyage</figcaption>
 </figure>
 </div>
@@ -1041,10 +1035,10 @@ Pour cela, il est recommandé d’utiliser la commande suivante :</p>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="ea283346" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="ea283346"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ea283346-1"><a href="#ea283346-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="ea283346-2"><a href="#ea283346-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="ea283346-3"><a href="#ea283346-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c9a5e0de" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="c9a5e0de"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c9a5e0de-1"><a href="#c9a5e0de-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="c9a5e0de-2"><a href="#c9a5e0de-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c9a5e0de-3"><a href="#c9a5e0de-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package punkt to /github/home/nltk_data...
 [nltk_data]   Unzipping tokenizers/punkt.zip.</code></pre>
@@ -1057,11 +1051,11 @@ Pour cela, il est recommandé d’utiliser la commande suivante :</p>
 pourraient être des phrases, des chapitres, des n-grammes ou des mots. C’est
 cette dernière option que l’on va choisir, plus simple pour retirer les
 <em>stop words</em> :</p>
-<div id="dcc05ea1" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="dcc05ea1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dcc05ea1-1"><a href="#dcc05ea1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="dcc05ea1-2"><a href="#dcc05ea1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="dcc05ea1-3"><a href="#dcc05ea1-3" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> nltk.word_tokenize(dumas, language<span class="op">=</span><span class="st">"french"</span>)</span>
-<span id="dcc05ea1-4"><a href="#dcc05ea1-4" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2512a2c2" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="2512a2c2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2512a2c2-1"><a href="#2512a2c2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="2512a2c2-2"><a href="#2512a2c2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="2512a2c2-3"><a href="#2512a2c2-3" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> nltk.word_tokenize(dumas, language<span class="op">=</span><span class="st">"french"</span>)</span>
+<span id="2512a2c2-4"><a href="#2512a2c2-4" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>['que',
  'voulez-vous',
@@ -1089,9 +1083,9 @@ cette dernière option que l’on va choisir, plus simple pour retirer les
 peut-être faux sur le plan de la grammaire mais peu avoir un sens pour une
 analyse statistique. Il reste des signes de ponctuation qu’on peut éliminer
 avec la méthode <code>isalpha</code>:</p>
-<div id="67e88c34" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="67e88c34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="67e88c34-1"><a href="#67e88c34-1" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()]</span>
-<span id="67e88c34-2"><a href="#67e88c34-2" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="429ac75f" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="429ac75f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="429ac75f-1"><a href="#429ac75f-1" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()]</span>
+<span id="429ac75f-2"><a href="#429ac75f-2" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>['assez',
  'sombre',
@@ -1136,10 +1130,10 @@ les <em>stop words</em>.</p>
 le corpus de <em>stop words</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, il est
 nécessaire d’exécuter la ligne de
 commande suivante :</p>
-<div id="faf25eeb" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="faf25eeb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="faf25eeb-1"><a href="#faf25eeb-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="faf25eeb-2"><a href="#faf25eeb-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="faf25eeb-3"><a href="#faf25eeb-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fa87b213" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="fa87b213"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fa87b213-1"><a href="#fa87b213-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="fa87b213-2"><a href="#fa87b213-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="fa87b213-3"><a href="#fa87b213-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to /github/home/nltk_data...
 [nltk_data]   Unzipping corpora/stopwords.zip.</code></pre>
@@ -1148,16 +1142,16 @@ commande suivante :</p>
 <pre><code>True</code></pre>
 </div>
 </div>
-<div id="75eca960" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="75eca960"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="75eca960-1"><a href="#75eca960-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="75eca960-2"><a href="#75eca960-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="75eca960-3"><a href="#75eca960-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stopwords.words(<span class="st">"french"</span>))</span>
-<span id="75eca960-4"><a href="#75eca960-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="75eca960-5"><a href="#75eca960-5" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">"french"</span>))</span>
-<span id="75eca960-6"><a href="#75eca960-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="75eca960-7"><a href="#75eca960-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="75eca960-8"><a href="#75eca960-8" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> <span class="kw">not</span> w <span class="kw">in</span> stop_words]</span>
-<span id="75eca960-9"><a href="#75eca960-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(words[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c02f76eb" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="c02f76eb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c02f76eb-1"><a href="#c02f76eb-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="c02f76eb-2"><a href="#c02f76eb-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c02f76eb-3"><a href="#c02f76eb-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stopwords.words(<span class="st">"french"</span>))</span>
+<span id="c02f76eb-4"><a href="#c02f76eb-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c02f76eb-5"><a href="#c02f76eb-5" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">"french"</span>))</span>
+<span id="c02f76eb-6"><a href="#c02f76eb-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c02f76eb-7"><a href="#c02f76eb-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c02f76eb-8"><a href="#c02f76eb-8" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> <span class="kw">not</span> w <span class="kw">in</span> stop_words]</span>
+<span id="c02f76eb-9"><a href="#c02f76eb-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(words[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['au', 'aux', 'avec', 'ce', 'ces', 'dans', 'de', 'des', 'du', 'elle', 'en', 'et', 'eux', 'il', 'ils', 'je', 'la', 'le', 'les', 'leur', 'lui', 'ma', 'mais', 'me', 'même', 'mes', 'moi', 'mon', 'ne', 'nos', 'notre', 'nous', 'on', 'ou', 'par', 'pas', 'pour', 'qu', 'que', 'qui', 'sa', 'se', 'ses', 'son', 'sur', 'ta', 'te', 'tes', 'toi', 'ton', 'tu', 'un', 'une', 'vos', 'votre', 'vous', 'c', 'd', 'j', 'l', 'à', 'm', 'n', 's', 't', 'y', 'été', 'étée', 'étées', 'étés', 'étant', 'étante', 'étants', 'étantes', 'suis', 'es', 'est', 'sommes', 'êtes', 'sont', 'serai', 'seras', 'sera', 'serons', 'serez', 'seront', 'serais', 'serait', 'serions', 'seriez', 'seraient', 'étais', 'était', 'étions', 'étiez', 'étaient', 'fus', 'fut', 'fûmes', 'fûtes', 'furent', 'sois', 'soit', 'soyons', 'soyez', 'soient', 'fusse', 'fusses', 'fût', 'fussions', 'fussiez', 'fussent', 'ayant', 'ayante', 'ayantes', 'ayants', 'eu', 'eue', 'eues', 'eus', 'ai', 'as', 'avons', 'avez', 'ont', 'aurai', 'auras', 'aura', 'aurons', 'aurez', 'auront', 'aurais', 'aurait', 'aurions', 'auriez', 'auraient', 'avais', 'avait', 'avions', 'aviez', 'avaient', 'eut', 'eûmes', 'eûtes', 'eurent', 'aie', 'aies', 'ait', 'ayons', 'ayez', 'aient', 'eusse', 'eusses', 'eût', 'eussions', 'eussiez', 'eussent']
 ['celui', 'dantès', 'a', 'déposé', 'passant', 'comment', 'paquet', 'déposer', 'danglars', 'rougit', 'passais', 'devant', 'porte', 'capitaine', 'entrouverte', 'vu', 'remettre', 'paquet', 'cette', 'lettre']</code></pre>
@@ -1166,13 +1160,13 @@ commande suivante :</p>
 <p>Ces retraitements commencent à porter leurs fruits puisque des mots ayant plus
 de sens commencent à se dégager, notamment les noms des personnages
 (Fernand, Mercédès, Villefort, etc.)</p>
-<div id="af720fb2" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="af720fb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="af720fb2-1"><a href="#af720fb2-1" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> make_wordcloud(<span class="st">" "</span>.join(words))</span>
-<span id="af720fb2-2"><a href="#af720fb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af720fb2-3"><a href="#af720fb2-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="af720fb2-4"><a href="#af720fb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af720fb2-5"><a href="#af720fb2-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc, interpolation<span class="op">=</span><span class="st">"bilinear"</span>)</span>
-<span id="af720fb2-6"><a href="#af720fb2-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">"off"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e22296b2" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="e22296b2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e22296b2-1"><a href="#e22296b2-1" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> make_wordcloud(<span class="st">" "</span>.join(words))</span>
+<span id="e22296b2-2"><a href="#e22296b2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e22296b2-3"><a href="#e22296b2-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="e22296b2-4"><a href="#e22296b2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e22296b2-5"><a href="#e22296b2-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc, interpolation<span class="op">=</span><span class="st">"bilinear"</span>)</span>
+<span id="e22296b2-6"><a href="#e22296b2-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">"off"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1208,13 +1202,13 @@ deviennent un même mot.</p>
 pour l’ordinateur et le modélisateur. Il existe plusieurs algorithmes de
 <em>stemming</em>, notamment le <em>Porter Stemming Algorithm</em> ou le
 <em>Snowball Stemming Algorithm</em>. Nous pouvons utiliser ce dernier en Français :</p>
-<div id="8397fbe5" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="8397fbe5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8397fbe5-1"><a href="#8397fbe5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
-<span id="8397fbe5-2"><a href="#8397fbe5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8397fbe5-3"><a href="#8397fbe5-3" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> SnowballStemmer(language<span class="op">=</span><span class="st">"french"</span>)</span>
-<span id="8397fbe5-4"><a href="#8397fbe5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8397fbe5-5"><a href="#8397fbe5-5" aria-hidden="true" tabindex="-1"></a>stemmed <span class="op">=</span> [stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
-<span id="8397fbe5-6"><a href="#8397fbe5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmed[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f3153a7a" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="f3153a7a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f3153a7a-1"><a href="#f3153a7a-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
+<span id="f3153a7a-2"><a href="#f3153a7a-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f3153a7a-3"><a href="#f3153a7a-3" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> SnowballStemmer(language<span class="op">=</span><span class="st">"french"</span>)</span>
+<span id="f3153a7a-4"><a href="#f3153a7a-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f3153a7a-5"><a href="#f3153a7a-5" aria-hidden="true" tabindex="-1"></a>stemmed <span class="op">=</span> [stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
+<span id="f3153a7a-6"><a href="#f3153a7a-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmed[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['celui', 'dantes', 'a', 'dépos', 'pass', 'comment', 'paquet', 'dépos', 'danglar', 'roug', 'pass', 'dev', 'port', 'capitain', 'entrouvert', 'vu', 'remettr', 'paquet', 'cet', 'lettr']</code></pre>
 </div>
@@ -1257,20 +1251,20 @@ plusieurs étapes de transformation des données.</p>
 </div>
 <p>Voici un exemple de reconnaissance d’entités nommées
 sur les premières phrases de l’ouvrage :</p>
-<div id="f73fb8f4" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="f73fb8f4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f73fb8f4-1"><a href="#f73fb8f4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install deplacy</span></span>
-<span id="f73fb8f4-2"><a href="#f73fb8f4-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download fr_core_news_sm</span>
-<span id="f73fb8f4-3"><a href="#f73fb8f4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="f73fb8f4-4"><a href="#f73fb8f4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="f73fb8f4-5"><a href="#f73fb8f4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
-<span id="f73fb8f4-6"><a href="#f73fb8f4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="f73fb8f4-7"><a href="#f73fb8f4-7" aria-hidden="true" tabindex="-1"></a>nlp<span class="op">=</span>spacy.load(<span class="st">"fr_core_news_sm"</span>)</span>
-<span id="f73fb8f4-8"><a href="#f73fb8f4-8" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> nlp(dumas[<span class="dv">15000</span>:<span class="dv">17000</span>])</span>
-<span id="f73fb8f4-9"><a href="#f73fb8f4-9" aria-hidden="true" tabindex="-1"></a>displacy.render(doc, style<span class="op">=</span><span class="st">"ent"</span>, jupyter<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="19c920c7" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="19c920c7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="19c920c7-1"><a href="#19c920c7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install deplacy</span></span>
+<span id="19c920c7-2"><a href="#19c920c7-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download fr_core_news_sm</span>
+<span id="19c920c7-3"><a href="#19c920c7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="19c920c7-4"><a href="#19c920c7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="19c920c7-5"><a href="#19c920c7-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
+<span id="19c920c7-6"><a href="#19c920c7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="19c920c7-7"><a href="#19c920c7-7" aria-hidden="true" tabindex="-1"></a>nlp<span class="op">=</span>spacy.load(<span class="st">"fr_core_news_sm"</span>)</span>
+<span id="19c920c7-8"><a href="#19c920c7-8" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> nlp(dumas[<span class="dv">15000</span>:<span class="dv">17000</span>])</span>
+<span id="19c920c7-9"><a href="#19c920c7-9" aria-hidden="true" tabindex="-1"></a>displacy.render(doc, style<span class="op">=</span><span class="st">"ent"</span>, jupyter<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Collecting fr-core-news-sm==3.7.0
   Downloading https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl (16.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/16.3 MB ? eta -:--:--     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.1/16.3 MB 4.0 MB/s eta 0:00:05     ━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.8/16.3 MB 11.9 MB/s eta 0:00:02     ━━━━━━━━╸━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/16.3 MB 33.9 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━╸━━━━━━━━━━━━━━━━━ 9.3/16.3 MB 67.5 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━ 15.0/16.3 MB 168.6 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 16.3/16.3 MB 167.6 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.3/16.3 MB 101.3 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/16.3 MB ? eta -:--:--     ━━━╸━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/16.3 MB 48.5 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/16.3 MB 89.8 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━ 11.4/16.3 MB 139.0 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 16.3/16.3 MB 160.5 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.3/16.3 MB 97.4 MB/s eta 0:00:00
 Requirement already satisfied: spacy&lt;3.8.0,&gt;=3.7.0 in /opt/mamba/lib/python3.11/site-packages (from fr-core-news-sm==3.7.0) (3.7.4)
 Requirement already satisfied: spacy-legacy&lt;3.1.0,&gt;=3.0.11 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (3.0.12)
 Requirement already satisfied: spacy-loggers&lt;2.0.0,&gt;=1.0.0 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.0.5)
@@ -1290,8 +1284,9 @@ Requirement already satisfied: pydantic!=1.8,!=1.8.1,&lt;3.0.0,&gt;=1.7.4 in /op
 Requirement already satisfied: jinja2 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (3.1.3)
 Requirement already satisfied: setuptools in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (69.2.0)
 Requirement already satisfied: packaging&gt;=20.0 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (23.2)
-Requirement already satisfied: langcodes&lt;4.0.0,&gt;=3.2.0 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (3.3.0)
+Requirement already satisfied: langcodes&lt;4.0.0,&gt;=3.2.0 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (3.4.0)
 Requirement already satisfied: numpy&gt;=1.19.0 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.26.4)
+Requirement already satisfied: language-data&gt;=1.2 in /opt/mamba/lib/python3.11/site-packages (from langcodes&lt;4.0.0,&gt;=3.2.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.2.0)
 Requirement already satisfied: annotated-types&gt;=0.4.0 in /opt/mamba/lib/python3.11/site-packages (from pydantic!=1.8,!=1.8.1,&lt;3.0.0,&gt;=1.7.4-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (0.6.0)
 Requirement already satisfied: pydantic-core==2.18.2 in /opt/mamba/lib/python3.11/site-packages (from pydantic!=1.8,!=1.8.1,&lt;3.0.0,&gt;=1.7.4-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (2.18.2)
 Requirement already satisfied: typing-extensions&gt;=4.6.1 in /opt/mamba/lib/python3.11/site-packages (from pydantic!=1.8,!=1.8.1,&lt;3.0.0,&gt;=1.7.4-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (4.11.0)
@@ -1304,6 +1299,7 @@ Requirement already satisfied: confection&lt;1.0.0,&gt;=0.0.1 in /opt/mamba/lib/
 Requirement already satisfied: click&lt;9.0.0,&gt;=7.1.1 in /opt/mamba/lib/python3.11/site-packages (from typer&lt;0.10.0,&gt;=0.3.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (8.1.7)
 Requirement already satisfied: cloudpathlib&lt;0.17.0,&gt;=0.7.0 in /opt/mamba/lib/python3.11/site-packages (from weasel&lt;0.4.0,&gt;=0.1.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (0.16.0)
 Requirement already satisfied: MarkupSafe&gt;=2.0 in /opt/mamba/lib/python3.11/site-packages (from jinja2-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (2.1.5)
+Requirement already satisfied: marisa-trie&gt;=0.7.7 in /opt/mamba/lib/python3.11/site-packages (from language-data&gt;=1.2-&gt;langcodes&lt;4.0.0,&gt;=3.2.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.1.0)
 Installing collected packages: fr-core-news-sm
 Successfully installed fr-core-news-sm-3.7.0
 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
@@ -1388,9 +1384,9 @@ abordée dans un prochain chapitre.</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-23</p>
+<p>Latest built version: 2024-04-24</p>
 <p>Python version used:</p>
-<div id="4cd7cded" class="cell" data-execution_count="13">
+<div id="edbbfff7" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1891,43 +1887,51 @@ abordée dans un prochain chapitre.</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">langcodes</td>
-<td style="text-align: left;">3.3.0</td>
+<td style="text-align: left;">3.4.0</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">language_data</td>
+<td style="text-align: left;">1.2.0</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">lazy_loader</td>
 <td style="text-align: left;">0.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">libmambapy</td>
 <td style="text-align: left;">1.5.7</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">llvmlite</td>
 <td style="text-align: left;">0.42.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">locket</td>
 <td style="text-align: left;">1.0.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">lxml</td>
 <td style="text-align: left;">5.2.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">lz4</td>
 <td style="text-align: left;">4.3.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Mako</td>
 <td style="text-align: left;">1.3.2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">mamba</td>
 <td style="text-align: left;">1.5.7</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mapclassify</td>
 <td style="text-align: left;">2.6.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">marisa-trie</td>
+<td style="text-align: left;">1.1.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Markdown</td>
@@ -3395,6 +3399,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -3818,7 +3966,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","openEffect":"zoom","descPosition":"bottom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
