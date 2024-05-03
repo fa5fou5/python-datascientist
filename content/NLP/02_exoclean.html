@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-27">
+<meta name="dcterms.date" content="2024-05-03">
 <meta name="description" content="Ce chapitre continue de présenter l’approche de nettoyage de données du NLP en s’appuyant sur le corpus de trois auteurs anglo-saxons : Mary Shelley, Edgar Allan Poe, H.P. Lovecraft. Dans cette série d’exercice nous mettons en oeuvre de manière plus approfondie les différentes méthodes présentées précédemment.">
 
 <title>Python pour la data science - Nettoyer un texte : des exercices pour découvrir l’approche bag-of-words</title>
@@ -265,7 +265,7 @@ précédemment.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-27">
+<meta name="citation_online_date" content="2024-05-03">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -621,7 +621,7 @@ précédemment.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-27</p>
+        <p class="date">2024-05-03</p>
       </div>
     </div>
     
@@ -945,36 +945,36 @@ synthétiques comme <a href="https://github.com/amueller/word_cloud">WordCloud</
 </div>
 </div>
 <p>La liste des modules à importer est assez longue, la voici :</p>
-<div id="1fbc040e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="1fbc040e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1fbc040e-1"><a href="#1fbc040e-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="1fbc040e-2"><a href="#1fbc040e-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="1fbc040e-3"><a href="#1fbc040e-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="1fbc040e-4"><a href="#1fbc040e-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="1fbc040e-5"><a href="#1fbc040e-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud</span>
-<span id="1fbc040e-6"><a href="#1fbc040e-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64</span>
-<span id="1fbc040e-7"><a href="#1fbc040e-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
-<span id="1fbc040e-8"><a href="#1fbc040e-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="1fbc040e-9"><a href="#1fbc040e-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="1fbc040e-10"><a href="#1fbc040e-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1fbc040e-11"><a href="#1fbc040e-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="1fbc040e-12"><a href="#1fbc040e-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
-<span id="1fbc040e-13"><a href="#1fbc040e-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1fbc040e-14"><a href="#1fbc040e-14" aria-hidden="true" tabindex="-1"></a><span class="co"># from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS as stopwords</span></span>
-<span id="1fbc040e-15"><a href="#1fbc040e-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> log_loss</span>
-<span id="1fbc040e-16"><a href="#1fbc040e-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="1fbc040e-17"><a href="#1fbc040e-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1fbc040e-18"><a href="#1fbc040e-18" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install pywaffle</span></span>
-<span id="1fbc040e-19"><a href="#1fbc040e-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pywaffle <span class="im">import</span> Waffle</span>
-<span id="1fbc040e-20"><a href="#1fbc040e-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1fbc040e-21"><a href="#1fbc040e-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
-<span id="1fbc040e-22"><a href="#1fbc040e-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer, CountVectorizer</span>
-<span id="1fbc040e-23"><a href="#1fbc040e-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> NMF, LatentDirichletAllocation</span>
-<span id="1fbc040e-24"><a href="#1fbc040e-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1fbc040e-25"><a href="#1fbc040e-25" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span>
-<span id="1fbc040e-26"><a href="#1fbc040e-26" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span>
-<span id="1fbc040e-27"><a href="#1fbc040e-27" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"genesis"</span>)</span>
-<span id="1fbc040e-28"><a href="#1fbc040e-28" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"wordnet"</span>)</span>
-<span id="1fbc040e-29"><a href="#1fbc040e-29" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"omw-1.4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1ea8a090" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="1ea8a090"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1ea8a090-1"><a href="#1ea8a090-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="1ea8a090-2"><a href="#1ea8a090-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="1ea8a090-3"><a href="#1ea8a090-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="1ea8a090-4"><a href="#1ea8a090-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="1ea8a090-5"><a href="#1ea8a090-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud</span>
+<span id="1ea8a090-6"><a href="#1ea8a090-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64</span>
+<span id="1ea8a090-7"><a href="#1ea8a090-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
+<span id="1ea8a090-8"><a href="#1ea8a090-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="1ea8a090-9"><a href="#1ea8a090-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="1ea8a090-10"><a href="#1ea8a090-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1ea8a090-11"><a href="#1ea8a090-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="1ea8a090-12"><a href="#1ea8a090-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="1ea8a090-13"><a href="#1ea8a090-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1ea8a090-14"><a href="#1ea8a090-14" aria-hidden="true" tabindex="-1"></a><span class="co"># from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS as stopwords</span></span>
+<span id="1ea8a090-15"><a href="#1ea8a090-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> log_loss</span>
+<span id="1ea8a090-16"><a href="#1ea8a090-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="1ea8a090-17"><a href="#1ea8a090-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1ea8a090-18"><a href="#1ea8a090-18" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install pywaffle</span></span>
+<span id="1ea8a090-19"><a href="#1ea8a090-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pywaffle <span class="im">import</span> Waffle</span>
+<span id="1ea8a090-20"><a href="#1ea8a090-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1ea8a090-21"><a href="#1ea8a090-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="1ea8a090-22"><a href="#1ea8a090-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer, CountVectorizer</span>
+<span id="1ea8a090-23"><a href="#1ea8a090-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> NMF, LatentDirichletAllocation</span>
+<span id="1ea8a090-24"><a href="#1ea8a090-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1ea8a090-25"><a href="#1ea8a090-25" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span>
+<span id="1ea8a090-26"><a href="#1ea8a090-26" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span>
+<span id="1ea8a090-27"><a href="#1ea8a090-27" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"genesis"</span>)</span>
+<span id="1ea8a090-28"><a href="#1ea8a090-28" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"wordnet"</span>)</span>
+<span id="1ea8a090-29"><a href="#1ea8a090-29" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"omw-1.4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to /github/home/nltk_data...
 [nltk_data]   Package stopwords is already up-to-date!
@@ -1005,21 +1005,21 @@ synthétiques comme <a href="https://github.com/amueller/word_cloud">WordCloud</
 </div>
 </div>
 <p>Si vous ne faites pas l’exercice 1, pensez à charger les données en executant la fonction <code>get_data.py</code> :</p>
-<div id="be899f7b" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="be899f7b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="be899f7b-1"><a href="#be899f7b-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="be899f7b-2"><a href="#be899f7b-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be899f7b-3"><a href="#be899f7b-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/NLP/get_data.py"</span></span>
-<span id="be899f7b-4"><a href="#be899f7b-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="be899f7b-5"><a href="#be899f7b-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
-<span id="be899f7b-6"><a href="#be899f7b-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be899f7b-7"><a href="#be899f7b-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="be899f7b-8"><a href="#be899f7b-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="be899f7b-9"><a href="#be899f7b-9" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> getdata.create_train_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="566dcb69" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="566dcb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="566dcb69-1"><a href="#566dcb69-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="566dcb69-2"><a href="#566dcb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="566dcb69-3"><a href="#566dcb69-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/NLP/get_data.py"</span></span>
+<span id="566dcb69-4"><a href="#566dcb69-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="566dcb69-5"><a href="#566dcb69-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
+<span id="566dcb69-6"><a href="#566dcb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="566dcb69-7"><a href="#566dcb69-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="566dcb69-8"><a href="#566dcb69-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="566dcb69-9"><a href="#566dcb69-9" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> getdata.create_train_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ce code introduit une base nommée <code>train</code> dans l’environnement.</p>
 <p>Le jeu de données met ainsi en regard un auteur avec une phrase qu’il a écrite :</p>
-<div id="0a27c3dc" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="0a27c3dc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0a27c3dc-1"><a href="#0a27c3dc-1" aria-hidden="true" tabindex="-1"></a>train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d44c70c6" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="d44c70c6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d44c70c6-1"><a href="#d44c70c6-1" aria-hidden="true" tabindex="-1"></a>train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 <div>
@@ -1081,12 +1081,12 @@ synthétiques comme <a href="https://github.com/amueller/word_cloud">WordCloud</
 <p>On peut se rendre compte que les extraits des 3 auteurs ne sont
 pas forcément équilibrés dans le jeu de données.
 Il faudra en tenir compte dans la prédiction.</p>
-<div id="7fafebf4" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="7fafebf4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7fafebf4-1"><a href="#7fafebf4-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="7fafebf4-2"><a href="#7fafebf4-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.barplot(</span>
-<span id="7fafebf4-3"><a href="#7fafebf4-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>[<span class="st">"Edgar Allen Poe"</span>, <span class="st">"Mary W. Shelley"</span>, <span class="st">"H.P. Lovecraft"</span>],</span>
-<span id="7fafebf4-4"><a href="#7fafebf4-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>train[<span class="st">"Author"</span>].value_counts(),</span>
-<span id="7fafebf4-5"><a href="#7fafebf4-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3caf655b" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="3caf655b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3caf655b-1"><a href="#3caf655b-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="3caf655b-2"><a href="#3caf655b-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.barplot(</span>
+<span id="3caf655b-3"><a href="#3caf655b-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>[<span class="st">"Edgar Allen Poe"</span>, <span class="st">"Mary W. Shelley"</span>, <span class="st">"H.P. Lovecraft"</span>],</span>
+<span id="3caf655b-4"><a href="#3caf655b-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>train[<span class="st">"Author"</span>].value_counts(),</span>
+<span id="3caf655b-5"><a href="#3caf655b-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1140,7 +1140,7 @@ de manière synthétique le nombre d’occurrences du mot <em>“fear”</em> pa
 </div>
 <p>A l’issue de la question 1, vous devriez obtenir le tableau
 de fréquence suivant :</p>
-<div id="68b82dd4" class="cell" data-execution_count="12">
+<div id="f199e9b8" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 <div>
@@ -1211,7 +1211,7 @@ des observations.</p>
 en conclure que la peur est plus évoquée par Mary Shelley
 (sentiment assez naturel face à la créature du docteur Frankenstein) alors
 que Lovecraft n’a pas volé sa réputation d’écrivain de l’horreur !</p>
-<div id="c5423a95" class="cell" data-execution_count="17">
+<div id="8db0e03c" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display" data-execution_count="17">
 <div>
 <figure class="figure">
@@ -1236,7 +1236,7 @@ taille proportionnelle au nombre d’occurrence de celui-ci.</p>
 </div>
 </div>
 <p>Le <em>wordcloud</em> pour nos différents auteurs est le suivant :</p>
-<div id="01a6e9fb" class="cell" data-execution_count="19">
+<div id="afcc3ec4" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display" data-execution_count="19">
 <div>
 <figure class="figure">
@@ -1247,11 +1247,11 @@ taille proportionnelle au nombre d’occurrence de celui-ci.</p>
 </div>
 <p>Enfin, si on fait un histogramme des fréquences,
 cela donnera :</p>
-<div id="50ff4d4c" class="cell" data-execution_count="21">
+<div id="37afce79" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-display">
-<div>                            <div id="12f8fd5b-b555-4781-be4b-b25ffbe8fa6b" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("12f8fd5b-b555-4781-be4b-b25ffbe8fa6b")) {                    Plotly.newPlot(                        "12f8fd5b-b555-4781-be4b-b25ffbe8fa6b",                        [{"alignmentgroup":"True","hovertemplate":"word=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["the","of","and","to","a","in","I","was","that","my","with","it","is","at","as","which","had","for","not","his","by","be","have","this","he"],"xaxis":"x","y":[13927,8930,5222,4625,4514,3750,3598,2109,2085,1666,1635,1555,1530,1464,1458,1377,1265,1214,1184,1167,1125,1049,1037,964,963],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"word"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="c1d6ca11-2179-4caa-a39e-3c32c9310ce5" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("c1d6ca11-2179-4caa-a39e-3c32c9310ce5")) {                    Plotly.newPlot(                        "c1d6ca11-2179-4caa-a39e-3c32c9310ce5",                        [{"alignmentgroup":"True","hovertemplate":"word=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["the","of","and","to","a","in","I","was","that","my","with","it","is","at","as","which","had","for","not","his","by","be","have","this","he"],"xaxis":"x","y":[13927,8930,5222,4625,4514,3750,3598,2109,2085,1666,1635,1555,1530,1464,1458,1377,1265,1214,1184,1167,1125,1049,1037,964,963],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"word"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('12f8fd5b-b555-4781-be4b-b25ffbe8fa6b');
+var gd = document.getElementById('c1d6ca11-2179-4caa-a39e-3c32c9310ce5');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -1276,9 +1276,9 @@ if (outputEl) {{
                         })                };                });            </script>        </div>
 </div>
 <div class="cell-output cell-output-display">
-<div>                            <div id="747de2b4-7928-4d3a-a5b1-35c19b5375b6" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("747de2b4-7928-4d3a-a5b1-35c19b5375b6")) {                    Plotly.newPlot(                        "747de2b4-7928-4d3a-a5b1-35c19b5375b6",                        [{"alignmentgroup":"True","hovertemplate":"word=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["the","and","of","a","to","I","in","was","that","had","he","with","his","as","for","which","my","from","it","on","at","but","not","were","by"],"xaxis":"x","y":[10330,5908,5792,3230,3219,2629,2558,2126,1902,1744,1339,1094,1089,1068,939,911,902,877,874,852,845,816,809,689,635],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"word"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="4b80082f-4ad4-41de-8c78-1edafd38d708" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("4b80082f-4ad4-41de-8c78-1edafd38d708")) {                    Plotly.newPlot(                        "4b80082f-4ad4-41de-8c78-1edafd38d708",                        [{"alignmentgroup":"True","hovertemplate":"word=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["the","and","of","a","to","I","in","was","that","had","he","with","his","as","for","which","my","from","it","on","at","but","not","were","by"],"xaxis":"x","y":[10330,5908,5792,3230,3219,2629,2558,2126,1902,1744,1339,1094,1089,1068,939,911,902,877,874,852,845,816,809,689,635],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"word"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('747de2b4-7928-4d3a-a5b1-35c19b5375b6');
+var gd = document.getElementById('4b80082f-4ad4-41de-8c78-1edafd38d708');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -1303,9 +1303,9 @@ if (outputEl) {{
                         })                };                });            </script>        </div>
 </div>
 <div class="cell-output cell-output-display">
-<div>                            <div id="634987bd-11d9-45c7-80ed-8f7419d11ac4" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("634987bd-11d9-45c7-80ed-8f7419d11ac4")) {                    Plotly.newPlot(                        "634987bd-11d9-45c7-80ed-8f7419d11ac4",                        [{"alignmentgroup":"True","hovertemplate":"word=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["the","of","and","to","I","a","in","my","was","that","his","with","her","had","he","for","not","as","by","on","from","which","me","but","it"],"xaxis":"x","y":[9039,6129,5929,4771,4155,2615,2479,2469,2205,2001,1546,1478,1389,1315,1120,1074,1055,1002,965,961,943,915,906,902,818],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"word"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="c2a00565-8c33-43a3-a2ca-d662ee5dd183" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("c2a00565-8c33-43a3-a2ca-d662ee5dd183")) {                    Plotly.newPlot(                        "c2a00565-8c33-43a3-a2ca-d662ee5dd183",                        [{"alignmentgroup":"True","hovertemplate":"word=%{x}\u003cbr\u003ecount=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["the","of","and","to","I","a","in","my","was","that","his","with","her","had","he","for","not","as","by","on","from","which","me","but","it"],"xaxis":"x","y":[9039,6129,5929,4771,4155,2615,2479,2469,2205,2001,1546,1478,1389,1315,1120,1074,1055,1002,965,961,943,915,906,902,818],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"word"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"count"}},"legend":{"tracegroupgap":0},"barmode":"relative"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('634987bd-11d9-45c7-80ed-8f7419d11ac4');
+var gd = document.getElementById('c2a00565-8c33-43a3-a2ca-d662ee5dd183');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -1366,47 +1366,47 @@ package <code>statsmodels</code><a href="#fn2" class="footnote-ref" id="fnref2" 
 \mathbb{E}\bigg( f(n_i)|n_i \bigg) = \exp(\beta_0 + \beta_1 \log(n_i))
 \]</span></p>
 <p>Prenons les résultats de l’exercice précédent et enrichissons les du rang et de la fréquence d’occurrence d’un mot :</p>
-<div id="d8c218df" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="d8c218df"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d8c218df-1"><a href="#d8c218df-1" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> pd.DataFrame(</span>
-<span id="d8c218df-2"><a href="#d8c218df-2" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="d8c218df-3"><a href="#d8c218df-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"counter"</span>: train.groupby(<span class="st">"Author"</span>)</span>
-<span id="d8c218df-4"><a href="#d8c218df-4" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="st">" "</span>.join(s[<span class="st">"Text"</span>]).split())</span>
-<span id="d8c218df-5"><a href="#d8c218df-5" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: Counter(s))</span>
-<span id="d8c218df-6"><a href="#d8c218df-6" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: s.most_common())</span>
-<span id="d8c218df-7"><a href="#d8c218df-7" aria-hidden="true" tabindex="-1"></a>        .explode()</span>
-<span id="d8c218df-8"><a href="#d8c218df-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="d8c218df-9"><a href="#d8c218df-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="d8c218df-10"><a href="#d8c218df-10" aria-hidden="true" tabindex="-1"></a>count_words[[<span class="st">"word"</span>, <span class="st">"count"</span>]] <span class="op">=</span> pd.DataFrame(</span>
-<span id="d8c218df-11"><a href="#d8c218df-11" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"counter"</span>].tolist(), index<span class="op">=</span>count_words.index</span>
-<span id="d8c218df-12"><a href="#d8c218df-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="d8c218df-13"><a href="#d8c218df-13" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.reset_index()</span>
-<span id="d8c218df-14"><a href="#d8c218df-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d8c218df-15"><a href="#d8c218df-15" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.assign(</span>
-<span id="d8c218df-16"><a href="#d8c218df-16" aria-hidden="true" tabindex="-1"></a>    tot_mots_auteur<span class="op">=</span><span class="kw">lambda</span> x: (x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"sum"</span>)),</span>
-<span id="d8c218df-17"><a href="#d8c218df-17" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">"count"</span>] <span class="op">/</span> x[<span class="st">"tot_mots_auteur"</span>],</span>
-<span id="d8c218df-18"><a href="#d8c218df-18" aria-hidden="true" tabindex="-1"></a>    rank<span class="op">=</span><span class="kw">lambda</span> x: x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"rank"</span>, ascending<span class="op">=</span><span class="va">False</span>),</span>
-<span id="d8c218df-19"><a href="#d8c218df-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="41f4eccc" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="41f4eccc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="41f4eccc-1"><a href="#41f4eccc-1" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> pd.DataFrame(</span>
+<span id="41f4eccc-2"><a href="#41f4eccc-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="41f4eccc-3"><a href="#41f4eccc-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"counter"</span>: train.groupby(<span class="st">"Author"</span>)</span>
+<span id="41f4eccc-4"><a href="#41f4eccc-4" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="st">" "</span>.join(s[<span class="st">"Text"</span>]).split())</span>
+<span id="41f4eccc-5"><a href="#41f4eccc-5" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: Counter(s))</span>
+<span id="41f4eccc-6"><a href="#41f4eccc-6" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: s.most_common())</span>
+<span id="41f4eccc-7"><a href="#41f4eccc-7" aria-hidden="true" tabindex="-1"></a>        .explode()</span>
+<span id="41f4eccc-8"><a href="#41f4eccc-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="41f4eccc-9"><a href="#41f4eccc-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="41f4eccc-10"><a href="#41f4eccc-10" aria-hidden="true" tabindex="-1"></a>count_words[[<span class="st">"word"</span>, <span class="st">"count"</span>]] <span class="op">=</span> pd.DataFrame(</span>
+<span id="41f4eccc-11"><a href="#41f4eccc-11" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"counter"</span>].tolist(), index<span class="op">=</span>count_words.index</span>
+<span id="41f4eccc-12"><a href="#41f4eccc-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="41f4eccc-13"><a href="#41f4eccc-13" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.reset_index()</span>
+<span id="41f4eccc-14"><a href="#41f4eccc-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="41f4eccc-15"><a href="#41f4eccc-15" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.assign(</span>
+<span id="41f4eccc-16"><a href="#41f4eccc-16" aria-hidden="true" tabindex="-1"></a>    tot_mots_auteur<span class="op">=</span><span class="kw">lambda</span> x: (x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"sum"</span>)),</span>
+<span id="41f4eccc-17"><a href="#41f4eccc-17" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">"count"</span>] <span class="op">/</span> x[<span class="st">"tot_mots_auteur"</span>],</span>
+<span id="41f4eccc-18"><a href="#41f4eccc-18" aria-hidden="true" tabindex="-1"></a>    rank<span class="op">=</span><span class="kw">lambda</span> x: x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"rank"</span>, ascending<span class="op">=</span><span class="va">False</span>),</span>
+<span id="41f4eccc-19"><a href="#41f4eccc-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_5393/3685081206.py:3: DeprecationWarning:
+<pre><code>/tmp/ipykernel_5263/3685081206.py:3: DeprecationWarning:
 
 DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
 </code></pre>
 </div>
 </div>
 <p>Commençons par représenter la relation entre la fréquence et le rang:</p>
-<div id="da8b366f" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="da8b366f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="da8b366f-1"><a href="#da8b366f-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
-<span id="da8b366f-2"><a href="#da8b366f-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="da8b366f-3"><a href="#da8b366f-3" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> (</span>
-<span id="da8b366f-4"><a href="#da8b366f-4" aria-hidden="true" tabindex="-1"></a>    ggplot(count_words)</span>
-<span id="da8b366f-5"><a href="#da8b366f-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(y<span class="op">=</span><span class="st">"freq"</span>, x<span class="op">=</span><span class="st">"rank"</span>, color<span class="op">=</span><span class="st">"Author"</span>), alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
-<span id="da8b366f-6"><a href="#da8b366f-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_log10()</span>
-<span id="da8b366f-7"><a href="#da8b366f-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_log10()</span>
-<span id="da8b366f-8"><a href="#da8b366f-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
-<span id="da8b366f-9"><a href="#da8b366f-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="75df3349" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="75df3349"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="75df3349-1"><a href="#75df3349-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="75df3349-2"><a href="#75df3349-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="75df3349-3"><a href="#75df3349-3" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> (</span>
+<span id="75df3349-4"><a href="#75df3349-4" aria-hidden="true" tabindex="-1"></a>    ggplot(count_words)</span>
+<span id="75df3349-5"><a href="#75df3349-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(y<span class="op">=</span><span class="st">"freq"</span>, x<span class="op">=</span><span class="st">"rank"</span>, color<span class="op">=</span><span class="st">"Author"</span>), alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="75df3349-6"><a href="#75df3349-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_log10()</span>
+<span id="75df3349-7"><a href="#75df3349-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_log10()</span>
+<span id="75df3349-8"><a href="#75df3349-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
+<span id="75df3349-9"><a href="#75df3349-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nous avons bien, graphiquement, une relation log-linéaire entre les deux :</p>
-<div id="382888d6" class="cell" data-execution_count="24">
+<div id="a725b7d0" class="cell" data-execution_count="24">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1416,17 +1416,17 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 </div>
 <p>Avec <code>statsmodels</code>, vérifions plus formellement cette relation:</p>
-<div id="23828193" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="23828193"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="23828193-1"><a href="#23828193-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="23828193-2"><a href="#23828193-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="23828193-3"><a href="#23828193-3" aria-hidden="true" tabindex="-1"></a>exog <span class="op">=</span> sm.add_constant(np.log(count_words[<span class="st">"rank"</span>].astype(<span class="bu">float</span>)))</span>
-<span id="23828193-4"><a href="#23828193-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="23828193-5"><a href="#23828193-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.GLM(</span>
-<span id="23828193-6"><a href="#23828193-6" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"freq"</span>].astype(<span class="bu">float</span>), exog, family<span class="op">=</span>sm.families.Poisson()</span>
-<span id="23828193-7"><a href="#23828193-7" aria-hidden="true" tabindex="-1"></a>).fit()</span>
-<span id="23828193-8"><a href="#23828193-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="23828193-9"><a href="#23828193-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher les résultats du modèle</span></span>
-<span id="23828193-10"><a href="#23828193-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7681cc05" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="7681cc05"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7681cc05-1"><a href="#7681cc05-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="7681cc05-2"><a href="#7681cc05-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7681cc05-3"><a href="#7681cc05-3" aria-hidden="true" tabindex="-1"></a>exog <span class="op">=</span> sm.add_constant(np.log(count_words[<span class="st">"rank"</span>].astype(<span class="bu">float</span>)))</span>
+<span id="7681cc05-4"><a href="#7681cc05-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7681cc05-5"><a href="#7681cc05-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.GLM(</span>
+<span id="7681cc05-6"><a href="#7681cc05-6" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"freq"</span>].astype(<span class="bu">float</span>), exog, family<span class="op">=</span>sm.families.Poisson()</span>
+<span id="7681cc05-7"><a href="#7681cc05-7" aria-hidden="true" tabindex="-1"></a>).fit()</span>
+<span id="7681cc05-8"><a href="#7681cc05-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="7681cc05-9"><a href="#7681cc05-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher les résultats du modèle</span></span>
+<span id="7681cc05-10"><a href="#7681cc05-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 Generalized Linear Model Regression Results                  
 ==============================================================================
@@ -1435,8 +1435,8 @@ Model:                            GLM   Df Residuals:                    69299
 Model Family:                 Poisson   Df Model:                            1
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -23.011
-Date:                Sat, 27 Apr 2024   Deviance:                     0.065676
-Time:                        19:51:34   Pearson chi2:                   0.0656
+Date:                Fri, 03 May 2024   Deviance:                     0.065676
+Time:                        09:34:29   Pearson chi2:                   0.0656
 No. Iterations:                     5   Pseudo R-squ. (CS):          0.0002431
 Covariance Type:            nonrobust                                         
 ==============================================================================
@@ -1479,7 +1479,7 @@ on peut utiliser la librairie <code>nltk</code> comme détaillé <a href="../../
 </div>
 </div>
 <p>Pour rappel, au début de l’exercice, <code>train</code> présente l’aspect suivant :</p>
-<div id="62e72178" class="cell" data-execution_count="26">
+<div id="e823ead5" class="cell" data-execution_count="26">
 <div class="cell-output cell-output-display" data-execution_count="26">
 <div>
 <div>
@@ -1525,9 +1525,9 @@ on peut utiliser la librairie <code>nltk</code> comme détaillé <a href="../../
 </div>
 </div>
 <p>Après tokenisation, il devrait avoir cet aspect :</p>
-<div id="6a8916d1" class="cell" data-execution_count="27">
+<div id="1ac54b65" class="cell" data-execution_count="27">
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_5393/3502394793.py:4: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.</code></pre>
+<pre><code>/tmp/ipykernel_5263/3502394793.py:4: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>ID     Author
@@ -1545,7 +1545,7 @@ sur notre <code>DataFrame</code> grâce à <code>apply</code>, sans le diviser.<
 </div>
 </div>
 <p>Ce petit nettoyage permet d’arriver à un texte plus intéressant en termes d’analyse lexicale. Par exemple, si on reproduit l’analyse précédente… :</p>
-<div id="35efd704" class="cell" data-execution_count="30">
+<div id="3e8b0812" class="cell" data-execution_count="30">
 <div class="cell-output cell-output-display" data-execution_count="30">
 <div>
 <figure class="figure">
@@ -1571,13 +1571,13 @@ modèle. En l’occurrence, un <code>WordNetLemmatizer</code> (WordNet est une b
 lexicographique ouverte). Par exemple, les mots <em>“women”</em>, <em>“daughters”</em>
 et <em>“leaves”</em> seront ainsi lemmatisés de la manière suivante :</p></li>
 </ul>
-<div id="06520c72" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="06520c72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="06520c72-1"><a href="#06520c72-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
-<span id="06520c72-2"><a href="#06520c72-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="06520c72-3"><a href="#06520c72-3" aria-hidden="true" tabindex="-1"></a>lemm <span class="op">=</span> WordNetLemmatizer()</span>
-<span id="06520c72-4"><a href="#06520c72-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="06520c72-5"><a href="#06520c72-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> [<span class="st">"women"</span>, <span class="st">"daughters"</span>, <span class="st">"leaves"</span>]:</span>
-<span id="06520c72-6"><a href="#06520c72-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"The lemmatized form of </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss"> is: </span><span class="sc">{</span>lemm<span class="sc">.</span>lemmatize(word)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4d6a5eb1" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="4d6a5eb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4d6a5eb1-1"><a href="#4d6a5eb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="4d6a5eb1-2"><a href="#4d6a5eb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4d6a5eb1-3"><a href="#4d6a5eb1-3" aria-hidden="true" tabindex="-1"></a>lemm <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="4d6a5eb1-4"><a href="#4d6a5eb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4d6a5eb1-5"><a href="#4d6a5eb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> [<span class="st">"women"</span>, <span class="st">"daughters"</span>, <span class="st">"leaves"</span>]:</span>
+<span id="4d6a5eb1-6"><a href="#4d6a5eb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"The lemmatized form of </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss"> is: </span><span class="sc">{</span>lemm<span class="sc">.</span>lemmatize(word)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The lemmatized form of women is: woman
 The lemmatized form of daughters is: daughter
@@ -1605,7 +1605,7 @@ brute :</p>
 </div>
 </div>
 <p>Le <code>WordNetLemmatizer</code> donnera le résultat suivant :</p>
-<div id="19ae1672" class="cell" data-execution_count="33">
+<div id="7c004e1a" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-stdout">
 <pre><code>This process , however , afforded me no means of ascertaining the dimensions of my dungeon ; as I might make its circuit , and return to the point whence I set out , without being aware of the fact ; so perfectly
 ---------------------------
@@ -1637,7 +1637,7 @@ ou qui sont plus ou moins <em>smooth</em>.</p>
 </ol>
 </div>
 </div>
-<div id="25921022" class="cell" data-execution_count="35">
+<div id="b4ef950d" class="cell" data-execution_count="35">
 <div class="cell-output cell-output-display" data-execution_count="35">
 <div>
 <div>
@@ -1801,7 +1801,7 @@ ou qui sont plus ou moins <em>smooth</em>.</p>
 </div>
 <p>Les lignes où les termes de abandon sont non nuls
 sont les suivantes :</p>
-<div id="58eec3b2" class="cell" data-execution_count="36">
+<div id="0ec6d74f" class="cell" data-execution_count="36">
 <div class="cell-output cell-output-stdout">
 <pre><code>Index([    4,   116,   215,   571,   839,  1042,  1052,  1069,  2247,  2317,
         2505,  3023,  3058,  3245,  3380,  3764,  3886,  4425,  5289,  5576,
@@ -1971,7 +1971,7 @@ sont les suivantes :</p>
 </div>
 </div>
 </div>
-<div id="d579bcae" class="cell" data-execution_count="37">
+<div id="12ef618c" class="cell" data-execution_count="37">
 <div class="cell-output cell-output-display" data-execution_count="37">
 <pre><code>Author
 MWS    22
@@ -1981,7 +1981,7 @@ Name: Text, dtype: int64</code></pre>
 </div>
 </div>
 <p>Les 10 scores les plus élevés sont les suivants :</p>
-<div id="92ea91aa" class="cell" data-execution_count="38">
+<div id="90c919b8" class="cell" data-execution_count="38">
 <div class="cell-output cell-output-stdout">
 <pre><code>['We could not fear we did not.' '"And now I do not fear death.'
  'Be of heart and fear nothing.' 'I smiled, for what had I to fear?'
@@ -2010,11 +2010,11 @@ ensuite, de manière conditionnelle.</p>
 <p>Une manière d’introduire des liens entre les séries de <em>tokens</em> sont les <em>n-grams</em>.
 On s’intéresse non seulement aux mots et à leur fréquence, mais aussi aux mots qui suivent. Cette approche est essentielle pour désambiguiser les homonymes. Le calcul de <em>n-grams</em> <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> constitue la méthode la plus simple pour tenir compte du contexte.</p>
 <p>Pour être en mesure de mener cette analyse, il est nécessaire de télécharger un corpus supplémentaire :</p>
-<div id="5837ffda" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="5837ffda"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5837ffda-1"><a href="#5837ffda-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="5837ffda-2"><a href="#5837ffda-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="5837ffda-3"><a href="#5837ffda-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"genesis"</span>)</span>
-<span id="5837ffda-4"><a href="#5837ffda-4" aria-hidden="true" tabindex="-1"></a>nltk.corpus.genesis.words(<span class="st">"english-web.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="30fa325f" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="30fa325f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="30fa325f-1"><a href="#30fa325f-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="30fa325f-2"><a href="#30fa325f-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="30fa325f-3"><a href="#30fa325f-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"genesis"</span>)</span>
+<span id="30fa325f-4"><a href="#30fa325f-4" aria-hidden="true" tabindex="-1"></a>nltk.corpus.genesis.words(<span class="st">"english-web.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package genesis to /github/home/nltk_data...
 [nltk_data]   Package genesis is already up-to-date!</code></pre>
@@ -2031,13 +2031,13 @@ On s’intéresse non seulement aux mots et à leur fréquence, mais aussi aux m
 <p>On va, rapidement, regarder dans quel contexte apparaît le mot <code>fear</code> dans
 l’oeuvre d’Edgar Allan Poe (EAP). Pour cela, on transforme d’abord
 le corpus EAP en tokens <code>NLTK</code> :</p>
-<div id="abb0892d" class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="abb0892d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="abb0892d-1"><a href="#abb0892d-1" aria-hidden="true" tabindex="-1"></a>eap_clean <span class="op">=</span> train[train[<span class="st">"Author"</span>] <span class="op">==</span> <span class="st">"EAP"</span>]</span>
-<span id="abb0892d-2"><a href="#abb0892d-2" aria-hidden="true" tabindex="-1"></a>eap_clean <span class="op">=</span> <span class="st">" "</span>.join(eap_clean[<span class="st">"Text"</span>])</span>
-<span id="abb0892d-3"><a href="#abb0892d-3" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> eap_clean.split()</span>
-<span id="abb0892d-4"><a href="#abb0892d-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tokens[:<span class="dv">10</span>])</span>
-<span id="abb0892d-5"><a href="#abb0892d-5" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> nltk.Text(tokens)</span>
-<span id="abb0892d-6"><a href="#abb0892d-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="12800e35" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="12800e35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="12800e35-1"><a href="#12800e35-1" aria-hidden="true" tabindex="-1"></a>eap_clean <span class="op">=</span> train[train[<span class="st">"Author"</span>] <span class="op">==</span> <span class="st">"EAP"</span>]</span>
+<span id="12800e35-2"><a href="#12800e35-2" aria-hidden="true" tabindex="-1"></a>eap_clean <span class="op">=</span> <span class="st">" "</span>.join(eap_clean[<span class="st">"Text"</span>])</span>
+<span id="12800e35-3"><a href="#12800e35-3" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> eap_clean.split()</span>
+<span id="12800e35-4"><a href="#12800e35-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tokens[:<span class="dv">10</span>])</span>
+<span id="12800e35-5"><a href="#12800e35-5" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> nltk.Text(tokens)</span>
+<span id="12800e35-6"><a href="#12800e35-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['This', 'process,', 'however,', 'afforded', 'me', 'no', 'means', 'of', 'ascertaining', 'the']
 &lt;Text: This process, however, afforded me no means of...&gt;</code></pre>
@@ -2060,7 +2060,7 @@ le corpus EAP en tokens <code>NLTK</code> :</p>
 </div>
 <p>Avec la méthode <code>concordance</code> (question 1),
 la liste devrait ressembler à celle-ci :</p>
-<div id="012fd57f" class="cell" data-execution_count="42">
+<div id="e91b7d60" class="cell" data-execution_count="42">
 <div class="cell-output cell-output-stdout">
 <pre><code>Exemples d'occurences du terme 'fear' :
 Displaying 13 of 13 matches:
@@ -2086,7 +2086,7 @@ arriers of iron that hemmed me in. I fear you have mesmerized" adding immediat
 apparaissent le plus fréquemment ensemble. Parmi toutes les paires de deux mots observées,
 il s’agit de sélectionner, à partir d’un modèle statistique, les “meilleures”.
 On obtient donc avec cette méthode (question 2):</p>
-<div id="95034508" class="cell" data-execution_count="43">
+<div id="ec977b2a" class="cell" data-execution_count="43">
 <div class="cell-output cell-output-display" data-execution_count="43">
 <pre><code>[('of', 'the'),
  ('in', 'the'),
@@ -2111,7 +2111,7 @@ On obtient donc avec cette méthode (question 2):</p>
 </div>
 </div>
 <p>Si on modélise les meilleures collocations:</p>
-<div id="310b37f5" class="cell" data-execution_count="44">
+<div id="531ddc6f" class="cell" data-execution_count="44">
 <div class="cell-output cell-output-stdout">
 <pre><code>"Gad Fly"
 'Hum Drum,'
@@ -2134,13 +2134,13 @@ Brigadier General</code></pre>
 on a des noms de personnages, de lieux mais aussi des termes fréquemment employés ensemble
 (<em>Chess Player</em> par exemple).</p>
 <p>En ce qui concerne les <em>collocations</em> du mot fear :</p>
-<div id="4ca6e701" class="cell" data-execution_count="45">
+<div id="addc4b71" class="cell" data-execution_count="45">
 <div class="cell-output cell-output-stdout">
 <pre><code>[('fear', 'of'), ('fear', 'God'), ('I', 'fear'), ('the', 'fear'), ('The', 'fear'), ('fear', 'him'), ('you', 'fear')]</code></pre>
 </div>
 </div>
 <p>Si on mène la même analyse pour le terme <em>love</em>, on remarque que de manière logique, on retrouve bien des sujets généralement accolés au verbe :</p>
-<div id="2e319be2" class="cell" data-execution_count="46">
+<div id="e2fe11fb" class="cell" data-execution_count="46">
 <div class="cell-output cell-output-stdout">
 <pre><code>[('love', 'me'), ('love', 'he'), ('will', 'love'), ('I', 'love'), ('love', ','), ('you', 'love'), ('the', 'love')]</code></pre>
 </div>
@@ -2154,9 +2154,9 @@ on a des noms de personnages, de lieux mais aussi des termes fréquemment employ
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-27</p>
+<p>Latest built version: 2024-05-03</p>
 <p>Python version used:</p>
-<div id="abef60ea" class="cell" data-execution_count="48">
+<div id="7a02bb91" class="cell" data-execution_count="48">
 <div class="cell-output cell-output-display" data-execution_count="48">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -4783,7 +4783,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

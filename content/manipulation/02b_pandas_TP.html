@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-27">
+<meta name="dcterms.date" content="2024-05-03">
 <meta name="description" content="Après avoir présenté la logique de Pandas dans le chapitre précédent, ce chapitre vise à illustrer les fonctionalités du package à partir de données d’émissions de gaz à effet de serre de l’Ademe.">
 
 <title>Python pour la data science - Pratique de pandas : un exemple complet</title>
@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -82,9 +82,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
-<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -178,39 +175,7 @@ document.addEventListener('readystatechange', function() {
 </script>
 <script type="module" src="../../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="../../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta name="twitter:title" content="Python pour la data science - Pratique de pandas : un exemple complet">
@@ -225,7 +190,7 @@ de l’Ademe.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-27">
+<meta name="citation_online_date" content="2024-05-03">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -548,7 +513,7 @@ de l’Ademe.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-27</p>
+        <p class="date">2024-05-03</p>
       </div>
     </div>
     
@@ -625,27 +590,7 @@ de l’Ademe.">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#importer-les-données" id="toc-importer-les-données" class="nav-link active" data-scroll-target="#importer-les-données"><span class="header-section-number">1</span> Importer les données</a>
-  <ul class="collapse">
-  <li><a href="#lire-des-données-depuis-un-chemin-local" id="toc-lire-des-données-depuis-un-chemin-local" class="nav-link" data-scroll-target="#lire-des-données-depuis-un-chemin-local"><span class="header-section-number">1.1</span> Lire des données depuis un chemin local</a></li>
-  <li><a href="#importer-et-découvrir-des-données-depuis-un-csv" id="toc-importer-et-découvrir-des-données-depuis-un-csv" class="nav-link" data-scroll-target="#importer-et-découvrir-des-données-depuis-un-csv"><span class="header-section-number">1.2</span> Importer et découvrir des données depuis un CSV</a></li>
-  </ul></li>
-  <li><a href="#premières-manipulations-de-données" id="toc-premières-manipulations-de-données" class="nav-link" data-scroll-target="#premières-manipulations-de-données"><span class="header-section-number">2</span> Premières manipulations de données</a>
-  <ul class="collapse">
-  <li><a href="#import-des-données-de-linsee" id="toc-import-des-données-de-linsee" class="nav-link" data-scroll-target="#import-des-données-de-linsee"><span class="header-section-number">2.1</span> Import des données de l’Insee</a></li>
-  </ul></li>
-  <li><a href="#les-indices" id="toc-les-indices" class="nav-link" data-scroll-target="#les-indices"><span class="header-section-number">3</span> Les indices</a></li>
-  <li><a href="#restructurer-les-données" id="toc-restructurer-les-données" class="nav-link" data-scroll-target="#restructurer-les-données"><span class="header-section-number">4</span> Restructurer les données</a></li>
-  <li><a href="#combiner-les-données" id="toc-combiner-les-données" class="nav-link" data-scroll-target="#combiner-les-données"><span class="header-section-number">5</span> Combiner les données</a>
-  <ul class="collapse">
-  <li><a href="#travail-préliminaire" id="toc-travail-préliminaire" class="nav-link" data-scroll-target="#travail-préliminaire"><span class="header-section-number">5.1</span> Travail préliminaire</a></li>
-  <li><a href="#associer-des-données" id="toc-associer-des-données" class="nav-link" data-scroll-target="#associer-des-données"><span class="header-section-number">5.2</span> Associer des données</a></li>
-  </ul></li>
-  <li><a href="#formatter-des-tableaux-de-statistiques-descriptives" id="toc-formatter-des-tableaux-de-statistiques-descriptives" class="nav-link" data-scroll-target="#formatter-des-tableaux-de-statistiques-descriptives"><span class="header-section-number">6</span> Formatter des tableaux de statistiques descriptives</a></li>
-  <li><a href="#exercices-bonus" id="toc-exercices-bonus" class="nav-link" data-scroll-target="#exercices-bonus"><span class="header-section-number">7</span> Exercices bonus</a>
-  <ul class="collapse">
-  <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
-  </ul></li>
+  <li><a href="#informations-additionnelles" id="toc-informations-additionnelles" class="nav-link active" data-scroll-target="#informations-additionnelles">Informations additionnelles</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/linogaliana/python-datascientist/edit/master/content/manipulation/02b_pandas_TP.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/linogaliana/python-datascientist/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -656,1729 +601,21 @@ de l’Ademe.">
 
 
 
-<p>Les exemples de ce TP sont visualisables sous forme de <code>Jupyter Notebooks</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="1233" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1232;"><span id="cb1-1233"><a href="#cb1-1233" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">pathname</span><span class="op">.</span><span class="fu">replace</span>(<span class="st">".html"</span><span class="op">,</span> <span class="st">".qmd"</span>)<span class="op">;</span></span>
-<span id="cb1-1234"><a href="#cb1-1234" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path})<span class="sc">}</span><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-1" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-2" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="1239" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1238;"><span id="cb2-1239"><a href="#cb2-1239" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-1240"><a href="#cb2-1240" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
-<span id="cb2-1241"><a href="#cb2-1241" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
-<span id="cb2-1242"><a href="#cb2-1242" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
-<span id="cb2-1243"><a href="#cb2-1243" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1244"><a href="#cb2-1244" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-1245"><a href="#cb2-1245" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1246"><a href="#cb2-1246" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-1247"><a href="#cb2-1247" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-1248"><a href="#cb2-1248" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
-<span id="cb2-1249"><a href="#cb2-1249" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-1250"><a href="#cb2-1250" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1251"><a href="#cb2-1251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1252"><a href="#cb2-1252" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
-<span id="cb2-1253"><a href="#cb2-1253" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-1254"><a href="#cb2-1254" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
-<span id="cb2-1255"><a href="#cb2-1255" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1256"><a href="#cb2-1256" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
-<span id="cb2-1257"><a href="#cb2-1257" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1258"><a href="#cb2-1258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1259"><a href="#cb2-1259" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
-<span id="cb2-1260"><a href="#cb2-1260" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
-<span id="cb2-1261"><a href="#cb2-1261" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1262"><a href="#cb2-1262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1263"><a href="#cb2-1263" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink <span class="op">;</span></span>
-<span id="cb2-1264"><a href="#cb2-1264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1265"><a href="#cb2-1265" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
-<span id="cb2-1266"><a href="#cb2-1266" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
-<span id="cb2-1267"><a href="#cb2-1267" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1268"><a href="#cb2-1268" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
-<span id="cb2-1269"><a href="#cb2-1269" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1270"><a href="#cb2-1270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1271"><a href="#cb2-1271" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1272"><a href="#cb2-1272" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
-<span id="cb2-1273"><a href="#cb2-1273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1274"><a href="#cb2-1274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1275"><a href="#cb2-1275" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1276"><a href="#cb2-1276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1277"><a href="#cb2-1277" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-1278"><a href="#cb2-1278" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
-<span id="cb2-1279"><a href="#cb2-1279" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
-<span id="cb2-1280"><a href="#cb2-1280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1281"><a href="#cb2-1281" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-1282"><a href="#cb2-1282" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
-<span id="cb2-1283"><a href="#cb2-1283" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1284"><a href="#cb2-1284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1285"><a href="#cb2-1285" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
-<span id="cb2-1286"><a href="#cb2-1286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1287"><a href="#cb2-1287" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-1288"><a href="#cb2-1288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1289"><a href="#cb2-1289" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
-<span id="cb2-1290"><a href="#cb2-1290" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1291"><a href="#cb2-1291" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1292"><a href="#cb2-1292" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1293"><a href="#cb2-1293" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1294"><a href="#cb2-1294" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1295"><a href="#cb2-1295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1296"><a href="#cb2-1296" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
-<span id="cb2-1297"><a href="#cb2-1297" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-1298"><a href="#cb2-1298" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1299"><a href="#cb2-1299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1300"><a href="#cb2-1300" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-1301"><a href="#cb2-1301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1302"><a href="#cb2-1302" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
-<span id="cb2-1303"><a href="#cb2-1303" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1304"><a href="#cb2-1304" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1305"><a href="#cb2-1305" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1306"><a href="#cb2-1306" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1307"><a href="#cb2-1307" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1308"><a href="#cb2-1308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1309"><a href="#cb2-1309" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
-<span id="cb2-1310"><a href="#cb2-1310" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-1311"><a href="#cb2-1311" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1312"><a href="#cb2-1312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1313"><a href="#cb2-1313" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
-<span id="cb2-1314"><a href="#cb2-1314" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1315"><a href="#cb2-1315" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1316"><a href="#cb2-1316" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1317"><a href="#cb2-1317" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1318"><a href="#cb2-1318" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1319"><a href="#cb2-1319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1320"><a href="#cb2-1320" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
-<span id="cb2-1321"><a href="#cb2-1321" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-1322"><a href="#cb2-1322" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1323"><a href="#cb2-1323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1324"><a href="#cb2-1324" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
-<span id="cb2-1325"><a href="#cb2-1325" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-1326"><a href="#cb2-1326" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-1327"><a href="#cb2-1327" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-1328"><a href="#cb2-1328" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1329"><a href="#cb2-1329" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1330"><a href="#cb2-1330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1331"><a href="#cb2-1331" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
-<span id="cb2-1332"><a href="#cb2-1332" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span></span>
-<span id="cb2-1333"><a href="#cb2-1333" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink<span class="op">,</span></span>
-<span id="cb2-1334"><a href="#cb2-1334" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink</span>
-<span id="cb2-1335"><a href="#cb2-1335" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
-<span id="cb2-1336"><a href="#cb2-1336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1337"><a href="#cb2-1337" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
-<span id="cb2-1338"><a href="#cb2-1338" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink)<span class="op">;</span></span>
-<span id="cb2-1339"><a href="#cb2-1339" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1340"><a href="#cb2-1340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1341"><a href="#cb2-1341" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
-<span id="cb2-1342"><a href="#cb2-1342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1343"><a href="#cb2-1343" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
-<span id="cb2-1344"><a href="#cb2-1344" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-1345"><a href="#cb2-1345" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1346"><a href="#cb2-1346" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1347"><a href="#cb2-1347" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
-<span id="cb2-1348"><a href="#cb2-1348" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-1349"><a href="#cb2-1349" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-1350"><a href="#cb2-1350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1351"><a href="#cb2-1351" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
-<span id="cb2-1352"><a href="#cb2-1352" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-1353"><a href="#cb2-1353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1354"><a href="#cb2-1354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1355"><a href="#cb2-1355" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
-<span id="cb2-1356"><a href="#cb2-1356" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
-<span id="cb2-1357"><a href="#cb2-1357" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1358"><a href="#cb2-1358" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
-<span id="cb2-1359"><a href="#cb2-1359" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
-<span id="cb2-1360"><a href="#cb2-1360" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-1361"><a href="#cb2-1361" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-1362"><a href="#cb2-1362" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-1363"><a href="#cb2-1363" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-1364"><a href="#cb2-1364" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-1365"><a href="#cb2-1365" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
-<span id="cb2-1366"><a href="#cb2-1366" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
-<span id="cb2-1367"><a href="#cb2-1367" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
-<span id="cb2-1368"><a href="#cb2-1368" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
-<span id="cb2-1369"><a href="#cb2-1369" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
-<span id="cb2-1370"><a href="#cb2-1370" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
-<span id="cb2-1371"><a href="#cb2-1371" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
-<span id="cb2-1372"><a href="#cb2-1372" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
-<span id="cb2-1373"><a href="#cb2-1373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-1374"><a href="#cb2-1374" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
-<span id="cb2-1375"><a href="#cb2-1375" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-1" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-2-2" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-</div>
-<p>Dans cette série d’exercices <code>Pandas</code>,
-nous allons découvrir comment manipuler plusieurs
-jeux de données avec <code>Python</code>.</p>
-<p>Si vous êtes intéressés par <code>R</code>,
-une version très proche de ce TP est
-disponible dans <a href="https://rgeo.linogaliana.fr/exercises/r-wrangling.html">ce cours</a>.</p>
-<p>Dans ce tutoriel, nous allons utiliser deux sources de données :</p>
+<p>La partie <code>Pandas</code> a évolué récemment. Vous pouvez retrouver les contenus liés à <code>Pandas</code> dans les chapitres suivants:</p>
 <ul>
-<li>Les émissions de gaz à effet de serre estimées au niveau communal par l’<code>ADEME</code>. Le jeu de données est
-disponible sur <a href="https://www.data.gouv.fr/fr/datasets/inventaire-de-gaz-a-effet-de-serre-territorialise/#_">data.gouv</a>
-et requêtable directement dans <code>Python</code> avec
-<a href="https://koumoul.com/s/data-fair/api/v1/datasets/igt-pouvoir-de-rechauffement-global/convert">cet url</a> (ce sera l’objet du premier exercice).</li>
-<li>Idéalement, on utiliserait directement les données
-<a href="https://www.insee.fr/fr/statistiques/3560121">disponibles sur le site de l’Insee</a> mais celles-ci nécessitent un peu de travail
-de nettoyage qui n’entre pas dans le cadre de ce TP.
-Pour faciliter l’import de données Insee, il est recommandé d’utiliser le <em>package</em>
-<a href="https://pynsee.readthedocs.io/en/latest/"><code>pynsee</code></a> qui simplifie l’accès aux données
-de l’Insee disponibles sur le site web <a href="https://www.insee.fr/fr/accueil">insee.fr</a>
-ou via des API.</li>
-<li>Le premier exercice présentera le
-<a href="https://www.insee.fr/fr/statistiques/fichier/6800675/v_commune_2023.csv">code officiel géographique</a>,
-un référentiel
-produit par l’Insee utilisé pour identifier les communes à partir d’un code unique, contrairement au code postal.</li>
+<li><a href="../../content/manipulation/02_pandas_intro.qmd">Introduction à <code>Pandas</code> et à la logique du <em>DataFrame</em></a> ;</li>
+<li><a href="../../content/manipulation/02_pandas_suite.qmd">Statistiques par groupe et association de plusieurs jeux de données avec <code>Pandas</code></a> ;</li>
 </ul>
-<p>La librairie <code>pynsee</code> n’est pas installée par défaut avec <code>Python</code>. Avant de pouvoir l’utiliser,
-il est nécessaire de l’installer :</p>
-<div id="1f127bcb" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="1f127bcb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1f127bcb-1"><a href="#1f127bcb-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span>
-<span id="1f127bcb-2"><a href="#1f127bcb-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pynsee</span>
-<span id="1f127bcb-3"><a href="#1f127bcb-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install great_tables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Toutes les dépendances indispensables étant installées, il suffit
-maintenant d’importer les librairies qui seront utilisées
-pendant ces exercices :</p>
-<div id="fcb3a232" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="fcb3a232"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fcb3a232-1"><a href="#fcb3a232-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="fcb3a232-2"><a href="#fcb3a232-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="fcb3a232-3"><a href="#fcb3a232-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="fcb3a232-4"><a href="#fcb3a232-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee</span>
-<span id="fcb3a232-5"><a href="#fcb3a232-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pynsee.download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="importer-les-données" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Importer les données</h1>
-<section id="lire-des-données-depuis-un-chemin-local" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="lire-des-données-depuis-un-chemin-local"><span class="header-section-number">1.1</span> Lire des données depuis un chemin local</h2>
-<p>Cet exercice vise à présenter l’intérêt d’utiliser un chemin relatif
-plutôt qu’un chemin absolu.</p>
-<p>Pour préparer cet exercice, le code suivant permettra de
-télécharger des données qu’on va écrire en local</p>
-<div id="7ca94a33" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="7ca94a33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7ca94a33-1"><a href="#7ca94a33-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="7ca94a33-2"><a href="#7ca94a33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7ca94a33-3"><a href="#7ca94a33-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.insee.fr/fr/statistiques/fichier/6800675/v_commune_2023.csv"</span></span>
-<span id="7ca94a33-4"><a href="#7ca94a33-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="7ca94a33-5"><a href="#7ca94a33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7ca94a33-6"><a href="#7ca94a33-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assurez-vous que la requête a réussi</span></span>
-<span id="7ca94a33-7"><a href="#7ca94a33-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
-<span id="7ca94a33-8"><a href="#7ca94a33-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"cog_2023.csv"</span>, <span class="st">"wb"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
-<span id="7ca94a33-9"><a href="#7ca94a33-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">file</span>.write(response.content)</span>
-<span id="7ca94a33-10"><a href="#7ca94a33-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="7ca94a33-11"><a href="#7ca94a33-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Échec du téléchargement du fichier. Statut HTTP :"</span>, response.status_code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice préliminaire: Importer un CSV (optionnel)</h3>
-<ol type="1">
-<li>Utiliser le code ci-dessus ☝️ pour télécharger les données. Utiliser <code>Pandas</code> pour lire le fichier téléchargé.</li>
-<li>Chercher où les données ont été écrites. Observer la structure de ce dossier.</li>
-<li>Créer un dossier depuis l’explorateur de fichiers (à gauche dans <code>Jupyter</code> ou <code>VSCode</code>). Déplacer le CSV et le <em>notebook</em>. Redémarrer le kernel et adaptez votre code si besoin. Refaire cette manipulation plusieurs fois avec des dossiers différents. Quel peut être le problème rencontré ?</li>
-</ol>
-</div>
-</div>
-<div id="9a424355" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-display" data-execution_count="3">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">TYPECOM</th>
-<th data-quarto-table-cell-role="th">COM</th>
-<th data-quarto-table-cell-role="th">REG</th>
-<th data-quarto-table-cell-role="th">DEP</th>
-<th data-quarto-table-cell-role="th">CTCD</th>
-<th data-quarto-table-cell-role="th">ARR</th>
-<th data-quarto-table-cell-role="th">TNCC</th>
-<th data-quarto-table-cell-role="th">NCC</th>
-<th data-quarto-table-cell-role="th">NCCENR</th>
-<th data-quarto-table-cell-role="th">LIBELLE</th>
-<th data-quarto-table-cell-role="th">CAN</th>
-<th data-quarto-table-cell-role="th">COMPARENT</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>COM</td>
-<td>01001</td>
-<td>84.0</td>
-<td>01</td>
-<td>01D</td>
-<td>012</td>
-<td>5</td>
-<td>ABERGEMENT CLEMENCIAT</td>
-<td>Abergement-Clémenciat</td>
-<td>L'Abergement-Clémenciat</td>
-<td>0108</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>COM</td>
-<td>01002</td>
-<td>84.0</td>
-<td>01</td>
-<td>01D</td>
-<td>011</td>
-<td>5</td>
-<td>ABERGEMENT DE VAREY</td>
-<td>Abergement-de-Varey</td>
-<td>L'Abergement-de-Varey</td>
-<td>0101</td>
-<td>NaN</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="importer-et-découvrir-des-données-depuis-un-csv" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="importer-et-découvrir-des-données-depuis-un-csv"><span class="header-section-number">1.2</span> Importer et découvrir des données depuis un CSV</h2>
-<p>Il est plus pratique lorsque le CSV est disponible directement depuis un lien HTTPS de lire directement les données avec <code>Pandas</code>, sans passer par l’écriture d’un fichier en local. Cela permet de limiter les problèmes d’adhérance à un <em>file system</em>.</p>
-<p>L’URL d’accès aux données peut être conservé dans une variable <em>ad hoc</em> :</p>
-<div id="3cc5be1a" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="3cc5be1a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3cc5be1a-1"><a href="#3cc5be1a-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://koumoul.com/s/data-fair/api/v1/datasets/igt-pouvoir-de-rechauffement-global/convert"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Et utilisé ensuite pour la lecture des données.
-L’objectif du premier exercice est de se familiariser à l’import et l’affichage de données
-avec <code>Pandas</code>.</p>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 1: Importer un CSV et explorer la structure de données</h3>
-<ol type="1">
-<li>Importer les données de l’Ademe à l’aide du package <code>Pandas</code> et de la commande consacrée pour l’import de csv. Nommer le <code>DataFrame</code> obtenu <code>emissions</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</li>
-<li>Utiliser les méthodes adéquates afin d’afficher pour les 10 premières valeurs, les 15 dernières et un échantillon aléatoire de 10 valeurs grâce aux méthodes adéquates du <em>package</em> <code>Pandas</code>.</li>
-<li>Tirer 5 pourcents de l’échantillon sans remise.</li>
-<li>Ne conserver que les 10 premières lignes et tirer aléatoirement dans celles-ci pour obtenir un DataFrame de 100 données.</li>
-<li>Faire 100 tirages à partir des 6 premières lignes avec une probabilité de 1/2 pour la première observation et une probabilité uniforme pour les autres.</li>
-</ol>
-<details>
-<summary>
-En cas de blocage à la question 1
-</summary>
-<p>Lire la documentation de <code>read_csv</code> (très bien faite) ou chercher des exemples
-en ligne pour découvrir cette fonction.</p>
-</details>
-</div>
-</div>
-</section>
-</section>
-<section id="premières-manipulations-de-données" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Premières manipulations de données</h1>
-<p>Le chapitre précédent évoquait quelques manipulations traditionnelles
-de données. Les principales sont rappelées ici :</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<p><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/select_pandas.png" class="img-fluid" alt="Sélectionner des colonnes">
-<img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/rename_pandas.png" class="img-fluid" alt="Renommer des colonnes"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<p><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/mutate_pandas.png" class="img-fluid" alt="Créer de nouvelles colonnes">
-<img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/filter_pandas.png" class="img-fluid" alt="Sélectionner des lignes"></p>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/arrange_pandas.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="Réordonner le DataFrame"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/arrange_pandas.png" class="img-fluid figure-img" alt="Réordonner le DataFrame"></a></p>
-<figcaption>Réordonner le <em>DataFrame</em></figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>La <em>cheatsheet</em> suivante est très pratique puisqu’elle illustre ces différentes
-fonctions. Il est recommandé de régulièrement
-la consulter :</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://cdn-images-1.medium.com/max/2000/1*YhTbz8b8Svi22wNVvqzneg.jpeg" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2" title="Cheasheet Pandas"><img src="https://cdn-images-1.medium.com/max/2000/1*YhTbz8b8Svi22wNVvqzneg.jpeg" class="img-fluid figure-img" style="width:70.0%" alt="Cheasheet Pandas"></a></p>
-<figcaption>Cheasheet <code>Pandas</code></figcaption>
-</figure>
-</div>
-<p>L’objectif du prochain exercice est de se familiariser aux principales manipulations de données
-sur un sous-ensemble de la table des émissions de gaz carbonique.</p>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 2: Découverte des verbes de <code>Pandas</code> pour manipuler des données</h3>
-<p>En premier lieu, on propose de se familiariser avec les opérations sur
-les colonnes.</p>
-<ol type="1">
-<li>Créer un <em>dataframe</em> <code>emissions_copy</code> ne conservant que les colonnes
-<code>INSEE commune</code>, <code>Commune</code>, <code>Autres transports</code> et <code>Autres transports international</code></li>
-</ol>
-<details>
-<summary>
-Indice pour cette question
-</summary>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/select_pandas.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/select_pandas.png" class="img-fluid" data-fig-width="50%"></a></p>
-</details>
-<ol start="2" type="1">
-<li>Comme les noms de variables sont peu pratiques, les renommer de la
-manière suivante :
-<ul>
-<li><code>INSEE commune</code> <span class="math inline">\(\to\)</span> <code>code_insee</code></li>
-<li><code>Autres transports</code> <span class="math inline">\(\to\)</span> <code>transports</code></li>
-<li><code>Autres transports international</code> <span class="math inline">\(\to\)</span> <code>transports_international</code></li>
-</ul></li>
-</ol>
-<details>
-<summary>
-Indice pour cette question
-</summary>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/rename_pandas.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/rename_pandas.png" class="img-fluid" data-fig-width="50%"></a></p>
-</details>
-<ol start="3" type="1">
-<li><p>On propose, pour simplifier, de remplacer les valeurs manquantes (<code>NA</code>)
-par la valeur 0. Utiliser la
-méthode <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.fillna.html"><code>fillna</code></a>
-pour transformer les valeurs manquantes en 0.</p></li>
-<li><p>Créer les variables suivantes :</p>
-<ul>
-<li><code>dep</code>: le département. Celui-ci peut être créé grâce aux deux premiers caractères de <code>code_insee</code> en appliquant la méthode <code>str</code> ;</li>
-<li><code>transports_total</code>: les émissions du secteur transports (somme des deux variables)</li>
-</ul></li>
-</ol>
-<details>
-<summary>
-Indice pour cette question
-</summary>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/mutate_pandas.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/mutate_pandas.png" class="img-fluid" data-fig-width="50%"></a></p>
-</details>
-<ol start="5" type="1">
-<li>Ordonner les données du plus gros pollueur au plus petit
-puis ordonner les données
-du plus gros pollueur au plus petit par département (du 01 au 95).</li>
-</ol>
-<details>
-<summary>
-Indice pour cette question
-</summary>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/arrange_pandas.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/arrange_pandas.png" class="img-fluid" data-fig-width="50%"></a></p>
-</details>
-<ol start="6" type="1">
-<li>Ne conserver que les communes appartenant aux départements 13 ou 31.
-Ordonner ces communes du plus gros pollueur au plus petit.</li>
-</ol>
-<details>
-<summary>
-Indice pour cette question
-</summary>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/filter_pandas.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/filter_pandas.png" class="img-fluid" data-fig-width="50%"></a></p>
-</details>
-<ol start="7" type="1">
-<li>Calculer les émissions totales par départements</li>
-</ol>
-<details>
-<summary>
-Indice pour cette question
-</summary>
-<ul>
-<li><em>“Grouper par”</em> = <code>groupby</code></li>
-<li><em>“émissions totales”</em> = <code>agg({*** : "sum"})</code></li>
-</ul>
-</details>
-</div>
-</div>
-<p>A la question 5, quand on ordonne les communes exclusivement à partir de la variable
-<code>transports_total</code>, on obtient ainsi:</p>
-<div id="06607ab3" class="cell" data-execution_count="10">
-<div class="cell-output cell-output-display" data-execution_count="9">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">code_insee</th>
-<th data-quarto-table-cell-role="th">Commune</th>
-<th data-quarto-table-cell-role="th">transports</th>
-<th data-quarto-table-cell-role="th">transports_international</th>
-<th data-quarto-table-cell-role="th">dep</th>
-<th data-quarto-table-cell-role="th">transports_total</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">31108</td>
-<td>77291</td>
-<td>LE MESNIL-AMELOT</td>
-<td>133834.090767</td>
-<td>3.303394e+06</td>
-<td>77</td>
-<td>3.437228e+06</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">31099</td>
-<td>77282</td>
-<td>MAUREGARD</td>
-<td>133699.072712</td>
-<td>3.303394e+06</td>
-<td>77</td>
-<td>3.437093e+06</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">31111</td>
-<td>77294</td>
-<td>MITRY-MORY</td>
-<td>89815.529858</td>
-<td>2.202275e+06</td>
-<td>77</td>
-<td>2.292090e+06</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>A la question 6, on obtient ce classement :</p>
-<div id="61c66020" class="cell" data-execution_count="11">
-<div class="cell-output cell-output-display" data-execution_count="10">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">code_insee</th>
-<th data-quarto-table-cell-role="th">Commune</th>
-<th data-quarto-table-cell-role="th">transports</th>
-<th data-quarto-table-cell-role="th">transports_international</th>
-<th data-quarto-table-cell-role="th">dep</th>
-<th data-quarto-table-cell-role="th">transports_total</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4438</td>
-<td>13096</td>
-<td>SAINTES-MARIES-DE-LA-MER</td>
-<td>271182.758578</td>
-<td>0.000000</td>
-<td>13</td>
-<td>271182.758578</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">4397</td>
-<td>13054</td>
-<td>MARIGNANE</td>
-<td>245375.418650</td>
-<td>527360.799265</td>
-<td>13</td>
-<td>772736.217915</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">11684</td>
-<td>31069</td>
-<td>BLAGNAC</td>
-<td>210157.688544</td>
-<td>403717.366279</td>
-<td>31</td>
-<td>613875.054823</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<section id="import-des-données-de-linsee" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="import-des-données-de-linsee"><span class="header-section-number">2.1</span> Import des données de l’Insee</h2>
-<p>En ce qui concerne nos informations communales, on va utiliser l’une des
-sources de l’Insee les plus utilisées : les données <a href="https://www.insee.fr/fr/metadonnees/source/serie/s1172"><code>Filosofi</code></a>.
-Afin de faciliter la récupération de celles-ci, nous allons
-utiliser le <em>package</em> communautaire <code>pynsee</code> :</p>
-<div class="cell markdown">
-<div class="alert alert-info" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-comment"></i> Note</h3>
-<p>Le <em>package</em> <code>pynsee</code> comporte deux principaux points d’entrée :</p>
-<ul>
-<li>Les API de l’Insee, ce qui sera illustré dans le chapitre consacré.</li>
-<li>Quelques jeux de données directement issus du site web de
-l’Insee (<a href="https://www.insee.fr/fr/accueil">insee.fr</a>)</li>
-</ul>
-<p>Dans ce chapitre, nous allons exclusivement utiliser cette deuxième
-approche. Cela se fera par le module <code>pynsee.download</code>.</p>
-<p>La liste des données disponibles depuis ce <em>package</em> est <a href="https://inseefrlab.github.io/DoReMIFaSol/articles/donnees_dispo.html">ici</a>.
-La fonction <code>download_file</code> attend un identifiant unique
-pour savoir quelle base de données aller chercher et
-restructurer depuis le
-site <a href="https://www.insee.fr/fr/accueil">insee.fr</a>.</p>
-<details>
-<summary>
-Connaître la liste des bases disponibles
-</summary>
-<p>Pour connaître la liste des bases disponibles, vous
-pouvez utiliser la fonction <code>meta = pynsee.get_file_list()</code>
-après avoir fait <code>import pynsee</code>.
-Celle-ci renvoie un <code>DataFrame</code> dans lequel on peut
-rechercher, par exemple grâce à une recherche
-de mots-clefs :</p>
-<div id="6c2831bd" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pynsee.get_file_list()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>meta.loc[meta[<span class="st">"label"</span>].<span class="bu">str</span>.contains(<span class="vs">r"Filosofi.*2016"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">id</th>
-<th data-quarto-table-cell-role="th">name</th>
-<th data-quarto-table-cell-role="th">label</th>
-<th data-quarto-table-cell-role="th">collection</th>
-<th data-quarto-table-cell-role="th">link</th>
-<th data-quarto-table-cell-role="th">type</th>
-<th data-quarto-table-cell-role="th">zip</th>
-<th data-quarto-table-cell-role="th">big_zip</th>
-<th data-quarto-table-cell-role="th">data_file</th>
-<th data-quarto-table-cell-role="th">tab</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">label_col</th>
-<th data-quarto-table-cell-role="th">date_ref</th>
-<th data-quarto-table-cell-role="th">meta_file</th>
-<th data-quarto-table-cell-role="th">separator</th>
-<th data-quarto-table-cell-role="th">type_col</th>
-<th data-quarto-table-cell-role="th">long_col</th>
-<th data-quarto-table-cell-role="th">val_col</th>
-<th data-quarto-table-cell-role="th">encoding</th>
-<th data-quarto-table-cell-role="th">last_row</th>
-<th data-quarto-table-cell-role="th">missing_value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">79</td>
-<td>FILOSOFI_COM_2016</td>
-<td>FILOSOFI_COM</td>
-<td>Données Filosofi niveau communal – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>COM</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">80</td>
-<td>FILOSOFI_EPCI_2016</td>
-<td>FILOSOFI_EPCI</td>
-<td>Données Filosofi niveau EPCI – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>EPCI</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">81</td>
-<td>FILOSOFI_ARR_2016</td>
-<td>FILOSOFI_ARR</td>
-<td>Données Filosofi niveau arondissement – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>ARR</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">82</td>
-<td>FILOSOFI_DEP_2016</td>
-<td>FILOSOFI_DEP</td>
-<td>Données Filosofi niveau départemental – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>DEP</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">83</td>
-<td>FILOSOFI_REG_2016</td>
-<td>FILOSOFI_REG</td>
-<td>Données Filosofi niveau régional – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>REG</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">84</td>
-<td>FILOSOFI_METRO_2016</td>
-<td>FILOSOFI_METRO</td>
-<td>Données Filosofi niveau France métropolitaine ...</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>METRO</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">85</td>
-<td>FILOSOFI_AU2010_2016</td>
-<td>FILOSOFI_AU2010</td>
-<td>Données Filosofi niveau aire urbaine – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>AU2010</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">86</td>
-<td>FILOSOFI_UU2010_2016</td>
-<td>FILOSOFI_UU2010</td>
-<td>Données Filosofi niveau unité urbaine – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>UU2010</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">87</td>
-<td>FILOSOFI_ZE2010_2016</td>
-<td>FILOSOFI_ZE2010</td>
-<td>Données Filosofi niveau zone d’emploi – 2016</td>
-<td>FILOSOFI</td>
-<td>https://www.insee.fr/fr/statistiques/fichier/4...</td>
-<td>xls</td>
-<td>True</td>
-<td>False</td>
-<td>base-cc-filosofi-2016.xls</td>
-<td>ZE2010</td>
-<td>...</td>
-<td>NaN</td>
-<td>2016-01-01</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-</tbody>
-</table>
-
-<p>9 rows × 24 columns</p>
-</div>
-</div>
-</div>
-</div>
-<p>Ici, <code>meta['label'].str.contains(r"Filosofi.*2016")</code> signifie:
-“<em><code>pandas</code> trouve moi tous les labels où sont contenus les termes Filosofi et 2016.</em>”
-(<code>.*</code> signifiant “<em>peu m’importe le nombre de mots ou caractères entre</em>”)</p>
-</details>
-</div>
-</div>
-<p>On va utiliser les données Filosofi (données de revenus) au niveau communal de 2016.
-Ce n’est pas la même année que les données d’émission de CO2, ce n’est donc pas parfaitement rigoureux,
-mais cela permettra tout de même d’illustrer
-les principales fonctionnalités de <code>Pandas</code></p>
-<p>Le point d’entrée principal de la fonction <code>pynsee</code> est la fonction <code>download_file</code>.</p>
-<p>Le code pour télécharger les données est le suivant :</p>
-<div id="c8059c6b" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="c8059c6b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c8059c6b-1"><a href="#c8059c6b-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pynsee.download <span class="im">import</span> download_file</span>
-<span id="c8059c6b-2"><a href="#c8059c6b-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c8059c6b-3"><a href="#c8059c6b-3" aria-hidden="true" tabindex="-1"></a>filosofi <span class="op">=</span> download_file(<span class="st">"FILOSOFI_COM_2016"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Le <em>DataFrame</em> en question a l’aspect suivant :</p>
-<div id="11a2a434" class="cell" data-execution_count="14">
-<div class="cell-output cell-output-display" data-execution_count="13">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">CODGEO</th>
-<th data-quarto-table-cell-role="th">LIBGEO</th>
-<th data-quarto-table-cell-role="th">NBMENFISC16</th>
-<th data-quarto-table-cell-role="th">NBPERSMENFISC16</th>
-<th data-quarto-table-cell-role="th">MED16</th>
-<th data-quarto-table-cell-role="th">PIMP16</th>
-<th data-quarto-table-cell-role="th">TP6016</th>
-<th data-quarto-table-cell-role="th">TP60AGE116</th>
-<th data-quarto-table-cell-role="th">TP60AGE216</th>
-<th data-quarto-table-cell-role="th">TP60AGE316</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">PPEN16</th>
-<th data-quarto-table-cell-role="th">PPAT16</th>
-<th data-quarto-table-cell-role="th">PPSOC16</th>
-<th data-quarto-table-cell-role="th">PPFAM16</th>
-<th data-quarto-table-cell-role="th">PPMINI16</th>
-<th data-quarto-table-cell-role="th">PPLOGT16</th>
-<th data-quarto-table-cell-role="th">PIMPOT16</th>
-<th data-quarto-table-cell-role="th">D116</th>
-<th data-quarto-table-cell-role="th">D916</th>
-<th data-quarto-table-cell-role="th">RD16</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">7617</td>
-<td>22362</td>
-<td>Tréguier</td>
-<td>1075</td>
-<td>1958.5</td>
-<td>18506</td>
-<td>37</td>
-<td>18</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>47.1</td>
-<td>9.2</td>
-<td>7.8</td>
-<td>1.7</td>
-<td>3.7</td>
-<td>2.4</td>
-<td>-14.2</td>
-<td>10624</td>
-<td>32887.666666666664</td>
-<td>3.095601154618474</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">26925</td>
-<td>68304</td>
-<td>Sentheim</td>
-<td>596</td>
-<td>1477.5</td>
-<td>23423.6</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">30781</td>
-<td>78688</td>
-<td>Voisins-le-Bretonneux</td>
-<td>4304</td>
-<td>11784</td>
-<td>33332.666666666664</td>
-<td>83</td>
-<td>5</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>21.9</td>
-<td>8.7</td>
-<td>1.8</td>
-<td>1.1</td>
-<td>0.3</td>
-<td>0.4</td>
-<td>-23.8</td>
-<td>18540.357142857145</td>
-<td>56755.6</td>
-<td>3.0611923795581064</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">12220</td>
-<td>32366</td>
-<td>Saint-Brès</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">1377</td>
-<td>03187</td>
-<td>Montoldre</td>
-<td>188</td>
-<td>467</td>
-<td>19624.8</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-</tbody>
-</table>
-
-<p>5 rows × 29 columns</p>
-</div>
-</div>
-</div>
-</div>
-<p><code>Pandas</code> a géré automatiquement les types de variables. Il le fait relativement bien, mais une vérification est toujours utile pour les variables qui ont un statut spécifique.</p>
-<p>Pour les variables qui ne sont pas en type <code>float</code> alors qu’elles devraient l’être, on modifie leur type.</p>
-<div id="eca8e68a" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="eca8e68a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eca8e68a-1"><a href="#eca8e68a-1" aria-hidden="true" tabindex="-1"></a>filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]] <span class="op">=</span> filosofi.loc[:, filosofi.columns[<span class="dv">2</span>:]].<span class="bu">apply</span>(</span>
-<span id="eca8e68a-2"><a href="#eca8e68a-2" aria-hidden="true" tabindex="-1"></a>    pd.to_numeric, errors<span class="op">=</span><span class="st">"coerce"</span></span>
-<span id="eca8e68a-3"><a href="#eca8e68a-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Un simple coup d’oeil sur les données
-donne une idée assez précise de la manière dont les données sont organisées.
-On remarque que certaines variables de <code>filosofi</code> semblent avoir beaucoup de valeurs manquantes (secret statistique)
-alors que d’autres semblent complètes.
-Si on désire exploiter <code>filosofi</code>, il faut faire attention à la variable choisie.</p>
-<p>Notre objectif à terme va être de relier l’information contenue entre ces
-deux jeux de données. En effet, sinon, nous risquons d’être frustré : nous allons
-vouloir en savoir plus sur les émissions de gaz carbonique mais seront très
-limités dans les possibilités d’analyse sans ajout d’une information annexe
-issue de <code>filosofi</code>.</p>
-</section>
-</section>
-<section id="les-indices" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Les indices</h1>
-<p>Les indices sont des éléments spéciaux d’un <code>DataFrame</code> puisqu’ils permettent d’identifier certaines observations.
-Il est tout à fait possible d’utiliser plusieurs indices, par exemple si on a des niveaux imbriqués.</p>
-<p>Pour le moment, on va prendre comme acquis que les codes communes (dits aussi codes Insee) permettent
-d’identifier de manière unique une commune. Un exercice ultérieur permettra de s’en assurer.</p>
-<p><code>Pandas</code> propose un système d’indice qui permet d’ordonner les variables mais également de gagner
-en efficacité sur certains traitements, comme des recherches d’observations. Le prochain
-exercice illustre cette fonctionnalité.</p>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored" data-anchor-id="les-indices"><i class="fa-solid fa-pencil"></i> Exercice 3 : Les indices</h3>
-<p>On suppose ici qu’on peut se fier aux codes communes. En effet, on a un même ordre de grandeur de communes dans les deux bases.</p>
-<div id="d6dd77cd" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(emissions[[<span class="st">"INSEE commune"</span>, <span class="st">"Commune"</span>]].nunique())</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(filosofi[[<span class="st">"CODGEO"</span>, <span class="st">"LIBGEO"</span>]].nunique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>INSEE commune    35798
-Commune          33338
-dtype: int64
-CODGEO    34932
-LIBGEO    32676
-dtype: int64</code></pre>
-</div>
-</div>
-<ol type="1">
-<li><p>Fixer comme indice la variable de code commune dans les deux bases.
-Regarder le changement que cela induit sur le <em>display</em> du <code>DataFrame</code></p></li>
-<li><p>Les deux premiers chiffres des codes communes sont le numéro de département.
-Créer une variable de département <code>dep</code> dans <code>emissions</code> et <code>filosofi</code></p></li>
-<li><p>Calculer les émissions totales par secteur pour chaque département.
-Mettre en <em>log</em> ces résultats dans un objet <code>emissions_log</code>.
-Garder 5 départements et produire un <code>barplot</code> grâce à la méthode <em>plot</em> (la
-figure n’a pas besoin d’être vraiment propre, c’est seulement pour illustrer
-cette méthode)</p></li>
-<li><p>Repartir de <code>emissions</code>.
-Calculer les émissions totales par département et sortir la liste
-des 10 principaux émetteurs de CO2 et des 5 départements les moins émetteurs.
-Essayer de comprendre pourquoi ce sont ces départements qui apparaissent en tête
-du classement. Pour cela, il peut être utile de regarder les caractéristiques de ces
-départements dans <code>filosofi</code></p></li>
-</ol>
-</div>
-</div>
-<p>En pratique, l’utilisation des indices en <code>Pandas</code> peut être piégeuse, notamment lorsqu’on
-associe des sources de données.<br>
-Il est plutôt recommandé de ne pas les utiliser ou de les utiliser avec parcimonie,
-cela pourra éviter de mauvaises surprises.</p>
-</section>
-<section id="restructurer-les-données" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Restructurer les données</h1>
-<p>Quand on a plusieurs informations pour un même individu ou groupe, on
-retrouve généralement deux types de structure de données :</p>
-<ul>
-<li>format <strong>wide</strong> : les données comportent des observations répétées, pour un même individu (ou groupe), dans des colonnes différentes</li>
-<li>format <strong>long</strong> : les données comportent des observations répétées, pour un même individu, dans des lignes différentes avec une colonne permettant de distinguer les niveaux d’observations</li>
-</ul>
-<p>Un exemple de la distinction entre les deux peut être pris à l’ouvrage de référence d’Hadley Wickham, <a href="https://r4ds.hadley.nz/"><em>R for Data Science</em></a>:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://d33wubrfki0l68.cloudfront.net/3aea19108d39606bbe49981acda07696c0c7fcd8/2de65/images/tidy-9.png" class="lightbox" data-glightbox="description: .lightbox-desc-8" data-gallery="quarto-lightbox-gallery-8" title="Données long et wide"><img src="https://d33wubrfki0l68.cloudfront.net/3aea19108d39606bbe49981acda07696c0c7fcd8/2de65/images/tidy-9.png" class="img-fluid figure-img" alt="Données long et wide"></a></p>
-<figcaption>Données <em>long</em> et <em>wide</em></figcaption>
-</figure>
-</div>
-<p>L’aide mémoire suivante aidera à se rappeler les fonctions à appliquer si besoin :</p>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/reshape.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/reshape.png" class="img-fluid" data-fig-width="60%"></a></p>
-<p>Le fait de passer d’un format <em>wide</em> au format <em>long</em> (ou vice-versa)
-peut être extrêmement pratique car certaines fonctions sont plus adéquates sur une forme de données ou sur l’autre.</p>
-<p>En règle générale, avec <code>Python</code> comme avec <code>R</code>, les <strong>formats <em>long</em> sont souvent préférables</strong>.
-Les formats <em>wide</em> sont plutôt pensés pour des tableurs comme <code>Excel</code> ou on dispose d’un nombre réduit
-de lignes à partir duquel faire des tableaux croisés dynamiques.</p>
-<p>Le prochain exercice propose donc une telle restructuration de données.
-Les données de l’ADEME, et celles de l’Insee également, sont au format
-<em>wide</em>.
-Le prochain exercice illustre l’intérêt de faire la conversion <em>long</em> <span class="math inline">\(\to\)</span> <em>wide</em>
-avant de faire un graphique.</p>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored" data-anchor-id="restructurer-les-données"><i class="fa-solid fa-pencil"></i> Exercice 5: Restructurer les données : wide to long</h3>
-<ol type="1">
-<li><p>Créer une copie des données de l’<code>ADEME</code> en faisant <code>df_wide = emissions_wide.copy()</code></p></li>
-<li><p>Restructurer les données au format <em>long</em> pour avoir des données d’émissions par secteur en gardant comme niveau d’analyse la commune (attention aux autres variables identifiantes).</p></li>
-<li><p>Faire la somme par secteur et représenter graphiquement</p></li>
-<li><p>Garder, pour chaque département, le secteur le plus polluant</p></li>
-</ol>
-</div>
-</div>
-</section>
-<section id="combiner-les-données" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Combiner les données</h1>
-<section id="travail-préliminaire" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="travail-préliminaire"><span class="header-section-number">5.1</span> Travail préliminaire</h2>
-<p>Jusqu’à présent lorsque nous avons produit des statistiques descriptives,
-celles-ci étaient univariées, c’est-à-dire que nous produisions de l’information
-sur une variable mais nous ne la mettions pas en lien avec une autre. Pourtant,
-on est rapidement amené à désirer expliquer certaines statistiques agrégées à partir
-de caractéristiques issues d’une autre source de données. Cela implique
-donc d’associer des jeux de données,
-autrement dit de mettre en lien deux jeux de données
-présentant le même niveau d’information.</p>
-<p>On appelle ceci faire un <em>merge</em> ou un <em>join</em>. De manière illustrée,
-ceci revient à effectuer ce type d’opération :</p>
-<p><a href="https://pandas.pydata.org/docs/_images/merging_concat_axis1_inner.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="https://pandas.pydata.org/docs/_images/merging_concat_axis1_inner.png" class="img-fluid"></a></p>
-<p>Avant de faire ceci, il est néanmoins nécessaire de s’assurer que les variables
-communes entre les bases de données présentent le bon niveau d’information.</p>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 6: vérification des clés de jointure</h3>
-<p>On commence par vérifier les dimensions des <code>DataFrames</code> et la structure de certaines variables clés.
-En l’occurrence, les variables fondamentales pour lier nos données sont les variables communales.
-Ici, on a deux variables géographiques: un code commune et un nom de commune.</p>
-<ol type="1">
-<li><p>Vérifier les dimensions des <em>DataFrames</em>.</p></li>
-<li><p>Identifier dans <code>filosofi</code> les noms de communes qui correspondent à plusieurs codes communes et sélectionner leurs codes. En d’autres termes, identifier les <code>LIBGEO</code> tels qu’il existe des doublons de <code>CODGEO</code> et les stocker dans un vecteur <code>x</code> (conseil: faire attention à l’index de <code>x</code>).</p></li>
-</ol>
-<p>On se focalise temporairement sur les observations où le libellé comporte plus de deux codes communes différents</p>
-<ul>
-<li><p><em>Question 3</em>. Regarder dans <code>filosofi</code> ces observations.</p></li>
-<li><p><em>Question 4</em>. Pour mieux y voir, réordonner la base obtenue par order alphabétique.</p></li>
-<li><p><em>Question 5</em>. Déterminer la taille moyenne (variable nombre de personnes: <code>NBPERSMENFISC16</code>) et quelques statistiques descriptives de ces données.
-Comparer aux mêmes statistiques sur les données où libellés et codes communes coïncident.</p></li>
-<li><p><em>Question 6</em>. Vérifier les grandes villes (plus de 100 000 personnes),
-la proportion de villes pour lesquelles un même nom est associé à différents codes commune.</p></li>
-<li><p><em>Question 7</em>. Vérifier dans <code>filosofi</code> les villes dont le libellé est égal à Montreuil.
-Vérifier également celles qui contiennent le terme <em>‘Saint-Denis’</em>.</p></li>
-</ul>
-</div>
-</div>
-<p>Ce petit exercice permet de se rassurer car les libellés dupliqués
-sont en fait des noms de commune identiques mais qui ne sont pas dans le même département.
-Il ne s’agit donc pas d’observations dupliquées.
-On peut donc se fier aux codes communes, qui eux sont uniques.</p>
-</section>
-<section id="associer-des-données" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="associer-des-données"><span class="header-section-number">5.2</span> Associer des données</h2>
-<p>Une information que l’on cherche à obtenir s’obtient de moins en moins à partir d’une unique base de données. Il devient commun de devoir combiner des données issues de sources différentes.</p>
-<p>Nous allons ici nous focaliser sur le cas le plus favorable qui est la situation où une information permet d’apparier de manière exacte deux bases de données (autrement nous serions dans une situation, beaucoup plus complexe, d’appariement flou). La situation typique est l’appariement entre deux sources de données selon un identifiant individuel ou un identifiant de code commune, ce qui est notre cas.</p>
-<p>Il est recommandé de lire <a href="https://www.book.utilitr.org/03_fiches_thematiques/fiche_joindre_donnees">ce guide assez complet sur la question des jointures avec R</a> qui donne des recommandations également utiles en <code>Python</code>.</p>
-<p>Dans le langage courant du statisticien,
-on utilise de manière indifférente les termes <em>merge</em> ou <em>join</em>. Le deuxième terme provient de la syntaxe <code>SQL</code>.
-Quand on fait du <code>Pandas</code>, on utilise plutôt la commande <em>merge</em>.</p>
-<p><a href="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/pandas_join.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/pandas_join.png" class="img-fluid"></a></p>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored"><i class="fa-solid fa-pencil"></i> Exercice 7: Calculer l'empreinte carbone par habitant</h3>
-<p>En premier lieu, on va calculer l’empreinte carbone de chaque commune.</p>
-<ol type="1">
-<li><p>Créer une variable <code>emissions</code> qui correspond aux émissions totales d’une commune</p></li>
-<li><p>Faire une jointure à gauche entre les données d’émissions et les données de cadrage<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p></li>
-<li><p>Calculer l’empreinte carbone (émissions totales / population).</p></li>
-</ol>
-<p>A ce stade nous pourrions avoir envie d’aller vers la modélisation pour essayer d’expliquer
-les déterminants de l’empreinte carbone à partir de variables communales.
-Une approche inférentielle nécessite néanmoins pour être pertinente de
-vérifier en amont des statistiques descriptives.</p>
-<ol start="4" type="1">
-<li>Sortir un histogramme en niveau puis en log de l’empreinte carbone communale.</li>
-</ol>
-<p>Avec une meilleure compréhension de nos données, nous nous rapprochons
-de la statistique inférentielle. Néanmoins, nous avons jusqu’à présent
-construit des statistiques univariées mais n’avons pas cherché à comprendre
-les résultats en regardant le lien avec d’autres variables.
-Cela nous amène vers la statistique bivariée, notamment l’analyse des corrélations.
-Ce travail est important puisque toute modélisation ultérieure consistera à
-raffiner l’analyse des corrélations pour tenir compte des corrélations croisées
-entre multiples facteurs. On propose ici de faire cette analyse
-de manière minimale.</p>
-<ol start="5" type="1">
-<li>Regarder la corrélation entre les variables de cadrage et l’empreinte carbone. Certaines variables semblent-elles pouvoir potentiellement influer sur l’empreinte carbone ?</li>
-</ol>
-</div>
-</div>
-<p>A l’issue de la question 5, le graphique des corrélations est le suivant :</p>
-<div id="10999d01" class="cell" data-execution_count="37">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="02b_pandas_TP_files/figure-html/cell-38-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="02b_pandas_TP_files/figure-html/cell-38-output-1.png" width="773" height="411" class="figure-img"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="formatter-des-tableaux-de-statistiques-descriptives" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Formatter des tableaux de statistiques descriptives</h1>
-<p>De manière automatique un <em>dataframe</em> <code>Pandas</code>
-est mis en forme lorsqu’il est visualisé depuis un <em>notebook</em>.
-Cette mise en forme est pratique pour voir
-les données, une tâche indispensable pour les <em>data scientists</em>
-mais ne permet pas d’aller vraiment au-delà. Dans une phase
-exploratoire, il peut être pratique d’avoir un tableau
-un peu plus complet, intégrant notamment des visualisations
-minimalistes, pour mieux connaître ses données. Dans la phase
-finale d’un projet, lorsqu’on communique sur un projet, il
-est avantageux de disposer d’une visualisation attrative.
-Pour ces deux besoins, les sorties des <em>notebooks</em> sont
-une réponse peu satisfaisante, en plus de nécessiter
-le <em>medium</em> du <em>notebook</em> qui peut en rebuter certains.</p>
-<p>Heureusement, le tout jeune <em>package</em> <a href="https://posit-dev.github.io/great-tables/get-started/"><code>great_tables</code></a> permet, de manière programmatique
-et assez simple, la création de tableaux
-qui n’ont rien à envier à des productions manuelles faites dans <code>Excel</code>
-et difficilement répliquables. <code>great_tables</code> construit des tableaux
-<em>html</em> ce qui offre une grande richesse dans la mise en forme.
-L’exercice suivant proposera de construire un tableau avec
-ce <em>package</em>, pas à pas.</p>
-<p>Afin de se concentrer sur la construction du tableau,
-les préparations de données à faire en amont sont données
-directement. Nous allons repartir de ce jeu de données:</p>
-<div id="7de769d2" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="7de769d2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7de769d2-1"><a href="#7de769d2-1" aria-hidden="true" tabindex="-1"></a>emissions_merged.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">INSEE commune</th>
-<th data-quarto-table-cell-role="th">Commune</th>
-<th data-quarto-table-cell-role="th">Agriculture</th>
-<th data-quarto-table-cell-role="th">Autres transports</th>
-<th data-quarto-table-cell-role="th">Autres transports international</th>
-<th data-quarto-table-cell-role="th">CO2 biomasse hors-total</th>
-<th data-quarto-table-cell-role="th">Déchets</th>
-<th data-quarto-table-cell-role="th">Energie</th>
-<th data-quarto-table-cell-role="th">Industrie hors-énergie</th>
-<th data-quarto-table-cell-role="th">Résidentiel</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">PPSOC16</th>
-<th data-quarto-table-cell-role="th">PPFAM16</th>
-<th data-quarto-table-cell-role="th">PPMINI16</th>
-<th data-quarto-table-cell-role="th">PPLOGT16</th>
-<th data-quarto-table-cell-role="th">PIMPOT16</th>
-<th data-quarto-table-cell-role="th">D116</th>
-<th data-quarto-table-cell-role="th">D916</th>
-<th data-quarto-table-cell-role="th">RD16</th>
-<th data-quarto-table-cell-role="th">dep_y</th>
-<th data-quarto-table-cell-role="th">empreinte</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>01001</td>
-<td>L'ABERGEMENT-CLEMENCIAT</td>
-<td>3711.425991</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>432.751835</td>
-<td>101.430476</td>
-<td>2.354558</td>
-<td>6.911213</td>
-<td>309.358195</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>01</td>
-<td>7.196009</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>01002</td>
-<td>L'ABERGEMENT-DE-VAREY</td>
-<td>475.330205</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>140.741660</td>
-<td>140.675439</td>
-<td>2.354558</td>
-<td>6.911213</td>
-<td>104.866444</td>
-<td>...</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>01</td>
-<td>5.374240</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>01004</td>
-<td>AMBERIEU-EN-BUGEY</td>
-<td>499.043526</td>
-<td>212.577908</td>
-<td>NaN</td>
-<td>10313.446515</td>
-<td>5314.314445</td>
-<td>998.332482</td>
-<td>2930.354461</td>
-<td>16616.822534</td>
-<td>...</td>
-<td>6.9</td>
-<td>2.8</td>
-<td>2.1</td>
-<td>2.0</td>
-<td>-15.7</td>
-<td>10457.083333</td>
-<td>33880.555556</td>
-<td>3.239962</td>
-<td>01</td>
-<td>4.446141</td>
-</tr>
-</tbody>
-</table>
-
-<p>3 rows × 45 columns</p>
-</div>
-</div>
-</div>
-</div>
-<p>Nous allons construire un tableau de statistiques
-descriptives par département mettant en parallèle
-l’empreinte carbone, le revenu médian et la population
-de chaque département</p>
-<div id="a396571f" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="a396571f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a396571f-1"><a href="#a396571f-1" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> (</span>
-<span id="a396571f-2"><a href="#a396571f-2" aria-hidden="true" tabindex="-1"></a>    emissions_merged.rename(</span>
-<span id="a396571f-3"><a href="#a396571f-3" aria-hidden="true" tabindex="-1"></a>        columns<span class="op">=</span>{<span class="st">"dep_y"</span>: <span class="st">"dep"</span>, <span class="st">"NBPERSMENFISC16"</span>: <span class="st">"population"</span>, <span class="st">"MED16"</span>: <span class="st">"revenu"</span>}</span>
-<span id="a396571f-4"><a href="#a396571f-4" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="a396571f-5"><a href="#a396571f-5" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"dep"</span>)</span>
-<span id="a396571f-6"><a href="#a396571f-6" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
-<span id="a396571f-7"><a href="#a396571f-7" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"empreinte"</span>: <span class="st">"sum"</span>, <span class="st">"revenu"</span>: <span class="st">"median"</span>, <span class="st">"population"</span>: <span class="st">"sum"</span>}</span>
-<span id="a396571f-8"><a href="#a396571f-8" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># pas vraiment le revenu médian</span></span>
-<span id="a396571f-9"><a href="#a396571f-9" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
-<span id="a396571f-10"><a href="#a396571f-10" aria-hidden="true" tabindex="-1"></a>    .sort_values(by<span class="op">=</span><span class="st">"empreinte"</span>)</span>
-<span id="a396571f-11"><a href="#a396571f-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Dans ce tableau nous allons intégrer des barres horizontales,
-à la manière des exemples présentés <a href="https://posit-dev.github.io/great-tables/examples/">ici</a>. Cela se fait en incluant directement
-le code <em>html</em> dans la colonne du <em>DataFrame</em></p>
-<div id="efc615fc" class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="efc615fc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="efc615fc-1"><a href="#efc615fc-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_bar(</span>
-<span id="efc615fc-2"><a href="#efc615fc-2" aria-hidden="true" tabindex="-1"></a>    prop_fill: <span class="bu">float</span>, max_width: <span class="bu">int</span>, height: <span class="bu">int</span>, color: <span class="bu">str</span> <span class="op">=</span> <span class="st">"green"</span></span>
-<span id="efc615fc-3"><a href="#efc615fc-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="efc615fc-4"><a href="#efc615fc-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create divs to represent prop_fill as a bar."""</span></span>
-<span id="efc615fc-5"><a href="#efc615fc-5" aria-hidden="true" tabindex="-1"></a>    width <span class="op">=</span> <span class="bu">round</span>(max_width <span class="op">*</span> prop_fill, <span class="dv">2</span>)</span>
-<span id="efc615fc-6"><a href="#efc615fc-6" aria-hidden="true" tabindex="-1"></a>    px_width <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>width<span class="sc">}</span><span class="ss">px"</span></span>
-<span id="efc615fc-7"><a href="#efc615fc-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"""</span><span class="ch">\</span></span>
-<span id="efc615fc-8"><a href="#efc615fc-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;div style="width: </span><span class="sc">{</span>max_width<span class="sc">}</span><span class="ss">px; background-color: lightgrey;"&gt;</span><span class="ch">\</span></span>
-<span id="efc615fc-9"><a href="#efc615fc-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        &lt;div style="height:</span><span class="sc">{</span>height<span class="sc">}</span><span class="ss">px;width:</span><span class="sc">{</span>px_width<span class="sc">}</span><span class="ss">;background-color:</span><span class="sc">{</span>color<span class="sc">}</span><span class="ss">;"&gt;&lt;/div&gt;</span><span class="ch">\</span></span>
-<span id="efc615fc-10"><a href="#efc615fc-10" aria-hidden="true" tabindex="-1"></a><span class="ss">    &lt;/div&gt;</span><span class="ch">\</span></span>
-<span id="efc615fc-11"><a href="#efc615fc-11" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
-<span id="efc615fc-12"><a href="#efc615fc-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="efc615fc-13"><a href="#efc615fc-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="efc615fc-14"><a href="#efc615fc-14" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> {<span class="st">"empreinte"</span>: <span class="st">"green"</span>, <span class="st">"revenu"</span>: <span class="st">"red"</span>, <span class="st">"population"</span>: <span class="st">"blue"</span>}</span>
-<span id="efc615fc-15"><a href="#efc615fc-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="efc615fc-16"><a href="#efc615fc-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> variable <span class="kw">in</span> [<span class="st">"empreinte"</span>, <span class="st">"revenu"</span>, <span class="st">"population"</span>]:</span>
-<span id="efc615fc-17"><a href="#efc615fc-17" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> (</span>
-<span id="efc615fc-18"><a href="#efc615fc-18" aria-hidden="true" tabindex="-1"></a>        emissions_table[variable] <span class="op">/</span> emissions_table[variable].<span class="bu">max</span>()</span>
-<span id="efc615fc-19"><a href="#efc615fc-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="efc615fc-20"><a href="#efc615fc-20" aria-hidden="true" tabindex="-1"></a>    emissions_table[<span class="ss">f"bar_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> emissions_table[<span class="ss">f"raw_perc_</span><span class="sc">{</span>variable<span class="sc">}</span><span class="ss">"</span>].<span class="bu">map</span>(</span>
-<span id="efc615fc-21"><a href="#efc615fc-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">lambda</span> x: create_bar(x, max_width<span class="op">=</span><span class="dv">75</span>, height<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span>colors[variable])</span>
-<span id="efc615fc-22"><a href="#efc615fc-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Nous ne gardons que les 5 plus petites empreintes carbone, et les
-cinq plus importantes.</p>
-<div id="dbe16adb" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="dbe16adb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dbe16adb-1"><a href="#dbe16adb-1" aria-hidden="true" tabindex="-1"></a>emissions_min <span class="op">=</span> (</span>
-<span id="dbe16adb-2"><a href="#dbe16adb-2" aria-hidden="true" tabindex="-1"></a>    emissions_table.head(<span class="dv">5</span>)</span>
-<span id="dbe16adb-3"><a href="#dbe16adb-3" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les moins pollueurs"</span>)</span>
-<span id="dbe16adb-4"><a href="#dbe16adb-4" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
-<span id="dbe16adb-5"><a href="#dbe16adb-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="dbe16adb-6"><a href="#dbe16adb-6" aria-hidden="true" tabindex="-1"></a>emissions_max <span class="op">=</span> (</span>
-<span id="dbe16adb-7"><a href="#dbe16adb-7" aria-hidden="true" tabindex="-1"></a>    emissions_table.tail(<span class="dv">5</span>)</span>
-<span id="dbe16adb-8"><a href="#dbe16adb-8" aria-hidden="true" tabindex="-1"></a>    .assign(grp<span class="op">=</span><span class="st">"5 départements les plus pollueurs"</span>)</span>
-<span id="dbe16adb-9"><a href="#dbe16adb-9" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
-<span id="dbe16adb-10"><a href="#dbe16adb-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="dbe16adb-11"><a href="#dbe16adb-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="dbe16adb-12"><a href="#dbe16adb-12" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pd.concat([emissions_min, emissions_max])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Enfin, pour pouvoir utiliser quelques fonctions
-pratiques pour sélectionner des colonnes à partir
-de motifs, nous allons convertir les données
-au format <a href="https://pola.rs/"><code>Polars</code></a></p>
-<div id="3ed2ee99" class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="3ed2ee99"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3ed2ee99-1"><a href="#3ed2ee99-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
-<span id="3ed2ee99-2"><a href="#3ed2ee99-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3ed2ee99-3"><a href="#3ed2ee99-3" aria-hidden="true" tabindex="-1"></a>emissions_table <span class="op">=</span> pl.from_pandas(emissions_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell markdown">
-<div class="alert alert-success" role="alert">
-<h3 class="alert-heading anchored" data-anchor-id="formatter-des-tableaux-de-statistiques-descriptives"><i class="fa-solid fa-pencil"></i> Exercice 8: Un beau tableau de statistiques descriptives (exercice libre)</h3>
-<p>En prenant comme base ce tableau</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>GT(emissions_table, groupname_col<span class="op">=</span><span class="st">"grp"</span>, rowname_col<span class="op">=</span><span class="st">"dep"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>construire un tableau dans le style de celui ci-dessous</p>
-</div>
-</div>
-<p>Le tableau à obtenir:</p>
-<div id="55a7dd66" class="cell" data-execution_count="43">
-<div class="cell-output cell-output-display" data-execution_count="42">
-<div id="jcfemiqwdg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>
-#jcfemiqwdg table {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-#jcfemiqwdg thead, tbody, tfoot, tr, td, th { border-style: none; }
- tr { background-color: transparent; }
-#jcfemiqwdg p { margin: 0; padding: 0; }
- #jcfemiqwdg .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #jcfemiqwdg .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #jcfemiqwdg .gt_title { color: #FFFFFF; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #jcfemiqwdg .gt_subtitle { color: #FFFFFF; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #jcfemiqwdg .gt_heading { background-color: #0c540c; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #jcfemiqwdg .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #jcfemiqwdg .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #jcfemiqwdg .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #jcfemiqwdg .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #jcfemiqwdg .gt_column_spanner_outer:first-child { padding-left: 0; }
- #jcfemiqwdg .gt_column_spanner_outer:last-child { padding-right: 0; }
- #jcfemiqwdg .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #jcfemiqwdg .gt_spanner_row { border-bottom-style: hidden; }
- #jcfemiqwdg .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #jcfemiqwdg .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #jcfemiqwdg .gt_from_md> :first-child { margin-top: 0; }
- #jcfemiqwdg .gt_from_md> :last-child { margin-bottom: 0; }
- #jcfemiqwdg .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #jcfemiqwdg .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #jcfemiqwdg .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #jcfemiqwdg .gt_row_group_first td { border-top-width: 2px; }
- #jcfemiqwdg .gt_row_group_first th { border-top-width: 2px; }
- #jcfemiqwdg .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #jcfemiqwdg .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #jcfemiqwdg .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #jcfemiqwdg .gt_left { text-align: left; }
- #jcfemiqwdg .gt_center { text-align: center; }
- #jcfemiqwdg .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #jcfemiqwdg .gt_font_normal { font-weight: normal; }
- #jcfemiqwdg .gt_font_bold { font-weight: bold; }
- #jcfemiqwdg .gt_font_italic { font-style: italic; }
- #jcfemiqwdg .gt_super { font-size: 65%; }
- #jcfemiqwdg .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #jcfemiqwdg .gt_asterisk { font-size: 100%; vertical-align: 0; }
- 
-</style>
-<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead class="gt_header">
-  <tr>
-    <th colspan="10" class="gt_heading gt_title gt_font_normal"><strong>Empreinte carbone</strong></th>
-  </tr>
-  <tr>
-    <th colspan="10" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border"><em>Premières statistiques descriptives à affiner</em></th>
-  </tr>
-</thead>
-<tbody><tr class="gt_col_headings gt_spanner_row">
-  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id=""></th>
-  <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Empreinte</strong>">
-    <span class="gt_column_spanner"><strong>Empreinte</strong></span>
-  </th>
-  <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Revenu médian</strong>">
-    <span class="gt_column_spanner"><strong>Revenu médian</strong></span>
-  </th>
-  <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="<strong>Population</strong>">
-    <span class="gt_column_spanner"><strong>Population</strong></span>
-  </th>
-</tr>
-<tr class="gt_col_headings">
-  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<strong>Empreinte carbone</strong>"><strong>Empreinte carbone</strong></th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<em>(%)</em>*"><em>(%)</em>*</th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<strong>Revenu</strong>"><strong>Revenu</strong></th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<em>(%)</em>*"><em>(%)</em>*</th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<strong>Population</strong>"><strong>Population</strong></th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="<em>(%)</em>*"><em>(%)</em>*</th>
-  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
-</tr>
-</tbody><tbody class="gt_table_body">
-<tr>
-</tr><tr class="gt_group_heading_row">  <th class="gt_group_heading" colspan="10">5 départements les moins pollueurs</th></tr>
-  <tr><th class="gt_row gt_left gt_stub">75</th>
-  <td class="gt_row gt_right">8.12</td>
-  <td class="gt_row gt_right">0.4%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.32px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">30.5K</td>
-  <td class="gt_row gt_right">100.0%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:75.0px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">2.07M</td>
-  <td class="gt_row gt_right">82.9%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:62.18px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">92</th>
-  <td class="gt_row gt_right">14.72</td>
-  <td class="gt_row gt_right">0.8%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.58px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">28.6K</td>
-  <td class="gt_row gt_right">93.6%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:70.23px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.58M</td>
-  <td class="gt_row gt_right">63.3%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:47.47px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">93</th>
-  <td class="gt_row gt_right">16.79</td>
-  <td class="gt_row gt_right">0.9%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.66px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">17.3K</td>
-  <td class="gt_row gt_right">56.6%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:42.46px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.59M</td>
-  <td class="gt_row gt_right">63.4%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:47.55px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">94</th>
-  <td class="gt_row gt_right">20.72</td>
-  <td class="gt_row gt_right">1.1%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:0.82px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">22.4K</td>
-  <td class="gt_row gt_right">73.5%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:55.15px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.35M</td>
-  <td class="gt_row gt_right">53.8%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:40.34px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">83</th>
-  <td class="gt_row gt_right">82.37</td>
-  <td class="gt_row gt_right">4.3%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:3.24px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">20.8K</td>
-  <td class="gt_row gt_right">68.3%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:51.23px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.05M</td>
-  <td class="gt_row gt_right">42.0%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:31.5px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-</tr><tr class="gt_group_heading_row">  <th class="gt_group_heading" colspan="10">5 départements les plus pollueurs</th></tr>
-  <tr><th class="gt_row gt_left gt_stub">62</th>
-  <td class="gt_row gt_right">962.41</td>
-  <td class="gt_row gt_right">50.5%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:37.87px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">19.7K</td>
-  <td class="gt_row gt_right">64.5%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:48.35px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.44M</td>
-  <td class="gt_row gt_right">57.5%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:43.14px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">76</th>
-  <td class="gt_row gt_right">966.25</td>
-  <td class="gt_row gt_right">50.7%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:38.02px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">21.0K</td>
-  <td class="gt_row gt_right">69.0%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:51.74px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.21M</td>
-  <td class="gt_row gt_right">48.3%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:36.21px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">80</th>
-  <td class="gt_row gt_right">969.32</td>
-  <td class="gt_row gt_right">50.9%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:38.14px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">20.0K</td>
-  <td class="gt_row gt_right">65.7%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:49.26px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">535.82K</td>
-  <td class="gt_row gt_right">21.4%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:16.06px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">51</th>
-  <td class="gt_row gt_right">983.67</td>
-  <td class="gt_row gt_right">51.6%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:38.7px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">22.6K</td>
-  <td class="gt_row gt_right">74.1%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:55.55px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">531.40K</td>
-  <td class="gt_row gt_right">21.2%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:15.93px;background-color:blue;"></div>    </div>    </td>
-</tr>
-<tr>
-  <th class="gt_row gt_left gt_stub">77</th>
-  <td class="gt_row gt_right">1,906.19</td>
-  <td class="gt_row gt_right">100.0%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:75.0px;background-color:green;"></div>    </div>    </td>
-  <td class="gt_row gt_right">23.8K</td>
-  <td class="gt_row gt_right">77.9%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:58.41px;background-color:red;"></div>    </div>    </td>
-  <td class="gt_row gt_right">1.37M</td>
-  <td class="gt_row gt_right">54.9%</td>
-  <td class="gt_row gt_left">    <div style="width: 75px; background-color: lightgrey;">        <div style="height:20px;width:41.19px;background-color:blue;"></div>    </div>    </td>
-</tr>
-</tbody>
-  <tfoot class="gt_sourcenotes">
-  
-  <tr>
-    <td class="gt_sourcenote" colspan="10"><em>*<strong>Note</strong>: Le revenu médian présenté ici est une approximation du revenu médian du département</em>.</td>
-  </tr>
-
-
-  <tr>
-    <td class="gt_sourcenote" colspan="10"><em><strong>Lecture</strong>: Les colonnes <strong>(%)</strong> présentées ci-dessus sont rapportées à la valeur maximale de la variable</em></td>
-  </tr>
-
-
-  <tr>
-    <td class="gt_sourcenote" colspan="10"><em><strong>Source</strong>: Calculs à partir des données de l'Ademe</em></td>
-  </tr>
-
-</tfoot>
-
-</table>
-
-</div>
-        
-</div>
-</div>
-<p>Grâce à celui-ci, on peut déjà comprendre que notre définition
-de l’empreinte carbone est certainement défaillante. Il apparaît
-peu plausible que les habitants du 77 aient une empreinte 500 fois
-supérieure à celle de Paris intra-muros. La raison principale ?
-On n’est pas sur un concept d’émissions à la consommation mais à la
-production, ce qui pénalise les espaces industriels ou les espaces
-avec des aéroports…</p>
-<p>Pour aller plus loin sur la construction de tableaux
-avec <code>great_tables</code>, vous pouvez répliquer
-cet <a href="https://rgeo.linogaliana.fr/exercises/eval.html">exercice</a>
-de production de tableaux électoraux
-que j’ai proposé pour un cours de <code>R</code> avec <code>gt</code>, l’équivalent
-de <code>great_tables</code> pour <code>R</code>.</p>
-</section>
-<section id="exercices-bonus" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Exercices bonus</h1>
-<p>Les plus rapides d’entre vous sont invités à aller un peu plus loin en s’entraînant avec des exercices bonus qui proviennent du <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3">site de Xavier Dupré</a>. 3 notebooks en lien avec <code>numpy</code> et <code>pandas</code> vous y sont proposés :</p>
-<ol type="1">
-<li>Calcul Matriciel, Optimisation : <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/td2a_cenonce_session_2A.html">énoncé</a> / <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/td2a_correction_session_2A.html">corrigé</a></li>
-<li>DataFrame et Graphes : <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/td2a_cenonce_session_1.html">énoncé</a> / <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/td2a_correction_session_1.html">corrigé</a></li>
-<li>Pandas et itérateurs : <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/pandas_iterator.html">énoncé</a> / <a href="http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/pandas_iterator_correction.html">corrigé</a></li>
-</ol>
 <section id="informations-additionnelles" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informations-additionnelles">Informations additionnelles</h2>
 <details>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-27</p>
+<p>Latest built version: 2024-05-03</p>
 <p>Python version used:</p>
-<div id="9dc4c9f3" class="cell" data-execution_count="45">
-<div class="cell-output cell-output-display" data-execution_count="44">
+<div id="495f1960" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
 </div>
@@ -3573,7 +1810,64 @@ de <code>great_tables</code> pour <code>R</code>.</p>
 <p>View file history <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></p>
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="1263" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1262;"><span id="cb8-1263"><a href="#cb8-1263" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`Ce fichier a été modifié __</span><span class="sc">${</span>table_commit<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">__ fois depuis sa création le </span><span class="sc">${</span>creation_string<span class="sc">}</span><span class="vs"> (dernière modification le </span><span class="sc">${</span>last_modification_string<span class="sc">}</span><span class="vs">)`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="76" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 75;"><span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`Ce fichier a été modifié __</span><span class="sc">${</span>table_commit<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">__ fois depuis sa création le </span><span class="sc">${</span>creation_string<span class="sc">}</span><span class="vs"> (dernière modification le </span><span class="sc">${</span>last_modification_string<span class="sc">}</span><span class="vs">)`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-1" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="83" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 82;"><span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>creation <span class="op">=</span> d3<span class="op">.</span><span class="fu">min</span>(</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>last_modification <span class="op">=</span> d3<span class="op">.</span><span class="fu">max</span>(</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>creation_string <span class="op">=</span> creation<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>last_modification_string <span class="op">=</span> last_modification<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="107" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 106;"><span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="expression">
 
@@ -3581,66 +1875,9 @@ de <code>great_tables</code> pour <code>R</code>.</p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="1269" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1268;"><span id="cb9-1269"><a href="#cb9-1269" aria-hidden="true" tabindex="-1"></a>creation <span class="op">=</span> d3<span class="op">.</span><span class="fu">min</span>(</span>
-<span id="cb9-1270"><a href="#cb9-1270" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
-<span id="cb9-1271"><a href="#cb9-1271" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-1272"><a href="#cb9-1272" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-1273"><a href="#cb9-1273" aria-hidden="true" tabindex="-1"></a>last_modification <span class="op">=</span> d3<span class="op">.</span><span class="fu">max</span>(</span>
-<span id="cb9-1274"><a href="#cb9-1274" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
-<span id="cb9-1275"><a href="#cb9-1275" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-1276"><a href="#cb9-1276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-1277"><a href="#cb9-1277" aria-hidden="true" tabindex="-1"></a>creation_string <span class="op">=</span> creation<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
-<span id="cb9-1278"><a href="#cb9-1278" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
-<span id="cb9-1279"><a href="#cb9-1279" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
-<span id="cb9-1280"><a href="#cb9-1280" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
-<span id="cb9-1281"><a href="#cb9-1281" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb9-1282"><a href="#cb9-1282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-1283"><a href="#cb9-1283" aria-hidden="true" tabindex="-1"></a>last_modification_string <span class="op">=</span> last_modification<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
-<span id="cb9-1284"><a href="#cb9-1284" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
-<span id="cb9-1285"><a href="#cb9-1285" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
-<span id="cb9-1286"><a href="#cb9-1286" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
-<span id="cb9-1287"><a href="#cb9-1287" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="112" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 111;"><span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-4-1" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-4-2" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-4-3" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-4-4" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="1278" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1277;"><span id="cb10-1278"><a href="#cb10-1278" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-5" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="1298" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1297;"><span id="cb11-1298"><a href="#cb11-1298" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-6" data-nodetype="expression">
+<div id="ojs-cell-4" data-nodetype="expression">
 
 </div>
 </div>
@@ -3663,6 +1900,20 @@ Description
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/linogaliana/python-datascientist/commit/e0d615e">e0d615e</a>
+</td>
+<td>
+2024-05-03 11:15:29
+</td>
+<td>
+Lino Galiana
+</td>
+<td>
+Restructure la partie Pandas (#497)
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/linogaliana/python-datascientist/commit/4d678bf">4d678bf</a>
@@ -4451,160 +2702,139 @@ Continuer la partie pandas (#13)
 </table>
 </details>
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="1314" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1313;"><span id="cb12-1314"><a href="#cb12-1314" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
-<span id="cb12-1315"><a href="#cb12-1315" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
-<span id="cb12-1316"><a href="#cb12-1316" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb12-1317"><a href="#cb12-1317" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
-<span id="cb12-1318"><a href="#cb12-1318" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
-<span id="cb12-1319"><a href="#cb12-1319" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
-<span id="cb12-1320"><a href="#cb12-1320" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
-<span id="cb12-1321"><a href="#cb12-1321" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
-<span id="cb12-1322"><a href="#cb12-1322" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
-<span id="cb12-1323"><a href="#cb12-1323" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
-<span id="cb12-1324"><a href="#cb12-1324" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
-<span id="cb12-1325"><a href="#cb12-1325" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
-<span id="cb12-1326"><a href="#cb12-1326" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-1327"><a href="#cb12-1327" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb12-1328"><a href="#cb12-1328" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="123" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 122;"><span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
+<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
+<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
+<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
+<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
+<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
+<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
+<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
+<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
+<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display hidden">
-<div id="ojs-cell-7" data-nodetype="declaration">
+<div id="ojs-cell-5" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="1328" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1327;"><span id="cb13-1328"><a href="#cb13-1328" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb13-1329"><a href="#cb13-1329" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb13-1330"><a href="#cb13-1330" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
-<span id="cb13-1331"><a href="#cb13-1331" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb13-1332"><a href="#cb13-1332" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
-<span id="cb13-1333"><a href="#cb13-1333" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
-<span id="cb13-1334"><a href="#cb13-1334" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
-<span id="cb13-1335"><a href="#cb13-1335" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb13-1336"><a href="#cb13-1336" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="143" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 142;"><span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="157" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 156;"><span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
+<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
+<span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
+<span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
+<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
+<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
+<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="171" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 170;"><span id="cb9-171"><a href="#cb9-171" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
 <div id="ojs-cell-8" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb14" data-startfrom="1332" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1331;"><span id="cb14-1332"><a href="#cb14-1332" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
-<span id="cb14-1333"><a href="#cb14-1333" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
-<span id="cb14-1334"><a href="#cb14-1334" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
-<span id="cb14-1335"><a href="#cb14-1335" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-1336"><a href="#cb14-1336" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
-<span id="cb14-1337"><a href="#cb14-1337" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
-<span id="cb14-1338"><a href="#cb14-1338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-1339"><a href="#cb14-1339" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
-<span id="cb14-1340"><a href="#cb14-1340" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="176" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 175;"><span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
+<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
+<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
+<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
+<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
+<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
+<span id="cb10-184"><a href="#cb10-184" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb10-185"><a href="#cb10-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
+<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
+<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
+<span id="cb10-193"><a href="#cb10-193" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb10-194"><a href="#cb10-194" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
+<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-197"><a href="#cb10-197" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
+<span id="cb10-198"><a href="#cb10-198" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
+<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
+<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
+<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
+<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
+<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-9" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb15" data-startfrom="1371" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1370;"><span id="cb15-1371"><a href="#cb15-1371" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-10" data-nodetype="declaration">
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="216" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 215;"><span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the element with class 'git-details'</span></span>
+<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> gitDetails <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
+<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check if the element exists</span></span>
+<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (gitDetails) {</span>
+<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Hide the element</span></span>
+<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a>      gitDetails<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">display</span> <span class="op">=</span> <span class="st">'none'</span><span class="op">;</span></span>
+<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-10" data-nodetype="expression">
 
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb16" data-startfrom="1387" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1386;"><span id="cb16-1387"><a href="#cb16-1387" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
-<span id="cb16-1388"><a href="#cb16-1388" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1389"><a href="#cb16-1389" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
-<span id="cb16-1390"><a href="#cb16-1390" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
-<span id="cb16-1391"><a href="#cb16-1391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1392"><a href="#cb16-1392" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
-<span id="cb16-1393"><a href="#cb16-1393" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
-<span id="cb16-1394"><a href="#cb16-1394" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
-<span id="cb16-1395"><a href="#cb16-1395" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb16-1396"><a href="#cb16-1396" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1397"><a href="#cb16-1397" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
-<span id="cb16-1398"><a href="#cb16-1398" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb16-1399"><a href="#cb16-1399" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb16-1400"><a href="#cb16-1400" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
-<span id="cb16-1401"><a href="#cb16-1401" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb16-1402"><a href="#cb16-1402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1403"><a href="#cb16-1403" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
-<span id="cb16-1404"><a href="#cb16-1404" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb16-1405"><a href="#cb16-1405" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
-<span id="cb16-1406"><a href="#cb16-1406" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
-<span id="cb16-1407"><a href="#cb16-1407" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1408"><a href="#cb16-1408" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
-<span id="cb16-1409"><a href="#cb16-1409" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
-<span id="cb16-1410"><a href="#cb16-1410" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
-<span id="cb16-1411"><a href="#cb16-1411" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
-<span id="cb16-1412"><a href="#cb16-1412" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb16-1413"><a href="#cb16-1413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1414"><a href="#cb16-1414" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
-<span id="cb16-1415"><a href="#cb16-1415" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
-<span id="cb16-1416"><a href="#cb16-1416" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb16-1417"><a href="#cb16-1417" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb16-1418"><a href="#cb16-1418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1419"><a href="#cb16-1419" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
-<span id="cb16-1420"><a href="#cb16-1420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1421"><a href="#cb16-1421" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="231" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 230;"><span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="pp">require</span>(<span class="st">'@observablehq/plot@0.6.12/dist/plot.umd.min.js'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-11" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
-<div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb17" data-startfrom="1" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the element with class 'git-details'</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> gitDetails <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check if the element exists</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (gitDetails) {</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Hide the element</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>      gitDetails<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">display</span> <span class="op">=</span> <span class="st">'none'</span><span class="op">;</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display hidden">
-<div id="ojs-cell-12" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb18" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb18-0"><a href="#cb18-0" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="pp">require</span>(<span class="st">'@observablehq/plot@0.6.12/dist/plot.umd.min.js'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-13" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
 
 
-<div class="hidden" aria-hidden="true">
-<span class="glightbox-desc lightbox-desc-1">Réordonner le <em>DataFrame</em></span>
-<span class="glightbox-desc lightbox-desc-2">Cheasheet <code>Pandas</code></span>
-<span class="glightbox-desc lightbox-desc-8">Données <em>long</em> et <em>wide</em></span>
-</div>
-</section>
 </section>
 
-
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p>Par manque d’imagination, on est souvent tenté d’appeler notre
-<em>dataframe</em> principal <code>df</code> ou <code>data</code>. C’est souvent une mauvaise idée puisque
-ce nom n’est pas très informatif quand on relit le code quelques semaines
-plus tard. L’autodocumentation, approche qui consiste à avoir un code
-qui se comprend de lui-même, est une bonne pratique et il est donc recommandé
-de donner un nom simple mais efficace pour connaître la nature du <em>dataset</em> en question.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Idéalement, il serait nécessaire de s’assurer que cette jointure n’introduit
-pas de biais. En effet, comme nos années de référence ne sont pas forcément identiques,
-il peut y avoir un <em>mismatch</em> entre nos deux sources. Le TP étant déjà long, nous n’allons pas dans cette voie.
-Les lecteurs intéressés pourront effectuer une telle analyse en exercice supplémentaire.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@book{galiana2023,
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@book{galiana2023,
   author = {Galiana, Lino},
   title = {Python Pour La Data Science},
   date = {2023},
@@ -4616,7 +2846,7 @@ Les lecteurs intéressés pourront effectuer une telle analyse en exercice suppl
 Galiana, Lino. 2023. <em>Python Pour La Data Science</em>. <a href="https://doi.org/10.5281/zenodo.8229676">https://doi.org/10.5281/zenodo.8229676</a>.
 </div></div></section></div></main> <!-- /main -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSB3aW5kb3cubG9jYXRpb24ucGF0aG5hbWUucmVwbGFjZShcIi5odG1sXCIsIFwiLnFtZFwiKTtcbmh0bWxgJHtwcmludEJhZGdlcyh7ZnBhdGg6IHBhdGh9KX1gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiByZW1pbmRlckJhZGdlcyh7XG4gICAgc291cmNlRmlsZSA9IFwiY29udGVudC8wMV90b3RvLlJtZFwiLFxuICAgIHR5cGUgPSBbJ21kJywgJ2h0bWwnXSxcbiAgICBzcGxpdCA9IG51bGwsXG4gICAgb255eGlhT25seSA9IGZhbHNlLFxuICAgIHNzcENsb3VkU2VydmljZSA9IFwicHl0aG9uXCIsXG4gICAgR1BVID0gZmFsc2UsXG4gICAgY29ycmVjdGlvbiA9IGZhbHNlXG59ID0ge30pIHtcbiAgICBpZiAoQXJyYXkuaXNBcnJheSh0eXBlKSkge1xuICAgICAgICB0eXBlID0gdHlwZVswXTtcbiAgICB9XG5cbiAgICBsZXQgbm90ZWJvb2sgPSBzb3VyY2VGaWxlLnJlcGxhY2UoLyguUm1kfC5xbWQpLywgXCIuaXB5bmJcIik7XG4gICAgaWYgKGNvcnJlY3Rpb24pIHtcbiAgICAgICAgbm90ZWJvb2sgPSBub3RlYm9vay5yZXBsYWNlKC9jb250ZW50LywgXCJjb3JyZWN0aW9uc1wiKTtcbiAgICB9IGVsc2Uge1xuICAgICAgICBub3RlYm9vayA9IG5vdGVib29rLnJlcGxhY2UoL2NvbnRlbnQvLCBcIm5vdGVib29rc1wiKTtcbiAgICB9XG5cbiAgICBjb25zdCBnaXRodWJSZXBvTm90ZWJvb2tzU2ltcGxpZmllZCA9IFwiZ2l0aHViL2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0LW5vdGVib29rc1wiO1xuICAgIGNvbnN0IGdpdGh1YkFsaWFzID0gZ2l0aHViUmVwb05vdGVib29rc1NpbXBsaWZpZWQucmVwbGFjZShcImdpdGh1YlwiLCBcImdpdGh1Yi5jb21cIik7XG4gICAgY29uc3QgZ2l0aHViUmVwb05vdGVib29rcyA9IGBodHRwczovLyR7Z2l0aHViQWxpYXN9YDtcblxuICAgIGxldCBnaXRodWJMaW5rIDtcblxuICAgIGlmIChub3RlYm9vayA9PT0gXCJcIikge1xuICAgICAgICBnaXRodWJMaW5rID0gZ2l0aHViUmVwb05vdGVib29rcztcbiAgICB9IGVsc2Uge1xuICAgICAgICBnaXRodWJMaW5rID0gYCR7Z2l0aHViUmVwb05vdGVib29rc30vYmxvYi9tYWluYDtcbiAgICB9XG5cbiAgICBjb25zdCBub3RlYm9va1JlbFBhdGggPSBgLyR7bm90ZWJvb2t9YDtcbiAgICBjb25zdCBbc2VjdGlvbiwgY2hhcHRlcl0gPSBub3RlYm9vay5zcGxpdChcIi9cIikuc2xpY2UoLTIpO1xuXG5cbiAgICBnaXRodWJMaW5rID0gYDxhIGhyZWY9XCIke2dpdGh1Ykxpbmt9JHtub3RlYm9va1JlbFBhdGh9XCIgY2xhc3M9XCJnaXRodWJcIj48aSBjbGFzcz1cImZhYiBmYS1naXRodWJcIj48L2k+PC9hPmA7XG5cbiAgICBjb25zdCBzZWN0aW9uTGF0ZXN0ID0gc2VjdGlvbi5zcGxpdChcIi9cIikuc2xpY2UoLTEpWzBdO1xuICAgIGNvbnN0IGNoYXB0ZXJOb0V4dGVuc2lvbiA9IGNoYXB0ZXIucmVwbGFjZShcIi5pcHluYlwiLCBcIlwiKTtcbiAgICBjb25zdCBvbnl4aWFJbml0QXJncyA9IFtzZWN0aW9uTGF0ZXN0LCBjaGFwdGVyTm9FeHRlbnNpb25dO1xuXG4gICAgaWYgKGNvcnJlY3Rpb24pIHtcbiAgICAgICAgb255eGlhSW5pdEFyZ3MucHVzaChcImNvcnJlY3Rpb25cIik7XG4gICAgfVxuXG4gICAgY29uc3QgZ3B1U3VmZml4ID0gR1BVID8gXCItZ3B1XCIgOiBcIlwiO1xuXG4gICAgY29uc3Qgc3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyID0gYGh0dHBzOi8vZGF0YWxhYi5zc3BjbG91ZC5mci9sYXVuY2hlci9pZGUvanVweXRlci0ke3NzcENsb3VkU2VydmljZX0ke2dwdVN1ZmZpeH0/YXV0b0xhdW5jaD10cnVlJm9ueXhpYS5mcmllbmRseU5hbWU9JUMyJUFCJHtjaGFwdGVyTm9FeHRlbnNpb259JUMyJUJCJmluaXQucGVyc29uYWxJbml0PSVDMiVBQmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmxpbm9nYWxpYW5hJTJGcHl0aG9uLWRhdGFzY2llbnRpc3QlMkZtYXN0ZXIlMkZzc3BjbG91ZCUyRmluaXQtanVweXRlci5zaCVDMiVCQiZpbml0LnBlcnNvbmFsSW5pdEFyZ3M9JUMyJUFCJHtvbnl4aWFJbml0QXJncy5qb2luKCclMjAnKX0lQzIlQkImc2VjdXJpdHkuYWxsb3dsaXN0LmVuYWJsZWQ9ZmFsc2VgO1xuXG4gICAgbGV0IHNzcGNsb3VkSnVweXRlckxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rID0gYFshW09ueXhpYV0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9TU1AlMjBDbG91ZC1UZXN0ZXJfYXZlY19KdXB5dGVyLW9yYW5nZT9sb2dvPUp1cHl0ZXImbG9nb0NvbG9yPW9yYW5nZSldKCR7c3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyfSlgO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgPSBgPGEgaHJlZj1cIiR7c3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyfVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX0p1cHl0ZXItb3JhbmdlP2xvZ289SnVweXRlciZsb2dvQ29sb3I9b3JhbmdlXCIgYWx0PVwiT255eGlhXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA0KSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGNvbnN0IHNzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyID0gYGh0dHBzOi8vZGF0YWxhYi5zc3BjbG91ZC5mci9sYXVuY2hlci9pZGUvdnNjb2RlLSR7c3NwQ2xvdWRTZXJ2aWNlfSR7Z3B1U3VmZml4fT9hdXRvTGF1bmNoPXRydWUmb255eGlhLmZyaWVuZGx5TmFtZT0lQzIlQUIke2NoYXB0ZXJOb0V4dGVuc2lvbn0lQzIlQkImaW5pdC5wZXJzb25hbEluaXQ9JUMyJUFCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGbGlub2dhbGlhbmElMkZweXRob24tZGF0YXNjaWVudGlzdCUyRm1hc3RlciUyRnNzcGNsb3VkJTJGaW5pdC12c2NvZGUuc2glQzIlQkImaW5pdC5wZXJzb25hbEluaXRBcmdzPSVDMiVBQiR7b255eGlhSW5pdEFyZ3Muam9pbignJTIwJyl9JUMyJUJCJnNlY3VyaXR5LmFsbG93bGlzdC5lbmFibGVkPWZhbHNlYDtcblxuICAgIGxldCBzc3BjbG91ZFZzY29kZUxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgPSBgWyFbT255eGlhXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX1ZTQ29kZS1ibHVlP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsb2dvQ29sb3I9Ymx1ZSldKCR7c3NwY2xvdWRWc2NvZGVMaW5rTGF1bmNoZXJ9KWA7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rID0gYDxhIGhyZWY9XCIke3NzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyfVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX1ZTQ29kZS1ibHVlP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsb2dvQ29sb3I9Ymx1ZVwiIGFsdD1cIk9ueXhpYVwiPjwvYT5gO1xuICAgIH1cblxuICAgIGlmIChzcGxpdCA9PT0gNSkge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGxldCBjb2xhYkxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBjb2xhYkxpbmsgPSBgWyFbT3BlbiBJbiBDb2xhYl0oaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tL2Fzc2V0cy9jb2xhYi1iYWRnZS5zdmcpXShodHRwOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS8ke2dpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkfS9ibG9iL21haW4ke25vdGVib29rUmVsUGF0aH0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICBjb2xhYkxpbmsgPSBgPGEgaHJlZj1cImh0dHBzOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS8ke2dpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkfS9ibG9iL21haW4ke25vdGVib29rUmVsUGF0aH1cIiB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lclwiPjxpbWcgc3JjPVwiaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tL2Fzc2V0cy9jb2xhYi1iYWRnZS5zdmdcIiBhbHQ9XCJPcGVuIEluIENvbGFiXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA3KSB7XG4gICAgICAgIGNvbGFiTGluayArPSAnPGJyPic7XG4gICAgfVxuXG4gICAgbGV0IHZzY29kZUxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICB2c2NvZGVMaW5rID0gYFshW2dpdGh1YmRldl0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9zdGF0aWMvdjE/bG9nbz12aXN1YWxzdHVkaW9jb2RlJmxhYmVsPSZtZXNzYWdlPU9wZW4lMjBpbiUyMFZpc3VhbCBTdHVkaW8gQ29kZSZsYWJlbENvbG9yPTJjMmMzMiZjb2xvcj0wMDdhY2MmbG9nb0NvbG9yPTAwN2FjYyldKGh0dHBzOi8vZ2l0aHViLmRldi9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdC1ub3RlYm9va3Mke25vdGVib29rUmVsUGF0aH0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICB2c2NvZGVMaW5rID0gYDxhIGhyZWY9XCJodHRwczovL2dpdGh1Yi5kZXYvbGlub2dhbGlhbmEvcHl0aG9uLWRhdGFzY2llbnRpc3Qtbm90ZWJvb2tzJHtub3RlYm9va1JlbFBhdGh9XCIgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXJcIj48aW1nIHNyYz1cImh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vc3RhdGljL3YxP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsYWJlbD0mbWVzc2FnZT1PcGVuJTIwaW4lMjBWaXN1YWwlMjBTdHVkaW8lMjBDb2RlJmxhYmVsQ29sb3I9MmMyYzMyJmNvbG9yPTAwN2FjYyZsb2dvQ29sb3I9MDA3YWNjXCIgYWx0PVwiZ2l0aHViZGV2XCI+PC9hPjwvcD5gO1xuICAgIH1cblxuICAgIGNvbnN0IGJhZGdlcyA9IFtcbiAgICAgICAgZ2l0aHViTGluayxcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rLFxuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rXG4gICAgXTtcblxuICAgIGlmICghb255eGlhT25seSkge1xuICAgICAgICBiYWRnZXMucHVzaChjb2xhYkxpbmspO1xuICAgIH1cblxuICAgIGxldCByZXN1bHQgPSBiYWRnZXMuam9pbihcIlxcblwiKTtcblxuICAgIGlmICh0eXBlID09PSBcImh0bWxcIikge1xuICAgICAgICByZXN1bHQgPSBgPHAgY2xhc3M9XCJiYWRnZXNcIj4ke3Jlc3VsdH08L3A+YDtcbiAgICB9XG5cbiAgICBpZiAob255eGlhT25seSkge1xuICAgICAgICByZXN1bHQgPSBgJHtzc3BjbG91ZEp1cHl0ZXJMaW5rfSR7c3NwY2xvdWRWc2NvZGVMaW5rfWA7XG4gICAgfVxuXG4gICAgcmV0dXJuIHJlc3VsdDtcbn1cblxuXG5mdW5jdGlvbiBwcmludEJhZGdlcyh7XG4gICAgZnBhdGgsXG4gICAgb255eGlhT25seSA9IGZhbHNlLFxuICAgIHNwbGl0ID0gNSxcbiAgICB0eXBlID0gXCJodG1sXCIsXG4gICAgc3NwQ2xvdWRTZXJ2aWNlID0gXCJweXRob25cIixcbiAgICBHUFUgPSBmYWxzZSxcbiAgICBjb3JyZWN0aW9uID0gZmFsc2Vcbn0gPSB7fSkge1xuICAgIGNvbnN0IGJhZGdlcyA9IHJlbWluZGVyQmFkZ2VzKHtcbiAgICAgICAgc291cmNlRmlsZTogZnBhdGgsXG4gICAgICAgIHR5cGU6IHR5cGUsXG4gICAgICAgIHNwbGl0OiBzcGxpdCxcbiAgICAgICAgb255eGlhT25seTogb255eGlhT25seSxcbiAgICAgICAgc3NwQ2xvdWRTZXJ2aWNlOiBzc3BDbG91ZFNlcnZpY2UsXG4gICAgICAgIEdQVTogR1BVLFxuICAgICAgICBjb3JyZWN0aW9uOiBjb3JyZWN0aW9uXG4gICAgfSk7XG5cbiAgICByZXR1cm4gYmFkZ2VzXG59XG5cbi8vIEV4YW1wbGUgdXNhZ2U6XG4vLyBwcmludEJhZGdlcyh7IGZwYXRoOiBcImNvbnRlbnQvZ2V0dGluZy1zdGFydGVkLzA1X3JhcHBlbHNfdHlwZXMucW1kXCIsIG9ueXhpYU9ubHk6IGZhbHNlLCBzcGxpdDogNSwgdHlwZTogXCJodG1sXCIsIHNzcENsb3VkU2VydmljZTogXCJweXRob25cIiwgR1BVOiBmYWxzZSwgY29ycmVjdGlvbjogZmFsc2UgfSk7XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtZGBDZSBmaWNoaWVyIGEgw6l0w6kgbW9kaWZpw6kgX18ke3RhYmxlX2NvbW1pdC5sZW5ndGh9X18gZm9pcyBkZXB1aXMgc2EgY3LDqWF0aW9uIGxlICR7Y3JlYXRpb25fc3RyaW5nfSAoZGVybmnDqHJlIG1vZGlmaWNhdGlvbiBsZSAke2xhc3RfbW9kaWZpY2F0aW9uX3N0cmluZ30pYFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiY3JlYXRpb24gPSBkMy5taW4oXG4gIHRhYmxlX2NvbW1pdC5tYXAoZCA9PiBuZXcgRGF0ZShkLkRhdGUpKVxuKVxuXG5sYXN0X21vZGlmaWNhdGlvbiA9IGQzLm1heChcbiAgdGFibGVfY29tbWl0Lm1hcChkID0+IG5ldyBEYXRlKGQuRGF0ZSkpXG4pXG5cbmNyZWF0aW9uX3N0cmluZyA9IGNyZWF0aW9uLnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgXCJtb250aFwiOiBcImxvbmdcIixcbiAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG59KVxuXG5sYXN0X21vZGlmaWNhdGlvbl9zdHJpbmcgPSBsYXN0X21vZGlmaWNhdGlvbi50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gIFwibW9udGhcIjogXCJsb25nXCIsXG4gIFwieWVhclwiOiBcIm51bWVyaWNcIlxufSlcblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2PiR7Z2l0X2hpc3RvcnlfdGFibGV9PC9kaXY+YFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2PiR7Z2l0X2hpc3RvcnlfcGxvdH08L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRfaGlzdG9yeV90YWJsZSA9IElucHV0cy50YWJsZShcbiAgdGFibGVfY29tbWl0LFxuICB7XG4gICAgZm9ybWF0OiB7XG4gICAgICBTSEE6IHggPT4gbWRgWyR7eH1dKCR7Z2l0aHViX3JlcG99L2NvbW1pdC8ke3h9KWAsXG4gICAgICBEZXNjcmlwdGlvbjogeCA9PiBtZGAke3JlcGxhY2VQdWxsUmVxdWVzdFBhdHRlcm4oeCwgZ2l0aHViX3JlcG8pfWAsXG4gICAgICAvKkRhdGU6IHggPT4geC50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgICAgICAgXCJtb250aFwiOiBcIm51bWVyaWNcIixcbiAgICAgICAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gICAgICAgIFwieWVhclwiOiBcIm51bWVyaWNcIlxuICAgICAgICB9KVxuICAgICAgKi9cbiAgICB9XG4gIH1cbilcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImdpdF9oaXN0b3J5X3Bsb3QgPSBQbG90LnBsb3Qoe1xuICBtYXJrczogW1xuICAgIFBsb3QucnVsZVkoWzBdLCB7c3Ryb2tlOiBcInJveWFsYmx1ZVwifSksXG4gICAgUGxvdC5kb3QoXG4gICAgICAgICAgdGFibGVfY29tbWl0LFxuICAgICAgICAgIFBsb3QucG9pbnRlclgoe3g6IChkKSA9PiBuZXcgRGF0ZShkLmRhdGUpLCB5OiAwLCBzdHJva2U6IFwicmVkXCJ9KSksXG4gICAgUGxvdC5kb3QodGFibGVfY29tbWl0LCB7eDogKGQpID0+IG5ldyBEYXRlKGQuRGF0ZSksIHk6IDAsIGZpbGw6IFwicm95YWxibHVlXCJ9KVxuICBdXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC05IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZnVuY3Rpb24gcmVwbGFjZVB1bGxSZXF1ZXN0UGF0dGVybihpbnB1dFN0cmluZywgZ2l0aHViUmVwbykge1xuICAgIC8vIFVzZSBhIHJlZ3VsYXIgZXhwcmVzc2lvbiB0byBtYXRjaCB0aGUgcGF0dGVybiAjZGlnaXRcbiAgICB2YXIgcGF0dGVybiA9IC8jKFxcZCspL2c7XG5cbiAgICAvLyBSZXBsYWNlIHRoZSBwYXR0ZXJuIHdpdGggJHtnaXRodWJfcmVwb30vcHVsbC8jZGlnaXRcbiAgICB2YXIgcmVwbGFjZWRTdHJpbmcgPSBpbnB1dFN0cmluZy5yZXBsYWNlKHBhdHRlcm4sICdbIyQxXSgnICsgZ2l0aHViUmVwbyArICcvcHVsbC8kMSknKTtcblxuICAgIHJldHVybiByZXBsYWNlZFN0cmluZztcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRodWJfcmVwbyA9IFwiaHR0cHM6Ly9naXRodWIuY29tL2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0XCJcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTEiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ0YWJsZV9jb21taXQgPSB7XG5cbi8vIEdldCB0aGUgSFRNTCB0YWJsZSBieSBpdHMgY2xhc3MgbmFtZVxudmFyIHRhYmxlID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignLmNvbW1pdC10YWJsZScpO1xuXG4vLyBDaGVjayBpZiB0aGUgdGFibGUgZXhpc3RzXG5pZiAodGFibGUpIHtcbiAgICAvLyBJbml0aWFsaXplIGFuIGFycmF5IHRvIHN0b3JlIHRoZSB0YWJsZSBkYXRhXG4gICAgdmFyIGRhdGFBcnJheSA9IFtdO1xuXG4gICAgLy8gRXh0cmFjdCBoZWFkZXJzIGZyb20gdGhlIGZpcnN0IHJvd1xuICAgIHZhciBoZWFkZXJzID0gW107XG4gICAgZm9yICh2YXIgaSA9IDA7IGkgPCB0YWJsZS5yb3dzWzBdLmNlbGxzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIGhlYWRlcnMucHVzaCh0YWJsZS5yb3dzWzBdLmNlbGxzW2ldLnRleHRDb250ZW50LnRyaW0oKSk7XG4gICAgfVxuXG4gICAgLy8gSXRlcmF0ZSB0aHJvdWdoIHRoZSByb3dzLCBzdGFydGluZyBmcm9tIHRoZSBzZWNvbmQgcm93XG4gICAgZm9yICh2YXIgaSA9IDE7IGkgPCB0YWJsZS5yb3dzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIHZhciByb3cgPSB0YWJsZS5yb3dzW2ldO1xuICAgICAgICB2YXIgcm93RGF0YSA9IHt9O1xuXG4gICAgICAgIC8vIEl0ZXJhdGUgdGhyb3VnaCB0aGUgY2VsbHMgaW4gdGhlIHJvd1xuICAgICAgICBmb3IgKHZhciBqID0gMDsgaiA8IHJvdy5jZWxscy5sZW5ndGg7IGorKykge1xuICAgICAgICAgICAgLy8gVXNlIGhlYWRlcnMgYXMga2V5cyBhbmQgY2VsbCBjb250ZW50IGFzIHZhbHVlc1xuICAgICAgICAgICAgcm93RGF0YVtoZWFkZXJzW2pdXSA9IHJvdy5jZWxsc1tqXS50ZXh0Q29udGVudC50cmltKCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBQdXNoIHRoZSByb3dEYXRhIG9iamVjdCB0byB0aGUgZGF0YUFycmF5XG4gICAgICAgIGRhdGFBcnJheS5wdXNoKHJvd0RhdGEpO1xuICAgIH1cbiAgfVxuXG4gIHJldHVybiBkYXRhQXJyYXlcblxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuLy8gR2V0IHRoZSBlbGVtZW50IHdpdGggY2xhc3MgJ2dpdC1kZXRhaWxzJ1xue1xuICB2YXIgZ2l0RGV0YWlscyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5jb21taXQtdGFibGUnKTtcblxuICAvLyBDaGVjayBpZiB0aGUgZWxlbWVudCBleGlzdHNcbiAgaWYgKGdpdERldGFpbHMpIHtcbiAgICAgIC8vIEhpZGUgdGhlIGVsZW1lbnRcbiAgICAgIGdpdERldGFpbHMuc3R5bGUuZGlzcGxheSA9ICdub25lJztcbiAgfVxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlBsb3QgPSByZXF1aXJlKCdAb2JzZXJ2YWJsZWhxL3Bsb3RAMC42LjEyL2Rpc3QvcGxvdC51bWQubWluLmpzJylcbiJ9XX0=
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Im1kYENlIGZpY2hpZXIgYSDDqXTDqSBtb2RpZmnDqSBfXyR7dGFibGVfY29tbWl0Lmxlbmd0aH1fXyBmb2lzIGRlcHVpcyBzYSBjcsOpYXRpb24gbGUgJHtjcmVhdGlvbl9zdHJpbmd9IChkZXJuacOocmUgbW9kaWZpY2F0aW9uIGxlICR7bGFzdF9tb2RpZmljYXRpb25fc3RyaW5nfSlgXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJjcmVhdGlvbiA9IGQzLm1pbihcbiAgdGFibGVfY29tbWl0Lm1hcChkID0+IG5ldyBEYXRlKGQuRGF0ZSkpXG4pXG5cbmxhc3RfbW9kaWZpY2F0aW9uID0gZDMubWF4KFxuICB0YWJsZV9jb21taXQubWFwKGQgPT4gbmV3IERhdGUoZC5EYXRlKSlcbilcblxuY3JlYXRpb25fc3RyaW5nID0gY3JlYXRpb24udG9Mb2NhbGVTdHJpbmcoXCJmclwiLCB7XG4gIFwiZGF5XCI6IFwibnVtZXJpY1wiLFxuICBcIm1vbnRoXCI6IFwibG9uZ1wiLFxuICBcInllYXJcIjogXCJudW1lcmljXCJcbn0pXG5cbmxhc3RfbW9kaWZpY2F0aW9uX3N0cmluZyA9IGxhc3RfbW9kaWZpY2F0aW9uLnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgXCJtb250aFwiOiBcImxvbmdcIixcbiAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG59KVxuXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxkaXY+JHtnaXRfaGlzdG9yeV90YWJsZX08L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxkaXY+JHtnaXRfaGlzdG9yeV9wbG90fTwvZGl2PmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImdpdF9oaXN0b3J5X3RhYmxlID0gSW5wdXRzLnRhYmxlKFxuICB0YWJsZV9jb21taXQsXG4gIHtcbiAgICBmb3JtYXQ6IHtcbiAgICAgIFNIQTogeCA9PiBtZGBbJHt4fV0oJHtnaXRodWJfcmVwb30vY29tbWl0LyR7eH0pYCxcbiAgICAgIERlc2NyaXB0aW9uOiB4ID0+IG1kYCR7cmVwbGFjZVB1bGxSZXF1ZXN0UGF0dGVybih4LCBnaXRodWJfcmVwbyl9YCxcbiAgICAgIC8qRGF0ZTogeCA9PiB4LnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICAgICAgICBcIm1vbnRoXCI6IFwibnVtZXJpY1wiLFxuICAgICAgICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgICAgICAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG4gICAgICAgIH0pXG4gICAgICAqL1xuICAgIH1cbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZ2l0X2hpc3RvcnlfcGxvdCA9IFBsb3QucGxvdCh7XG4gIG1hcmtzOiBbXG4gICAgUGxvdC5ydWxlWShbMF0sIHtzdHJva2U6IFwicm95YWxibHVlXCJ9KSxcbiAgICBQbG90LmRvdChcbiAgICAgICAgICB0YWJsZV9jb21taXQsXG4gICAgICAgICAgUGxvdC5wb2ludGVyWCh7eDogKGQpID0+IG5ldyBEYXRlKGQuZGF0ZSksIHk6IDAsIHN0cm9rZTogXCJyZWRcIn0pKSxcbiAgICBQbG90LmRvdCh0YWJsZV9jb21taXQsIHt4OiAoZCkgPT4gbmV3IERhdGUoZC5EYXRlKSwgeTogMCwgZmlsbDogXCJyb3lhbGJsdWVcIn0pXG4gIF1cbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiByZXBsYWNlUHVsbFJlcXVlc3RQYXR0ZXJuKGlucHV0U3RyaW5nLCBnaXRodWJSZXBvKSB7XG4gICAgLy8gVXNlIGEgcmVndWxhciBleHByZXNzaW9uIHRvIG1hdGNoIHRoZSBwYXR0ZXJuICNkaWdpdFxuICAgIHZhciBwYXR0ZXJuID0gLyMoXFxkKykvZztcblxuICAgIC8vIFJlcGxhY2UgdGhlIHBhdHRlcm4gd2l0aCAke2dpdGh1Yl9yZXBvfS9wdWxsLyNkaWdpdFxuICAgIHZhciByZXBsYWNlZFN0cmluZyA9IGlucHV0U3RyaW5nLnJlcGxhY2UocGF0dGVybiwgJ1sjJDFdKCcgKyBnaXRodWJSZXBvICsgJy9wdWxsLyQxKScpO1xuXG4gICAgcmV0dXJuIHJlcGxhY2VkU3RyaW5nO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC04IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZ2l0aHViX3JlcG8gPSBcImh0dHBzOi8vZ2l0aHViLmNvbS9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdFwiXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTkiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ0YWJsZV9jb21taXQgPSB7XG5cbi8vIEdldCB0aGUgSFRNTCB0YWJsZSBieSBpdHMgY2xhc3MgbmFtZVxudmFyIHRhYmxlID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignLmNvbW1pdC10YWJsZScpO1xuXG4vLyBDaGVjayBpZiB0aGUgdGFibGUgZXhpc3RzXG5pZiAodGFibGUpIHtcbiAgICAvLyBJbml0aWFsaXplIGFuIGFycmF5IHRvIHN0b3JlIHRoZSB0YWJsZSBkYXRhXG4gICAgdmFyIGRhdGFBcnJheSA9IFtdO1xuXG4gICAgLy8gRXh0cmFjdCBoZWFkZXJzIGZyb20gdGhlIGZpcnN0IHJvd1xuICAgIHZhciBoZWFkZXJzID0gW107XG4gICAgZm9yICh2YXIgaSA9IDA7IGkgPCB0YWJsZS5yb3dzWzBdLmNlbGxzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIGhlYWRlcnMucHVzaCh0YWJsZS5yb3dzWzBdLmNlbGxzW2ldLnRleHRDb250ZW50LnRyaW0oKSk7XG4gICAgfVxuXG4gICAgLy8gSXRlcmF0ZSB0aHJvdWdoIHRoZSByb3dzLCBzdGFydGluZyBmcm9tIHRoZSBzZWNvbmQgcm93XG4gICAgZm9yICh2YXIgaSA9IDE7IGkgPCB0YWJsZS5yb3dzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIHZhciByb3cgPSB0YWJsZS5yb3dzW2ldO1xuICAgICAgICB2YXIgcm93RGF0YSA9IHt9O1xuXG4gICAgICAgIC8vIEl0ZXJhdGUgdGhyb3VnaCB0aGUgY2VsbHMgaW4gdGhlIHJvd1xuICAgICAgICBmb3IgKHZhciBqID0gMDsgaiA8IHJvdy5jZWxscy5sZW5ndGg7IGorKykge1xuICAgICAgICAgICAgLy8gVXNlIGhlYWRlcnMgYXMga2V5cyBhbmQgY2VsbCBjb250ZW50IGFzIHZhbHVlc1xuICAgICAgICAgICAgcm93RGF0YVtoZWFkZXJzW2pdXSA9IHJvdy5jZWxsc1tqXS50ZXh0Q29udGVudC50cmltKCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBQdXNoIHRoZSByb3dEYXRhIG9iamVjdCB0byB0aGUgZGF0YUFycmF5XG4gICAgICAgIGRhdGFBcnJheS5wdXNoKHJvd0RhdGEpO1xuICAgIH1cbiAgfVxuXG4gIHJldHVybiBkYXRhQXJyYXlcblxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuLy8gR2V0IHRoZSBlbGVtZW50IHdpdGggY2xhc3MgJ2dpdC1kZXRhaWxzJ1xue1xuICB2YXIgZ2l0RGV0YWlscyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5jb21taXQtdGFibGUnKTtcblxuICAvLyBDaGVjayBpZiB0aGUgZWxlbWVudCBleGlzdHNcbiAgaWYgKGdpdERldGFpbHMpIHtcbiAgICAgIC8vIEhpZGUgdGhlIGVsZW1lbnRcbiAgICAgIGdpdERldGFpbHMuc3R5bGUuZGlzcGxheSA9ICdub25lJztcbiAgfVxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlBsb3QgPSByZXF1aXJlKCdAb2JzZXJ2YWJsZWhxL3Bsb3RAMC42LjEyL2Rpc3QvcGxvdC51bWQubWluLmpzJylcbiJ9XX0=
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
@@ -5213,31 +3443,6 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
-    }
-  });
-
-};
-          </script>
 
 
 

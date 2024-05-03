@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-04-27">
+<meta name="dcterms.date" content="2024-05-03">
 <meta name="description" content="Ce chapitre illustre les fonctionalités de GeoPandas à partir des décomptes de vélo fournis par la ville de Paris en opendata. Il prolonge le chapitre précédent avec des données un petit peu plus complexes à manipuler.">
 
 <title>Python pour la data science - Pratique de geopandas avec les données vélib</title>
@@ -227,7 +227,7 @@ le chapitre précédent avec des données un petit peu plus complexes
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-04-27">
+<meta name="citation_online_date" content="2024-05-03">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -552,7 +552,7 @@ le chapitre précédent avec des données un petit peu plus complexes
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-04-27</p>
+        <p class="date">2024-05-03</p>
       </div>
     </div>
     
@@ -874,31 +874,31 @@ source depuis <a href="https://github.com/InseeFrLab/cartiflette"><code>Github</
 librairies qui ne sont pas disponibles par défaut, dans l’environnement <code>Python</code>
 de base de la <em>data science</em>. Pour installer celles-ci depuis une
 cellule de <em>notebook</em> <code>Jupyter</code>, le code suivant est à exécuter :</p>
-<div id="870c98da" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="870c98da"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="870c98da-1"><a href="#870c98da-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install fiona shapely</span>
-<span id="870c98da-2"><a href="#870c98da-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pyproj rtree</span>
-<span id="870c98da-3"><a href="#870c98da-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install contextily</span>
-<span id="870c98da-4"><a href="#870c98da-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span>
-<span id="870c98da-5"><a href="#870c98da-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pygeos</span>
-<span id="870c98da-6"><a href="#870c98da-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install topojson</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ac353c39" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="ac353c39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ac353c39-1"><a href="#ac353c39-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install fiona shapely</span>
+<span id="ac353c39-2"><a href="#ac353c39-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pyproj rtree</span>
+<span id="ac353c39-3"><a href="#ac353c39-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install contextily</span>
+<span id="ac353c39-4"><a href="#ac353c39-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span>
+<span id="ac353c39-5"><a href="#ac353c39-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pygeos</span>
+<span id="ac353c39-6"><a href="#ac353c39-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install topojson</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Après installations,
 les <em>packages</em> à importer pour progresser
 dans ce chapitre sont les suivants :</p>
-<div id="b43e9ee0" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="b43e9ee0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b43e9ee0-1"><a href="#b43e9ee0-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="b43e9ee0-2"><a href="#b43e9ee0-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextily <span class="im">as</span> ctx</span>
-<span id="b43e9ee0-3"><a href="#b43e9ee0-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cb548a8d" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb548a8d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb548a8d-1"><a href="#cb548a8d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb548a8d-2"><a href="#cb548a8d-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextily <span class="im">as</span> ctx</span>
+<span id="cb548a8d-3"><a href="#cb548a8d-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les instructions d’installation du package <code>cartiflette</code>
 sont quant à elles détaillées dans le chapitre
 précédent.</p>
-<div id="9fa64903" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="9fa64903"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9fa64903-1"><a href="#9fa64903-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install requests py7zr geopandas openpyxl tqdm s3fs PyYAML xlrd</span>
-<span id="9fa64903-2"><a href="#9fa64903-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>inseefrlab<span class="op">/</span>cartiflette</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d54d457d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="d54d457d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d54d457d-1"><a href="#d54d457d-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install requests py7zr geopandas openpyxl tqdm s3fs PyYAML xlrd</span>
+<span id="d54d457d-2"><a href="#d54d457d-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>inseefrlab<span class="op">/</span>cartiflette</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cdf0825e" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cdf0825e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cdf0825e-1"><a href="#cdf0825e-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cf354c5f" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cf354c5f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cf354c5f-1"><a href="#cf354c5f-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="lire-et-enrichir-des-données-spatiales" class="level2" data-number="0.2">
@@ -921,7 +921,7 @@ des départements de la petite couronne (75, 92, 93 et 94)
 de manière simplifiée grâce au <em>package</em>
 <code>cartiflette</code>:</li>
 </ol>
-<div id="bef2d1e8" class="cell" data-execution_count="6">
+<div id="a1daed6e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>communes_borders <span class="op">=</span> carti_download(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"75"</span>, <span class="st">"92"</span>, <span class="st">"93"</span>, <span class="st">"94"</span>],</span>
@@ -936,7 +936,7 @@ de manière simplifiée grâce au <em>package</em>
 <li>Regarder les premières lignes des données. Identifier la différence avec
 un <em>dataframe</em> standard.</li>
 </ol>
-<div id="fa71860c" class="cell" data-execution_count="7">
+<div id="c57c873f" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 <div>
@@ -1118,7 +1118,7 @@ Convertir en Lambert 93.</li>
 </ol>
 </div>
 </div>
-<div id="1b2c1f6c" class="cell" data-execution_count="11">
+<div id="42844624" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1127,7 +1127,7 @@ Convertir en Lambert 93.</li>
 </div>
 </div>
 </div>
-<div id="a653f732" class="cell" data-execution_count="12">
+<div id="9b9412ee" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1237,7 +1237,7 @@ choisies:</p>
 <p>Voici un code utilisant encore
 <code>cartiflette</code>
 pour récupérer les frontières françaises (découpées par région):</p>
-<div id="3cb3b1f4" class="cell" data-execution_count="14">
+<div id="836bbc63" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>france <span class="op">=</span> carti_download(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"France"</span>],</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
@@ -1279,7 +1279,7 @@ forme de cartes :</p>
 <div id="fig-effet-mercator-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-effet-mercator-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-1.png" class="lightbox" data-gallery="fig-effet-mercator" data-glightbox="description: .lightbox-desc-3"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-1.png" data-ref-parent="fig-effet-mercator" width="416" height="389" class="figure-img"></a>
+<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-1.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="fig-effet-mercator"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-1.png" data-ref-parent="fig-effet-mercator" width="416" height="389" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-effet-mercator-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Mercator WGS84 (EPSG: 4326)
@@ -1291,7 +1291,7 @@ forme de cartes :</p>
 <div id="fig-effet-mercator-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-effet-mercator-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-2.png" class="lightbox" data-gallery="fig-effet-mercator" data-glightbox="description: .lightbox-desc-4"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-2.png" data-ref-parent="fig-effet-mercator" width="540" height="210" class="figure-img"></a>
+<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-2.png" class="lightbox" data-glightbox="description: .lightbox-desc-4" data-gallery="fig-effet-mercator"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-2.png" data-ref-parent="fig-effet-mercator" width="540" height="210" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-effet-mercator-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Projection healpix (+proj=healpix +lon_0=0 +a=1)
@@ -1305,7 +1305,7 @@ forme de cartes :</p>
 <div id="fig-effet-mercator-3" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-effet-mercator-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-3.png" class="lightbox" data-gallery="fig-effet-mercator" data-glightbox="description: .lightbox-desc-5"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-3.png" data-ref-parent="fig-effet-mercator" width="494" height="389" class="figure-img"></a>
+<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-3.png" class="lightbox" data-glightbox="description: .lightbox-desc-5" data-gallery="fig-effet-mercator"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-3.png" data-ref-parent="fig-effet-mercator" width="494" height="389" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-effet-mercator-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) Projection prévue pour Tahiti (EPSG: 3304)
@@ -1317,7 +1317,7 @@ forme de cartes :</p>
 <div id="fig-effet-mercator-4" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-effet-mercator-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-4.png" class="lightbox" data-gallery="fig-effet-mercator" data-glightbox="description: .lightbox-desc-6"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-4.png" data-ref-parent="fig-effet-mercator" width="315" height="389" class="figure-img"></a>
+<a href="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-4.png" class="lightbox" data-glightbox="description: .lightbox-desc-6" data-gallery="fig-effet-mercator"><img src="03_geopandas_TP_files/figure-html/fig-effet-mercator-output-4.png" data-ref-parent="fig-effet-mercator" width="315" height="389" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-effet-mercator-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (d) Projection Albers prévue pour Etats-Unis (EPSG: 5070)
@@ -1337,7 +1337,7 @@ numérique. Les calculs géométriques amènent à des différences
 assez notables selon le système de référence utilisé.</p>
 <p>On peut représenter ces approximations sur une carte<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> pour se faire
 une idée des régions où l’erreur de mesure est la plus importante.</p>
-<div id="97265dea" class="cell" data-execution_count="18">
+<div id="787bb2e5" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1355,7 +1355,7 @@ surtout lorqu’on se rapproche de l’équateur ou des pôles.</p>
 <div id="fig-surus" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-surus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="https://pythonds.linogaliana.fr/content/manipulation/truesize.png" class="lightbox" data-gallery="fig-mercator" data-glightbox="description: .lightbox-desc-8"><img src="https://pythonds.linogaliana.fr/content/manipulation/truesize.png" class="img-fluid figure-img" data-ref-parent="fig-mercator"></a>
+<a href="https://pythonds.linogaliana.fr/content/manipulation/truesize.png" class="lightbox" data-glightbox="description: .lightbox-desc-8" data-gallery="fig-mercator"><img src="https://pythonds.linogaliana.fr/content/manipulation/truesize.png" class="img-fluid figure-img" data-ref-parent="fig-mercator"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-surus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Exemple de reprojection de pays depuis le site <a href="https://www.thetruesize.com/">thetruesize.com</a>
@@ -1365,7 +1365,7 @@ surtout lorqu’on se rapproche de l’équateur ou des pôles.</p>
 <div id="fig-mercator-funny" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-mercator-funny-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="https://rgeo.linogaliana.fr/exercises/img/mercator.jpg" class="lightbox" data-gallery="fig-mercator" data-glightbox="description: .lightbox-desc-9"><img src="https://rgeo.linogaliana.fr/exercises/img/mercator.jpg" class="img-fluid figure-img" data-ref-parent="fig-mercator"></a>
+<a href="https://rgeo.linogaliana.fr/exercises/img/mercator.jpg" class="lightbox" data-glightbox="description: .lightbox-desc-9" data-gallery="fig-mercator"><img src="https://rgeo.linogaliana.fr/exercises/img/mercator.jpg" class="img-fluid figure-img" data-ref-parent="fig-mercator"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mercator-funny-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) “Don’t trust the Mercator projection” sur <code>Reddit</code>
@@ -1426,8 +1426,8 @@ un autre jeu de données.</p>
 stations velib,
 disponibles <a href="https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/table/">sur le site d’open data de la ville de Paris</a> et
 requêtables directement en utilisant un URL</p>
-<div id="72d80aaf" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="72d80aaf"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="72d80aaf-1"><a href="#72d80aaf-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/download/?format=geojson&amp;timezone=Europe/Berlin&amp;lang=fr"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5d03a4e8" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="5d03a4e8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5d03a4e8-1"><a href="#5d03a4e8-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://opendata.paris.fr/explore/dataset/velib-emplacement-des-stations/download/?format=geojson&amp;timezone=Europe/Berlin&amp;lang=fr"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans le prochain exercice, nous proposons de créer rapidement une
 carte comprenant trois couches :</p>
@@ -1443,20 +1443,20 @@ toujours utile dans un travail exploratoire.</p>
 <p>En amont de l’exercice,
 utiliser la fonction suivante du <em>package</em> <code>cartiflette</code> pour récupérer
 le fonds de carte des départements de la petite couronne:</p>
-<div id="e39f3571" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="e39f3571"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e39f3571-1"><a href="#e39f3571-1" aria-hidden="true" tabindex="-1"></a>idf <span class="op">=</span> carti_download(</span>
-<span id="e39f3571-2"><a href="#e39f3571-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"11"</span>],</span>
-<span id="e39f3571-3"><a href="#e39f3571-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
-<span id="e39f3571-4"><a href="#e39f3571-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
-<span id="e39f3571-5"><a href="#e39f3571-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
-<span id="e39f3571-6"><a href="#e39f3571-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"REGION"</span>,</span>
-<span id="e39f3571-7"><a href="#e39f3571-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
-<span id="e39f3571-8"><a href="#e39f3571-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
-<span id="e39f3571-9"><a href="#e39f3571-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="e39f3571-10"><a href="#e39f3571-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e39f3571-11"><a href="#e39f3571-11" aria-hidden="true" tabindex="-1"></a>petite_couronne_departements <span class="op">=</span> idf.loc[</span>
-<span id="e39f3571-12"><a href="#e39f3571-12" aria-hidden="true" tabindex="-1"></a>    idf[<span class="st">"INSEE_DEP"</span>].isin([<span class="st">"75"</span>, <span class="st">"92"</span>, <span class="st">"93"</span>, <span class="st">"94"</span>])</span>
-<span id="e39f3571-13"><a href="#e39f3571-13" aria-hidden="true" tabindex="-1"></a>].to_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5ef602a4" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="5ef602a4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5ef602a4-1"><a href="#5ef602a4-1" aria-hidden="true" tabindex="-1"></a>idf <span class="op">=</span> carti_download(</span>
+<span id="5ef602a4-2"><a href="#5ef602a4-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span>[<span class="st">"11"</span>],</span>
+<span id="5ef602a4-3"><a href="#5ef602a4-3" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="dv">4326</span>,</span>
+<span id="5ef602a4-4"><a href="#5ef602a4-4" aria-hidden="true" tabindex="-1"></a>    borders<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
+<span id="5ef602a4-5"><a href="#5ef602a4-5" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
+<span id="5ef602a4-6"><a href="#5ef602a4-6" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"REGION"</span>,</span>
+<span id="5ef602a4-7"><a href="#5ef602a4-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="5ef602a4-8"><a href="#5ef602a4-8" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span>,</span>
+<span id="5ef602a4-9"><a href="#5ef602a4-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="5ef602a4-10"><a href="#5ef602a4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="5ef602a4-11"><a href="#5ef602a4-11" aria-hidden="true" tabindex="-1"></a>petite_couronne_departements <span class="op">=</span> idf.loc[</span>
+<span id="5ef602a4-12"><a href="#5ef602a4-12" aria-hidden="true" tabindex="-1"></a>    idf[<span class="st">"INSEE_DEP"</span>].isin([<span class="st">"75"</span>, <span class="st">"92"</span>, <span class="st">"93"</span>, <span class="st">"94"</span>])</span>
+<span id="5ef602a4-13"><a href="#5ef602a4-13" aria-hidden="true" tabindex="-1"></a>].to_crs(<span class="dv">2154</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert">
@@ -1487,7 +1487,7 @@ et ajuster la taille en fonction de la variable <code>capacity</code>. L’esth�
 </div>
 </div>
 <p>La couche de base obtenue à l’issue de la question 4.</p>
-<div id="ce71f008" class="cell" data-execution_count="24">
+<div id="9e8eea09" class="cell" data-execution_count="24">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1497,7 +1497,7 @@ et ajuster la taille en fonction de la variable <code>capacity</code>. L’esth�
 </div>
 </div>
 <p>Puis en y ajoutant les limites départementales (question 5).</p>
-<div id="2db754c7" class="cell" data-execution_count="25">
+<div id="94556e9e" class="cell" data-execution_count="25">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1507,7 +1507,7 @@ et ajuster la taille en fonction de la variable <code>capacity</code>. L’esth�
 </div>
 </div>
 <p>Puis les stations (question 6).</p>
-<div id="27418864" class="cell" data-execution_count="26">
+<div id="ac1b4385" class="cell" data-execution_count="26">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1517,7 +1517,7 @@ et ajuster la taille en fonction de la variable <code>capacity</code>. L’esth�
 </div>
 </div>
 <p>La carte finale, après mise en forme:</p>
-<div id="ee4546d7" class="cell" data-execution_count="27">
+<div id="7fa02bfb" class="cell" data-execution_count="27">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1564,7 +1564,7 @@ les stations appartenant au 19e et les limites de l’arrondissement.</li>
 </ol>
 </div>
 </div>
-<div id="25e5c1ca" class="cell" data-execution_count="30">
+<div id="4c37b04b" class="cell" data-execution_count="30">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1574,7 +1574,7 @@ les stations appartenant au 19e et les limites de l’arrondissement.</li>
 </div>
 </div>
 <p>Carte obtenue à la question 4 :</p>
-<div id="a94c0624" class="cell" data-execution_count="31">
+<div id="2c56b062" class="cell" data-execution_count="31">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1585,7 +1585,7 @@ les stations appartenant au 19e et les limites de l’arrondissement.</li>
 </div>
 <p>Avec la carte de la question 4, basée sur des aplats de couleurs (choropleth map), le lecteur est victime d’une illusion classique. Les arrondissements les plus visibles sur la carte sont les plus grands. D’ailleurs c’est assez logique qu’ils soient également mieux pourvus en velib. Même si l’offre de velib est probablement plus reliée à la densité de population et d’équipements, on peut penser que l’effet taille joue et qu’ainsi on est victime d’une illusion avec la carte précédente.</p>
 <p>Si on représente plutôt la capacité sous forme de densité, pour tenir compte de la taille différente des arrondissements, les conclusions sont inversées et correspondent mieux aux attentes d’un modèle centre-périphérie. Les arrondissements centraux sont mieux pourvus, cela se voit encore mieux avec des ronds proportionnels plutôt qu’une carte chorolèpthe.</p>
-<div id="1e086bb4" class="cell" data-execution_count="32">
+<div id="fe871765" class="cell" data-execution_count="32">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1616,9 +1616,9 @@ permet de se familiariser avec cette approche<a href="#fn4" class="footnote-ref"
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-04-27</p>
+<p>Latest built version: 2024-05-03</p>
 <p>Python version used:</p>
-<div id="3ead3eba" class="cell" data-execution_count="34">
+<div id="b654a4b1" class="cell" data-execution_count="34">
 <div class="cell-output cell-output-display" data-execution_count="32">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -4331,7 +4331,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"openEffect":"zoom","descPosition":"bottom","selector":".lightbox"});
+<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
