@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-05-03">
+<meta name="dcterms.date" content="2024-05-06">
 <meta name="description" content="La classification permet d’attribuer une classe d’appartenance (label dans la terminologie du machine learning) discrète à des données à partir de certaines variables explicatives (features dans la même terminologie). Les algorithmes de classification sont nombreux. L’un des plus intuitifs et les plus fréquemment rencontrés sont les SVM (Support Vector Machine). Ce chapitre illustre les enjeux de la classification à partir de ce modèle sur les données de vote aux élections présidentielles US de 2020.">
 
 <title>Python pour la data science - Classification: premier modèle avec les SVM</title>
@@ -228,7 +228,7 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-05-03">
+<meta name="citation_online_date" content="2024-05-06">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -303,12 +303,12 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
  <span class="dropdown-text">Numpy, la brique de base de la data science</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../content/manipulation/02a_pandas_tutorial.html">
+    <a class="dropdown-item" href="../../content/manipulation/02_pandas_intro.html">
  <span class="dropdown-text">Introduction à Pandas</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../content/manipulation/02b_pandas_TP.html">
- <span class="dropdown-text">Pratique de pandas : un exemple complet</span></a>
+    <a class="dropdown-item" href="../../content/manipulation/02_pandas_suite.html">
+ <span class="dropdown-text">Statistiques par groupe et association de plusieurs jeux de données avec Pandas</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../content/manipulation/03_geopandas_tutorial.html">
@@ -555,7 +555,7 @@ ce modèle sur les données de vote aux élections présidentielles US de 2020."
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-05-03</p>
+        <p class="date">2024-05-06</p>
       </div>
     </div>
     
@@ -821,25 +821,25 @@ de cette partie</a> : les données de vote aux élections présidentielles amér
 croisées à des variables sociodémographiques.
 Le code
 est disponible <a href="https://github.com/linogaliana/python-datascientist/blob/master/content/modelisation/get_data.py">sur Github</a>.</p>
-<div id="ec7eb79a" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="ec7eb79a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ec7eb79a-1"><a href="#ec7eb79a-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
-<span id="ec7eb79a-2"><a href="#ec7eb79a-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="db7cd1e7" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="db7cd1e7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="db7cd1e7-1"><a href="#db7cd1e7-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">--</span>upgrade xlrd <span class="co">#colab bug verson xlrd</span></span>
+<span id="db7cd1e7-2"><a href="#db7cd1e7-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4bb49e58" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="4bb49e58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4bb49e58-1"><a href="#4bb49e58-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="4bb49e58-2"><a href="#4bb49e58-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4bb49e58-3"><a href="#4bb49e58-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
-<span id="4bb49e58-4"><a href="#4bb49e58-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="4bb49e58-5"><a href="#4bb49e58-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
-<span id="4bb49e58-6"><a href="#4bb49e58-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4bb49e58-7"><a href="#4bb49e58-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
-<span id="4bb49e58-8"><a href="#4bb49e58-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="4bb49e58-9"><a href="#4bb49e58-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="71edc8d2" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="71edc8d2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="71edc8d2-1"><a href="#71edc8d2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="71edc8d2-2"><a href="#71edc8d2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="71edc8d2-3"><a href="#71edc8d2-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/linogaliana/python-datascientist/master/content/modelisation/get_data.py"</span></span>
+<span id="71edc8d2-4"><a href="#71edc8d2-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="71edc8d2-5"><a href="#71edc8d2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"getdata.py"</span>, <span class="st">"wb"</span>).write(r.content)</span>
+<span id="71edc8d2-6"><a href="#71edc8d2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="71edc8d2-7"><a href="#71edc8d2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getdata</span>
+<span id="71edc8d2-8"><a href="#71edc8d2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="71edc8d2-9"><a href="#71edc8d2-9" aria-hidden="true" tabindex="-1"></a>votes <span class="op">=</span> getdata.create_votes_dataframes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour ce TP, nous aurons besoin des packages suivants :</p>
-<div id="9e29c82f" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="9e29c82f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9e29c82f-1"><a href="#9e29c82f-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="9e29c82f-2"><a href="#9e29c82f-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4f03625c" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="4f03625c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4f03625c-1"><a href="#4f03625c-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="4f03625c-2"><a href="#4f03625c-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="la-méthode-des-svm-support-vector-machines" class="level2" data-number="0.1">
 <h2 data-number="0.1" class="anchored" data-anchor-id="la-méthode-des-svm-support-vector-machines"><span class="header-section-number">0.1</span> La méthode des <em>SVM</em> (<em>Support Vector Machines</em>)</h2>
@@ -991,9 +991,9 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-05-03</p>
+<p>Latest built version: 2024-05-06</p>
 <p>Python version used:</p>
-<div id="49b414d9" class="cell" data-execution_count="16">
+<div id="5c893c8c" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1062,7 +1062,7 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Babel</td>
-<td style="text-align: left;">2.14.0</td>
+<td style="text-align: left;">2.15.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">bcrypt</td>
@@ -1366,7 +1366,7 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">great-tables</td>
-<td style="text-align: left;">0.5.0</td>
+<td style="text-align: left;">0.5.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">greenlet</td>
@@ -2062,7 +2062,7 @@ le nouveau classifieur avec devrait avoir les performances suivantes :</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tifffile</td>
-<td style="text-align: left;">2024.4.24</td>
+<td style="text-align: left;">2024.5.3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tomli</td>
