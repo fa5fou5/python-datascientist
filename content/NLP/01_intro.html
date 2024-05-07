@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-05-06">
+<meta name="dcterms.date" content="2024-05-07">
 <meta name="description" content="Les corpus textuels étant des objets de très grande dimension où le ratio signal/bruit est faible, il est nécessaire de mettre en oeuvre une série d’étapes de nettoyage de texte. Ce chapitre va explorer quelques méthodes classiques de nettoyage en s’appuyant sur le Comte de Monte Cristo d’Alexandre Dumas.">
 
 <title>Python pour la data science - Quelques éléments pour comprendre les enjeux du NLP</title>
@@ -246,7 +246,7 @@ sur le Comte de Monte Cristo d’Alexandre Dumas.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-05-06">
+<meta name="citation_online_date" content="2024-05-07">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -601,7 +601,7 @@ sur le Comte de Monte Cristo d’Alexandre Dumas.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-05-06</p>
+        <p class="date">2024-05-07</p>
       </div>
     </div>
     
@@ -707,153 +707,168 @@ sur le Comte de Monte Cristo d’Alexandre Dumas.">
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="493" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 492;"><span id="cb2-493"><a href="#cb2-493" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-494"><a href="#cb2-494" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
-<span id="cb2-495"><a href="#cb2-495" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
-<span id="cb2-496"><a href="#cb2-496" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
-<span id="cb2-497"><a href="#cb2-497" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-498"><a href="#cb2-498" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-499"><a href="#cb2-499" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-500"><a href="#cb2-500" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-501"><a href="#cb2-501" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-502"><a href="#cb2-502" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
-<span id="cb2-503"><a href="#cb2-503" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-504"><a href="#cb2-504" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-505"><a href="#cb2-505" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-506"><a href="#cb2-506" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
-<span id="cb2-507"><a href="#cb2-507" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-508"><a href="#cb2-508" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
-<span id="cb2-509"><a href="#cb2-509" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-510"><a href="#cb2-510" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
-<span id="cb2-511"><a href="#cb2-511" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-512"><a href="#cb2-512" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-513"><a href="#cb2-513" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
-<span id="cb2-514"><a href="#cb2-514" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
-<span id="cb2-515"><a href="#cb2-515" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-516"><a href="#cb2-516" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-517"><a href="#cb2-517" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink <span class="op">;</span></span>
-<span id="cb2-518"><a href="#cb2-518" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-519"><a href="#cb2-519" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
-<span id="cb2-520"><a href="#cb2-520" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
-<span id="cb2-521"><a href="#cb2-521" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-522"><a href="#cb2-522" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
-<span id="cb2-523"><a href="#cb2-523" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-524"><a href="#cb2-524" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-525"><a href="#cb2-525" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-526"><a href="#cb2-526" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
-<span id="cb2-527"><a href="#cb2-527" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-528"><a href="#cb2-528" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-529"><a href="#cb2-529" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-530"><a href="#cb2-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-531"><a href="#cb2-531" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
-<span id="cb2-532"><a href="#cb2-532" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
-<span id="cb2-533"><a href="#cb2-533" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
-<span id="cb2-534"><a href="#cb2-534" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-535"><a href="#cb2-535" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
-<span id="cb2-536"><a href="#cb2-536" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
-<span id="cb2-537"><a href="#cb2-537" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-538"><a href="#cb2-538" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-539"><a href="#cb2-539" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
-<span id="cb2-540"><a href="#cb2-540" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-541"><a href="#cb2-541" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-542"><a href="#cb2-542" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-543"><a href="#cb2-543" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
-<span id="cb2-544"><a href="#cb2-544" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-545"><a href="#cb2-545" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-546"><a href="#cb2-546" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-547"><a href="#cb2-547" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-548"><a href="#cb2-548" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-549"><a href="#cb2-549" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-550"><a href="#cb2-550" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
-<span id="cb2-551"><a href="#cb2-551" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-552"><a href="#cb2-552" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-553"><a href="#cb2-553" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-554"><a href="#cb2-554" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
-<span id="cb2-555"><a href="#cb2-555" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-556"><a href="#cb2-556" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
-<span id="cb2-557"><a href="#cb2-557" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-558"><a href="#cb2-558" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-559"><a href="#cb2-559" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-560"><a href="#cb2-560" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-561"><a href="#cb2-561" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-562"><a href="#cb2-562" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-563"><a href="#cb2-563" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
-<span id="cb2-564"><a href="#cb2-564" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-565"><a href="#cb2-565" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-566"><a href="#cb2-566" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-567"><a href="#cb2-567" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
-<span id="cb2-568"><a href="#cb2-568" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-569"><a href="#cb2-569" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-570"><a href="#cb2-570" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-571"><a href="#cb2-571" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
-<span id="cb2-572"><a href="#cb2-572" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-573"><a href="#cb2-573" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-574"><a href="#cb2-574" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
-<span id="cb2-575"><a href="#cb2-575" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
-<span id="cb2-576"><a href="#cb2-576" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-577"><a href="#cb2-577" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-578"><a href="#cb2-578" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
-<span id="cb2-579"><a href="#cb2-579" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
-<span id="cb2-580"><a href="#cb2-580" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
-<span id="cb2-581"><a href="#cb2-581" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-582"><a href="#cb2-582" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-583"><a href="#cb2-583" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-584"><a href="#cb2-584" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-585"><a href="#cb2-585" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
-<span id="cb2-586"><a href="#cb2-586" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span></span>
-<span id="cb2-587"><a href="#cb2-587" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink<span class="op">,</span></span>
-<span id="cb2-588"><a href="#cb2-588" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink</span>
-<span id="cb2-589"><a href="#cb2-589" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
-<span id="cb2-590"><a href="#cb2-590" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-591"><a href="#cb2-591" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
-<span id="cb2-592"><a href="#cb2-592" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink)<span class="op">;</span></span>
-<span id="cb2-593"><a href="#cb2-593" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-594"><a href="#cb2-594" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-595"><a href="#cb2-595" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
-<span id="cb2-596"><a href="#cb2-596" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-597"><a href="#cb2-597" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
-<span id="cb2-598"><a href="#cb2-598" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
-<span id="cb2-599"><a href="#cb2-599" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-600"><a href="#cb2-600" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-601"><a href="#cb2-601" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
-<span id="cb2-602"><a href="#cb2-602" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
-<span id="cb2-603"><a href="#cb2-603" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-604"><a href="#cb2-604" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-605"><a href="#cb2-605" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
-<span id="cb2-606"><a href="#cb2-606" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-607"><a href="#cb2-607" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-608"><a href="#cb2-608" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-609"><a href="#cb2-609" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
-<span id="cb2-610"><a href="#cb2-610" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
-<span id="cb2-611"><a href="#cb2-611" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-612"><a href="#cb2-612" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
-<span id="cb2-613"><a href="#cb2-613" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
-<span id="cb2-614"><a href="#cb2-614" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
-<span id="cb2-615"><a href="#cb2-615" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
-<span id="cb2-616"><a href="#cb2-616" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
-<span id="cb2-617"><a href="#cb2-617" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
-<span id="cb2-618"><a href="#cb2-618" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
-<span id="cb2-619"><a href="#cb2-619" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
-<span id="cb2-620"><a href="#cb2-620" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
-<span id="cb2-621"><a href="#cb2-621" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
-<span id="cb2-622"><a href="#cb2-622" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
-<span id="cb2-623"><a href="#cb2-623" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
-<span id="cb2-624"><a href="#cb2-624" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
-<span id="cb2-625"><a href="#cb2-625" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
-<span id="cb2-626"><a href="#cb2-626" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
-<span id="cb2-627"><a href="#cb2-627" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-628"><a href="#cb2-628" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
-<span id="cb2-629"><a href="#cb2-629" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="492" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 491;"><span id="cb2-492"><a href="#cb2-492" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb2-493"><a href="#cb2-493" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;details&gt;</span></span>
+<span id="cb2-494"><a href="#cb2-494" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;summary&gt;</span></span>
+<span id="cb2-495"><a href="#cb2-495" aria-hidden="true" tabindex="-1"></a><span class="vs">Pour ouvrir la version corrigée au format des _notebooks_</span></span>
+<span id="cb2-496"><a href="#cb2-496" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/summary&gt;</span></span>
+<span id="cb2-497"><a href="#cb2-497" aria-hidden="true" tabindex="-1"></a><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path<span class="op">,</span> <span class="dt">correction</span><span class="op">:</span> <span class="kw">true</span>})<span class="sc">}</span></span>
+<span id="cb2-498"><a href="#cb2-498" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/details&gt;</span></span>
+<span id="cb2-499"><a href="#cb2-499" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="518" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 517;"><span id="cb3-518"><a href="#cb3-518" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb3-519"><a href="#cb3-519" aria-hidden="true" tabindex="-1"></a>    sourceFile <span class="op">=</span> <span class="st">"content/01_toto.Rmd"</span><span class="op">,</span></span>
+<span id="cb3-520"><a href="#cb3-520" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> [<span class="st">'md'</span><span class="op">,</span> <span class="st">'html'</span>]<span class="op">,</span></span>
+<span id="cb3-521"><a href="#cb3-521" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb3-522"><a href="#cb3-522" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-523"><a href="#cb3-523" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb3-524"><a href="#cb3-524" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-525"><a href="#cb3-525" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb3-526"><a href="#cb3-526" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb3-527"><a href="#cb3-527" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(type)) {</span>
+<span id="cb3-528"><a href="#cb3-528" aria-hidden="true" tabindex="-1"></a>        type <span class="op">=</span> type[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb3-529"><a href="#cb3-529" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-530"><a href="#cb3-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-531"><a href="#cb3-531" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> notebook <span class="op">=</span> sourceFile<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">(</span><span class="ss">.Rmd</span><span class="sc">|</span><span class="ss">.qmd</span><span class="sc">)</span><span class="ss">/</span><span class="op">,</span> <span class="st">".ipynb"</span>)<span class="op">;</span></span>
+<span id="cb3-532"><a href="#cb3-532" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb3-533"><a href="#cb3-533" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"corrections"</span>)<span class="op">;</span></span>
+<span id="cb3-534"><a href="#cb3-534" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-535"><a href="#cb3-535" aria-hidden="true" tabindex="-1"></a>        notebook <span class="op">=</span> notebook<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/content/</span><span class="op">,</span> <span class="st">"notebooks"</span>)<span class="op">;</span></span>
+<span id="cb3-536"><a href="#cb3-536" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-537"><a href="#cb3-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-538"><a href="#cb3-538" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooksSimplified <span class="op">=</span> <span class="st">"github/linogaliana/python-datascientist-notebooks"</span><span class="op">;</span></span>
+<span id="cb3-539"><a href="#cb3-539" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubAlias <span class="op">=</span> githubRepoNotebooksSimplified<span class="op">.</span><span class="fu">replace</span>(<span class="st">"github"</span><span class="op">,</span> <span class="st">"github.com"</span>)<span class="op">;</span></span>
+<span id="cb3-540"><a href="#cb3-540" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> githubRepoNotebooks <span class="op">=</span> <span class="vs">`https://</span><span class="sc">${</span>githubAlias<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb3-541"><a href="#cb3-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-542"><a href="#cb3-542" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> githubLink <span class="op">;</span></span>
+<span id="cb3-543"><a href="#cb3-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-544"><a href="#cb3-544" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (notebook <span class="op">===</span> <span class="st">""</span>) {</span>
+<span id="cb3-545"><a href="#cb3-545" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> githubRepoNotebooks<span class="op">;</span></span>
+<span id="cb3-546"><a href="#cb3-546" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-547"><a href="#cb3-547" aria-hidden="true" tabindex="-1"></a>        githubLink <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>githubRepoNotebooks<span class="sc">}</span><span class="vs">/blob/main`</span><span class="op">;</span></span>
+<span id="cb3-548"><a href="#cb3-548" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-549"><a href="#cb3-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-550"><a href="#cb3-550" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> notebookRelPath <span class="op">=</span> <span class="vs">`/</span><span class="sc">${</span>notebook<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb3-551"><a href="#cb3-551" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [section<span class="op">,</span> chapter] <span class="op">=</span> notebook<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb3-552"><a href="#cb3-552" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-553"><a href="#cb3-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-554"><a href="#cb3-554" aria-hidden="true" tabindex="-1"></a>    githubLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>githubLink<span class="sc">}${</span>notebookRelPath<span class="sc">}</span><span class="vs">" class="github"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb3-555"><a href="#cb3-555" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-556"><a href="#cb3-556" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sectionLatest <span class="op">=</span> section<span class="op">.</span><span class="fu">split</span>(<span class="st">"/"</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">1</span>)[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb3-557"><a href="#cb3-557" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> chapterNoExtension <span class="op">=</span> chapter<span class="op">.</span><span class="fu">replace</span>(<span class="st">".ipynb"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span></span>
+<span id="cb3-558"><a href="#cb3-558" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> onyxiaInitArgs <span class="op">=</span> [sectionLatest<span class="op">,</span> chapterNoExtension]<span class="op">;</span></span>
+<span id="cb3-559"><a href="#cb3-559" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-560"><a href="#cb3-560" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (correction) {</span>
+<span id="cb3-561"><a href="#cb3-561" aria-hidden="true" tabindex="-1"></a>        onyxiaInitArgs<span class="op">.</span><span class="fu">push</span>(<span class="st">"correction"</span>)<span class="op">;</span></span>
+<span id="cb3-562"><a href="#cb3-562" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-563"><a href="#cb3-563" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-564"><a href="#cb3-564" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gpuSuffix <span class="op">=</span> GPU <span class="op">?</span> <span class="st">"-gpu"</span> <span class="op">:</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb3-565"><a href="#cb3-565" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-566"><a href="#cb3-566" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudJupyterLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/jupyter-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-jupyter.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb3-567"><a href="#cb3-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-568"><a href="#cb3-568" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudJupyterLink<span class="op">;</span></span>
+<span id="cb3-569"><a href="#cb3-569" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb3-570"><a href="#cb3-570" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange)](</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb3-571"><a href="#cb3-571" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-572"><a href="#cb3-572" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudJupyterLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_Jupyter-orange?logo=Jupyter&amp;logoColor=orange" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb3-573"><a href="#cb3-573" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-574"><a href="#cb3-574" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-575"><a href="#cb3-575" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">4</span>) {</span>
+<span id="cb3-576"><a href="#cb3-576" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb3-577"><a href="#cb3-577" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-578"><a href="#cb3-578" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-579"><a href="#cb3-579" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sspcloudVscodeLinkLauncher <span class="op">=</span> <span class="vs">`https://datalab.sspcloud.fr/launcher/ide/vscode-</span><span class="sc">${</span>sspCloudService<span class="sc">}${</span>gpuSuffix<span class="sc">}</span><span class="vs">?autoLaunch=true&amp;onyxia.friendlyName=%C2%AB</span><span class="sc">${</span>chapterNoExtension<span class="sc">}</span><span class="vs">%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmaster%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%AB</span><span class="sc">${</span>onyxiaInitArgs<span class="op">.</span><span class="fu">join</span>(<span class="st">'%20'</span>)<span class="sc">}</span><span class="vs">%C2%BB&amp;security.allowlist.enabled=false`</span><span class="op">;</span></span>
+<span id="cb3-580"><a href="#cb3-580" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-581"><a href="#cb3-581" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sspcloudVscodeLink<span class="op">;</span></span>
+<span id="cb3-582"><a href="#cb3-582" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb3-583"><a href="#cb3-583" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`[![Onyxia](https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue)](</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb3-584"><a href="#cb3-584" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-585"><a href="#cb3-585" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="</span><span class="sc">${</span>sspcloudVscodeLinkLauncher<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/badge/SSP%20Cloud-Tester_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb3-586"><a href="#cb3-586" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-587"><a href="#cb3-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-588"><a href="#cb3-588" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">5</span>) {</span>
+<span id="cb3-589"><a href="#cb3-589" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb3-590"><a href="#cb3-590" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-591"><a href="#cb3-591" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-592"><a href="#cb3-592" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> colabLink<span class="op">;</span></span>
+<span id="cb3-593"><a href="#cb3-593" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb3-594"><a href="#cb3-594" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb3-595"><a href="#cb3-595" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-596"><a href="#cb3-596" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">=</span> <span class="vs">`&lt;a href="https://colab.research.google.com/</span><span class="sc">${</span>githubRepoNotebooksSimplified<span class="sc">}</span><span class="vs">/blob/main</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"&gt;&lt;/a&gt;`</span><span class="op">;</span></span>
+<span id="cb3-597"><a href="#cb3-597" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-598"><a href="#cb3-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-599"><a href="#cb3-599" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split <span class="op">===</span> <span class="dv">7</span>) {</span>
+<span id="cb3-600"><a href="#cb3-600" aria-hidden="true" tabindex="-1"></a>        colabLink <span class="op">+=</span> <span class="st">'&lt;br&gt;'</span><span class="op">;</span></span>
+<span id="cb3-601"><a href="#cb3-601" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-602"><a href="#cb3-602" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-603"><a href="#cb3-603" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> vscodeLink<span class="op">;</span></span>
+<span id="cb3-604"><a href="#cb3-604" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"md"</span>) {</span>
+<span id="cb3-605"><a href="#cb3-605" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`[![githubdev](https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc)](https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb3-606"><a href="#cb3-606" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-607"><a href="#cb3-607" aria-hidden="true" tabindex="-1"></a>        vscodeLink <span class="op">=</span> <span class="vs">`&lt;a href="https://github.dev/linogaliana/python-datascientist-notebooks</span><span class="sc">${</span>notebookRelPath<span class="sc">}</span><span class="vs">" target="_blank" rel="noopener"&gt;&lt;img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open%20in%20Visual%20Studio%20Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="githubdev"&gt;&lt;/a&gt;&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb3-608"><a href="#cb3-608" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-609"><a href="#cb3-609" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-610"><a href="#cb3-610" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> [</span>
+<span id="cb3-611"><a href="#cb3-611" aria-hidden="true" tabindex="-1"></a>        githubLink<span class="op">,</span></span>
+<span id="cb3-612"><a href="#cb3-612" aria-hidden="true" tabindex="-1"></a>        sspcloudVscodeLink<span class="op">,</span></span>
+<span id="cb3-613"><a href="#cb3-613" aria-hidden="true" tabindex="-1"></a>        sspcloudJupyterLink</span>
+<span id="cb3-614"><a href="#cb3-614" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
+<span id="cb3-615"><a href="#cb3-615" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-616"><a href="#cb3-616" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>onyxiaOnly) {</span>
+<span id="cb3-617"><a href="#cb3-617" aria-hidden="true" tabindex="-1"></a>        badges<span class="op">.</span><span class="fu">push</span>(colabLink)<span class="op">;</span></span>
+<span id="cb3-618"><a href="#cb3-618" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-619"><a href="#cb3-619" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-620"><a href="#cb3-620" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> result <span class="op">=</span> badges<span class="op">.</span><span class="fu">join</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)<span class="op">;</span></span>
+<span id="cb3-621"><a href="#cb3-621" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-622"><a href="#cb3-622" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (type <span class="op">===</span> <span class="st">"html"</span>) {</span>
+<span id="cb3-623"><a href="#cb3-623" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`&lt;p class="badges"&gt;</span><span class="sc">${</span>result<span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb3-624"><a href="#cb3-624" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-625"><a href="#cb3-625" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-626"><a href="#cb3-626" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (onyxiaOnly) {</span>
+<span id="cb3-627"><a href="#cb3-627" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>sspcloudJupyterLink<span class="sc">}${</span>sspcloudVscodeLink<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb3-628"><a href="#cb3-628" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-629"><a href="#cb3-629" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-630"><a href="#cb3-630" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result<span class="op">;</span></span>
+<span id="cb3-631"><a href="#cb3-631" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-632"><a href="#cb3-632" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-633"><a href="#cb3-633" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-634"><a href="#cb3-634" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">printBadges</span>({</span>
+<span id="cb3-635"><a href="#cb3-635" aria-hidden="true" tabindex="-1"></a>    fpath<span class="op">,</span></span>
+<span id="cb3-636"><a href="#cb3-636" aria-hidden="true" tabindex="-1"></a>    onyxiaOnly <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-637"><a href="#cb3-637" aria-hidden="true" tabindex="-1"></a>    split <span class="op">=</span> <span class="dv">5</span><span class="op">,</span></span>
+<span id="cb3-638"><a href="#cb3-638" aria-hidden="true" tabindex="-1"></a>    type <span class="op">=</span> <span class="st">"html"</span><span class="op">,</span></span>
+<span id="cb3-639"><a href="#cb3-639" aria-hidden="true" tabindex="-1"></a>    sspCloudService <span class="op">=</span> <span class="st">"python"</span><span class="op">,</span></span>
+<span id="cb3-640"><a href="#cb3-640" aria-hidden="true" tabindex="-1"></a>    GPU <span class="op">=</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-641"><a href="#cb3-641" aria-hidden="true" tabindex="-1"></a>    correction <span class="op">=</span> <span class="kw">false</span></span>
+<span id="cb3-642"><a href="#cb3-642" aria-hidden="true" tabindex="-1"></a>} <span class="op">=</span> {}) {</span>
+<span id="cb3-643"><a href="#cb3-643" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> badges <span class="op">=</span> <span class="fu">reminderBadges</span>({</span>
+<span id="cb3-644"><a href="#cb3-644" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sourceFile</span><span class="op">:</span> fpath<span class="op">,</span></span>
+<span id="cb3-645"><a href="#cb3-645" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> type<span class="op">,</span></span>
+<span id="cb3-646"><a href="#cb3-646" aria-hidden="true" tabindex="-1"></a>        <span class="dt">split</span><span class="op">:</span> split<span class="op">,</span></span>
+<span id="cb3-647"><a href="#cb3-647" aria-hidden="true" tabindex="-1"></a>        <span class="dt">onyxiaOnly</span><span class="op">:</span> onyxiaOnly<span class="op">,</span></span>
+<span id="cb3-648"><a href="#cb3-648" aria-hidden="true" tabindex="-1"></a>        <span class="dt">sspCloudService</span><span class="op">:</span> sspCloudService<span class="op">,</span></span>
+<span id="cb3-649"><a href="#cb3-649" aria-hidden="true" tabindex="-1"></a>        <span class="dt">GPU</span><span class="op">:</span> GPU<span class="op">,</span></span>
+<span id="cb3-650"><a href="#cb3-650" aria-hidden="true" tabindex="-1"></a>        <span class="dt">correction</span><span class="op">:</span> correction</span>
+<span id="cb3-651"><a href="#cb3-651" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb3-652"><a href="#cb3-652" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-653"><a href="#cb3-653" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> badges</span>
+<span id="cb3-654"><a href="#cb3-654" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-2-1" data-nodetype="declaration">
+<div id="ojs-cell-3-1" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-2-2" data-nodetype="declaration">
+<div id="ojs-cell-3-2" data-nodetype="declaration">
 
 </div>
 </div>
@@ -877,33 +892,33 @@ d’autres livres du domaine public.</p>
 <p>La manière la plus simple de le récupérer
 est de télécharger avec le <em>package</em> <code>Request</code> le fichier texte et le retravailler
 légèrement pour ne conserver que le corpus du livre :</p>
-<div id="9900428f" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="9900428f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9900428f-1"><a href="#9900428f-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib <span class="im">import</span> request</span>
-<span id="9900428f-2"><a href="#9900428f-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-3"><a href="#9900428f-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/files/17989/17989-0.txt"</span></span>
-<span id="9900428f-4"><a href="#9900428f-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> request.urlopen(url)</span>
-<span id="9900428f-5"><a href="#9900428f-5" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read().decode(<span class="st">"utf8"</span>)</span>
-<span id="9900428f-6"><a href="#9900428f-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-7"><a href="#9900428f-7" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> raw.split(</span>
-<span id="9900428f-8"><a href="#9900428f-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** START OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
-<span id="9900428f-9"><a href="#9900428f-9" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span>].split(</span>
-<span id="9900428f-10"><a href="#9900428f-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** END OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
-<span id="9900428f-11"><a href="#9900428f-11" aria-hidden="true" tabindex="-1"></a>)[</span>
-<span id="9900428f-12"><a href="#9900428f-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="9900428f-13"><a href="#9900428f-13" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="9900428f-14"><a href="#9900428f-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-15"><a href="#9900428f-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="9900428f-16"><a href="#9900428f-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-17"><a href="#9900428f-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-18"><a href="#9900428f-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
-<span id="9900428f-19"><a href="#9900428f-19" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()  <span class="co"># mettre les mots en minuscule</span></span>
-<span id="9900428f-20"><a href="#9900428f-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="st">" "</span>.join(text.split())</span>
-<span id="9900428f-21"><a href="#9900428f-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span>
-<span id="9900428f-22"><a href="#9900428f-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-23"><a href="#9900428f-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-24"><a href="#9900428f-24" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> clean_text(dumas)</span>
-<span id="9900428f-25"><a href="#9900428f-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9900428f-26"><a href="#9900428f-26" aria-hidden="true" tabindex="-1"></a>dumas[<span class="dv">10000</span>:<span class="dv">10500</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6dd176c8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="6dd176c8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6dd176c8-1"><a href="#6dd176c8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib <span class="im">import</span> request</span>
+<span id="6dd176c8-2"><a href="#6dd176c8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-3"><a href="#6dd176c8-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/files/17989/17989-0.txt"</span></span>
+<span id="6dd176c8-4"><a href="#6dd176c8-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> request.urlopen(url)</span>
+<span id="6dd176c8-5"><a href="#6dd176c8-5" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read().decode(<span class="st">"utf8"</span>)</span>
+<span id="6dd176c8-6"><a href="#6dd176c8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-7"><a href="#6dd176c8-7" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> raw.split(</span>
+<span id="6dd176c8-8"><a href="#6dd176c8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** START OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
+<span id="6dd176c8-9"><a href="#6dd176c8-9" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span>].split(</span>
+<span id="6dd176c8-10"><a href="#6dd176c8-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** END OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
+<span id="6dd176c8-11"><a href="#6dd176c8-11" aria-hidden="true" tabindex="-1"></a>)[</span>
+<span id="6dd176c8-12"><a href="#6dd176c8-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="6dd176c8-13"><a href="#6dd176c8-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="6dd176c8-14"><a href="#6dd176c8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-15"><a href="#6dd176c8-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="6dd176c8-16"><a href="#6dd176c8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-17"><a href="#6dd176c8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-18"><a href="#6dd176c8-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="6dd176c8-19"><a href="#6dd176c8-19" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()  <span class="co"># mettre les mots en minuscule</span></span>
+<span id="6dd176c8-20"><a href="#6dd176c8-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="st">" "</span>.join(text.split())</span>
+<span id="6dd176c8-21"><a href="#6dd176c8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span>
+<span id="6dd176c8-22"><a href="#6dd176c8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-23"><a href="#6dd176c8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-24"><a href="#6dd176c8-24" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> clean_text(dumas)</span>
+<span id="6dd176c8-25"><a href="#6dd176c8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="6dd176c8-26"><a href="#6dd176c8-26" aria-hidden="true" tabindex="-1"></a>dumas[<span class="dv">10000</span>:<span class="dv">10500</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>" mes yeux. --vous avez donc vu l'empereur aussi? --il est entré chez le maréchal pendant que j'y étais. --et vous lui avez parlé? --c'est-à-dire que c'est lui qui m'a parlé, monsieur, dit dantès en souriant. --et que vous a-t-il dit? --il m'a fait des questions sur le bâtiment, sur l'époque de son départ pour marseille, sur la route qu'il avait suivie et sur la cargaison qu'il portait. je crois que s'il eût été vide, et que j'en eusse été le maître, son intention eût été de l'acheter; mais je lu"</code></pre>
 </div>
@@ -952,31 +967,31 @@ Les <em>wordclouds</em> sont très simples à implémenter en <code>Python</code
 avec le module <code>Wordcloud</code>. Quelques paramètres de mise en forme
 permettent même d’ajuster la forme du nuage à
 une image :</p>
-<div id="07bea2e4" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="07bea2e4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="07bea2e4-1"><a href="#07bea2e4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud</span>
-<span id="07bea2e4-2"><a href="#07bea2e4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="07bea2e4-3"><a href="#07bea2e4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
-<span id="07bea2e4-4"><a href="#07bea2e4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="07bea2e4-5"><a href="#07bea2e4-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> PIL</span>
-<span id="07bea2e4-6"><a href="#07bea2e4-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="07bea2e4-7"><a href="#07bea2e4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="07bea2e4-8"><a href="#07bea2e4-8" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/book.png"</span></span>
-<span id="07bea2e4-9"><a href="#07bea2e4-9" aria-hidden="true" tabindex="-1"></a>book_mask <span class="op">=</span> np.array(PIL.Image.<span class="bu">open</span>(io.BytesIO(requests.get(img).content)))</span>
-<span id="07bea2e4-10"><a href="#07bea2e4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="07bea2e4-11"><a href="#07bea2e4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="07bea2e4-12"><a href="#07bea2e4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_wordcloud(corpus):</span>
-<span id="07bea2e4-13"><a href="#07bea2e4-13" aria-hidden="true" tabindex="-1"></a>    wc <span class="op">=</span> wordcloud.WordCloud(</span>
-<span id="07bea2e4-14"><a href="#07bea2e4-14" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="07bea2e4-15"><a href="#07bea2e4-15" aria-hidden="true" tabindex="-1"></a>        max_words<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="07bea2e4-16"><a href="#07bea2e4-16" aria-hidden="true" tabindex="-1"></a>        mask<span class="op">=</span>book_mask,</span>
-<span id="07bea2e4-17"><a href="#07bea2e4-17" aria-hidden="true" tabindex="-1"></a>        contour_width<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="07bea2e4-18"><a href="#07bea2e4-18" aria-hidden="true" tabindex="-1"></a>        contour_color<span class="op">=</span><span class="st">"steelblue"</span>,</span>
-<span id="07bea2e4-19"><a href="#07bea2e4-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="07bea2e4-20"><a href="#07bea2e4-20" aria-hidden="true" tabindex="-1"></a>    wc.generate(corpus)</span>
-<span id="07bea2e4-21"><a href="#07bea2e4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wc</span>
-<span id="07bea2e4-22"><a href="#07bea2e4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="07bea2e4-23"><a href="#07bea2e4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="07bea2e4-24"><a href="#07bea2e4-24" aria-hidden="true" tabindex="-1"></a>wordcloud_dumas <span class="op">=</span> make_wordcloud(dumas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a9e82041" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="a9e82041"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a9e82041-1"><a href="#a9e82041-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud</span>
+<span id="a9e82041-2"><a href="#a9e82041-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="a9e82041-3"><a href="#a9e82041-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="a9e82041-4"><a href="#a9e82041-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="a9e82041-5"><a href="#a9e82041-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> PIL</span>
+<span id="a9e82041-6"><a href="#a9e82041-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="a9e82041-7"><a href="#a9e82041-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a9e82041-8"><a href="#a9e82041-8" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> <span class="st">"https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/book.png"</span></span>
+<span id="a9e82041-9"><a href="#a9e82041-9" aria-hidden="true" tabindex="-1"></a>book_mask <span class="op">=</span> np.array(PIL.Image.<span class="bu">open</span>(io.BytesIO(requests.get(img).content)))</span>
+<span id="a9e82041-10"><a href="#a9e82041-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a9e82041-11"><a href="#a9e82041-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a9e82041-12"><a href="#a9e82041-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_wordcloud(corpus):</span>
+<span id="a9e82041-13"><a href="#a9e82041-13" aria-hidden="true" tabindex="-1"></a>    wc <span class="op">=</span> wordcloud.WordCloud(</span>
+<span id="a9e82041-14"><a href="#a9e82041-14" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="a9e82041-15"><a href="#a9e82041-15" aria-hidden="true" tabindex="-1"></a>        max_words<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="a9e82041-16"><a href="#a9e82041-16" aria-hidden="true" tabindex="-1"></a>        mask<span class="op">=</span>book_mask,</span>
+<span id="a9e82041-17"><a href="#a9e82041-17" aria-hidden="true" tabindex="-1"></a>        contour_width<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="a9e82041-18"><a href="#a9e82041-18" aria-hidden="true" tabindex="-1"></a>        contour_color<span class="op">=</span><span class="st">"steelblue"</span>,</span>
+<span id="a9e82041-19"><a href="#a9e82041-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="a9e82041-20"><a href="#a9e82041-20" aria-hidden="true" tabindex="-1"></a>    wc.generate(corpus)</span>
+<span id="a9e82041-21"><a href="#a9e82041-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wc</span>
+<span id="a9e82041-22"><a href="#a9e82041-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a9e82041-23"><a href="#a9e82041-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a9e82041-24"><a href="#a9e82041-24" aria-hidden="true" tabindex="-1"></a>wordcloud_dumas <span class="op">=</span> make_wordcloud(dumas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-fig-wordcloud-dumas" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cell-fig-wordcloud-dumas"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cell-fig-wordcloud-dumas-1"><a href="#cell-fig-wordcloud-dumas-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(wordcloud_dumas, interpolation<span class="op">=</span><span class="st">"bilinear"</span>)</span>
@@ -1068,15 +1083,15 @@ mesure de les comparer.</p>
 <p>Lors de la première utilisation de <code>NLTK</code>, il est nécessaire de télécharger
 quelques éléments nécessaires à la tokenisation, notamment la ponctuation.
 Pour cela, il est recommandé d’utiliser la commande suivante :</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="640ece44" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="640ece44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="640ece44-1"><a href="#640ece44-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="640ece44-2"><a href="#640ece44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="640ece44-3"><a href="#640ece44-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9a32e19d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="9a32e19d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9a32e19d-1"><a href="#9a32e19d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="9a32e19d-2"><a href="#9a32e19d-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="9a32e19d-3"><a href="#9a32e19d-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package punkt to /github/home/nltk_data...
 [nltk_data]   Unzipping tokenizers/punkt.zip.</code></pre>
@@ -1089,11 +1104,11 @@ Pour cela, il est recommandé d’utiliser la commande suivante :</p>
 pourraient être des phrases, des chapitres, des n-grammes ou des mots. C’est
 cette dernière option que l’on va choisir, plus simple pour retirer les
 <em>stop words</em> :</p>
-<div id="71ace4fd" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="71ace4fd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="71ace4fd-1"><a href="#71ace4fd-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="71ace4fd-2"><a href="#71ace4fd-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="71ace4fd-3"><a href="#71ace4fd-3" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> nltk.word_tokenize(dumas, language<span class="op">=</span><span class="st">"french"</span>)</span>
-<span id="71ace4fd-4"><a href="#71ace4fd-4" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="209b1854" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="209b1854"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="209b1854-1"><a href="#209b1854-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="209b1854-2"><a href="#209b1854-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="209b1854-3"><a href="#209b1854-3" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> nltk.word_tokenize(dumas, language<span class="op">=</span><span class="st">"french"</span>)</span>
+<span id="209b1854-4"><a href="#209b1854-4" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>['que',
  'voulez-vous',
@@ -1121,9 +1136,9 @@ cette dernière option que l’on va choisir, plus simple pour retirer les
 peut-être faux sur le plan de la grammaire mais peu avoir un sens pour une
 analyse statistique. Il reste des signes de ponctuation qu’on peut éliminer
 avec la méthode <code>isalpha</code>:</p>
-<div id="962a92e8" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="962a92e8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="962a92e8-1"><a href="#962a92e8-1" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()]</span>
-<span id="962a92e8-2"><a href="#962a92e8-2" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="01f6b1ef" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="01f6b1ef"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="01f6b1ef-1"><a href="#01f6b1ef-1" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()]</span>
+<span id="01f6b1ef-2"><a href="#01f6b1ef-2" aria-hidden="true" tabindex="-1"></a>words[<span class="dv">1030</span>:<span class="dv">1050</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>['assez',
  'sombre',
@@ -1159,19 +1174,19 @@ lien entre deux prépositions. On appelle ces mots des
 <h3 class="alert-heading anchored"><i class="fa-solid fa-lightbulb"></i> Hint</h3>
 <p>Lors de la première utilisation de <code>NLTK</code>, il est nécessaire de télécharger
 les <em>stop words</em>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <p>Comme indiqué ci-dessus, pour télécharger
 le corpus de <em>stop words</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, il est
 nécessaire d’exécuter la ligne de
 commande suivante :</p>
-<div id="af615ffb" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="af615ffb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="af615ffb-1"><a href="#af615ffb-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="af615ffb-2"><a href="#af615ffb-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="af615ffb-3"><a href="#af615ffb-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="286fa532" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="286fa532"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="286fa532-1"><a href="#286fa532-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="286fa532-2"><a href="#286fa532-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="286fa532-3"><a href="#286fa532-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to /github/home/nltk_data...
 [nltk_data]   Unzipping corpora/stopwords.zip.</code></pre>
@@ -1180,16 +1195,16 @@ commande suivante :</p>
 <pre><code>True</code></pre>
 </div>
 </div>
-<div id="b247dd14" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="b247dd14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b247dd14-1"><a href="#b247dd14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="b247dd14-2"><a href="#b247dd14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b247dd14-3"><a href="#b247dd14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stopwords.words(<span class="st">"french"</span>))</span>
-<span id="b247dd14-4"><a href="#b247dd14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b247dd14-5"><a href="#b247dd14-5" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">"french"</span>))</span>
-<span id="b247dd14-6"><a href="#b247dd14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b247dd14-7"><a href="#b247dd14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="b247dd14-8"><a href="#b247dd14-8" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> <span class="kw">not</span> w <span class="kw">in</span> stop_words]</span>
-<span id="b247dd14-9"><a href="#b247dd14-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(words[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="10c8c9df" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="10c8c9df"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="10c8c9df-1"><a href="#10c8c9df-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="10c8c9df-2"><a href="#10c8c9df-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="10c8c9df-3"><a href="#10c8c9df-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stopwords.words(<span class="st">"french"</span>))</span>
+<span id="10c8c9df-4"><a href="#10c8c9df-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="10c8c9df-5"><a href="#10c8c9df-5" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">"french"</span>))</span>
+<span id="10c8c9df-6"><a href="#10c8c9df-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="10c8c9df-7"><a href="#10c8c9df-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="10c8c9df-8"><a href="#10c8c9df-8" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [w <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> <span class="kw">not</span> w <span class="kw">in</span> stop_words]</span>
+<span id="10c8c9df-9"><a href="#10c8c9df-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(words[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['au', 'aux', 'avec', 'ce', 'ces', 'dans', 'de', 'des', 'du', 'elle', 'en', 'et', 'eux', 'il', 'ils', 'je', 'la', 'le', 'les', 'leur', 'lui', 'ma', 'mais', 'me', 'même', 'mes', 'moi', 'mon', 'ne', 'nos', 'notre', 'nous', 'on', 'ou', 'par', 'pas', 'pour', 'qu', 'que', 'qui', 'sa', 'se', 'ses', 'son', 'sur', 'ta', 'te', 'tes', 'toi', 'ton', 'tu', 'un', 'une', 'vos', 'votre', 'vous', 'c', 'd', 'j', 'l', 'à', 'm', 'n', 's', 't', 'y', 'été', 'étée', 'étées', 'étés', 'étant', 'étante', 'étants', 'étantes', 'suis', 'es', 'est', 'sommes', 'êtes', 'sont', 'serai', 'seras', 'sera', 'serons', 'serez', 'seront', 'serais', 'serait', 'serions', 'seriez', 'seraient', 'étais', 'était', 'étions', 'étiez', 'étaient', 'fus', 'fut', 'fûmes', 'fûtes', 'furent', 'sois', 'soit', 'soyons', 'soyez', 'soient', 'fusse', 'fusses', 'fût', 'fussions', 'fussiez', 'fussent', 'ayant', 'ayante', 'ayantes', 'ayants', 'eu', 'eue', 'eues', 'eus', 'ai', 'as', 'avons', 'avez', 'ont', 'aurai', 'auras', 'aura', 'aurons', 'aurez', 'auront', 'aurais', 'aurait', 'aurions', 'auriez', 'auraient', 'avais', 'avait', 'avions', 'aviez', 'avaient', 'eut', 'eûmes', 'eûtes', 'eurent', 'aie', 'aies', 'ait', 'ayons', 'ayez', 'aient', 'eusse', 'eusses', 'eût', 'eussions', 'eussiez', 'eussent']
 ['celui', 'dantès', 'a', 'déposé', 'passant', 'comment', 'paquet', 'déposer', 'danglars', 'rougit', 'passais', 'devant', 'porte', 'capitaine', 'entrouverte', 'vu', 'remettre', 'paquet', 'cette', 'lettre']</code></pre>
@@ -1198,13 +1213,13 @@ commande suivante :</p>
 <p>Ces retraitements commencent à porter leurs fruits puisque des mots ayant plus
 de sens commencent à se dégager, notamment les noms des personnages
 (Fernand, Mercédès, Villefort, etc.)</p>
-<div id="e2a5959e" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="e2a5959e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e2a5959e-1"><a href="#e2a5959e-1" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> make_wordcloud(<span class="st">" "</span>.join(words))</span>
-<span id="e2a5959e-2"><a href="#e2a5959e-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e2a5959e-3"><a href="#e2a5959e-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="e2a5959e-4"><a href="#e2a5959e-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e2a5959e-5"><a href="#e2a5959e-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc, interpolation<span class="op">=</span><span class="st">"bilinear"</span>)</span>
-<span id="e2a5959e-6"><a href="#e2a5959e-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">"off"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="30e6b81a" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="30e6b81a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="30e6b81a-1"><a href="#30e6b81a-1" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> make_wordcloud(<span class="st">" "</span>.join(words))</span>
+<span id="30e6b81a-2"><a href="#30e6b81a-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="30e6b81a-3"><a href="#30e6b81a-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="30e6b81a-4"><a href="#30e6b81a-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="30e6b81a-5"><a href="#30e6b81a-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc, interpolation<span class="op">=</span><span class="st">"bilinear"</span>)</span>
+<span id="30e6b81a-6"><a href="#30e6b81a-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">"off"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1240,13 +1255,13 @@ deviennent un même mot.</p>
 pour l’ordinateur et le modélisateur. Il existe plusieurs algorithmes de
 <em>stemming</em>, notamment le <em>Porter Stemming Algorithm</em> ou le
 <em>Snowball Stemming Algorithm</em>. Nous pouvons utiliser ce dernier en Français :</p>
-<div id="c7b1719f" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="c7b1719f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c7b1719f-1"><a href="#c7b1719f-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
-<span id="c7b1719f-2"><a href="#c7b1719f-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b1719f-3"><a href="#c7b1719f-3" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> SnowballStemmer(language<span class="op">=</span><span class="st">"french"</span>)</span>
-<span id="c7b1719f-4"><a href="#c7b1719f-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c7b1719f-5"><a href="#c7b1719f-5" aria-hidden="true" tabindex="-1"></a>stemmed <span class="op">=</span> [stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
-<span id="c7b1719f-6"><a href="#c7b1719f-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmed[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e2a24c4c" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="e2a24c4c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e2a24c4c-1"><a href="#e2a24c4c-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
+<span id="e2a24c4c-2"><a href="#e2a24c4c-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e2a24c4c-3"><a href="#e2a24c4c-3" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> SnowballStemmer(language<span class="op">=</span><span class="st">"french"</span>)</span>
+<span id="e2a24c4c-4"><a href="#e2a24c4c-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e2a24c4c-5"><a href="#e2a24c4c-5" aria-hidden="true" tabindex="-1"></a>stemmed <span class="op">=</span> [stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
+<span id="e2a24c4c-6"><a href="#e2a24c4c-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmed[<span class="dv">1030</span>:<span class="dv">1050</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['celui', 'dantes', 'a', 'dépos', 'pass', 'comment', 'paquet', 'dépos', 'danglar', 'roug', 'pass', 'dev', 'port', 'capitain', 'entrouvert', 'vu', 'remettr', 'paquet', 'cet', 'lettr']</code></pre>
 </div>
@@ -1257,9 +1272,9 @@ La machine prendra le relais, on lui a préparé le travail.</p>
 <div class="alert alert-info" role="alert">
 <h3 class="alert-heading anchored"><i class="fa-solid fa-comment"></i> Note</h3>
 <p>Il existe aussi le <em>stemmer</em> suivant :</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> FrenchStemmer</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> FrenchStemmer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> FrenchStemmer</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> FrenchStemmer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -1289,20 +1304,20 @@ plusieurs étapes de transformation des données.</p>
 </div>
 <p>Voici un exemple de reconnaissance d’entités nommées
 sur les premières phrases de l’ouvrage :</p>
-<div id="a2f34295" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="a2f34295"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a2f34295-1"><a href="#a2f34295-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install deplacy</span></span>
-<span id="a2f34295-2"><a href="#a2f34295-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download fr_core_news_sm</span>
-<span id="a2f34295-3"><a href="#a2f34295-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="a2f34295-4"><a href="#a2f34295-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
-<span id="a2f34295-5"><a href="#a2f34295-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
-<span id="a2f34295-6"><a href="#a2f34295-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a2f34295-7"><a href="#a2f34295-7" aria-hidden="true" tabindex="-1"></a>nlp<span class="op">=</span>spacy.load(<span class="st">"fr_core_news_sm"</span>)</span>
-<span id="a2f34295-8"><a href="#a2f34295-8" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> nlp(dumas[<span class="dv">15000</span>:<span class="dv">17000</span>])</span>
-<span id="a2f34295-9"><a href="#a2f34295-9" aria-hidden="true" tabindex="-1"></a>displacy.render(doc, style<span class="op">=</span><span class="st">"ent"</span>, jupyter<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="60a2be83" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="60a2be83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="60a2be83-1"><a href="#60a2be83-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install deplacy</span></span>
+<span id="60a2be83-2"><a href="#60a2be83-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download fr_core_news_sm</span>
+<span id="60a2be83-3"><a href="#60a2be83-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="60a2be83-4"><a href="#60a2be83-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="60a2be83-5"><a href="#60a2be83-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
+<span id="60a2be83-6"><a href="#60a2be83-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="60a2be83-7"><a href="#60a2be83-7" aria-hidden="true" tabindex="-1"></a>nlp<span class="op">=</span>spacy.load(<span class="st">"fr_core_news_sm"</span>)</span>
+<span id="60a2be83-8"><a href="#60a2be83-8" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> nlp(dumas[<span class="dv">15000</span>:<span class="dv">17000</span>])</span>
+<span id="60a2be83-9"><a href="#60a2be83-9" aria-hidden="true" tabindex="-1"></a>displacy.render(doc, style<span class="op">=</span><span class="st">"ent"</span>, jupyter<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Collecting fr-core-news-sm==3.7.0
   Downloading https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.7.0/fr_core_news_sm-3.7.0-py3-none-any.whl (16.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/16.3 MB ? eta -:--:--     ━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/16.3 MB 78.7 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━ 8.2/16.3 MB 121.1 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━━━━ 13.2/16.3 MB 153.9 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 16.3/16.3 MB 159.1 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.3/16.3 MB 98.5 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/16.3 MB ? eta -:--:--     ━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/16.3 MB 54.4 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━ 7.3/16.3 MB 108.4 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╺━━━━━━━━ 12.6/16.3 MB 158.6 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 16.3/16.3 MB 163.4 MB/s eta 0:00:01     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.3/16.3 MB 98.6 MB/s eta 0:00:00
 Requirement already satisfied: spacy&lt;3.8.0,&gt;=3.7.0 in /opt/mamba/lib/python3.11/site-packages (from fr-core-news-sm==3.7.0) (3.7.4)
 Requirement already satisfied: spacy-legacy&lt;3.1.0,&gt;=3.0.11 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (3.0.12)
 Requirement already satisfied: spacy-loggers&lt;2.0.0,&gt;=1.0.0 in /opt/mamba/lib/python3.11/site-packages (from spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.0.5)
@@ -1337,7 +1352,7 @@ Requirement already satisfied: confection&lt;1.0.0,&gt;=0.0.1 in /opt/mamba/lib/
 Requirement already satisfied: click&lt;9.0.0,&gt;=7.1.1 in /opt/mamba/lib/python3.11/site-packages (from typer&lt;0.10.0,&gt;=0.3.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (8.1.7)
 Requirement already satisfied: cloudpathlib&lt;0.17.0,&gt;=0.7.0 in /opt/mamba/lib/python3.11/site-packages (from weasel&lt;0.4.0,&gt;=0.1.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (0.16.0)
 Requirement already satisfied: MarkupSafe&gt;=2.0 in /opt/mamba/lib/python3.11/site-packages (from jinja2-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (2.1.5)
-Requirement already satisfied: marisa-trie&gt;=0.7.7 in /opt/mamba/lib/python3.11/site-packages (from language-data&gt;=1.2-&gt;langcodes&lt;4.0.0,&gt;=3.2.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.1.0)
+Requirement already satisfied: marisa-trie&gt;=0.7.7 in /opt/mamba/lib/python3.11/site-packages (from language-data&gt;=1.2-&gt;langcodes&lt;4.0.0,&gt;=3.2.0-&gt;spacy&lt;3.8.0,&gt;=3.7.0-&gt;fr-core-news-sm==3.7.0) (1.1.1)
 Installing collected packages: fr-core-news-sm
 Successfully installed fr-core-news-sm-3.7.0
 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
@@ -1422,9 +1437,9 @@ abordée dans un prochain chapitre.</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-05-06</p>
+<p>Latest built version: 2024-05-07</p>
 <p>Python version used:</p>
-<div id="1c3a6c60" class="cell" data-execution_count="13">
+<div id="ba5ac839" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1969,7 +1984,7 @@ abordée dans un prochain chapitre.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">marisa-trie</td>
-<td style="text-align: left;">1.1.0</td>
+<td style="text-align: left;">1.1.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Markdown</td>
@@ -2656,74 +2671,74 @@ abordée dans un prochain chapitre.</p>
 <p>View file history <i class="fa-brands fa-git-alt" aria-label="git-alt"></i></p>
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb17" data-startfrom="517" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 516;"><span id="cb17-517"><a href="#cb17-517" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`Ce fichier a été modifié __</span><span class="sc">${</span>table_commit<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">__ fois depuis sa création le </span><span class="sc">${</span>creation_string<span class="sc">}</span><span class="vs"> (dernière modification le </span><span class="sc">${</span>last_modification_string<span class="sc">}</span><span class="vs">)`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb18" data-startfrom="522" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 521;"><span id="cb18-522"><a href="#cb18-522" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`Ce fichier a été modifié __</span><span class="sc">${</span>table_commit<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">__ fois depuis sa création le </span><span class="sc">${</span>creation_string<span class="sc">}</span><span class="vs"> (dernière modification le </span><span class="sc">${</span>last_modification_string<span class="sc">}</span><span class="vs">)`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-3" data-nodetype="expression">
+<div id="ojs-cell-4" data-nodetype="expression">
 
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb18" data-startfrom="523" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 522;"><span id="cb18-523"><a href="#cb18-523" aria-hidden="true" tabindex="-1"></a>creation <span class="op">=</span> d3<span class="op">.</span><span class="fu">min</span>(</span>
-<span id="cb18-524"><a href="#cb18-524" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
-<span id="cb18-525"><a href="#cb18-525" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-526"><a href="#cb18-526" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-527"><a href="#cb18-527" aria-hidden="true" tabindex="-1"></a>last_modification <span class="op">=</span> d3<span class="op">.</span><span class="fu">max</span>(</span>
-<span id="cb18-528"><a href="#cb18-528" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
-<span id="cb18-529"><a href="#cb18-529" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-530"><a href="#cb18-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-531"><a href="#cb18-531" aria-hidden="true" tabindex="-1"></a>creation_string <span class="op">=</span> creation<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
-<span id="cb18-532"><a href="#cb18-532" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
-<span id="cb18-533"><a href="#cb18-533" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
-<span id="cb18-534"><a href="#cb18-534" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
-<span id="cb18-535"><a href="#cb18-535" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb18-536"><a href="#cb18-536" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-537"><a href="#cb18-537" aria-hidden="true" tabindex="-1"></a>last_modification_string <span class="op">=</span> last_modification<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
-<span id="cb18-538"><a href="#cb18-538" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
-<span id="cb18-539"><a href="#cb18-539" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
-<span id="cb18-540"><a href="#cb18-540" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
-<span id="cb18-541"><a href="#cb18-541" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb19" data-startfrom="533" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 532;"><span id="cb19-533"><a href="#cb19-533" aria-hidden="true" tabindex="-1"></a>creation <span class="op">=</span> d3<span class="op">.</span><span class="fu">min</span>(</span>
+<span id="cb19-534"><a href="#cb19-534" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
+<span id="cb19-535"><a href="#cb19-535" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-536"><a href="#cb19-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-537"><a href="#cb19-537" aria-hidden="true" tabindex="-1"></a>last_modification <span class="op">=</span> d3<span class="op">.</span><span class="fu">max</span>(</span>
+<span id="cb19-538"><a href="#cb19-538" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>))</span>
+<span id="cb19-539"><a href="#cb19-539" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-540"><a href="#cb19-540" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-541"><a href="#cb19-541" aria-hidden="true" tabindex="-1"></a>creation_string <span class="op">=</span> creation<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
+<span id="cb19-542"><a href="#cb19-542" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
+<span id="cb19-543"><a href="#cb19-543" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
+<span id="cb19-544"><a href="#cb19-544" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
+<span id="cb19-545"><a href="#cb19-545" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb19-546"><a href="#cb19-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-547"><a href="#cb19-547" aria-hidden="true" tabindex="-1"></a>last_modification_string <span class="op">=</span> last_modification<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"fr"</span><span class="op">,</span> {</span>
+<span id="cb19-548"><a href="#cb19-548" aria-hidden="true" tabindex="-1"></a>  <span class="st">"day"</span><span class="op">:</span> <span class="st">"numeric"</span><span class="op">,</span></span>
+<span id="cb19-549"><a href="#cb19-549" aria-hidden="true" tabindex="-1"></a>  <span class="st">"month"</span><span class="op">:</span> <span class="st">"long"</span><span class="op">,</span></span>
+<span id="cb19-550"><a href="#cb19-550" aria-hidden="true" tabindex="-1"></a>  <span class="st">"year"</span><span class="op">:</span> <span class="st">"numeric"</span></span>
+<span id="cb19-551"><a href="#cb19-551" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-4-1" data-nodetype="declaration">
+<div id="ojs-cell-5-1" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-4-2" data-nodetype="declaration">
+<div id="ojs-cell-5-2" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-4-3" data-nodetype="declaration">
+<div id="ojs-cell-5-3" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-4-4" data-nodetype="declaration">
+<div id="ojs-cell-5-4" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb19" data-startfrom="532" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 531;"><span id="cb19-532"><a href="#cb19-532" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-5" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb20" data-startfrom="552" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 551;"><span id="cb20-552"><a href="#cb20-552" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb20" data-startfrom="552" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 551;"><span id="cb20-552"><a href="#cb20-552" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_table<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb21" data-startfrom="567" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 566;"><span id="cb21-567"><a href="#cb21-567" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div&gt;</span><span class="sc">${</span>git_history_plot<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="expression">
 
 </div>
 </div>
@@ -3240,61 +3255,53 @@ Lino Galiana
 </table>
 </details>
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb21" data-startfrom="568" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 567;"><span id="cb21-568"><a href="#cb21-568" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
-<span id="cb21-569"><a href="#cb21-569" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
-<span id="cb21-570"><a href="#cb21-570" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb21-571"><a href="#cb21-571" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
-<span id="cb21-572"><a href="#cb21-572" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
-<span id="cb21-573"><a href="#cb21-573" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
-<span id="cb21-574"><a href="#cb21-574" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
-<span id="cb21-575"><a href="#cb21-575" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
-<span id="cb21-576"><a href="#cb21-576" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
-<span id="cb21-577"><a href="#cb21-577" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
-<span id="cb21-578"><a href="#cb21-578" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
-<span id="cb21-579"><a href="#cb21-579" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
-<span id="cb21-580"><a href="#cb21-580" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb21-581"><a href="#cb21-581" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb21-582"><a href="#cb21-582" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display hidden">
-<div id="ojs-cell-7" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb22" data-startfrom="582" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 581;"><span id="cb22-582"><a href="#cb22-582" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb22-583"><a href="#cb22-583" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb22-584"><a href="#cb22-584" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
-<span id="cb22-585"><a href="#cb22-585" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb22-586"><a href="#cb22-586" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
-<span id="cb22-587"><a href="#cb22-587" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
-<span id="cb22-588"><a href="#cb22-588" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
-<span id="cb22-589"><a href="#cb22-589" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb22-590"><a href="#cb22-590" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb22" data-startfrom="582" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 581;"><span id="cb22-582"><a href="#cb22-582" aria-hidden="true" tabindex="-1"></a>git_history_table <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(</span>
+<span id="cb22-583"><a href="#cb22-583" aria-hidden="true" tabindex="-1"></a>  table_commit<span class="op">,</span></span>
+<span id="cb22-584"><a href="#cb22-584" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb22-585"><a href="#cb22-585" aria-hidden="true" tabindex="-1"></a>    <span class="dt">format</span><span class="op">:</span> {</span>
+<span id="cb22-586"><a href="#cb22-586" aria-hidden="true" tabindex="-1"></a>      <span class="dt">SHA</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`[</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">](</span><span class="sc">${</span>github_repo<span class="sc">}</span><span class="vs">/commit/</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">)`</span><span class="op">,</span></span>
+<span id="cb22-587"><a href="#cb22-587" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Description</span><span class="op">:</span> x <span class="kw">=&gt;</span> <span class="fu">md</span><span class="vs">`</span><span class="sc">${</span><span class="fu">replacePullRequestPattern</span>(x<span class="op">,</span> github_repo)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb22-588"><a href="#cb22-588" aria-hidden="true" tabindex="-1"></a>      <span class="co">/*Date: x =&gt; x.toLocaleString("fr", {</span></span>
+<span id="cb22-589"><a href="#cb22-589" aria-hidden="true" tabindex="-1"></a><span class="co">        "month": "numeric",</span></span>
+<span id="cb22-590"><a href="#cb22-590" aria-hidden="true" tabindex="-1"></a><span class="co">        "day": "numeric",</span></span>
+<span id="cb22-591"><a href="#cb22-591" aria-hidden="true" tabindex="-1"></a><span class="co">        "year": "numeric"</span></span>
+<span id="cb22-592"><a href="#cb22-592" aria-hidden="true" tabindex="-1"></a><span class="co">        })</span></span>
+<span id="cb22-593"><a href="#cb22-593" aria-hidden="true" tabindex="-1"></a><span class="co">      */</span></span>
+<span id="cb22-594"><a href="#cb22-594" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb22-595"><a href="#cb22-595" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb22-596"><a href="#cb22-596" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display hidden">
 <div id="ojs-cell-8" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb23" data-startfrom="586" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 585;"><span id="cb23-586"><a href="#cb23-586" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
-<span id="cb23-587"><a href="#cb23-587" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
-<span id="cb23-588"><a href="#cb23-588" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
-<span id="cb23-589"><a href="#cb23-589" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-590"><a href="#cb23-590" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
-<span id="cb23-591"><a href="#cb23-591" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
-<span id="cb23-592"><a href="#cb23-592" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-593"><a href="#cb23-593" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
-<span id="cb23-594"><a href="#cb23-594" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb23" data-startfrom="587" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 586;"><span id="cb23-587"><a href="#cb23-587" aria-hidden="true" tabindex="-1"></a>git_history_plot <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb23-588"><a href="#cb23-588" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb23-589"><a href="#cb23-589" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"royalblue"</span>})<span class="op">,</span></span>
+<span id="cb23-590"><a href="#cb23-590" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb23-591"><a href="#cb23-591" aria-hidden="true" tabindex="-1"></a>          table_commit<span class="op">,</span></span>
+<span id="cb23-592"><a href="#cb23-592" aria-hidden="true" tabindex="-1"></a>          Plot<span class="op">.</span><span class="fu">pointerX</span>({<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"red"</span>}))<span class="op">,</span></span>
+<span id="cb23-593"><a href="#cb23-593" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(table_commit<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> (d) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Date</span>(d<span class="op">.</span><span class="at">Date</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"royalblue"</span>})</span>
+<span id="cb23-594"><a href="#cb23-594" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb23-595"><a href="#cb23-595" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
 <div id="ojs-cell-9" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb24" data-startfrom="625" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 624;"><span id="cb24-625"><a href="#cb24-625" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb24" data-startfrom="625" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 624;"><span id="cb24-625"><a href="#cb24-625" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">replacePullRequestPattern</span>(inputString<span class="op">,</span> githubRepo) {</span>
+<span id="cb24-626"><a href="#cb24-626" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Use a regular expression to match the pattern #digit</span></span>
+<span id="cb24-627"><a href="#cb24-627" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> pattern <span class="op">=</span> <span class="ss">/#</span><span class="sc">(\d+)</span><span class="ss">/g</span><span class="op">;</span></span>
+<span id="cb24-628"><a href="#cb24-628" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-629"><a href="#cb24-629" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Replace the pattern with ${github_repo}/pull/#digit</span></span>
+<span id="cb24-630"><a href="#cb24-630" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> replacedString <span class="op">=</span> inputString<span class="op">.</span><span class="fu">replace</span>(pattern<span class="op">,</span> <span class="st">'[#$1]('</span> <span class="op">+</span> githubRepo <span class="op">+</span> <span class="st">'/pull/$1)'</span>)<span class="op">;</span></span>
+<span id="cb24-631"><a href="#cb24-631" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-632"><a href="#cb24-632" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> replacedString<span class="op">;</span></span>
+<span id="cb24-633"><a href="#cb24-633" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-10" data-nodetype="declaration">
 
@@ -3302,68 +3309,76 @@ Lino Galiana
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb25" data-startfrom="641" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 640;"><span id="cb25-641"><a href="#cb25-641" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
-<span id="cb25-642"><a href="#cb25-642" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-643"><a href="#cb25-643" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
-<span id="cb25-644"><a href="#cb25-644" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
-<span id="cb25-645"><a href="#cb25-645" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-646"><a href="#cb25-646" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
-<span id="cb25-647"><a href="#cb25-647" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
-<span id="cb25-648"><a href="#cb25-648" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
-<span id="cb25-649"><a href="#cb25-649" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb25-650"><a href="#cb25-650" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-651"><a href="#cb25-651" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
-<span id="cb25-652"><a href="#cb25-652" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb25-653"><a href="#cb25-653" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb25-654"><a href="#cb25-654" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
-<span id="cb25-655"><a href="#cb25-655" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb25-656"><a href="#cb25-656" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-657"><a href="#cb25-657" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
-<span id="cb25-658"><a href="#cb25-658" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb25-659"><a href="#cb25-659" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
-<span id="cb25-660"><a href="#cb25-660" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
-<span id="cb25-661"><a href="#cb25-661" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-662"><a href="#cb25-662" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
-<span id="cb25-663"><a href="#cb25-663" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
-<span id="cb25-664"><a href="#cb25-664" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
-<span id="cb25-665"><a href="#cb25-665" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
-<span id="cb25-666"><a href="#cb25-666" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb25-667"><a href="#cb25-667" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-668"><a href="#cb25-668" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
-<span id="cb25-669"><a href="#cb25-669" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
-<span id="cb25-670"><a href="#cb25-670" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb25-671"><a href="#cb25-671" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb25-672"><a href="#cb25-672" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-673"><a href="#cb25-673" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
-<span id="cb25-674"><a href="#cb25-674" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-675"><a href="#cb25-675" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb25" data-startfrom="641" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 640;"><span id="cb25-641"><a href="#cb25-641" aria-hidden="true" tabindex="-1"></a>github_repo <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-11" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
-<div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb26" data-startfrom="1" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the element with class 'git-details'</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> gitDetails <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb26" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb26-0"><a href="#cb26-0" aria-hidden="true" tabindex="-1"></a>table_commit <span class="op">=</span> {</span>
+<span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the HTML table by its class name</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> table <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check if the element exists</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (gitDetails) {</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Hide the element</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>      gitDetails<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">display</span> <span class="op">=</span> <span class="st">'none'</span><span class="op">;</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Check if the table exists</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (table) {</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize an array to store the table data</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> dataArray <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Extract headers from the first row</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> headers <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">.</span><span class="fu">push</span>(table<span class="op">.</span><span class="at">rows</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">cells</span>[i]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>())<span class="op">;</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Iterate through the rows, starting from the second row</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> table<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> row <span class="op">=</span> table<span class="op">.</span><span class="at">rows</span>[i]<span class="op">;</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">var</span> rowData <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Iterate through the cells in the row</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> row<span class="op">.</span><span class="at">cells</span><span class="op">.</span><span class="at">length</span><span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Use headers as keys and cell content as values</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>            rowData[headers[j]] <span class="op">=</span> row<span class="op">.</span><span class="at">cells</span>[j]<span class="op">.</span><span class="at">textContent</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">;</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Push the rowData object to the dataArray</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>        dataArray<span class="op">.</span><span class="fu">push</span>(rowData)<span class="op">;</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> dataArray</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-12" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb27" data-startfrom="1" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Get the element with class 'git-details'</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> gitDetails <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'.commit-table'</span>)<span class="op">;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check if the element exists</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (gitDetails) {</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Hide the element</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>      gitDetails<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">display</span> <span class="op">=</span> <span class="st">'none'</span><span class="op">;</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display hidden">
-<div id="ojs-cell-12" data-nodetype="expression">
+<div id="ojs-cell-13" data-nodetype="expression">
 
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb27" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb27-0"><a href="#cb27-0" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="pp">require</span>(<span class="st">'@observablehq/plot@0.6.12/dist/plot.umd.min.js'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb28" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb28-0"><a href="#cb28-0" aria-hidden="true" tabindex="-1"></a>Plot <span class="op">=</span> <span class="pp">require</span>(<span class="st">'@observablehq/plot@0.6.12/dist/plot.umd.min.js'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-13" data-nodetype="declaration">
+<div id="ojs-cell-14" data-nodetype="declaration">
 
 </div>
 </div>
@@ -3407,7 +3422,7 @@ valises.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></
 Galiana, Lino. 2023. <em>Python Pour La Data Science</em>. <a href="https://doi.org/10.5281/zenodo.8229676">https://doi.org/10.5281/zenodo.8229676</a>.
 </div></div></section></div></main> <!-- /main -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSB3aW5kb3cubG9jYXRpb24ucGF0aG5hbWUucmVwbGFjZShcIi5odG1sXCIsIFwiLnFtZFwiKTtcbmh0bWxgJHtwcmludEJhZGdlcyh7ZnBhdGg6IHBhdGh9KX1gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiByZW1pbmRlckJhZGdlcyh7XG4gICAgc291cmNlRmlsZSA9IFwiY29udGVudC8wMV90b3RvLlJtZFwiLFxuICAgIHR5cGUgPSBbJ21kJywgJ2h0bWwnXSxcbiAgICBzcGxpdCA9IG51bGwsXG4gICAgb255eGlhT25seSA9IGZhbHNlLFxuICAgIHNzcENsb3VkU2VydmljZSA9IFwicHl0aG9uXCIsXG4gICAgR1BVID0gZmFsc2UsXG4gICAgY29ycmVjdGlvbiA9IGZhbHNlXG59ID0ge30pIHtcbiAgICBpZiAoQXJyYXkuaXNBcnJheSh0eXBlKSkge1xuICAgICAgICB0eXBlID0gdHlwZVswXTtcbiAgICB9XG5cbiAgICBsZXQgbm90ZWJvb2sgPSBzb3VyY2VGaWxlLnJlcGxhY2UoLyguUm1kfC5xbWQpLywgXCIuaXB5bmJcIik7XG4gICAgaWYgKGNvcnJlY3Rpb24pIHtcbiAgICAgICAgbm90ZWJvb2sgPSBub3RlYm9vay5yZXBsYWNlKC9jb250ZW50LywgXCJjb3JyZWN0aW9uc1wiKTtcbiAgICB9IGVsc2Uge1xuICAgICAgICBub3RlYm9vayA9IG5vdGVib29rLnJlcGxhY2UoL2NvbnRlbnQvLCBcIm5vdGVib29rc1wiKTtcbiAgICB9XG5cbiAgICBjb25zdCBnaXRodWJSZXBvTm90ZWJvb2tzU2ltcGxpZmllZCA9IFwiZ2l0aHViL2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0LW5vdGVib29rc1wiO1xuICAgIGNvbnN0IGdpdGh1YkFsaWFzID0gZ2l0aHViUmVwb05vdGVib29rc1NpbXBsaWZpZWQucmVwbGFjZShcImdpdGh1YlwiLCBcImdpdGh1Yi5jb21cIik7XG4gICAgY29uc3QgZ2l0aHViUmVwb05vdGVib29rcyA9IGBodHRwczovLyR7Z2l0aHViQWxpYXN9YDtcblxuICAgIGxldCBnaXRodWJMaW5rIDtcblxuICAgIGlmIChub3RlYm9vayA9PT0gXCJcIikge1xuICAgICAgICBnaXRodWJMaW5rID0gZ2l0aHViUmVwb05vdGVib29rcztcbiAgICB9IGVsc2Uge1xuICAgICAgICBnaXRodWJMaW5rID0gYCR7Z2l0aHViUmVwb05vdGVib29rc30vYmxvYi9tYWluYDtcbiAgICB9XG5cbiAgICBjb25zdCBub3RlYm9va1JlbFBhdGggPSBgLyR7bm90ZWJvb2t9YDtcbiAgICBjb25zdCBbc2VjdGlvbiwgY2hhcHRlcl0gPSBub3RlYm9vay5zcGxpdChcIi9cIikuc2xpY2UoLTIpO1xuXG5cbiAgICBnaXRodWJMaW5rID0gYDxhIGhyZWY9XCIke2dpdGh1Ykxpbmt9JHtub3RlYm9va1JlbFBhdGh9XCIgY2xhc3M9XCJnaXRodWJcIj48aSBjbGFzcz1cImZhYiBmYS1naXRodWJcIj48L2k+PC9hPmA7XG5cbiAgICBjb25zdCBzZWN0aW9uTGF0ZXN0ID0gc2VjdGlvbi5zcGxpdChcIi9cIikuc2xpY2UoLTEpWzBdO1xuICAgIGNvbnN0IGNoYXB0ZXJOb0V4dGVuc2lvbiA9IGNoYXB0ZXIucmVwbGFjZShcIi5pcHluYlwiLCBcIlwiKTtcbiAgICBjb25zdCBvbnl4aWFJbml0QXJncyA9IFtzZWN0aW9uTGF0ZXN0LCBjaGFwdGVyTm9FeHRlbnNpb25dO1xuXG4gICAgaWYgKGNvcnJlY3Rpb24pIHtcbiAgICAgICAgb255eGlhSW5pdEFyZ3MucHVzaChcImNvcnJlY3Rpb25cIik7XG4gICAgfVxuXG4gICAgY29uc3QgZ3B1U3VmZml4ID0gR1BVID8gXCItZ3B1XCIgOiBcIlwiO1xuXG4gICAgY29uc3Qgc3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyID0gYGh0dHBzOi8vZGF0YWxhYi5zc3BjbG91ZC5mci9sYXVuY2hlci9pZGUvanVweXRlci0ke3NzcENsb3VkU2VydmljZX0ke2dwdVN1ZmZpeH0/YXV0b0xhdW5jaD10cnVlJm9ueXhpYS5mcmllbmRseU5hbWU9JUMyJUFCJHtjaGFwdGVyTm9FeHRlbnNpb259JUMyJUJCJmluaXQucGVyc29uYWxJbml0PSVDMiVBQmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmxpbm9nYWxpYW5hJTJGcHl0aG9uLWRhdGFzY2llbnRpc3QlMkZtYXN0ZXIlMkZzc3BjbG91ZCUyRmluaXQtanVweXRlci5zaCVDMiVCQiZpbml0LnBlcnNvbmFsSW5pdEFyZ3M9JUMyJUFCJHtvbnl4aWFJbml0QXJncy5qb2luKCclMjAnKX0lQzIlQkImc2VjdXJpdHkuYWxsb3dsaXN0LmVuYWJsZWQ9ZmFsc2VgO1xuXG4gICAgbGV0IHNzcGNsb3VkSnVweXRlckxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rID0gYFshW09ueXhpYV0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9TU1AlMjBDbG91ZC1UZXN0ZXJfYXZlY19KdXB5dGVyLW9yYW5nZT9sb2dvPUp1cHl0ZXImbG9nb0NvbG9yPW9yYW5nZSldKCR7c3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyfSlgO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgPSBgPGEgaHJlZj1cIiR7c3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyfVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX0p1cHl0ZXItb3JhbmdlP2xvZ289SnVweXRlciZsb2dvQ29sb3I9b3JhbmdlXCIgYWx0PVwiT255eGlhXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA0KSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGNvbnN0IHNzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyID0gYGh0dHBzOi8vZGF0YWxhYi5zc3BjbG91ZC5mci9sYXVuY2hlci9pZGUvdnNjb2RlLSR7c3NwQ2xvdWRTZXJ2aWNlfSR7Z3B1U3VmZml4fT9hdXRvTGF1bmNoPXRydWUmb255eGlhLmZyaWVuZGx5TmFtZT0lQzIlQUIke2NoYXB0ZXJOb0V4dGVuc2lvbn0lQzIlQkImaW5pdC5wZXJzb25hbEluaXQ9JUMyJUFCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGbGlub2dhbGlhbmElMkZweXRob24tZGF0YXNjaWVudGlzdCUyRm1hc3RlciUyRnNzcGNsb3VkJTJGaW5pdC12c2NvZGUuc2glQzIlQkImaW5pdC5wZXJzb25hbEluaXRBcmdzPSVDMiVBQiR7b255eGlhSW5pdEFyZ3Muam9pbignJTIwJyl9JUMyJUJCJnNlY3VyaXR5LmFsbG93bGlzdC5lbmFibGVkPWZhbHNlYDtcblxuICAgIGxldCBzc3BjbG91ZFZzY29kZUxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgPSBgWyFbT255eGlhXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX1ZTQ29kZS1ibHVlP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsb2dvQ29sb3I9Ymx1ZSldKCR7c3NwY2xvdWRWc2NvZGVMaW5rTGF1bmNoZXJ9KWA7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rID0gYDxhIGhyZWY9XCIke3NzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyfVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX1ZTQ29kZS1ibHVlP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsb2dvQ29sb3I9Ymx1ZVwiIGFsdD1cIk9ueXhpYVwiPjwvYT5gO1xuICAgIH1cblxuICAgIGlmIChzcGxpdCA9PT0gNSkge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGxldCBjb2xhYkxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBjb2xhYkxpbmsgPSBgWyFbT3BlbiBJbiBDb2xhYl0oaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tL2Fzc2V0cy9jb2xhYi1iYWRnZS5zdmcpXShodHRwOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS8ke2dpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkfS9ibG9iL21haW4ke25vdGVib29rUmVsUGF0aH0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICBjb2xhYkxpbmsgPSBgPGEgaHJlZj1cImh0dHBzOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS8ke2dpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkfS9ibG9iL21haW4ke25vdGVib29rUmVsUGF0aH1cIiB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lclwiPjxpbWcgc3JjPVwiaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tL2Fzc2V0cy9jb2xhYi1iYWRnZS5zdmdcIiBhbHQ9XCJPcGVuIEluIENvbGFiXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA3KSB7XG4gICAgICAgIGNvbGFiTGluayArPSAnPGJyPic7XG4gICAgfVxuXG4gICAgbGV0IHZzY29kZUxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICB2c2NvZGVMaW5rID0gYFshW2dpdGh1YmRldl0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9zdGF0aWMvdjE/bG9nbz12aXN1YWxzdHVkaW9jb2RlJmxhYmVsPSZtZXNzYWdlPU9wZW4lMjBpbiUyMFZpc3VhbCBTdHVkaW8gQ29kZSZsYWJlbENvbG9yPTJjMmMzMiZjb2xvcj0wMDdhY2MmbG9nb0NvbG9yPTAwN2FjYyldKGh0dHBzOi8vZ2l0aHViLmRldi9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdC1ub3RlYm9va3Mke25vdGVib29rUmVsUGF0aH0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICB2c2NvZGVMaW5rID0gYDxhIGhyZWY9XCJodHRwczovL2dpdGh1Yi5kZXYvbGlub2dhbGlhbmEvcHl0aG9uLWRhdGFzY2llbnRpc3Qtbm90ZWJvb2tzJHtub3RlYm9va1JlbFBhdGh9XCIgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXJcIj48aW1nIHNyYz1cImh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vc3RhdGljL3YxP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsYWJlbD0mbWVzc2FnZT1PcGVuJTIwaW4lMjBWaXN1YWwlMjBTdHVkaW8lMjBDb2RlJmxhYmVsQ29sb3I9MmMyYzMyJmNvbG9yPTAwN2FjYyZsb2dvQ29sb3I9MDA3YWNjXCIgYWx0PVwiZ2l0aHViZGV2XCI+PC9hPjwvcD5gO1xuICAgIH1cblxuICAgIGNvbnN0IGJhZGdlcyA9IFtcbiAgICAgICAgZ2l0aHViTGluayxcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rLFxuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rXG4gICAgXTtcblxuICAgIGlmICghb255eGlhT25seSkge1xuICAgICAgICBiYWRnZXMucHVzaChjb2xhYkxpbmspO1xuICAgIH1cblxuICAgIGxldCByZXN1bHQgPSBiYWRnZXMuam9pbihcIlxcblwiKTtcblxuICAgIGlmICh0eXBlID09PSBcImh0bWxcIikge1xuICAgICAgICByZXN1bHQgPSBgPHAgY2xhc3M9XCJiYWRnZXNcIj4ke3Jlc3VsdH08L3A+YDtcbiAgICB9XG5cbiAgICBpZiAob255eGlhT25seSkge1xuICAgICAgICByZXN1bHQgPSBgJHtzc3BjbG91ZEp1cHl0ZXJMaW5rfSR7c3NwY2xvdWRWc2NvZGVMaW5rfWA7XG4gICAgfVxuXG4gICAgcmV0dXJuIHJlc3VsdDtcbn1cblxuXG5mdW5jdGlvbiBwcmludEJhZGdlcyh7XG4gICAgZnBhdGgsXG4gICAgb255eGlhT25seSA9IGZhbHNlLFxuICAgIHNwbGl0ID0gNSxcbiAgICB0eXBlID0gXCJodG1sXCIsXG4gICAgc3NwQ2xvdWRTZXJ2aWNlID0gXCJweXRob25cIixcbiAgICBHUFUgPSBmYWxzZSxcbiAgICBjb3JyZWN0aW9uID0gZmFsc2Vcbn0gPSB7fSkge1xuICAgIGNvbnN0IGJhZGdlcyA9IHJlbWluZGVyQmFkZ2VzKHtcbiAgICAgICAgc291cmNlRmlsZTogZnBhdGgsXG4gICAgICAgIHR5cGU6IHR5cGUsXG4gICAgICAgIHNwbGl0OiBzcGxpdCxcbiAgICAgICAgb255eGlhT25seTogb255eGlhT25seSxcbiAgICAgICAgc3NwQ2xvdWRTZXJ2aWNlOiBzc3BDbG91ZFNlcnZpY2UsXG4gICAgICAgIEdQVTogR1BVLFxuICAgICAgICBjb3JyZWN0aW9uOiBjb3JyZWN0aW9uXG4gICAgfSk7XG5cbiAgICByZXR1cm4gYmFkZ2VzXG59XG5cbi8vIEV4YW1wbGUgdXNhZ2U6XG4vLyBwcmludEJhZGdlcyh7IGZwYXRoOiBcImNvbnRlbnQvZ2V0dGluZy1zdGFydGVkLzA1X3JhcHBlbHNfdHlwZXMucW1kXCIsIG9ueXhpYU9ubHk6IGZhbHNlLCBzcGxpdDogNSwgdHlwZTogXCJodG1sXCIsIHNzcENsb3VkU2VydmljZTogXCJweXRob25cIiwgR1BVOiBmYWxzZSwgY29ycmVjdGlvbjogZmFsc2UgfSk7XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtZGBDZSBmaWNoaWVyIGEgw6l0w6kgbW9kaWZpw6kgX18ke3RhYmxlX2NvbW1pdC5sZW5ndGh9X18gZm9pcyBkZXB1aXMgc2EgY3LDqWF0aW9uIGxlICR7Y3JlYXRpb25fc3RyaW5nfSAoZGVybmnDqHJlIG1vZGlmaWNhdGlvbiBsZSAke2xhc3RfbW9kaWZpY2F0aW9uX3N0cmluZ30pYFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiY3JlYXRpb24gPSBkMy5taW4oXG4gIHRhYmxlX2NvbW1pdC5tYXAoZCA9PiBuZXcgRGF0ZShkLkRhdGUpKVxuKVxuXG5sYXN0X21vZGlmaWNhdGlvbiA9IGQzLm1heChcbiAgdGFibGVfY29tbWl0Lm1hcChkID0+IG5ldyBEYXRlKGQuRGF0ZSkpXG4pXG5cbmNyZWF0aW9uX3N0cmluZyA9IGNyZWF0aW9uLnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgXCJtb250aFwiOiBcImxvbmdcIixcbiAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG59KVxuXG5sYXN0X21vZGlmaWNhdGlvbl9zdHJpbmcgPSBsYXN0X21vZGlmaWNhdGlvbi50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gIFwibW9udGhcIjogXCJsb25nXCIsXG4gIFwieWVhclwiOiBcIm51bWVyaWNcIlxufSlcblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2PiR7Z2l0X2hpc3RvcnlfdGFibGV9PC9kaXY+YFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2PiR7Z2l0X2hpc3RvcnlfcGxvdH08L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRfaGlzdG9yeV90YWJsZSA9IElucHV0cy50YWJsZShcbiAgdGFibGVfY29tbWl0LFxuICB7XG4gICAgZm9ybWF0OiB7XG4gICAgICBTSEE6IHggPT4gbWRgWyR7eH1dKCR7Z2l0aHViX3JlcG99L2NvbW1pdC8ke3h9KWAsXG4gICAgICBEZXNjcmlwdGlvbjogeCA9PiBtZGAke3JlcGxhY2VQdWxsUmVxdWVzdFBhdHRlcm4oeCwgZ2l0aHViX3JlcG8pfWAsXG4gICAgICAvKkRhdGU6IHggPT4geC50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgICAgICAgXCJtb250aFwiOiBcIm51bWVyaWNcIixcbiAgICAgICAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gICAgICAgIFwieWVhclwiOiBcIm51bWVyaWNcIlxuICAgICAgICB9KVxuICAgICAgKi9cbiAgICB9XG4gIH1cbilcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImdpdF9oaXN0b3J5X3Bsb3QgPSBQbG90LnBsb3Qoe1xuICBtYXJrczogW1xuICAgIFBsb3QucnVsZVkoWzBdLCB7c3Ryb2tlOiBcInJveWFsYmx1ZVwifSksXG4gICAgUGxvdC5kb3QoXG4gICAgICAgICAgdGFibGVfY29tbWl0LFxuICAgICAgICAgIFBsb3QucG9pbnRlclgoe3g6IChkKSA9PiBuZXcgRGF0ZShkLmRhdGUpLCB5OiAwLCBzdHJva2U6IFwicmVkXCJ9KSksXG4gICAgUGxvdC5kb3QodGFibGVfY29tbWl0LCB7eDogKGQpID0+IG5ldyBEYXRlKGQuRGF0ZSksIHk6IDAsIGZpbGw6IFwicm95YWxibHVlXCJ9KVxuICBdXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC05IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZnVuY3Rpb24gcmVwbGFjZVB1bGxSZXF1ZXN0UGF0dGVybihpbnB1dFN0cmluZywgZ2l0aHViUmVwbykge1xuICAgIC8vIFVzZSBhIHJlZ3VsYXIgZXhwcmVzc2lvbiB0byBtYXRjaCB0aGUgcGF0dGVybiAjZGlnaXRcbiAgICB2YXIgcGF0dGVybiA9IC8jKFxcZCspL2c7XG5cbiAgICAvLyBSZXBsYWNlIHRoZSBwYXR0ZXJuIHdpdGggJHtnaXRodWJfcmVwb30vcHVsbC8jZGlnaXRcbiAgICB2YXIgcmVwbGFjZWRTdHJpbmcgPSBpbnB1dFN0cmluZy5yZXBsYWNlKHBhdHRlcm4sICdbIyQxXSgnICsgZ2l0aHViUmVwbyArICcvcHVsbC8kMSknKTtcblxuICAgIHJldHVybiByZXBsYWNlZFN0cmluZztcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRodWJfcmVwbyA9IFwiaHR0cHM6Ly9naXRodWIuY29tL2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0XCJcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTEiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ0YWJsZV9jb21taXQgPSB7XG5cbi8vIEdldCB0aGUgSFRNTCB0YWJsZSBieSBpdHMgY2xhc3MgbmFtZVxudmFyIHRhYmxlID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignLmNvbW1pdC10YWJsZScpO1xuXG4vLyBDaGVjayBpZiB0aGUgdGFibGUgZXhpc3RzXG5pZiAodGFibGUpIHtcbiAgICAvLyBJbml0aWFsaXplIGFuIGFycmF5IHRvIHN0b3JlIHRoZSB0YWJsZSBkYXRhXG4gICAgdmFyIGRhdGFBcnJheSA9IFtdO1xuXG4gICAgLy8gRXh0cmFjdCBoZWFkZXJzIGZyb20gdGhlIGZpcnN0IHJvd1xuICAgIHZhciBoZWFkZXJzID0gW107XG4gICAgZm9yICh2YXIgaSA9IDA7IGkgPCB0YWJsZS5yb3dzWzBdLmNlbGxzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIGhlYWRlcnMucHVzaCh0YWJsZS5yb3dzWzBdLmNlbGxzW2ldLnRleHRDb250ZW50LnRyaW0oKSk7XG4gICAgfVxuXG4gICAgLy8gSXRlcmF0ZSB0aHJvdWdoIHRoZSByb3dzLCBzdGFydGluZyBmcm9tIHRoZSBzZWNvbmQgcm93XG4gICAgZm9yICh2YXIgaSA9IDE7IGkgPCB0YWJsZS5yb3dzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIHZhciByb3cgPSB0YWJsZS5yb3dzW2ldO1xuICAgICAgICB2YXIgcm93RGF0YSA9IHt9O1xuXG4gICAgICAgIC8vIEl0ZXJhdGUgdGhyb3VnaCB0aGUgY2VsbHMgaW4gdGhlIHJvd1xuICAgICAgICBmb3IgKHZhciBqID0gMDsgaiA8IHJvdy5jZWxscy5sZW5ndGg7IGorKykge1xuICAgICAgICAgICAgLy8gVXNlIGhlYWRlcnMgYXMga2V5cyBhbmQgY2VsbCBjb250ZW50IGFzIHZhbHVlc1xuICAgICAgICAgICAgcm93RGF0YVtoZWFkZXJzW2pdXSA9IHJvdy5jZWxsc1tqXS50ZXh0Q29udGVudC50cmltKCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBQdXNoIHRoZSByb3dEYXRhIG9iamVjdCB0byB0aGUgZGF0YUFycmF5XG4gICAgICAgIGRhdGFBcnJheS5wdXNoKHJvd0RhdGEpO1xuICAgIH1cbiAgfVxuXG4gIHJldHVybiBkYXRhQXJyYXlcblxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuLy8gR2V0IHRoZSBlbGVtZW50IHdpdGggY2xhc3MgJ2dpdC1kZXRhaWxzJ1xue1xuICB2YXIgZ2l0RGV0YWlscyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5jb21taXQtdGFibGUnKTtcblxuICAvLyBDaGVjayBpZiB0aGUgZWxlbWVudCBleGlzdHNcbiAgaWYgKGdpdERldGFpbHMpIHtcbiAgICAgIC8vIEhpZGUgdGhlIGVsZW1lbnRcbiAgICAgIGdpdERldGFpbHMuc3R5bGUuZGlzcGxheSA9ICdub25lJztcbiAgfVxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlBsb3QgPSByZXF1aXJlKCdAb2JzZXJ2YWJsZWhxL3Bsb3RAMC42LjEyL2Rpc3QvcGxvdC51bWQubWluLmpzJylcbiJ9XX0=
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSB3aW5kb3cubG9jYXRpb24ucGF0aG5hbWUucmVwbGFjZShcIi5odG1sXCIsIFwiLnFtZFwiKTtcbmh0bWxgJHtwcmludEJhZGdlcyh7ZnBhdGg6IHBhdGh9KX1gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYFxuPGRldGFpbHM+XG48c3VtbWFyeT5cblBvdXIgb3V2cmlyIGxhIHZlcnNpb24gY29ycmlnw6llIGF1IGZvcm1hdCBkZXMgX25vdGVib29rc19cbjwvc3VtbWFyeT5cbiR7cHJpbnRCYWRnZXMoe2ZwYXRoOiBwYXRoLCBjb3JyZWN0aW9uOiB0cnVlfSl9XG48L2RldGFpbHM+XG5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiByZW1pbmRlckJhZGdlcyh7XG4gICAgc291cmNlRmlsZSA9IFwiY29udGVudC8wMV90b3RvLlJtZFwiLFxuICAgIHR5cGUgPSBbJ21kJywgJ2h0bWwnXSxcbiAgICBzcGxpdCA9IG51bGwsXG4gICAgb255eGlhT25seSA9IGZhbHNlLFxuICAgIHNzcENsb3VkU2VydmljZSA9IFwicHl0aG9uXCIsXG4gICAgR1BVID0gZmFsc2UsXG4gICAgY29ycmVjdGlvbiA9IGZhbHNlXG59ID0ge30pIHtcbiAgICBpZiAoQXJyYXkuaXNBcnJheSh0eXBlKSkge1xuICAgICAgICB0eXBlID0gdHlwZVswXTtcbiAgICB9XG5cbiAgICBsZXQgbm90ZWJvb2sgPSBzb3VyY2VGaWxlLnJlcGxhY2UoLyguUm1kfC5xbWQpLywgXCIuaXB5bmJcIik7XG4gICAgaWYgKGNvcnJlY3Rpb24pIHtcbiAgICAgICAgbm90ZWJvb2sgPSBub3RlYm9vay5yZXBsYWNlKC9jb250ZW50LywgXCJjb3JyZWN0aW9uc1wiKTtcbiAgICB9IGVsc2Uge1xuICAgICAgICBub3RlYm9vayA9IG5vdGVib29rLnJlcGxhY2UoL2NvbnRlbnQvLCBcIm5vdGVib29rc1wiKTtcbiAgICB9XG5cbiAgICBjb25zdCBnaXRodWJSZXBvTm90ZWJvb2tzU2ltcGxpZmllZCA9IFwiZ2l0aHViL2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0LW5vdGVib29rc1wiO1xuICAgIGNvbnN0IGdpdGh1YkFsaWFzID0gZ2l0aHViUmVwb05vdGVib29rc1NpbXBsaWZpZWQucmVwbGFjZShcImdpdGh1YlwiLCBcImdpdGh1Yi5jb21cIik7XG4gICAgY29uc3QgZ2l0aHViUmVwb05vdGVib29rcyA9IGBodHRwczovLyR7Z2l0aHViQWxpYXN9YDtcblxuICAgIGxldCBnaXRodWJMaW5rIDtcblxuICAgIGlmIChub3RlYm9vayA9PT0gXCJcIikge1xuICAgICAgICBnaXRodWJMaW5rID0gZ2l0aHViUmVwb05vdGVib29rcztcbiAgICB9IGVsc2Uge1xuICAgICAgICBnaXRodWJMaW5rID0gYCR7Z2l0aHViUmVwb05vdGVib29rc30vYmxvYi9tYWluYDtcbiAgICB9XG5cbiAgICBjb25zdCBub3RlYm9va1JlbFBhdGggPSBgLyR7bm90ZWJvb2t9YDtcbiAgICBjb25zdCBbc2VjdGlvbiwgY2hhcHRlcl0gPSBub3RlYm9vay5zcGxpdChcIi9cIikuc2xpY2UoLTIpO1xuXG5cbiAgICBnaXRodWJMaW5rID0gYDxhIGhyZWY9XCIke2dpdGh1Ykxpbmt9JHtub3RlYm9va1JlbFBhdGh9XCIgY2xhc3M9XCJnaXRodWJcIj48aSBjbGFzcz1cImZhYiBmYS1naXRodWJcIj48L2k+PC9hPmA7XG5cbiAgICBjb25zdCBzZWN0aW9uTGF0ZXN0ID0gc2VjdGlvbi5zcGxpdChcIi9cIikuc2xpY2UoLTEpWzBdO1xuICAgIGNvbnN0IGNoYXB0ZXJOb0V4dGVuc2lvbiA9IGNoYXB0ZXIucmVwbGFjZShcIi5pcHluYlwiLCBcIlwiKTtcbiAgICBjb25zdCBvbnl4aWFJbml0QXJncyA9IFtzZWN0aW9uTGF0ZXN0LCBjaGFwdGVyTm9FeHRlbnNpb25dO1xuXG4gICAgaWYgKGNvcnJlY3Rpb24pIHtcbiAgICAgICAgb255eGlhSW5pdEFyZ3MucHVzaChcImNvcnJlY3Rpb25cIik7XG4gICAgfVxuXG4gICAgY29uc3QgZ3B1U3VmZml4ID0gR1BVID8gXCItZ3B1XCIgOiBcIlwiO1xuXG4gICAgY29uc3Qgc3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyID0gYGh0dHBzOi8vZGF0YWxhYi5zc3BjbG91ZC5mci9sYXVuY2hlci9pZGUvanVweXRlci0ke3NzcENsb3VkU2VydmljZX0ke2dwdVN1ZmZpeH0/YXV0b0xhdW5jaD10cnVlJm9ueXhpYS5mcmllbmRseU5hbWU9JUMyJUFCJHtjaGFwdGVyTm9FeHRlbnNpb259JUMyJUJCJmluaXQucGVyc29uYWxJbml0PSVDMiVBQmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmxpbm9nYWxpYW5hJTJGcHl0aG9uLWRhdGFzY2llbnRpc3QlMkZtYXN0ZXIlMkZzc3BjbG91ZCUyRmluaXQtanVweXRlci5zaCVDMiVCQiZpbml0LnBlcnNvbmFsSW5pdEFyZ3M9JUMyJUFCJHtvbnl4aWFJbml0QXJncy5qb2luKCclMjAnKX0lQzIlQkImc2VjdXJpdHkuYWxsb3dsaXN0LmVuYWJsZWQ9ZmFsc2VgO1xuXG4gICAgbGV0IHNzcGNsb3VkSnVweXRlckxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rID0gYFshW09ueXhpYV0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9TU1AlMjBDbG91ZC1UZXN0ZXJfYXZlY19KdXB5dGVyLW9yYW5nZT9sb2dvPUp1cHl0ZXImbG9nb0NvbG9yPW9yYW5nZSldKCR7c3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyfSlgO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgPSBgPGEgaHJlZj1cIiR7c3NwY2xvdWRKdXB5dGVyTGlua0xhdW5jaGVyfVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX0p1cHl0ZXItb3JhbmdlP2xvZ289SnVweXRlciZsb2dvQ29sb3I9b3JhbmdlXCIgYWx0PVwiT255eGlhXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA0KSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGNvbnN0IHNzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyID0gYGh0dHBzOi8vZGF0YWxhYi5zc3BjbG91ZC5mci9sYXVuY2hlci9pZGUvdnNjb2RlLSR7c3NwQ2xvdWRTZXJ2aWNlfSR7Z3B1U3VmZml4fT9hdXRvTGF1bmNoPXRydWUmb255eGlhLmZyaWVuZGx5TmFtZT0lQzIlQUIke2NoYXB0ZXJOb0V4dGVuc2lvbn0lQzIlQkImaW5pdC5wZXJzb25hbEluaXQ9JUMyJUFCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGbGlub2dhbGlhbmElMkZweXRob24tZGF0YXNjaWVudGlzdCUyRm1hc3RlciUyRnNzcGNsb3VkJTJGaW5pdC12c2NvZGUuc2glQzIlQkImaW5pdC5wZXJzb25hbEluaXRBcmdzPSVDMiVBQiR7b255eGlhSW5pdEFyZ3Muam9pbignJTIwJyl9JUMyJUJCJnNlY3VyaXR5LmFsbG93bGlzdC5lbmFibGVkPWZhbHNlYDtcblxuICAgIGxldCBzc3BjbG91ZFZzY29kZUxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgPSBgWyFbT255eGlhXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX1ZTQ29kZS1ibHVlP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsb2dvQ29sb3I9Ymx1ZSldKCR7c3NwY2xvdWRWc2NvZGVMaW5rTGF1bmNoZXJ9KWA7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rID0gYDxhIGhyZWY9XCIke3NzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyfVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX1ZTQ29kZS1ibHVlP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsb2dvQ29sb3I9Ymx1ZVwiIGFsdD1cIk9ueXhpYVwiPjwvYT5gO1xuICAgIH1cblxuICAgIGlmIChzcGxpdCA9PT0gNSkge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGxldCBjb2xhYkxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICBjb2xhYkxpbmsgPSBgWyFbT3BlbiBJbiBDb2xhYl0oaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tL2Fzc2V0cy9jb2xhYi1iYWRnZS5zdmcpXShodHRwOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS8ke2dpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkfS9ibG9iL21haW4ke25vdGVib29rUmVsUGF0aH0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICBjb2xhYkxpbmsgPSBgPGEgaHJlZj1cImh0dHBzOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS8ke2dpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkfS9ibG9iL21haW4ke25vdGVib29rUmVsUGF0aH1cIiB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lclwiPjxpbWcgc3JjPVwiaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tL2Fzc2V0cy9jb2xhYi1iYWRnZS5zdmdcIiBhbHQ9XCJPcGVuIEluIENvbGFiXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA3KSB7XG4gICAgICAgIGNvbGFiTGluayArPSAnPGJyPic7XG4gICAgfVxuXG4gICAgbGV0IHZzY29kZUxpbms7XG4gICAgaWYgKHR5cGUgPT09IFwibWRcIikge1xuICAgICAgICB2c2NvZGVMaW5rID0gYFshW2dpdGh1YmRldl0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9zdGF0aWMvdjE/bG9nbz12aXN1YWxzdHVkaW9jb2RlJmxhYmVsPSZtZXNzYWdlPU9wZW4lMjBpbiUyMFZpc3VhbCBTdHVkaW8gQ29kZSZsYWJlbENvbG9yPTJjMmMzMiZjb2xvcj0wMDdhY2MmbG9nb0NvbG9yPTAwN2FjYyldKGh0dHBzOi8vZ2l0aHViLmRldi9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdC1ub3RlYm9va3Mke25vdGVib29rUmVsUGF0aH0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICB2c2NvZGVMaW5rID0gYDxhIGhyZWY9XCJodHRwczovL2dpdGh1Yi5kZXYvbGlub2dhbGlhbmEvcHl0aG9uLWRhdGFzY2llbnRpc3Qtbm90ZWJvb2tzJHtub3RlYm9va1JlbFBhdGh9XCIgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXJcIj48aW1nIHNyYz1cImh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vc3RhdGljL3YxP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsYWJlbD0mbWVzc2FnZT1PcGVuJTIwaW4lMjBWaXN1YWwlMjBTdHVkaW8lMjBDb2RlJmxhYmVsQ29sb3I9MmMyYzMyJmNvbG9yPTAwN2FjYyZsb2dvQ29sb3I9MDA3YWNjXCIgYWx0PVwiZ2l0aHViZGV2XCI+PC9hPjwvcD5gO1xuICAgIH1cblxuICAgIGNvbnN0IGJhZGdlcyA9IFtcbiAgICAgICAgZ2l0aHViTGluayxcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rLFxuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rXG4gICAgXTtcblxuICAgIGlmICghb255eGlhT25seSkge1xuICAgICAgICBiYWRnZXMucHVzaChjb2xhYkxpbmspO1xuICAgIH1cblxuICAgIGxldCByZXN1bHQgPSBiYWRnZXMuam9pbihcIlxcblwiKTtcblxuICAgIGlmICh0eXBlID09PSBcImh0bWxcIikge1xuICAgICAgICByZXN1bHQgPSBgPHAgY2xhc3M9XCJiYWRnZXNcIj4ke3Jlc3VsdH08L3A+YDtcbiAgICB9XG5cbiAgICBpZiAob255eGlhT25seSkge1xuICAgICAgICByZXN1bHQgPSBgJHtzc3BjbG91ZEp1cHl0ZXJMaW5rfSR7c3NwY2xvdWRWc2NvZGVMaW5rfWA7XG4gICAgfVxuXG4gICAgcmV0dXJuIHJlc3VsdDtcbn1cblxuXG5mdW5jdGlvbiBwcmludEJhZGdlcyh7XG4gICAgZnBhdGgsXG4gICAgb255eGlhT25seSA9IGZhbHNlLFxuICAgIHNwbGl0ID0gNSxcbiAgICB0eXBlID0gXCJodG1sXCIsXG4gICAgc3NwQ2xvdWRTZXJ2aWNlID0gXCJweXRob25cIixcbiAgICBHUFUgPSBmYWxzZSxcbiAgICBjb3JyZWN0aW9uID0gZmFsc2Vcbn0gPSB7fSkge1xuICAgIGNvbnN0IGJhZGdlcyA9IHJlbWluZGVyQmFkZ2VzKHtcbiAgICAgICAgc291cmNlRmlsZTogZnBhdGgsXG4gICAgICAgIHR5cGU6IHR5cGUsXG4gICAgICAgIHNwbGl0OiBzcGxpdCxcbiAgICAgICAgb255eGlhT25seTogb255eGlhT25seSxcbiAgICAgICAgc3NwQ2xvdWRTZXJ2aWNlOiBzc3BDbG91ZFNlcnZpY2UsXG4gICAgICAgIEdQVTogR1BVLFxuICAgICAgICBjb3JyZWN0aW9uOiBjb3JyZWN0aW9uXG4gICAgfSk7XG5cbiAgICByZXR1cm4gYmFkZ2VzXG59XG5cbi8vIEV4YW1wbGUgdXNhZ2U6XG4vLyBwcmludEJhZGdlcyh7IGZwYXRoOiBcImNvbnRlbnQvZ2V0dGluZy1zdGFydGVkLzA1X3JhcHBlbHNfdHlwZXMucW1kXCIsIG9ueXhpYU9ubHk6IGZhbHNlLCBzcGxpdDogNSwgdHlwZTogXCJodG1sXCIsIHNzcENsb3VkU2VydmljZTogXCJweXRob25cIiwgR1BVOiBmYWxzZSwgY29ycmVjdGlvbjogZmFsc2UgfSk7XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJtZGBDZSBmaWNoaWVyIGEgw6l0w6kgbW9kaWZpw6kgX18ke3RhYmxlX2NvbW1pdC5sZW5ndGh9X18gZm9pcyBkZXB1aXMgc2EgY3LDqWF0aW9uIGxlICR7Y3JlYXRpb25fc3RyaW5nfSAoZGVybmnDqHJlIG1vZGlmaWNhdGlvbiBsZSAke2xhc3RfbW9kaWZpY2F0aW9uX3N0cmluZ30pYFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiY3JlYXRpb24gPSBkMy5taW4oXG4gIHRhYmxlX2NvbW1pdC5tYXAoZCA9PiBuZXcgRGF0ZShkLkRhdGUpKVxuKVxuXG5sYXN0X21vZGlmaWNhdGlvbiA9IGQzLm1heChcbiAgdGFibGVfY29tbWl0Lm1hcChkID0+IG5ldyBEYXRlKGQuRGF0ZSkpXG4pXG5cbmNyZWF0aW9uX3N0cmluZyA9IGNyZWF0aW9uLnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgXCJtb250aFwiOiBcImxvbmdcIixcbiAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG59KVxuXG5sYXN0X21vZGlmaWNhdGlvbl9zdHJpbmcgPSBsYXN0X21vZGlmaWNhdGlvbi50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gIFwibW9udGhcIjogXCJsb25nXCIsXG4gIFwieWVhclwiOiBcIm51bWVyaWNcIlxufSlcblxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2PiR7Z2l0X2hpc3RvcnlfdGFibGV9PC9kaXY+YFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2PiR7Z2l0X2hpc3RvcnlfcGxvdH08L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTgiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRfaGlzdG9yeV90YWJsZSA9IElucHV0cy50YWJsZShcbiAgdGFibGVfY29tbWl0LFxuICB7XG4gICAgZm9ybWF0OiB7XG4gICAgICBTSEE6IHggPT4gbWRgWyR7eH1dKCR7Z2l0aHViX3JlcG99L2NvbW1pdC8ke3h9KWAsXG4gICAgICBEZXNjcmlwdGlvbjogeCA9PiBtZGAke3JlcGxhY2VQdWxsUmVxdWVzdFBhdHRlcm4oeCwgZ2l0aHViX3JlcG8pfWAsXG4gICAgICAvKkRhdGU6IHggPT4geC50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgICAgICAgXCJtb250aFwiOiBcIm51bWVyaWNcIixcbiAgICAgICAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gICAgICAgIFwieWVhclwiOiBcIm51bWVyaWNcIlxuICAgICAgICB9KVxuICAgICAgKi9cbiAgICB9XG4gIH1cbilcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImdpdF9oaXN0b3J5X3Bsb3QgPSBQbG90LnBsb3Qoe1xuICBtYXJrczogW1xuICAgIFBsb3QucnVsZVkoWzBdLCB7c3Ryb2tlOiBcInJveWFsYmx1ZVwifSksXG4gICAgUGxvdC5kb3QoXG4gICAgICAgICAgdGFibGVfY29tbWl0LFxuICAgICAgICAgIFBsb3QucG9pbnRlclgoe3g6IChkKSA9PiBuZXcgRGF0ZShkLmRhdGUpLCB5OiAwLCBzdHJva2U6IFwicmVkXCJ9KSksXG4gICAgUGxvdC5kb3QodGFibGVfY29tbWl0LCB7eDogKGQpID0+IG5ldyBEYXRlKGQuRGF0ZSksIHk6IDAsIGZpbGw6IFwicm95YWxibHVlXCJ9KVxuICBdXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZ1bmN0aW9uIHJlcGxhY2VQdWxsUmVxdWVzdFBhdHRlcm4oaW5wdXRTdHJpbmcsIGdpdGh1YlJlcG8pIHtcbiAgICAvLyBVc2UgYSByZWd1bGFyIGV4cHJlc3Npb24gdG8gbWF0Y2ggdGhlIHBhdHRlcm4gI2RpZ2l0XG4gICAgdmFyIHBhdHRlcm4gPSAvIyhcXGQrKS9nO1xuXG4gICAgLy8gUmVwbGFjZSB0aGUgcGF0dGVybiB3aXRoICR7Z2l0aHViX3JlcG99L3B1bGwvI2RpZ2l0XG4gICAgdmFyIHJlcGxhY2VkU3RyaW5nID0gaW5wdXRTdHJpbmcucmVwbGFjZShwYXR0ZXJuLCAnWyMkMV0oJyArIGdpdGh1YlJlcG8gKyAnL3B1bGwvJDEpJyk7XG5cbiAgICByZXR1cm4gcmVwbGFjZWRTdHJpbmc7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTExIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZ2l0aHViX3JlcG8gPSBcImh0dHBzOi8vZ2l0aHViLmNvbS9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdFwiXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTEyIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidGFibGVfY29tbWl0ID0ge1xuXG4vLyBHZXQgdGhlIEhUTUwgdGFibGUgYnkgaXRzIGNsYXNzIG5hbWVcbnZhciB0YWJsZSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5jb21taXQtdGFibGUnKTtcblxuLy8gQ2hlY2sgaWYgdGhlIHRhYmxlIGV4aXN0c1xuaWYgKHRhYmxlKSB7XG4gICAgLy8gSW5pdGlhbGl6ZSBhbiBhcnJheSB0byBzdG9yZSB0aGUgdGFibGUgZGF0YVxuICAgIHZhciBkYXRhQXJyYXkgPSBbXTtcblxuICAgIC8vIEV4dHJhY3QgaGVhZGVycyBmcm9tIHRoZSBmaXJzdCByb3dcbiAgICB2YXIgaGVhZGVycyA9IFtdO1xuICAgIGZvciAodmFyIGkgPSAwOyBpIDwgdGFibGUucm93c1swXS5jZWxscy5sZW5ndGg7IGkrKykge1xuICAgICAgICBoZWFkZXJzLnB1c2godGFibGUucm93c1swXS5jZWxsc1tpXS50ZXh0Q29udGVudC50cmltKCkpO1xuICAgIH1cblxuICAgIC8vIEl0ZXJhdGUgdGhyb3VnaCB0aGUgcm93cywgc3RhcnRpbmcgZnJvbSB0aGUgc2Vjb25kIHJvd1xuICAgIGZvciAodmFyIGkgPSAxOyBpIDwgdGFibGUucm93cy5sZW5ndGg7IGkrKykge1xuICAgICAgICB2YXIgcm93ID0gdGFibGUucm93c1tpXTtcbiAgICAgICAgdmFyIHJvd0RhdGEgPSB7fTtcblxuICAgICAgICAvLyBJdGVyYXRlIHRocm91Z2ggdGhlIGNlbGxzIGluIHRoZSByb3dcbiAgICAgICAgZm9yICh2YXIgaiA9IDA7IGogPCByb3cuY2VsbHMubGVuZ3RoOyBqKyspIHtcbiAgICAgICAgICAgIC8vIFVzZSBoZWFkZXJzIGFzIGtleXMgYW5kIGNlbGwgY29udGVudCBhcyB2YWx1ZXNcbiAgICAgICAgICAgIHJvd0RhdGFbaGVhZGVyc1tqXV0gPSByb3cuY2VsbHNbal0udGV4dENvbnRlbnQudHJpbSgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gUHVzaCB0aGUgcm93RGF0YSBvYmplY3QgdG8gdGhlIGRhdGFBcnJheVxuICAgICAgICBkYXRhQXJyYXkucHVzaChyb3dEYXRhKTtcbiAgICB9XG4gIH1cblxuICByZXR1cm4gZGF0YUFycmF5XG5cbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJcbi8vIEdldCB0aGUgZWxlbWVudCB3aXRoIGNsYXNzICdnaXQtZGV0YWlscydcbntcbiAgdmFyIGdpdERldGFpbHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcuY29tbWl0LXRhYmxlJyk7XG5cbiAgLy8gQ2hlY2sgaWYgdGhlIGVsZW1lbnQgZXhpc3RzXG4gIGlmIChnaXREZXRhaWxzKSB7XG4gICAgICAvLyBIaWRlIHRoZSBlbGVtZW50XG4gICAgICBnaXREZXRhaWxzLnN0eWxlLmRpc3BsYXkgPSAnbm9uZSc7XG4gIH1cbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJQbG90ID0gcmVxdWlyZSgnQG9ic2VydmFibGVocS9wbG90QDAuNi4xMi9kaXN0L3Bsb3QudW1kLm1pbi5qcycpXG4ifV19
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
@@ -4004,7 +4019,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
