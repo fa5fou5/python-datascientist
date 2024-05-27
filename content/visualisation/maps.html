@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-05-08">
+<meta name="dcterms.date" content="2024-05-27">
 <meta name="description" content="La cartographie est un excellent moyen de diffuser une connaissance, y compris à des publics peu familiers de la statistique. Ce chapitre permet de découvrir la manière dont on peut utiliser Python pour construire des cartes standards (avec geopandas) ou réactives (folium). Cela se fera à travers un exercice permettant de visualiser la fréquentation par les vélos des routes parisiennes.">
 
 <title>Python pour la data science - De belles cartes avec python : mise en pratique</title>
@@ -230,7 +230,7 @@ vélos des routes parisiennes.">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-05-08">
+<meta name="citation_online_date" content="2024-05-27">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -313,12 +313,8 @@ vélos des routes parisiennes.">
  <span class="dropdown-text">Statistiques par groupe et association de plusieurs jeux de données avec Pandas</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_tutorial.html">
- <span class="dropdown-text">Données spatiales : découverte de geopandas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_TP.html">
- <span class="dropdown-text">Pratique de geopandas avec les données vélib</span></a>
+    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_intro.html">
+ <span class="dropdown-text">Introduction aux données spatiales avec Geopandas</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../content/manipulation/04a_webscraping_TP.html">
@@ -559,7 +555,7 @@ vélos des routes parisiennes.">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-05-08</p>
+        <p class="date">2024-05-27</p>
       </div>
     </div>
     
@@ -843,21 +839,21 @@ Pour installer <code>rtree</code> sur <code>Windows</code>, le mieux est d’uti
 </div>
 <p>Avant de pouvoir commencer, il est nécessaire d’installer quelques
 packages au préalable:</p>
-<div id="e06d2f8a" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="e06d2f8a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e06d2f8a-1"><a href="#e06d2f8a-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sur colab</span></span>
-<span id="e06d2f8a-2"><a href="#e06d2f8a-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas fiona shapely pyproj rtree <span class="co"># à faire obligatoirement en premier pour utiliser rtree ou pygeos pour les jointures spatiales</span></span>
-<span id="e06d2f8a-3"><a href="#e06d2f8a-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install contextily</span>
-<span id="e06d2f8a-4"><a href="#e06d2f8a-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span>
-<span id="e06d2f8a-5"><a href="#e06d2f8a-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geoplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4cc4f0b7" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="4cc4f0b7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4cc4f0b7-1"><a href="#4cc4f0b7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sur colab</span></span>
+<span id="4cc4f0b7-2"><a href="#4cc4f0b7-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas fiona shapely pyproj rtree <span class="co"># à faire obligatoirement en premier pour utiliser rtree ou pygeos pour les jointures spatiales</span></span>
+<span id="4cc4f0b7-3"><a href="#4cc4f0b7-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install contextily</span>
+<span id="4cc4f0b7-4"><a href="#4cc4f0b7-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geopandas</span>
+<span id="4cc4f0b7-5"><a href="#4cc4f0b7-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install geoplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Dans la première partie, nous allons utiliser les packages suivants :</p>
-<div id="16f7d683" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="16f7d683"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="16f7d683-1"><a href="#16f7d683-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="16f7d683-2"><a href="#16f7d683-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="16f7d683-3"><a href="#16f7d683-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextily <span class="im">as</span> ctx</span>
-<span id="16f7d683-4"><a href="#16f7d683-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geoplot</span>
-<span id="16f7d683-5"><a href="#16f7d683-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="16f7d683-6"><a href="#16f7d683-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> folium</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e9b5b242" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="e9b5b242"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e9b5b242-1"><a href="#e9b5b242-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="e9b5b242-2"><a href="#e9b5b242-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="e9b5b242-3"><a href="#e9b5b242-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextily <span class="im">as</span> ctx</span>
+<span id="e9b5b242-4"><a href="#e9b5b242-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geoplot</span>
+<span id="e9b5b242-5"><a href="#e9b5b242-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="e9b5b242-6"><a href="#e9b5b242-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> folium</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>ERROR 1: PROJ: proj_create_from_database: Open of /opt/mamba/share/proj failed</code></pre>
 </div>
@@ -901,12 +897,12 @@ l’argument <code>values</code>:</p>
 </details>
 </div>
 </div>
-<div id="2a181784" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="2a181784"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2a181784-1"><a href="#2a181784-1" aria-hidden="true" tabindex="-1"></a>compteurs <span class="op">=</span> compteurs.loc[</span>
-<span id="2a181784-2"><a href="#2a181784-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>compteurs[<span class="st">"nom_compteur"</span>].<span class="bu">str</span>.contains(<span class="vs">r"(Bike IN|Bike OUT)"</span>)</span>
-<span id="2a181784-3"><a href="#2a181784-3" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f895beae" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="f895beae"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f895beae-1"><a href="#f895beae-1" aria-hidden="true" tabindex="-1"></a>compteurs <span class="op">=</span> compteurs.loc[</span>
+<span id="f895beae-2"><a href="#f895beae-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>compteurs[<span class="st">"nom_compteur"</span>].<span class="bu">str</span>.contains(<span class="vs">r"(Bike IN|Bike OUT)"</span>)</span>
+<span id="f895beae-3"><a href="#f895beae-3" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_4678/3602001210.py:1: UserWarning:
+<pre><code>/tmp/ipykernel_4614/3602001210.py:1: UserWarning:
 
 This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
 </code></pre>
@@ -938,7 +934,7 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </div>
 </div>
 <p>Vous devriez obtenir cette carte:</p>
-<div id="76c61f98" class="cell" data-execution_count="9">
+<div id="ce0de9a5" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 <figure class="figure">
@@ -961,8 +957,8 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </ol>
 </div>
 </div>
-<div id="2b94b5bc" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="2b94b5bc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2b94b5bc-1"><a href="#2b94b5bc-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="926db82e" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="926db82e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="926db82e-1"><a href="#926db82e-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 <figure class="figure">
@@ -971,8 +967,8 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </div>
 </div>
 </div>
-<div id="a5223725" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="a5223725"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a5223725-1"><a href="#a5223725-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="59990c34" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="59990c34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="59990c34-1"><a href="#59990c34-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 <figure class="figure">
@@ -981,15 +977,15 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </div>
 </div>
 </div>
-<div id="0c97d551" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="0c97d551"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0c97d551-1"><a href="#0c97d551-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure().savefig(<span class="st">"featured_maps.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="408d6485" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="408d6485"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="408d6485-1"><a href="#408d6485-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure().savefig(<span class="st">"featured_maps.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le principe de la <em>heatmap</em> est de construire, à partir d’un nuage de point bidimensionnel, une distribution 2D lissée. La méthode repose sur les estimateurs à noyaux qui sont des méthodes de lissage local.</p>
 <div class="cell markdown">
 <div class="alert alert-info" role="alert" style="color: rgba(0,0,0,.8); background-color: white; margin-top: 1em; margin-bottom: 1em; margin:1.5625emauto; padding:0 .6rem .8rem!important;overflow:hidden; page-break-inside:avoid; border-radius:.25rem; box-shadow:0 .2rem .5rem rgba(0,0,0,.05),0 0 .05rem rgba(0,0,0,.1); transition:color .25s,background-color .25s,border-color .25s ; border-right: 1px solid #dee2e6 ; border-top: 1px solid #dee2e6 ; border-bottom: 1px solid #dee2e6 ; border-left:.2rem solid #007bff80;">
 <h3 class="alert-heading anchored"><i class="fa fa-comment"></i> Exercice 3 : Ajouter un fonds de carte avec contextily</h3>
 <p>Pour le moment, la fonction <code>geoplot.kdeplot</code> n’incorpore pas toutes les fonctionalités de <code>seaborn.kdeplot</code>. Pour être en mesure de construire une <code>heatmap</code> avec des données pondérées (cf.&nbsp;<a href="https://github.com/mwaskom/seaborn/issues/1364">cette issue dans le dépôt seaborn</a>), il y a une astuce. Il faut simuler <em>k</em> points de valeur 1 autour de la localisation observée. La fonction ci-dessous, qui m’a été bien utile, est pratique</p>
-<div id="da923fa4" class="cell" data-execution_count="15">
+<div id="a057cf5a" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1060,8 +1056,8 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </ul>
 </div>
 </div>
-<div id="33d39af0" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="33d39af0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="33d39af0-1"><a href="#33d39af0-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b5fde61f" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="b5fde61f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b5fde61f-1"><a href="#b5fde61f-1" aria-hidden="true" tabindex="-1"></a>ax.get_figure()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 <figure class="figure">
@@ -1081,22 +1077,22 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 <li>Utiliser la méthode <code>fit_bounds</code> qui cale la carte sur les coins sud-ouest et nord-est. En supposant que la carte s’appelle <code>m</code>, on fera <code>m.fit_bounds([sw, ne])</code></li>
 </ol>
 <p>Le bout de code suivant permet de calculer le centre de la carte</p>
-<div id="86c29aac" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="86c29aac"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="86c29aac-1"><a href="#86c29aac-1" aria-hidden="true" tabindex="-1"></a>compteurs[<span class="st">"lon"</span>] <span class="op">=</span> compteurs.geometry.x</span>
-<span id="86c29aac-2"><a href="#86c29aac-2" aria-hidden="true" tabindex="-1"></a>compteurs[<span class="st">"lat"</span>] <span class="op">=</span> compteurs.geometry.y</span>
-<span id="86c29aac-3"><a href="#86c29aac-3" aria-hidden="true" tabindex="-1"></a>center <span class="op">=</span> compteurs[[<span class="st">"lat"</span>, <span class="st">"lon"</span>]].mean().values.tolist()</span>
-<span id="86c29aac-4"><a href="#86c29aac-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(center)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="afa1e6b6" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="afa1e6b6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="afa1e6b6-1"><a href="#afa1e6b6-1" aria-hidden="true" tabindex="-1"></a>compteurs[<span class="st">"lon"</span>] <span class="op">=</span> compteurs.geometry.x</span>
+<span id="afa1e6b6-2"><a href="#afa1e6b6-2" aria-hidden="true" tabindex="-1"></a>compteurs[<span class="st">"lat"</span>] <span class="op">=</span> compteurs.geometry.y</span>
+<span id="afa1e6b6-3"><a href="#afa1e6b6-3" aria-hidden="true" tabindex="-1"></a>center <span class="op">=</span> compteurs[[<span class="st">"lat"</span>, <span class="st">"lon"</span>]].mean().values.tolist()</span>
+<span id="afa1e6b6-4"><a href="#afa1e6b6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(center)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[48.85531869230769, 2.3506555923076924]</code></pre>
+<pre><code>[48.855311461538456, 2.350665515384615]</code></pre>
 </div>
 </div>
 <p>Alors que le code suivant permet de calculer les coins:</p>
-<div id="2e38b8ac" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="2e38b8ac"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2e38b8ac-1"><a href="#2e38b8ac-1" aria-hidden="true" tabindex="-1"></a>sw <span class="op">=</span> compteurs[[<span class="st">"lat"</span>, <span class="st">"lon"</span>]].<span class="bu">min</span>().values.tolist()</span>
-<span id="2e38b8ac-2"><a href="#2e38b8ac-2" aria-hidden="true" tabindex="-1"></a>ne <span class="op">=</span> compteurs[[<span class="st">"lat"</span>, <span class="st">"lon"</span>]].<span class="bu">max</span>().values.tolist()</span>
-<span id="2e38b8ac-3"><a href="#2e38b8ac-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sw, ne)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b5a6b292" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="b5a6b292"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b5a6b292-1"><a href="#b5a6b292-1" aria-hidden="true" tabindex="-1"></a>sw <span class="op">=</span> compteurs[[<span class="st">"lat"</span>, <span class="st">"lon"</span>]].<span class="bu">min</span>().values.tolist()</span>
+<span id="b5a6b292-2"><a href="#b5a6b292-2" aria-hidden="true" tabindex="-1"></a>ne <span class="op">=</span> compteurs[[<span class="st">"lat"</span>, <span class="st">"lon"</span>]].<span class="bu">max</span>().values.tolist()</span>
+<span id="b5a6b292-3"><a href="#b5a6b292-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sw, ne)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[48.81964, 2.26526] [48.89907, 2.41143]</code></pre>
+<pre><code>[48.81964, 2.26526] [48.89905, 2.41143]</code></pre>
 </div>
 </div>
 <div class="cell markdown">
@@ -1115,9 +1111,9 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </ol>
 </div>
 </div>
-<div id="3ea69ce3" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="3ea69ce3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3ea69ce3-1"><a href="#3ea69ce3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher la carte</span></span>
-<span id="3ea69ce3-2"><a href="#3ea69ce3-2" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f6d9b591" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="f6d9b591"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f6d9b591-1"><a href="#f6d9b591-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher la carte</span></span>
+<span id="f6d9b591-2"><a href="#f6d9b591-2" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-success" role="alert" style="color: rgba(0,0,0,.8); background-color: white; margin-top: 1em; margin-bottom: 1em; margin:1.5625emauto; padding:0 .6rem .8rem!important;overflow:hidden; page-break-inside:avoid; border-radius:.25rem; box-shadow:0 .2rem .5rem rgba(0,0,0,.05),0 0 .05rem rgba(0,0,0,.1); transition:color .25s,background-color .25s,border-color .25s ; border-right: 1px solid #dee2e6 ; border-top: 1px solid #dee2e6 ; border-bottom: 1px solid #dee2e6 ; border-left:.2rem solid #3fb618;">
@@ -1132,9 +1128,9 @@ en surface. L’exception est lorsqu’on ajoute un fond de carte <code>contexti
 </div>
 </div>
 <p>La carte obtenue doit ressembler à la suivante :</p>
-<div id="bace5598" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="bace5598"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bace5598-1"><a href="#bace5598-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher la carte</span></span>
-<span id="bace5598-2"><a href="#bace5598-2" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e45a7e6a" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="e45a7e6a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e45a7e6a-1"><a href="#e45a7e6a-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher la carte</span></span>
+<span id="e45a7e6a-2"><a href="#e45a7e6a-2" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exercices-supplémentaires" class="level1" data-number="3">
@@ -1173,7 +1169,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </div>
 </div>
 <p>La carte obtenue devrait ressembler à celle-ci :</p>
-<div id="b2eb3d28" class="cell" data-execution_count="31">
+<div id="d9fe0865" class="cell" data-execution_count="31">
 <div class="cell-output cell-output-display" data-execution_count="29">
 <pre><code>Text(0.3, 0.15, 'Source: IGN - AdminExpress')</code></pre>
 </div>
@@ -1198,9 +1194,9 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-05-08</p>
+<p>Latest built version: 2024-05-27</p>
 <p>Python version used:</p>
-<div id="85985b3d" class="cell" data-execution_count="33">
+<div id="ef9b7b1e" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-display" data-execution_count="31">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1245,7 +1241,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">annotated-types</td>
-<td style="text-align: left;">0.6.0</td>
+<td style="text-align: left;">0.7.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">appdirs</td>
@@ -1573,7 +1569,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">great-tables</td>
-<td style="text-align: left;">0.5.1</td>
+<td style="text-align: left;">0.6.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">greenlet</td>
@@ -1589,7 +1585,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">htmltools</td>
-<td style="text-align: left;">0.5.1</td>
+<td style="text-align: left;">0.5.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hvac</td>
@@ -1721,7 +1717,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lxml</td>
-<td style="text-align: left;">5.2.1</td>
+<td style="text-align: left;">5.2.2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">lz4</td>
@@ -1773,7 +1769,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">mizani</td>
-<td style="text-align: left;">0.11.2</td>
+<td style="text-align: left;">0.11.4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mlflow</td>
@@ -1921,7 +1917,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="odd">
 <td style="text-align: left;">plotnine</td>
-<td style="text-align: left;">0.13.5</td>
+<td style="text-align: left;">0.13.6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">pluggy</td>
@@ -2093,7 +2089,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">pyzstd</td>
-<td style="text-align: left;">0.15.10</td>
+<td style="text-align: left;">0.16.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">QtPy</td>
@@ -2173,7 +2169,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">selenium</td>
-<td style="text-align: left;">4.20.0</td>
+<td style="text-align: left;">4.21.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">setuptools</td>
@@ -2269,7 +2265,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">tifffile</td>
-<td style="text-align: left;">2024.5.3</td>
+<td style="text-align: left;">2024.5.22</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tomli</td>
@@ -2285,7 +2281,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">topojson</td>
-<td style="text-align: left;">1.8</td>
+<td style="text-align: left;">1.9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tornado</td>
@@ -2301,7 +2297,7 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 </tr>
 <tr class="even">
 <td style="text-align: left;">trio</td>
-<td style="text-align: left;">0.25.0</td>
+<td style="text-align: left;">0.25.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">trio-websocket</td>
@@ -2348,74 +2344,70 @@ Vous pouvez utiliser la variable créée à la question 5 pour les couleurs.</li
 <td style="text-align: left;">0.3.4</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">webcolors</td>
-<td style="text-align: left;">1.13</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">webdriver-manager</td>
 <td style="text-align: left;">4.0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">websocket-client</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Werkzeug</td>
 <td style="text-align: left;">3.0.2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wheel</td>
 <td style="text-align: left;">0.43.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">widgetsnbextension</td>
 <td style="text-align: left;">4.0.10</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wordcloud</td>
 <td style="text-align: left;">1.9.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wrapt</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wsproto</td>
 <td style="text-align: left;">1.2.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xgboost</td>
 <td style="text-align: left;">2.0.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xlrd</td>
 <td style="text-align: left;">2.0.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xyzservices</td>
 <td style="text-align: left;">2024.4.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">yarl</td>
 <td style="text-align: left;">1.9.4</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">yellowbrick</td>
 <td style="text-align: left;">1.5</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zict</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zipp</td>
 <td style="text-align: left;">3.17.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zstandard</td>
 <td style="text-align: left;">0.22.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"></td>
 </tr>
@@ -3835,7 +3827,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","loop":false});
+<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

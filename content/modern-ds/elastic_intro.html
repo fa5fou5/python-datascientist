@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-05-08">
+<meta name="dcterms.date" content="2024-05-27">
 <meta name="description" content="ElasticSearch est un moteur de recherche extrêmement rapide et flexible. Cette technologie s’est imposée dans le domaine du traitement des données textuelles. L’API Python permet d’intégrer cette technologie dans des processus Python afin de les accélérer. Ce chapitre présente cette intégration d’ Elastic avec l’exemple de la recherche dans les données alimentaires de l’ OpenFoodFacts Database">
 
 <title>Python pour la data science - Introduction à ElasticSearch pour la recherche textuelle</title>
@@ -214,12 +214,13 @@ dans les données alimentaires de l’ OpenFoodFacts Database">
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-05-08">
+<meta name="citation_online_date" content="2024-05-27">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Coding for economists;,citation_author=undefined Turrell;,citation_author=undefined contributors;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://aeturrell.github.io/coding-for-economists;">
 <meta name="citation_reference" content="citation_title=Hands-on machine learning with scikit-learn, keras, and TensorFlow;,citation_author=Aurélien Géron;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;">
+<meta name="citation_reference" content="citation_title=A brief history of data visualization;,citation_author=Chun-houh Chen;,citation_author=Wolfgang Härdle;,citation_author=Antony Unwin;,citation_author=Michael Friendly;,citation_publication_date=2008;,citation_cover_date=2008;,citation_year=2008;,citation_journal_title=Handbook of data visualization;,citation_publisher=Springer;">
 <meta name="citation_reference" content="citation_title=Random forests;,citation_author=Leo Breiman;,citation_publication_date=2001;,citation_cover_date=2001;,citation_year=2001;,citation_volume=45;,citation_journal_title=Machine learning;,citation_publisher=Springer;">
 <meta name="citation_reference" content="citation_title=Bagging predictors;,citation_author=Leo Breiman;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_volume=24;,citation_journal_title=Machine learning;,citation_publisher=Springer;">
 <meta name="citation_reference" content="citation_title=R for data science;,citation_author=Hadley Wickham;,citation_author=Mine Çetinkaya-Rundel;,citation_author=Garrett Grolemund;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;">
@@ -328,12 +329,8 @@ dans les données alimentaires de l’ OpenFoodFacts Database">
  <span class="dropdown-text">Statistiques par groupe et association de plusieurs jeux de données avec Pandas</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_tutorial.html">
- <span class="dropdown-text">Données spatiales : découverte de geopandas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_TP.html">
- <span class="dropdown-text">Pratique de geopandas avec les données vélib</span></a>
+    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_intro.html">
+ <span class="dropdown-text">Introduction aux données spatiales avec Geopandas</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../content/manipulation/04a_webscraping_TP.html">
@@ -570,7 +567,7 @@ dans les données alimentaires de l’ OpenFoodFacts Database">
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-05-08</p>
+        <p class="date">2024-05-27</p>
       </div>
     </div>
     
@@ -884,17 +881,17 @@ pour requêter une base existante).</p>
 chapitre nécessite une version particulière du
 package <code>ElasticSearch</code> pour tenir compte de l’héritage de la version 7 du moteur <code>Elastic</code>.
 Pour cela, faire</p>
-<div id="f4fe77a0" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="f4fe77a0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f4fe77a0-1"><a href="#f4fe77a0-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install elasticsearch<span class="op">==</span><span class="fl">8.2.0</span></span>
-<span id="f4fe77a0-2"><a href="#f4fe77a0-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install unidecode</span>
-<span id="f4fe77a0-3"><a href="#f4fe77a0-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install rapidfuzz</span>
-<span id="f4fe77a0-4"><a href="#f4fe77a0-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c291c2ba" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="c291c2ba"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c291c2ba-1"><a href="#c291c2ba-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install elasticsearch<span class="op">==</span><span class="fl">8.2.0</span></span>
+<span id="c291c2ba-2"><a href="#c291c2ba-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install unidecode</span>
+<span id="c291c2ba-3"><a href="#c291c2ba-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install rapidfuzz</span>
+<span id="c291c2ba-4"><a href="#c291c2ba-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install xlrd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La première partie de ce tutoriel ne nécessite pas d’architecture particulière et
 peut ainsi être exécutée en utilisant les packages suivants :</p>
-<div id="d52db965" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="d52db965"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d52db965-1"><a href="#d52db965-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="d52db965-2"><a href="#d52db965-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6eed7853" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="6eed7853"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6eed7853-1"><a href="#6eed7853-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="6eed7853-2"><a href="#6eed7853-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le script <code>functions.py</code>, disponible sur <code>Github</code>,
 regroupe un certain nombre de fonctions utiles permettant
@@ -909,18 +906,18 @@ de cet encadré une méthode qui va chercher la dernière
 version sur le dépôt <code>Github</code> du cours</p>
 </div>
 </div>
-<div id="cb6a222d" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb6a222d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6a222d-1"><a href="#cb6a222d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb6a222d-2"><a href="#cb6a222d-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6a222d-3"><a href="#cb6a222d-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist/raw/master/content/modern-ds/functions.py"</span></span>
-<span id="cb6a222d-4"><a href="#cb6a222d-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6a222d-5"><a href="#cb6a222d-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6a222d-6"><a href="#cb6a222d-6" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"functions.py"</span>, <span class="st">"wb"</span>).write(r.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f04c4bb9" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="f04c4bb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f04c4bb9-1"><a href="#f04c4bb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="f04c4bb9-2"><a href="#f04c4bb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f04c4bb9-3"><a href="#f04c4bb9-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/linogaliana/python-datascientist/raw/master/content/modern-ds/functions.py"</span></span>
+<span id="f04c4bb9-4"><a href="#f04c4bb9-4" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url, allow_redirects<span class="op">=</span><span class="va">True</span>)</span>
+<span id="f04c4bb9-5"><a href="#f04c4bb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f04c4bb9-6"><a href="#f04c4bb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"functions.py"</span>, <span class="st">"wb"</span>).write(r.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Après l’avoir récupéré (cf.&nbsp;encadré dédié),
 il convient d’importer les fonctions sous forme de module:</p>
-<div id="5a8feba9" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="5a8feba9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5a8feba9-1"><a href="#5a8feba9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functions <span class="im">as</span> fc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3759a41c" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="3759a41c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3759a41c-1"><a href="#3759a41c-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functions <span class="im">as</span> fc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="cas-dusage" class="level2" data-number="1.2">
@@ -937,43 +934,43 @@ pour le papier présenté aux
 Le problème est que les libellés des tickets de caisse ne sont pas des champs textuels très propres, ils contiennent,
 par exemple, beaucoup d’abbréviations, toutes n’étant pas évidentes.</p>
 <p>Voici par exemple une série de noms de produits qu’on va utiliser par la suite:</p>
-<div id="7cc9e80f" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="7cc9e80f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7cc9e80f-1"><a href="#7cc9e80f-1" aria-hidden="true" tabindex="-1"></a>ticket <span class="op">=</span> [</span>
-<span id="7cc9e80f-2"><a href="#7cc9e80f-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CROISSANTS X6 400G"</span>,</span>
-<span id="7cc9e80f-3"><a href="#7cc9e80f-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MAQUEREAUX MOUTAR."</span>,</span>
-<span id="7cc9e80f-4"><a href="#7cc9e80f-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IGP OC SAUVIGNON B"</span>,</span>
-<span id="7cc9e80f-5"><a href="#7cc9e80f-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LAIT 1/2 ECRM UHT"</span>,</span>
-<span id="7cc9e80f-6"><a href="#7cc9e80f-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"6 OEUFS FRAIS LOCA"</span>,</span>
-<span id="7cc9e80f-7"><a href="#7cc9e80f-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ANANAS C2"</span>,</span>
-<span id="7cc9e80f-8"><a href="#7cc9e80f-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"L POMME FUDJI X6 CAL 75/80 1KG ENV"</span>,</span>
-<span id="7cc9e80f-9"><a href="#7cc9e80f-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PLT MIEL"</span>,</span>
-<span id="7cc9e80f-10"><a href="#7cc9e80f-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"STELLA ARTOIS X6"</span>,</span>
-<span id="7cc9e80f-11"><a href="#7cc9e80f-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"COTES DU LUBERON AIGUEBRUN 75C"</span>,</span>
-<span id="7cc9e80f-12"><a href="#7cc9e80f-12" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e9ed1f47" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="e9ed1f47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e9ed1f47-1"><a href="#e9ed1f47-1" aria-hidden="true" tabindex="-1"></a>ticket <span class="op">=</span> [</span>
+<span id="e9ed1f47-2"><a href="#e9ed1f47-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CROISSANTS X6 400G"</span>,</span>
+<span id="e9ed1f47-3"><a href="#e9ed1f47-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MAQUEREAUX MOUTAR."</span>,</span>
+<span id="e9ed1f47-4"><a href="#e9ed1f47-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IGP OC SAUVIGNON B"</span>,</span>
+<span id="e9ed1f47-5"><a href="#e9ed1f47-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LAIT 1/2 ECRM UHT"</span>,</span>
+<span id="e9ed1f47-6"><a href="#e9ed1f47-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"6 OEUFS FRAIS LOCA"</span>,</span>
+<span id="e9ed1f47-7"><a href="#e9ed1f47-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ANANAS C2"</span>,</span>
+<span id="e9ed1f47-8"><a href="#e9ed1f47-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"L POMME FUDJI X6 CAL 75/80 1KG ENV"</span>,</span>
+<span id="e9ed1f47-9"><a href="#e9ed1f47-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PLT MIEL"</span>,</span>
+<span id="e9ed1f47-10"><a href="#e9ed1f47-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"STELLA ARTOIS X6"</span>,</span>
+<span id="e9ed1f47-11"><a href="#e9ed1f47-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"COTES DU LUBERON AIGUEBRUN 75C"</span>,</span>
+<span id="e9ed1f47-12"><a href="#e9ed1f47-12" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>A ces produits, s’ajoutent les ingrédients suivants, issus de la
 <a href="https://www.marmiton.org/recettes/recette_veloute-de-potiron-et-carottes_19009.aspx">recette du velouté de potiron et carottes de Marmiton</a>
 qui sera notre plat principal :</p>
-<div id="3be955e0" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="3be955e0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3be955e0-1"><a href="#3be955e0-1" aria-hidden="true" tabindex="-1"></a>ingredients <span class="op">=</span> [</span>
-<span id="3be955e0-2"><a href="#3be955e0-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"500 g de carottes"</span>,</span>
-<span id="3be955e0-3"><a href="#3be955e0-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2 pommes de terre"</span>,</span>
-<span id="3be955e0-4"><a href="#3be955e0-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 gousse d'ail"</span>,</span>
-<span id="3be955e0-5"><a href="#3be955e0-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1/2 l de lait"</span>,</span>
-<span id="3be955e0-6"><a href="#3be955e0-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1/2 l de bouillon de volaille"</span>,</span>
-<span id="3be955e0-7"><a href="#3be955e0-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 cuillère à soupe de huile d'olive"</span>,</span>
-<span id="3be955e0-8"><a href="#3be955e0-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 kg de potiron"</span>,</span>
-<span id="3be955e0-9"><a href="#3be955e0-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 oignon"</span>,</span>
-<span id="3be955e0-10"><a href="#3be955e0-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10 cl de crème liquide (facultatif)"</span>,</span>
-<span id="3be955e0-11"><a href="#3be955e0-11" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="77a72c0e" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="77a72c0e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="77a72c0e-1"><a href="#77a72c0e-1" aria-hidden="true" tabindex="-1"></a>ingredients <span class="op">=</span> [</span>
+<span id="77a72c0e-2"><a href="#77a72c0e-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"500 g de carottes"</span>,</span>
+<span id="77a72c0e-3"><a href="#77a72c0e-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2 pommes de terre"</span>,</span>
+<span id="77a72c0e-4"><a href="#77a72c0e-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 gousse d'ail"</span>,</span>
+<span id="77a72c0e-5"><a href="#77a72c0e-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1/2 l de lait"</span>,</span>
+<span id="77a72c0e-6"><a href="#77a72c0e-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1/2 l de bouillon de volaille"</span>,</span>
+<span id="77a72c0e-7"><a href="#77a72c0e-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 cuillère à soupe de huile d'olive"</span>,</span>
+<span id="77a72c0e-8"><a href="#77a72c0e-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 kg de potiron"</span>,</span>
+<span id="77a72c0e-9"><a href="#77a72c0e-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1 oignon"</span>,</span>
+<span id="77a72c0e-10"><a href="#77a72c0e-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10 cl de crème liquide (facultatif)"</span>,</span>
+<span id="77a72c0e-11"><a href="#77a72c0e-11" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Essayer de récupérer par web scraping cette liste est un bon exercice pour réviser
 les concepts <a href="#webscraping">vus précédemment</a></p>
 <p>On va donc créer une liste de course compilant
 ces deux
 listes hétérogènes de noms de produits:</p>
-<div id="215312ee" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="215312ee"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="215312ee-1"><a href="#215312ee-1" aria-hidden="true" tabindex="-1"></a>libelles <span class="op">=</span> ticket <span class="op">+</span> ingredients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="939dcbb5" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="939dcbb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="939dcbb5-1"><a href="#939dcbb5-1" aria-hidden="true" tabindex="-1"></a>libelles <span class="op">=</span> ticket <span class="op">+</span> ingredients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On part avec cette liste dans notre supermarché virtuel. L’objectif sera de trouver
 une méthode permettant de passer à l’échelle:
@@ -1023,18 +1020,18 @@ pour les utilisateurs du <code>SSP Cloud</code> où une version est disponible s
 l’espace de stockage.</p>
 <p>La base <code>Ciqual</code>, qui plus légère, est récupérée elle directement en ligne
 via la fonction <code>fc.import_ciqual</code>.</p>
-<div id="5830f770" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="5830f770"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="5830f770-1"><a href="#5830f770-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour les utilisateurs du SSP Cloud</span></span>
-<span id="5830f770-2"><a href="#5830f770-2" aria-hidden="true" tabindex="-1"></a>openfood <span class="op">=</span> fc.import_openfood_s3()</span>
-<span id="5830f770-3"><a href="#5830f770-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour les utilisateurs hors du SSP Cloud</span></span>
-<span id="5830f770-4"><a href="#5830f770-4" aria-hidden="true" tabindex="-1"></a><span class="co"># openfood = fc.import_openfood()</span></span>
-<span id="5830f770-5"><a href="#5830f770-5" aria-hidden="true" tabindex="-1"></a>ciqual <span class="op">=</span> fc.import_ciqual()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7c20ad70" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="7c20ad70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7c20ad70-1"><a href="#7c20ad70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour les utilisateurs du SSP Cloud</span></span>
+<span id="7c20ad70-2"><a href="#7c20ad70-2" aria-hidden="true" tabindex="-1"></a>openfood <span class="op">=</span> fc.import_openfood_s3()</span>
+<span id="7c20ad70-3"><a href="#7c20ad70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour les utilisateurs hors du SSP Cloud</span></span>
+<span id="7c20ad70-4"><a href="#7c20ad70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># openfood = fc.import_openfood()</span></span>
+<span id="7c20ad70-5"><a href="#7c20ad70-5" aria-hidden="true" tabindex="-1"></a>ciqual <span class="op">=</span> fc.import_ciqual()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d529b9b3" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="d529b9b3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d529b9b3-1"><a href="#d529b9b3-1" aria-hidden="true" tabindex="-1"></a>openfood.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="18466d78" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="18466d78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="18466d78-1"><a href="#18466d78-1" aria-hidden="true" tabindex="-1"></a>openfood.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d318b265" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="d318b265"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d318b265-1"><a href="#d318b265-1" aria-hidden="true" tabindex="-1"></a>ciqual.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="66492a27" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="66492a27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="66492a27-1"><a href="#66492a27-1" aria-hidden="true" tabindex="-1"></a>ciqual.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1116,20 +1113,20 @@ assez bonnes pour que nous puissions
 passer à l’échelle.</p>
 <p>Voici trois exemples pour évaluer le coût de chaque
 opération:</p>
-<div id="457f6a63" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="457f6a63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="457f6a63-1"><a href="#457f6a63-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rapidfuzz</span>
-<span id="457f6a63-2"><a href="#457f6a63-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="457f6a63-3"><a href="#457f6a63-3" aria-hidden="true" tabindex="-1"></a>[</span>
-<span id="457f6a63-4"><a href="#457f6a63-4" aria-hidden="true" tabindex="-1"></a>    rapidfuzz.distance.Levenshtein.distance(</span>
-<span id="457f6a63-5"><a href="#457f6a63-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"salut"</span>, <span class="st">"slut"</span>, weights<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="457f6a63-6"><a href="#457f6a63-6" aria-hidden="true" tabindex="-1"></a>    ),  <span class="co"># Suppression</span></span>
-<span id="457f6a63-7"><a href="#457f6a63-7" aria-hidden="true" tabindex="-1"></a>    rapidfuzz.distance.Levenshtein.distance(</span>
-<span id="457f6a63-8"><a href="#457f6a63-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"salut"</span>, <span class="st">"saalut"</span>, weights<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="457f6a63-9"><a href="#457f6a63-9" aria-hidden="true" tabindex="-1"></a>    ),  <span class="co"># Addition</span></span>
-<span id="457f6a63-10"><a href="#457f6a63-10" aria-hidden="true" tabindex="-1"></a>    rapidfuzz.distance.Levenshtein.distance(</span>
-<span id="457f6a63-11"><a href="#457f6a63-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"salut"</span>, <span class="st">"selut"</span>, weights<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="457f6a63-12"><a href="#457f6a63-12" aria-hidden="true" tabindex="-1"></a>    ),  <span class="co"># Substitution</span></span>
-<span id="457f6a63-13"><a href="#457f6a63-13" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="68795599" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="68795599"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="68795599-1"><a href="#68795599-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rapidfuzz</span>
+<span id="68795599-2"><a href="#68795599-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="68795599-3"><a href="#68795599-3" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="68795599-4"><a href="#68795599-4" aria-hidden="true" tabindex="-1"></a>    rapidfuzz.distance.Levenshtein.distance(</span>
+<span id="68795599-5"><a href="#68795599-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"salut"</span>, <span class="st">"slut"</span>, weights<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="68795599-6"><a href="#68795599-6" aria-hidden="true" tabindex="-1"></a>    ),  <span class="co"># Suppression</span></span>
+<span id="68795599-7"><a href="#68795599-7" aria-hidden="true" tabindex="-1"></a>    rapidfuzz.distance.Levenshtein.distance(</span>
+<span id="68795599-8"><a href="#68795599-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"salut"</span>, <span class="st">"saalut"</span>, weights<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="68795599-9"><a href="#68795599-9" aria-hidden="true" tabindex="-1"></a>    ),  <span class="co"># Addition</span></span>
+<span id="68795599-10"><a href="#68795599-10" aria-hidden="true" tabindex="-1"></a>    rapidfuzz.distance.Levenshtein.distance(</span>
+<span id="68795599-11"><a href="#68795599-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"salut"</span>, <span class="st">"selut"</span>, weights<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="68795599-12"><a href="#68795599-12" aria-hidden="true" tabindex="-1"></a>    ),  <span class="co"># Substitution</span></span>
+<span id="68795599-13"><a href="#68795599-13" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="premier-essai-les-produits-ciqual-les-plus-similaires-aux-produits-de-la-recette" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="premier-essai-les-produits-ciqual-les-plus-similaires-aux-produits-de-la-recette"><span class="header-section-number">4.1</span> Premier essai: les produits <code>Ciqual</code> les plus similaires aux produits de la recette</h2>
@@ -1147,9 +1144,9 @@ pour chaque produit, le meilleur <em>match</em>.</p>
 Avec des bases plus conséquentes, une stratégie plus parcimonieuse en mémoire devrait être envisagée.</p>
 <p>Pour faire cette opération, on va utiliser la fonction <code>match_product</code> de
 note script d’utilitaires.</p>
-<div id="a7d49cd5" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="a7d49cd5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a7d49cd5-1"><a href="#a7d49cd5-1" aria-hidden="true" tabindex="-1"></a>dist_leven <span class="op">=</span> fc.match_product(libelles, ciqual)</span>
-<span id="a7d49cd5-2"><a href="#a7d49cd5-2" aria-hidden="true" tabindex="-1"></a>dist_leven</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f954ae14" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="f954ae14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f954ae14-1"><a href="#f954ae14-1" aria-hidden="true" tabindex="-1"></a>dist_leven <span class="op">=</span> fc.match_product(libelles, ciqual)</span>
+<span id="f954ae14-2"><a href="#f954ae14-2" aria-hidden="true" tabindex="-1"></a>dist_leven</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Cette première étape naïve est décevante à plusieurs égards:</p>
 <ul>
@@ -1286,8 +1283,8 @@ dans les noms de produits sur ce qui l’identifie vraiment.</p>
 <p>Pour systématiser cette approche à nos différents <code>DataFrame</code>, rien de mieux
 qu’une fonction. Celle-ci est présente dans le module <code>functions</code>
 sous le nom <code>clean_libelle</code>.</p>
-<div id="dd44bedc" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="dd44bedc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dd44bedc-1"><a href="#dd44bedc-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functions <span class="im">import</span> clean_libelle</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d1b49dd4" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="d1b49dd4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d1b49dd4-1"><a href="#d1b49dd4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functions <span class="im">import</span> clean_libelle</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour résumer l’exercice précédent, cette fonction va :</p>
 <ul>
@@ -1295,43 +1292,43 @@ sous le nom <code>clean_libelle</code>.</p>
 <li>Retirer tout les caractères qui ne sont pas des lettres (chiffres, ponctuations) ;</li>
 <li>Retirer les caractères isolés.</li>
 </ul>
-<div id="699b0417" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="699b0417"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="699b0417-1"><a href="#699b0417-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="699b0417-2"><a href="#699b0417-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="699b0417-3"><a href="#699b0417-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="699b0417-4"><a href="#699b0417-4" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span>
-<span id="699b0417-5"><a href="#699b0417-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="699b0417-6"><a href="#699b0417-6" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> [<span class="st">"KG"</span>, <span class="st">"CL"</span>, <span class="st">"G"</span>, <span class="st">"L"</span>, <span class="st">"CRUE?S?"</span>, <span class="st">"PREEMBALLEE?S?"</span>]</span>
-<span id="699b0417-7"><a href="#699b0417-7" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">+=</span> [l.upper() <span class="cf">for</span> l <span class="kw">in</span> stopwords.words(<span class="st">"french"</span>)]</span>
-<span id="699b0417-8"><a href="#699b0417-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="699b0417-9"><a href="#699b0417-9" aria-hidden="true" tabindex="-1"></a>replace_regex <span class="op">=</span> {<span class="vs">r"[^A-Z]"</span>: <span class="st">" "</span>, <span class="vs">r"\b[A-Z0-9]{1,2}?\b"</span>: <span class="st">" "</span>}  <span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8d28b4a3" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="8d28b4a3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8d28b4a3-1"><a href="#8d28b4a3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="8d28b4a3-2"><a href="#8d28b4a3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="8d28b4a3-3"><a href="#8d28b4a3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8d28b4a3-4"><a href="#8d28b4a3-4" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span>
+<span id="8d28b4a3-5"><a href="#8d28b4a3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8d28b4a3-6"><a href="#8d28b4a3-6" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> [<span class="st">"KG"</span>, <span class="st">"CL"</span>, <span class="st">"G"</span>, <span class="st">"L"</span>, <span class="st">"CRUE?S?"</span>, <span class="st">"PREEMBALLEE?S?"</span>]</span>
+<span id="8d28b4a3-7"><a href="#8d28b4a3-7" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">+=</span> [l.upper() <span class="cf">for</span> l <span class="kw">in</span> stopwords.words(<span class="st">"french"</span>)]</span>
+<span id="8d28b4a3-8"><a href="#8d28b4a3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="8d28b4a3-9"><a href="#8d28b4a3-9" aria-hidden="true" tabindex="-1"></a>replace_regex <span class="op">=</span> {<span class="vs">r"[^A-Z]"</span>: <span class="st">" "</span>, <span class="vs">r"\b[A-Z0-9]{1,2}?\b"</span>: <span class="st">" "</span>}  <span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Cela permet d’obtenir les bases nettoyées suivantes :</p>
-<div id="4873d5f3" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="4873d5f3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4873d5f3-1"><a href="#4873d5f3-1" aria-hidden="true" tabindex="-1"></a>ciqual <span class="op">=</span> clean_libelle(</span>
-<span id="4873d5f3-2"><a href="#4873d5f3-2" aria-hidden="true" tabindex="-1"></a>    ciqual, yvar<span class="op">=</span><span class="st">"alim_nom_fr"</span>, replace_regex<span class="op">=</span>replace_regex, stopWords<span class="op">=</span>stop_words</span>
-<span id="4873d5f3-3"><a href="#4873d5f3-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="4873d5f3-4"><a href="#4873d5f3-4" aria-hidden="true" tabindex="-1"></a>ciqual.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0a1fdcbb" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="0a1fdcbb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0a1fdcbb-1"><a href="#0a1fdcbb-1" aria-hidden="true" tabindex="-1"></a>ciqual <span class="op">=</span> clean_libelle(</span>
+<span id="0a1fdcbb-2"><a href="#0a1fdcbb-2" aria-hidden="true" tabindex="-1"></a>    ciqual, yvar<span class="op">=</span><span class="st">"alim_nom_fr"</span>, replace_regex<span class="op">=</span>replace_regex, stopWords<span class="op">=</span>stop_words</span>
+<span id="0a1fdcbb-3"><a href="#0a1fdcbb-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="0a1fdcbb-4"><a href="#0a1fdcbb-4" aria-hidden="true" tabindex="-1"></a>ciqual.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b2f2e8b2" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="b2f2e8b2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b2f2e8b2-1"><a href="#b2f2e8b2-1" aria-hidden="true" tabindex="-1"></a>openfood <span class="op">=</span> clean_libelle(</span>
-<span id="b2f2e8b2-2"><a href="#b2f2e8b2-2" aria-hidden="true" tabindex="-1"></a>    openfood, yvar<span class="op">=</span><span class="st">"product_name"</span>, replace_regex<span class="op">=</span>replace_regex, stopWords<span class="op">=</span>stop_words</span>
-<span id="b2f2e8b2-3"><a href="#b2f2e8b2-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="b2f2e8b2-4"><a href="#b2f2e8b2-4" aria-hidden="true" tabindex="-1"></a>openfood.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d50dbe44" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="d50dbe44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d50dbe44-1"><a href="#d50dbe44-1" aria-hidden="true" tabindex="-1"></a>openfood <span class="op">=</span> clean_libelle(</span>
+<span id="d50dbe44-2"><a href="#d50dbe44-2" aria-hidden="true" tabindex="-1"></a>    openfood, yvar<span class="op">=</span><span class="st">"product_name"</span>, replace_regex<span class="op">=</span>replace_regex, stopWords<span class="op">=</span>stop_words</span>
+<span id="d50dbe44-3"><a href="#d50dbe44-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="d50dbe44-4"><a href="#d50dbe44-4" aria-hidden="true" tabindex="-1"></a>openfood.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1955a996" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="1955a996"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1955a996-1"><a href="#1955a996-1" aria-hidden="true" tabindex="-1"></a>courses <span class="op">=</span> pd.DataFrame(libelles, columns<span class="op">=</span>[<span class="st">"libel"</span>])</span>
-<span id="1955a996-2"><a href="#1955a996-2" aria-hidden="true" tabindex="-1"></a>courses <span class="op">=</span> clean_libelle(</span>
-<span id="1955a996-3"><a href="#1955a996-3" aria-hidden="true" tabindex="-1"></a>    courses, yvar<span class="op">=</span><span class="st">"libel"</span>, replace_regex<span class="op">=</span>replace_regex, stopWords<span class="op">=</span>stop_words</span>
-<span id="1955a996-4"><a href="#1955a996-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="1955a996-5"><a href="#1955a996-5" aria-hidden="true" tabindex="-1"></a>courses.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e57ad645" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="e57ad645"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e57ad645-1"><a href="#e57ad645-1" aria-hidden="true" tabindex="-1"></a>courses <span class="op">=</span> pd.DataFrame(libelles, columns<span class="op">=</span>[<span class="st">"libel"</span>])</span>
+<span id="e57ad645-2"><a href="#e57ad645-2" aria-hidden="true" tabindex="-1"></a>courses <span class="op">=</span> clean_libelle(</span>
+<span id="e57ad645-3"><a href="#e57ad645-3" aria-hidden="true" tabindex="-1"></a>    courses, yvar<span class="op">=</span><span class="st">"libel"</span>, replace_regex<span class="op">=</span>replace_regex, stopWords<span class="op">=</span>stop_words</span>
+<span id="e57ad645-4"><a href="#e57ad645-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="e57ad645-5"><a href="#e57ad645-5" aria-hidden="true" tabindex="-1"></a>courses.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les noms de produits sont déjà plus harmonisés.
 Voyons voir si cela permet de trouver un
 <em>match</em> dans l’Openfood database:</p>
-<div id="04ee56c7" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="04ee56c7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="04ee56c7-1"><a href="#04ee56c7-1" aria-hidden="true" tabindex="-1"></a>dist_leven_openfood <span class="op">=</span> fc.match_product(courses[<span class="st">"libel_clean"</span>], openfood, <span class="st">"libel_clean"</span>)</span>
-<span id="04ee56c7-2"><a href="#04ee56c7-2" aria-hidden="true" tabindex="-1"></a>dist_leven_openfood.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="acad62c0" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="acad62c0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="acad62c0-1"><a href="#acad62c0-1" aria-hidden="true" tabindex="-1"></a>dist_leven_openfood <span class="op">=</span> fc.match_product(courses[<span class="st">"libel_clean"</span>], openfood, <span class="st">"libel_clean"</span>)</span>
+<span id="acad62c0-2"><a href="#acad62c0-2" aria-hidden="true" tabindex="-1"></a>dist_leven_openfood.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pas encore parfait, mais on progresse sur les produits appariés!
 Concernant le temps de calcul, les quelques secondes nécessaires à
@@ -1374,23 +1371,23 @@ qui est prêt à vous écouter:</p>
 recherche.
 Nous allons utiliser la librairie <code>elasticsearch</code> pour dialoguer avec notre moteur de recherche Elastic.
 Les instructions ci-dessous indiquent comment établir la connection.</p>
-<div id="3e3b6fe0" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="3e3b6fe0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3e3b6fe0-1"><a href="#3e3b6fe0-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> elasticsearch <span class="im">import</span> Elasticsearch</span>
-<span id="3e3b6fe0-2"><a href="#3e3b6fe0-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e3b6fe0-3"><a href="#3e3b6fe0-3" aria-hidden="true" tabindex="-1"></a>HOST <span class="op">=</span> <span class="st">"elasticsearch-master"</span></span>
-<span id="3e3b6fe0-4"><a href="#3e3b6fe0-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e3b6fe0-5"><a href="#3e3b6fe0-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e3b6fe0-6"><a href="#3e3b6fe0-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elastic():</span>
-<span id="3e3b6fe0-7"><a href="#3e3b6fe0-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Connection avec Elastic sur le data lab"""</span></span>
-<span id="3e3b6fe0-8"><a href="#3e3b6fe0-8" aria-hidden="true" tabindex="-1"></a>    es <span class="op">=</span> Elasticsearch(</span>
-<span id="3e3b6fe0-9"><a href="#3e3b6fe0-9" aria-hidden="true" tabindex="-1"></a>        [{<span class="st">"host"</span>: HOST, <span class="st">"port"</span>: <span class="dv">9200</span>, <span class="st">"scheme"</span>: <span class="st">"http"</span>}],</span>
-<span id="3e3b6fe0-10"><a href="#3e3b6fe0-10" aria-hidden="true" tabindex="-1"></a>        http_compress<span class="op">=</span><span class="va">True</span>,</span>
-<span id="3e3b6fe0-11"><a href="#3e3b6fe0-11" aria-hidden="true" tabindex="-1"></a>        request_timeout<span class="op">=</span><span class="dv">200</span>,</span>
-<span id="3e3b6fe0-12"><a href="#3e3b6fe0-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="3e3b6fe0-13"><a href="#3e3b6fe0-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> es</span>
-<span id="3e3b6fe0-14"><a href="#3e3b6fe0-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e3b6fe0-15"><a href="#3e3b6fe0-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e3b6fe0-16"><a href="#3e3b6fe0-16" aria-hidden="true" tabindex="-1"></a>es <span class="op">=</span> elastic()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="061d9938" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="061d9938"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="061d9938-1"><a href="#061d9938-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> elasticsearch <span class="im">import</span> Elasticsearch</span>
+<span id="061d9938-2"><a href="#061d9938-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="061d9938-3"><a href="#061d9938-3" aria-hidden="true" tabindex="-1"></a>HOST <span class="op">=</span> <span class="st">"elasticsearch-master"</span></span>
+<span id="061d9938-4"><a href="#061d9938-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="061d9938-5"><a href="#061d9938-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="061d9938-6"><a href="#061d9938-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elastic():</span>
+<span id="061d9938-7"><a href="#061d9938-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Connection avec Elastic sur le data lab"""</span></span>
+<span id="061d9938-8"><a href="#061d9938-8" aria-hidden="true" tabindex="-1"></a>    es <span class="op">=</span> Elasticsearch(</span>
+<span id="061d9938-9"><a href="#061d9938-9" aria-hidden="true" tabindex="-1"></a>        [{<span class="st">"host"</span>: HOST, <span class="st">"port"</span>: <span class="dv">9200</span>, <span class="st">"scheme"</span>: <span class="st">"http"</span>}],</span>
+<span id="061d9938-10"><a href="#061d9938-10" aria-hidden="true" tabindex="-1"></a>        http_compress<span class="op">=</span><span class="va">True</span>,</span>
+<span id="061d9938-11"><a href="#061d9938-11" aria-hidden="true" tabindex="-1"></a>        request_timeout<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="061d9938-12"><a href="#061d9938-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="061d9938-13"><a href="#061d9938-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> es</span>
+<span id="061d9938-14"><a href="#061d9938-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="061d9938-15"><a href="#061d9938-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="061d9938-16"><a href="#061d9938-16" aria-hidden="true" tabindex="-1"></a>es <span class="op">=</span> elastic()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>&lt;Elasticsearch([{'host': 'elasticsearch-master', 'port': 9200}])&gt;</code></pre>
 <p>Maintenant que la connection est établie, deux étapes nous attendent:</p>
@@ -1402,40 +1399,40 @@ Les instructions ci-dessous indiquent comment établir la connection.</p>
 <section id="première-indexation" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="première-indexation"><span class="header-section-number">6.2</span> Première indexation</h2>
 <p>On crée donc nos deux index:</p>
-<div id="b3a41f3e" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="b3a41f3e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b3a41f3e-1"><a href="#b3a41f3e-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> es.indices.exists(index<span class="op">=</span><span class="st">"openfood"</span>):</span>
-<span id="b3a41f3e-2"><a href="#b3a41f3e-2" aria-hidden="true" tabindex="-1"></a>    es.indices.create(index<span class="op">=</span><span class="st">"openfood"</span>)</span>
-<span id="b3a41f3e-3"><a href="#b3a41f3e-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> es.indices.exists(index<span class="op">=</span><span class="st">"ciqual"</span>):</span>
-<span id="b3a41f3e-4"><a href="#b3a41f3e-4" aria-hidden="true" tabindex="-1"></a>    es.indices.create(index<span class="op">=</span><span class="st">"ciqual"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ebad4e27" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="ebad4e27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ebad4e27-1"><a href="#ebad4e27-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> es.indices.exists(index<span class="op">=</span><span class="st">"openfood"</span>):</span>
+<span id="ebad4e27-2"><a href="#ebad4e27-2" aria-hidden="true" tabindex="-1"></a>    es.indices.create(index<span class="op">=</span><span class="st">"openfood"</span>)</span>
+<span id="ebad4e27-3"><a href="#ebad4e27-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> es.indices.exists(index<span class="op">=</span><span class="st">"ciqual"</span>):</span>
+<span id="ebad4e27-4"><a href="#ebad4e27-4" aria-hidden="true" tabindex="-1"></a>    es.indices.create(index<span class="op">=</span><span class="st">"ciqual"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Pour l’instant, nos index sont vides! Ils contiennent 0 documents.</p>
-<div id="711ced45" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="711ced45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="711ced45-1"><a href="#711ced45-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"openfood"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cd4286cd" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cd4286cd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cd4286cd-1"><a href="#cd4286cd-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"openfood"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>{'count': 0, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}}</code></pre>
 <p>Nous allons en rajouter quelques-uns !</p>
-<div id="7b81b286" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="7b81b286"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7b81b286-1"><a href="#7b81b286-1" aria-hidden="true" tabindex="-1"></a>es.create(</span>
-<span id="7b81b286-2"><a href="#7b81b286-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"openfood"</span>,</span>
-<span id="7b81b286-3"><a href="#7b81b286-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="dv">1</span>,</span>
-<span id="7b81b286-4"><a href="#7b81b286-4" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span>{</span>
-<span id="7b81b286-5"><a href="#7b81b286-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"product_name"</span>: <span class="st">"Tarte noix de coco"</span>,</span>
-<span id="7b81b286-6"><a href="#7b81b286-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"product_name_clean"</span>: <span class="st">"TARTE NOIX COCO"</span>,</span>
-<span id="7b81b286-7"><a href="#7b81b286-7" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="7b81b286-8"><a href="#7b81b286-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="7b81b286-9"><a href="#7b81b286-9" aria-hidden="true" tabindex="-1"></a>es.create(</span>
-<span id="7b81b286-10"><a href="#7b81b286-10" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"openfood"</span>,</span>
-<span id="7b81b286-11"><a href="#7b81b286-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="dv">2</span>,</span>
-<span id="7b81b286-12"><a href="#7b81b286-12" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span>{<span class="st">"product_name"</span>: <span class="st">"Noix de coco"</span>, <span class="st">"product_name_clean"</span>: <span class="st">"NOIX COCO"</span>},</span>
-<span id="7b81b286-13"><a href="#7b81b286-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="7b81b286-14"><a href="#7b81b286-14" aria-hidden="true" tabindex="-1"></a>es.create(</span>
-<span id="7b81b286-15"><a href="#7b81b286-15" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"openfood"</span>,</span>
-<span id="7b81b286-16"><a href="#7b81b286-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="dv">3</span>,</span>
-<span id="7b81b286-17"><a href="#7b81b286-17" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span>{<span class="st">"product_name"</span>: <span class="st">"Beurre doux"</span>, <span class="st">"product_name_clean"</span>: <span class="st">"BEURRE DOUX"</span>},</span>
-<span id="7b81b286-18"><a href="#7b81b286-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="64528e08" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="64528e08"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="64528e08-1"><a href="#64528e08-1" aria-hidden="true" tabindex="-1"></a>es.create(</span>
+<span id="64528e08-2"><a href="#64528e08-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"openfood"</span>,</span>
+<span id="64528e08-3"><a href="#64528e08-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="dv">1</span>,</span>
+<span id="64528e08-4"><a href="#64528e08-4" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span>{</span>
+<span id="64528e08-5"><a href="#64528e08-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"product_name"</span>: <span class="st">"Tarte noix de coco"</span>,</span>
+<span id="64528e08-6"><a href="#64528e08-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"product_name_clean"</span>: <span class="st">"TARTE NOIX COCO"</span>,</span>
+<span id="64528e08-7"><a href="#64528e08-7" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="64528e08-8"><a href="#64528e08-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="64528e08-9"><a href="#64528e08-9" aria-hidden="true" tabindex="-1"></a>es.create(</span>
+<span id="64528e08-10"><a href="#64528e08-10" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"openfood"</span>,</span>
+<span id="64528e08-11"><a href="#64528e08-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="dv">2</span>,</span>
+<span id="64528e08-12"><a href="#64528e08-12" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span>{<span class="st">"product_name"</span>: <span class="st">"Noix de coco"</span>, <span class="st">"product_name_clean"</span>: <span class="st">"NOIX COCO"</span>},</span>
+<span id="64528e08-13"><a href="#64528e08-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="64528e08-14"><a href="#64528e08-14" aria-hidden="true" tabindex="-1"></a>es.create(</span>
+<span id="64528e08-15"><a href="#64528e08-15" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"openfood"</span>,</span>
+<span id="64528e08-16"><a href="#64528e08-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="dv">3</span>,</span>
+<span id="64528e08-17"><a href="#64528e08-17" aria-hidden="true" tabindex="-1"></a>    body<span class="op">=</span>{<span class="st">"product_name"</span>: <span class="st">"Beurre doux"</span>, <span class="st">"product_name_clean"</span>: <span class="st">"BEURRE DOUX"</span>},</span>
+<span id="64528e08-18"><a href="#64528e08-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1dc3a1d1" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="1dc3a1d1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1dc3a1d1-1"><a href="#1dc3a1d1-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"openfood"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1500ab4c" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="1500ab4c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1500ab4c-1"><a href="#1500ab4c-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"openfood"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>{'count': 3, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}}</code></pre>
 <p>Dans l’interface graphique <code>Kibana</code>,
@@ -1446,16 +1443,16 @@ a bien eue lieu en allant dans <code>Management &gt; Stack Management</code></p>
 <section id="première-recherche" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="première-recherche"><span class="header-section-number">6.3</span> Première recherche</h2>
 <p>Faisons notre première recherche: cherchons des noix de pécan!</p>
-<div id="918c5264" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="918c5264"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="918c5264-1"><a href="#918c5264-1" aria-hidden="true" tabindex="-1"></a>es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"noix de pécan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7003496e" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="7003496e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7003496e-1"><a href="#7003496e-1" aria-hidden="true" tabindex="-1"></a>es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"noix de pécan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'took': 116, 'timed_out': False, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}, 'hits': {'total': {'value': 2, 'relation': 'eq'}, 'max_score': 0.9400072, 'hits': [{'_index': 'openfood', '_type': '_doc', '_id': '2', '_score': 0.9400072, '_source': {'product_name': 'Noix de coco', 'product_name_clean': 'NOIX COCO'}}, {'_index': 'openfood', '_type': '_doc', '_id': '1', '_score': 0.8272065, '_source': {'product_name': 'Tarte noix de coco', 'product_name_clean': 'TARTE NOIX COCO'}}]}})</code></pre>
 <p>Intéressons nous aux <code>hits</code> (résultats pertinents, ou echos) : nous en avons 2.
 Le score maximal parmi les hits est mentionné dans <code>max_score</code> et correspond à celui du deuxième document indexé.</p>
 <p><code>Elastic</code> nous fournit ici un <strong>score de pertinence</strong> dans notre recherche d’information, et classe ainsi les documents renvoyés.</p>
 <p>Ici nous utilisons la configuration par défaut. Mais comment est calculé ce score? Demandons à Elastic de nous expliquer le score du document <code>2</code> dans la requête <code>"noix de pécan"</code>.</p>
-<div id="ba173ccd" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="ba173ccd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ba173ccd-1"><a href="#ba173ccd-1" aria-hidden="true" tabindex="-1"></a>es.explain(index<span class="op">=</span><span class="st">"openfood"</span>, <span class="bu">id</span><span class="op">=</span><span class="dv">2</span>, q<span class="op">=</span><span class="st">"noix de pécan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7cf1f8e7" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="7cf1f8e7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7cf1f8e7-1"><a href="#7cf1f8e7-1" aria-hidden="true" tabindex="-1"></a>es.explain(index<span class="op">=</span><span class="st">"openfood"</span>, <span class="bu">id</span><span class="op">=</span><span class="dv">2</span>, q<span class="op">=</span><span class="st">"noix de pécan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'_index': 'openfood', '_type': '_doc', '_id': '2', 'matched': True, 'explanation': {'value': 0.9400072, 'description': 'max of:', 'details': [{'value': 0.49917626, 'description': 'sum of:', 'details': [{'value': 0.49917626, 'description': 'weight(product_name_clean:noix in 1) [PerFieldSimilarity], result of:', 'details': [{'value': 0.49917626, 'description': 'score(freq=1.0), computed as boost * idf * tf from:', 'details': [{'value': 2.2, 'description': 'boost', 'details': []}, {'value': 0.47000363, 'description': 'idf, computed as log(1 + (N - n + 0.5) / (n + 0.5)) from:', 'details': [{'value': 2, 'description': 'n, number of documents containing term', 'details': []}, {'value': 3, 'description': 'N, total number of documents with field', 'details': []}]}, {'value': 0.48275858, 'description': 'tf, computed as freq / (freq + k1 * (1 - b + b * dl / avgdl)) from:', 'details': [{'value': 1.0, 'description': 'freq, occurrences of term within document', 'details': []}, {'value': 1.2, 'description': 'k1, term saturation parameter', 'details': []}, {'value': 0.75, 'description': 'b, length normalization parameter', 'details': []}, {'value': 2.0, 'description': 'dl, length of field', 'details': []}, {'value': 2.3333333, 'description': 'avgdl, average length of field', 'details': []}]}]}]}]}, {'value': 0.9400072, 'description': 'sum of:', 'details': [{'value': 0.4700036, 'description': 'weight(product_name:noix in 1) [PerFieldSimilarity], result of:', 'details': [{'value': 0.4700036, 'description': 'score(freq=1.0), computed as boost * idf * tf from:', 'details': [{'value': 2.2, 'description': 'boost', 'details': []}, {'value': 0.47000363, 'description': 'idf, computed as log(1 + (N - n + 0.5) / (n + 0.5)) from:', 'details': [{'value': 2, 'description': 'n, number of documents containing term', 'details': []}, {'value': 3, 'description': 'N, total number of documents with field', 'details': []}]}, {'value': 0.45454544, 'description': 'tf, computed as freq / (freq + k1 * (1 - b + b * dl / avgdl)) from:', 'details': [{'value': 1.0, 'description': 'freq, occurrences of term within document', 'details': []}, {'value': 1.2, 'description': 'k1, term saturation parameter', 'details': []}, {'value': 0.75, 'description': 'b, length normalization parameter', 'details': []}, {'value': 3.0, 'description': 'dl, length of field', 'details': []}, {'value': 3.0, 'description': 'avgdl, average length of field', 'details': []}]}]}]}, {'value': 0.4700036, 'description': 'weight(product_name:de in 1) [PerFieldSimilarity], result of:', 'details': [{'value': 0.4700036, 'description': 'score(freq=1.0), computed as boost * idf * tf from:', 'details': [{'value': 2.2, 'description': 'boost', 'details': []}, {'value': 0.47000363, 'description': 'idf, computed as log(1 + (N - n + 0.5) / (n + 0.5)) from:', 'details': [{'value': 2, 'description': 'n, number of documents containing term', 'details': []}, {'value': 3, 'description': 'N, total number of documents with field', 'details': []}]}, {'value': 0.45454544, 'description': 'tf, computed as freq / (freq + k1 * (1 - b + b * dl / avgdl)) from:', 'details': [{'value': 1.0, 'description': 'freq, occurrences of term within document', 'details': []}, {'value': 1.2, 'description': 'k1, term saturation parameter', 'details': []}, {'value': 0.75, 'description': 'b, length normalization parameter', 'details': []}, {'value': 3.0, 'description': 'dl, length of field', 'details': []}, {'value': 3.0, 'description': 'avgdl, average length of field', 'details': []}]}]}]}]}]}})</code></pre>
 <p><code>Elastic</code> nous explique donc que le score <code>0.9400072</code> est le maximum entre deux sous-scores, <code>0.4991</code> et <code>0.9400072</code>.</p>
@@ -1473,16 +1470,16 @@ en tout cas moins rudimentaire que les distances caractères à caractères pour
 <h2 data-number="6.4" class="anchored" data-anchor-id="limite-de-cette-première-indexation"><span class="header-section-number">6.4</span> Limite de cette première indexation</h2>
 <p>Pour l’instant, Elastic n’a pas l’air de gérer les fautes de frappes!
 Pas le droit à l’erreur dans la requête:</p>
-<div id="8f0518fd" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="8f0518fd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8f0518fd-1"><a href="#8f0518fd-1" aria-hidden="true" tabindex="-1"></a>es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"TART NOI"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="aa4c0325" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="aa4c0325"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="aa4c0325-1"><a href="#aa4c0325-1" aria-hidden="true" tabindex="-1"></a>es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"TART NOI"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'took': 38, 'timed_out': False, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}, 'hits': {'total': {'value': 0, 'relation': 'eq'}, 'max_score': None, 'hits': []}})</code></pre>
 <p>Cela s’explique par la représentation des champs (<em>‘product_name’</em> par exemple) qu’<code>Elastic</code> a inféré,
 puisque nous n’avons rien spécifié.
 La représentation d’une variable conditionne la façon dont les champs sont analysés pour calculer la pertinence.
 Par exemple, regardons la représentation du champ <code>product_name</code></p>
-<div id="beb07264" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="beb07264"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="beb07264-1"><a href="#beb07264-1" aria-hidden="true" tabindex="-1"></a>es.indices.get_field_mapping(index<span class="op">=</span><span class="st">"openfood"</span>, fields<span class="op">=</span><span class="st">"product_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2ec54ee6" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="2ec54ee6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2ec54ee6-1"><a href="#2ec54ee6-1" aria-hidden="true" tabindex="-1"></a>es.indices.get_field_mapping(index<span class="op">=</span><span class="st">"openfood"</span>, fields<span class="op">=</span><span class="st">"product_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'openfood': {'mappings': {'product_name': {'full_name': 'product_name', 'mapping': {'product_name': {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}}}}}})</code></pre>
 <p><code>Elastic</code> a compris qu’il s’agissait d’un champ textuel.
@@ -1510,21 +1507,21 @@ Cela fait aussi plus de comparaisons à opérer ! D’où également, l’intér
 <p>On va préciser un peu le schéma de données qu’on souhaite <em>indexer</em>, et aussi préciser comment les différents champs seront <em>analysés</em>.</p>
 <section id="une-indexation-plus-adaptée" class="level3" data-number="7.0.1">
 <h3 data-number="7.0.1" class="anchored" data-anchor-id="une-indexation-plus-adaptée"><span class="header-section-number">7.0.1</span> Une indexation plus adaptée</h3>
-<div id="d74edc49" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="d74edc49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d74edc49-1"><a href="#d74edc49-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="d74edc49-2"><a href="#d74edc49-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d74edc49-3"><a href="#d74edc49-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> es.indices.exists(index<span class="op">=</span><span class="st">"openfood"</span>):</span>
-<span id="d74edc49-4"><a href="#d74edc49-4" aria-hidden="true" tabindex="-1"></a>    es.indices.delete(index<span class="op">=</span><span class="st">"openfood"</span>)</span>
-<span id="d74edc49-5"><a href="#d74edc49-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d74edc49-6"><a href="#d74edc49-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"schema.json"</span>) <span class="im">as</span> f:</span>
-<span id="d74edc49-7"><a href="#d74edc49-7" aria-hidden="true" tabindex="-1"></a>    mapping <span class="op">=</span> json.load(f)</span>
-<span id="d74edc49-8"><a href="#d74edc49-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="d74edc49-9"><a href="#d74edc49-9" aria-hidden="true" tabindex="-1"></a>es.indices.create(index<span class="op">=</span><span class="st">"openfood"</span>, body<span class="op">=</span>mapping)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="853e0593" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="853e0593"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="853e0593-1"><a href="#853e0593-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="853e0593-2"><a href="#853e0593-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="853e0593-3"><a href="#853e0593-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> es.indices.exists(index<span class="op">=</span><span class="st">"openfood"</span>):</span>
+<span id="853e0593-4"><a href="#853e0593-4" aria-hidden="true" tabindex="-1"></a>    es.indices.delete(index<span class="op">=</span><span class="st">"openfood"</span>)</span>
+<span id="853e0593-5"><a href="#853e0593-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="853e0593-6"><a href="#853e0593-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"schema.json"</span>) <span class="im">as</span> f:</span>
+<span id="853e0593-7"><a href="#853e0593-7" aria-hidden="true" tabindex="-1"></a>    mapping <span class="op">=</span> json.load(f)</span>
+<span id="853e0593-8"><a href="#853e0593-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="853e0593-9"><a href="#853e0593-9" aria-hidden="true" tabindex="-1"></a>es.indices.create(index<span class="op">=</span><span class="st">"openfood"</span>, body<span class="op">=</span>mapping)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Maintenant, les champs textuels <em>“product_name”</em> et <em>“product_name_clean”</em>
 vont pouvoir être analysé aussi via leur n-grammes et après racinisation (et l’un n’exclut pas l’autre!)</p>
-<div id="2ee23cd0" class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="2ee23cd0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2ee23cd0-1"><a href="#2ee23cd0-1" aria-hidden="true" tabindex="-1"></a>es.indices.get_field_mapping(index<span class="op">=</span><span class="st">"openfood"</span>, fields<span class="op">=</span><span class="st">"product_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7ff4ad86" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="7ff4ad86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7ff4ad86-1"><a href="#7ff4ad86-1" aria-hidden="true" tabindex="-1"></a>es.indices.get_field_mapping(index<span class="op">=</span><span class="st">"openfood"</span>, fields<span class="op">=</span><span class="st">"product_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'openfood': {'mappings': {'product_name': {'full_name': 'product_name', 'mapping': {'product_name': {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}, 'ngr': {'type': 'text', 'analyzer': 'ngram_analyzer'}, 'stem': {'type': 'text', 'analyzer': 'stem_analyzer'}}}}}}}})</code></pre>
 <p>C’est parti, on envoie toute notre base OpenFood pour pouvoir la requêter !
@@ -1532,77 +1529,77 @@ La fonction suivante (<code>index_elastic</code>) va vous faire gagner du temps 
 car indexer chaque produit à la main n’est pas très efficace.</p>
 <p>Du coup ça prend quelques minutes… mais c’est pour nous en faire gagner ensuite.
 Cette opération est faite une fois, pour préparer des requêtes potentiellement nombreuses!</p>
-<div id="20567b68" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="20567b68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="20567b68-1"><a href="#20567b68-1" aria-hidden="true" tabindex="-1"></a>fc.index_elastic(</span>
-<span id="20567b68-2"><a href="#20567b68-2" aria-hidden="true" tabindex="-1"></a>    es<span class="op">=</span>es,</span>
-<span id="20567b68-3"><a href="#20567b68-3" aria-hidden="true" tabindex="-1"></a>    index_name<span class="op">=</span><span class="st">"openfood"</span>,</span>
-<span id="20567b68-4"><a href="#20567b68-4" aria-hidden="true" tabindex="-1"></a>    setting_file<span class="op">=</span><span class="st">"schema.json"</span>,</span>
-<span id="20567b68-5"><a href="#20567b68-5" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>openfood[</span>
-<span id="20567b68-6"><a href="#20567b68-6" aria-hidden="true" tabindex="-1"></a>        [<span class="st">"product_name"</span>, <span class="st">"libel_clean"</span>, <span class="st">"energy_100g"</span>, <span class="st">"nutriscore_score"</span>]</span>
-<span id="20567b68-7"><a href="#20567b68-7" aria-hidden="true" tabindex="-1"></a>    ].drop_duplicates(),</span>
-<span id="20567b68-8"><a href="#20567b68-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7270197f" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="7270197f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7270197f-1"><a href="#7270197f-1" aria-hidden="true" tabindex="-1"></a>fc.index_elastic(</span>
+<span id="7270197f-2"><a href="#7270197f-2" aria-hidden="true" tabindex="-1"></a>    es<span class="op">=</span>es,</span>
+<span id="7270197f-3"><a href="#7270197f-3" aria-hidden="true" tabindex="-1"></a>    index_name<span class="op">=</span><span class="st">"openfood"</span>,</span>
+<span id="7270197f-4"><a href="#7270197f-4" aria-hidden="true" tabindex="-1"></a>    setting_file<span class="op">=</span><span class="st">"schema.json"</span>,</span>
+<span id="7270197f-5"><a href="#7270197f-5" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>openfood[</span>
+<span id="7270197f-6"><a href="#7270197f-6" aria-hidden="true" tabindex="-1"></a>        [<span class="st">"product_name"</span>, <span class="st">"libel_clean"</span>, <span class="st">"energy_100g"</span>, <span class="st">"nutriscore_score"</span>]</span>
+<span id="7270197f-7"><a href="#7270197f-7" aria-hidden="true" tabindex="-1"></a>    ].drop_duplicates(),</span>
+<span id="7270197f-8"><a href="#7270197f-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>Temps d'exécution total : 125.57 secondes ---</code></pre>
-<div id="9f4ff47d" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="9f4ff47d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9f4ff47d-1"><a href="#9f4ff47d-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"openfood"</span>)[<span class="st">"count"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dd34b698" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="dd34b698"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="dd34b698-1"><a href="#dd34b698-1" aria-hidden="true" tabindex="-1"></a>es.count(index<span class="op">=</span><span class="st">"openfood"</span>)[<span class="st">"count"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>738366</code></pre>
 </section>
 <section id="nos-premières-requêtes" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="nos-premières-requêtes"><span class="header-section-number">7.1</span> Nos premières requêtes</h2>
 <p>Vérifions qu’on recupère quelques tartes aux noix même si l’on fait plein de fautes:</p>
-<div id="2fcf53c8" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="2fcf53c8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2fcf53c8-1"><a href="#2fcf53c8-1" aria-hidden="true" tabindex="-1"></a>es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"TART NOI"</span>, size<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="22afe2ba" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="22afe2ba"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="22afe2ba-1"><a href="#22afe2ba-1" aria-hidden="true" tabindex="-1"></a>es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"TART NOI"</span>, size<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ObjectApiResponse({'took': 60, 'timed_out': False, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}, 'hits': {'total': {'value': 10000, 'relation': 'gte'}, 'max_score': 22.837925, 'hits': [{'_index': 'openfood', '_type': '_doc', '_id': '405332', '_score': 22.837925, '_source': {'product_name': 'Tarte noix', 'libel_clean': 'TARTE NOIX', 'energy_100g': 1833.0, 'nutriscore_score': 23.0}}, {'_index': 'openfood', '_type': '_doc', '_id': '1103594', '_score': 22.82367, '_source': {'product_name': 'Tarte aux noix', 'libel_clean': 'TARTE NOIX', 'energy_100g': 4.0, 'nutriscore_score': 4.0}}, {'_index': 'openfood', '_type': '_doc', '_id': '1150755', '_score': 22.82367, '_source': {'product_name': 'Tarte aux noix', 'libel_clean': 'TARTE NOIX', 'energy_100g': 1929.0, 'nutriscore_score': 21.0}}]}})</code></pre>
 <p>Si on préfère sous une forme de <code>DataFrame</code>:</p>
-<div id="b55a90e7" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="b55a90e7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b55a90e7-1"><a href="#b55a90e7-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.json_normalize(</span>
-<span id="b55a90e7-2"><a href="#b55a90e7-2" aria-hidden="true" tabindex="-1"></a>    es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"TART NOI"</span>, size<span class="op">=</span><span class="dv">3</span>)[<span class="st">"hits"</span>][<span class="st">"hits"</span>]</span>
-<span id="b55a90e7-3"><a href="#b55a90e7-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="b55a90e7-4"><a href="#b55a90e7-4" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.replace(<span class="st">"_source."</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">False</span>)</span>
-<span id="b55a90e7-5"><a href="#b55a90e7-5" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="48d9586e" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="48d9586e"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="48d9586e-1"><a href="#48d9586e-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.json_normalize(</span>
+<span id="48d9586e-2"><a href="#48d9586e-2" aria-hidden="true" tabindex="-1"></a>    es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span><span class="st">"TART NOI"</span>, size<span class="op">=</span><span class="dv">3</span>)[<span class="st">"hits"</span>][<span class="st">"hits"</span>]</span>
+<span id="48d9586e-3"><a href="#48d9586e-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="48d9586e-4"><a href="#48d9586e-4" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.replace(<span class="st">"_source."</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">False</span>)</span>
+<span id="48d9586e-5"><a href="#48d9586e-5" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 \n  \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n  \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n<table class="dataframe table table-sm table-striped small"><thead><tr><th></th><th>_index</th><th>_type</th><th>_id</th><th>_score</th><th>product_name</th><th>libel_clean</th><th>energy_100g</th><th>nutriscore_score</th></tr></thead><tbody><tr><th>0</th><td>openfood</td><td>_doc</td><td>405332</td><td>22.837925</td><td>Tarte noix</td><td>TARTE NOIX</td><td>1833.0</td><td>23.0</td></tr><tr><th>1</th><td>openfood</td><td>_doc</td><td>1103594</td><td>22.823670</td><td>Tarte aux noix</td><td>TARTE NOIX</td><td>4.0</td><td>4.0</td></tr><tr><th>2</th><td>openfood</td><td>_doc</td><td>1150755</td><td>22.823670</td><td>Tarte aux noix</td><td>TARTE NOIX</td><td>1929.0</td><td>21.0</td></tr></tbody></table>
 <p>Pour automatiser l’envoi de requêtes et la récupération du meilleur
 écho, on peut définir la fonction suivante</p>
-<div id="195c1cce" class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="195c1cce"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="195c1cce-1"><a href="#195c1cce-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matchElastic(libelles):</span>
-<span id="195c1cce-2"><a href="#195c1cce-2" aria-hidden="true" tabindex="-1"></a>    start_time <span class="op">=</span> time.time()</span>
-<span id="195c1cce-3"><a href="#195c1cce-3" aria-hidden="true" tabindex="-1"></a>    matches <span class="op">=</span> {}</span>
-<span id="195c1cce-4"><a href="#195c1cce-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l <span class="kw">in</span> libelles:</span>
-<span id="195c1cce-5"><a href="#195c1cce-5" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span>l, size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="195c1cce-6"><a href="#195c1cce-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(response[<span class="st">"hits"</span>][<span class="st">"hits"</span>]) <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="195c1cce-7"><a href="#195c1cce-7" aria-hidden="true" tabindex="-1"></a>            matches[l] <span class="op">=</span> pd.json_normalize(response[<span class="st">"hits"</span>][<span class="st">"hits"</span>])</span>
-<span id="195c1cce-8"><a href="#195c1cce-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="dv">80</span> <span class="op">*</span> <span class="st">"-"</span>)</span>
-<span id="195c1cce-9"><a href="#195c1cce-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Temps d'exécution total : </span><span class="sc">{</span>(time.time() <span class="op">-</span> start_time)<span class="sc">:.2f}</span><span class="ss"> secondes ---"</span>)</span>
-<span id="195c1cce-10"><a href="#195c1cce-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="195c1cce-11"><a href="#195c1cce-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> matches</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4e5589a7" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="4e5589a7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4e5589a7-1"><a href="#4e5589a7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matchElastic(libelles):</span>
+<span id="4e5589a7-2"><a href="#4e5589a7-2" aria-hidden="true" tabindex="-1"></a>    start_time <span class="op">=</span> time.time()</span>
+<span id="4e5589a7-3"><a href="#4e5589a7-3" aria-hidden="true" tabindex="-1"></a>    matches <span class="op">=</span> {}</span>
+<span id="4e5589a7-4"><a href="#4e5589a7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l <span class="kw">in</span> libelles:</span>
+<span id="4e5589a7-5"><a href="#4e5589a7-5" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> es.search(index<span class="op">=</span><span class="st">"openfood"</span>, q<span class="op">=</span>l, size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="4e5589a7-6"><a href="#4e5589a7-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(response[<span class="st">"hits"</span>][<span class="st">"hits"</span>]) <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="4e5589a7-7"><a href="#4e5589a7-7" aria-hidden="true" tabindex="-1"></a>            matches[l] <span class="op">=</span> pd.json_normalize(response[<span class="st">"hits"</span>][<span class="st">"hits"</span>])</span>
+<span id="4e5589a7-8"><a href="#4e5589a7-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="dv">80</span> <span class="op">*</span> <span class="st">"-"</span>)</span>
+<span id="4e5589a7-9"><a href="#4e5589a7-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Temps d'exécution total : </span><span class="sc">{</span>(time.time() <span class="op">-</span> start_time)<span class="sc">:.2f}</span><span class="ss"> secondes ---"</span>)</span>
+<span id="4e5589a7-10"><a href="#4e5589a7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4e5589a7-11"><a href="#4e5589a7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> matches</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e15617c6" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="e15617c6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e15617c6-1"><a href="#e15617c6-1" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> matchElastic(courses[<span class="st">"libel_clean"</span>])</span>
-<span id="e15617c6-2"><a href="#e15617c6-2" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> pd.concat(matches)</span>
-<span id="e15617c6-3"><a href="#e15617c6-3" aria-hidden="true" tabindex="-1"></a>matches.sample(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b2bc9d8c" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="b2bc9d8c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b2bc9d8c-1"><a href="#b2bc9d8c-1" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> matchElastic(courses[<span class="st">"libel_clean"</span>])</span>
+<span id="b2bc9d8c-2"><a href="#b2bc9d8c-2" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> pd.concat(matches)</span>
+<span id="b2bc9d8c-3"><a href="#b2bc9d8c-3" aria-hidden="true" tabindex="-1"></a>matches.sample(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 \n  \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n  \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n<table class="dataframe table table-sm table-striped small"><thead><tr><th></th><th></th><th>_index</th><th>_type</th><th>_id</th><th>_score</th><th>_source.product_name</th><th>_source.libel_clean</th><th>_source.energy_100g</th><th>_source.nutriscore_score</th></tr></thead><tbody><tr><th>GOUSSE AIL</th><th>0</th><td>openfood</td><td>_doc</td><td>1982062</td><td>57.93140</td><td>Gousse d\'ail</td><td>GOUSSE AIL</td><td>498.0</td><td>5.0</td></tr><tr><th>IGP SAUVIGNON</th><th>0</th><td>openfood</td><td>_doc</td><td>1801406</td><td>96.55756</td><td>vin blanc Sauvignon</td><td>VIN BLANC SAUVIGNON</td><td>66.3</td><td>1.0</td></tr><tr><th>POTIRON</th><th>0</th><td>openfood</td><td>_doc</td><td>1043961</td><td>75.96385</td><td>Potiron</td><td>POTIRON</td><td>172.0</td><td>0.0</td></tr></tbody></table>
 <p>Et voilà, on a un outil très rapide de requête !
 La pertinence des résultats est encore douteuse.
 Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<div id="40b41a21" class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="40b41a21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="40b41a21-1"><a href="#40b41a21-1" aria-hidden="true" tabindex="-1"></a>req <span class="op">=</span> {</span>
-<span id="40b41a21-2"><a href="#40b41a21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bool"</span>: {</span>
-<span id="40b41a21-3"><a href="#40b41a21-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"should"</span>: [</span>
-<span id="40b41a21-4"><a href="#40b41a21-4" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"match"</span>: {<span class="st">"libel_clean"</span>: {<span class="st">"query"</span>: <span class="st">"HUILE OLIVE"</span>, <span class="st">"boost"</span>: <span class="dv">10</span>}}},</span>
-<span id="40b41a21-5"><a href="#40b41a21-5" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"match"</span>: {<span class="st">"libel_clean.ngr"</span>: <span class="st">"HUILE OLIVE"</span>}},</span>
-<span id="40b41a21-6"><a href="#40b41a21-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="40b41a21-7"><a href="#40b41a21-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"minimum_should_match"</span>: <span class="dv">1</span>,</span>
-<span id="40b41a21-8"><a href="#40b41a21-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"filter"</span>: [{<span class="st">"range"</span>: {<span class="st">"nutriscore_score"</span>: {<span class="st">"gte"</span>: <span class="dv">10</span>, <span class="st">"lte"</span>: <span class="dv">20</span>}}}],</span>
-<span id="40b41a21-9"><a href="#40b41a21-9" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="40b41a21-10"><a href="#40b41a21-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eb74d28c" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="eb74d28c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="eb74d28c-1"><a href="#eb74d28c-1" aria-hidden="true" tabindex="-1"></a>req <span class="op">=</span> {</span>
+<span id="eb74d28c-2"><a href="#eb74d28c-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bool"</span>: {</span>
+<span id="eb74d28c-3"><a href="#eb74d28c-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"should"</span>: [</span>
+<span id="eb74d28c-4"><a href="#eb74d28c-4" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"match"</span>: {<span class="st">"libel_clean"</span>: {<span class="st">"query"</span>: <span class="st">"HUILE OLIVE"</span>, <span class="st">"boost"</span>: <span class="dv">10</span>}}},</span>
+<span id="eb74d28c-5"><a href="#eb74d28c-5" aria-hidden="true" tabindex="-1"></a>            {<span class="st">"match"</span>: {<span class="st">"libel_clean.ngr"</span>: <span class="st">"HUILE OLIVE"</span>}},</span>
+<span id="eb74d28c-6"><a href="#eb74d28c-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="eb74d28c-7"><a href="#eb74d28c-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"minimum_should_match"</span>: <span class="dv">1</span>,</span>
+<span id="eb74d28c-8"><a href="#eb74d28c-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"filter"</span>: [{<span class="st">"range"</span>: {<span class="st">"nutriscore_score"</span>: {<span class="st">"gte"</span>: <span class="dv">10</span>, <span class="st">"lte"</span>: <span class="dv">20</span>}}}],</span>
+<span id="eb74d28c-9"><a href="#eb74d28c-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="eb74d28c-10"><a href="#eb74d28c-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="23e448a0" class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="23e448a0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="23e448a0-1"><a href="#23e448a0-1" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> es.search(index<span class="op">=</span><span class="st">"openfood"</span>, query<span class="op">=</span>req, size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="23e448a0-2"><a href="#23e448a0-2" aria-hidden="true" tabindex="-1"></a>pd.json_normalize(out[<span class="st">"hits"</span>][<span class="st">"hits"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a2530f97" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="a2530f97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a2530f97-1"><a href="#a2530f97-1" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> es.search(index<span class="op">=</span><span class="st">"openfood"</span>, query<span class="op">=</span>req, size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="a2530f97-2"><a href="#a2530f97-2" aria-hidden="true" tabindex="-1"></a>pd.json_normalize(out[<span class="st">"hits"</span>][<span class="st">"hits"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 \n  \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n  \n    \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n<table class="dataframe table table-sm table-striped small"><thead><tr><th></th><th>_index</th><th>_type</th><th>_id</th><th>_score</th><th>_source.product_name</th><th>_source.libel_clean</th><th>_source.energy_100g</th><th>_source.nutriscore_score</th></tr></thead><tbody><tr><th>0</th><td>openfood</td><td>_doc</td><td>960041</td><td>174.27896</td><td>Huile d olive</td><td>HUILE OLIVE</td><td>3761.0</td><td>11.0</td></tr></tbody></table>
 <p>Qu’a-t-on demandé ici?
@@ -1666,7 +1663,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="even">
 <td style="text-align: left;">annotated-types</td>
-<td style="text-align: left;">0.6.0</td>
+<td style="text-align: left;">0.7.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">appdirs</td>
@@ -1998,7 +1995,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">great-tables</td>
-<td style="text-align: left;">0.5.1</td>
+<td style="text-align: left;">0.6.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">greenlet</td>
@@ -2014,7 +2011,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">htmltools</td>
-<td style="text-align: left;">0.5.1</td>
+<td style="text-align: left;">0.5.2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hvac</td>
@@ -2146,7 +2143,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="even">
 <td style="text-align: left;">lxml</td>
-<td style="text-align: left;">5.2.1</td>
+<td style="text-align: left;">5.2.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lz4</td>
@@ -2198,7 +2195,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mizani</td>
-<td style="text-align: left;">0.11.2</td>
+<td style="text-align: left;">0.11.4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">mlflow</td>
@@ -2346,7 +2343,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="even">
 <td style="text-align: left;">plotnine</td>
-<td style="text-align: left;">0.13.5</td>
+<td style="text-align: left;">0.13.6</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">pluggy</td>
@@ -2518,7 +2515,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">pyzstd</td>
-<td style="text-align: left;">0.15.10</td>
+<td style="text-align: left;">0.16.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">QtPy</td>
@@ -2598,7 +2595,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">selenium</td>
-<td style="text-align: left;">4.20.0</td>
+<td style="text-align: left;">4.21.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">setuptools</td>
@@ -2694,7 +2691,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tifffile</td>
-<td style="text-align: left;">2024.5.3</td>
+<td style="text-align: left;">2024.5.22</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tomli</td>
@@ -2710,7 +2707,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">topojson</td>
-<td style="text-align: left;">1.8</td>
+<td style="text-align: left;">1.9</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tornado</td>
@@ -2726,7 +2723,7 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 </tr>
 <tr class="odd">
 <td style="text-align: left;">trio</td>
-<td style="text-align: left;">0.25.0</td>
+<td style="text-align: left;">0.25.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">trio-websocket</td>
@@ -2773,74 +2770,70 @@ Pour cela, il conviendrait de préciser des requêtes plus sophistiquées!<a hre
 <td style="text-align: left;">0.3.4</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">webcolors</td>
-<td style="text-align: left;">1.13</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">webdriver-manager</td>
 <td style="text-align: left;">4.0.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">websocket-client</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Werkzeug</td>
 <td style="text-align: left;">3.0.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wheel</td>
 <td style="text-align: left;">0.43.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">widgetsnbextension</td>
 <td style="text-align: left;">4.0.10</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wordcloud</td>
 <td style="text-align: left;">1.9.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wrapt</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wsproto</td>
 <td style="text-align: left;">1.2.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xgboost</td>
 <td style="text-align: left;">2.0.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xlrd</td>
 <td style="text-align: left;">2.0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xyzservices</td>
 <td style="text-align: left;">2024.4.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">yarl</td>
 <td style="text-align: left;">1.9.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">yellowbrick</td>
 <td style="text-align: left;">1.5</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zict</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zipp</td>
 <td style="text-align: left;">3.17.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zstandard</td>
 <td style="text-align: left;">0.22.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"></td>
 </tr>
@@ -4086,7 +4079,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","loop":false});
+<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-05-08">
+<meta name="dcterms.date" content="2024-05-27">
 <meta name="description" content="La Latent Dirichlet Allocation (LDA) est un modèle probabiliste génératif qui permet de décrire des collections de documents de texte ou d’autres types de données discrètes. La LDA fait partie d’une catégorie de modèles appelés “topic models”, qui cherchent à découvrir des structures thématiques cachées dans des vastes archives de documents. Le principe est de décomposer un document comme une collection de thèmes qui se distinguent par des choix de mots différents.">
 
 <title>Python pour la data science - Latent Dirichlet Allocation (LDA)</title>
@@ -228,7 +228,7 @@ document comme une collection de thèmes qui se distinguent par des choix de mot
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-05-08">
+<meta name="citation_online_date" content="2024-05-27">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -311,12 +311,8 @@ document comme une collection de thèmes qui se distinguent par des choix de mot
  <span class="dropdown-text">Statistiques par groupe et association de plusieurs jeux de données avec Pandas</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_tutorial.html">
- <span class="dropdown-text">Données spatiales : découverte de geopandas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_TP.html">
- <span class="dropdown-text">Pratique de geopandas avec les données vélib</span></a>
+    <a class="dropdown-item" href="../../content/manipulation/03_geopandas_intro.html">
+ <span class="dropdown-text">Introduction aux données spatiales avec Geopandas</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../content/manipulation/04a_webscraping_TP.html">
@@ -554,7 +550,7 @@ document comme une collection de thèmes qui se distinguent par des choix de mot
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-05-08</p>
+        <p class="date">2024-05-27</p>
       </div>
     </div>
     
@@ -865,36 +861,36 @@ les fondements de cette technique.</p>
 </div>
 </div>
 <p>La liste des modules à importer est assez longue, la voici :</p>
-<div id="7a96156c" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="7a96156c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="7a96156c-1"><a href="#7a96156c-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="7a96156c-2"><a href="#7a96156c-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7a96156c-3"><a href="#7a96156c-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span>
-<span id="7a96156c-4"><a href="#7a96156c-4" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span>
-<span id="7a96156c-5"><a href="#7a96156c-5" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"genesis"</span>)</span>
-<span id="7a96156c-6"><a href="#7a96156c-6" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"wordnet"</span>)</span>
-<span id="7a96156c-7"><a href="#7a96156c-7" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"omw-1.4"</span>)</span>
-<span id="7a96156c-8"><a href="#7a96156c-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7a96156c-9"><a href="#7a96156c-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np  <span class="co"># linear algebra</span></span>
-<span id="7a96156c-10"><a href="#7a96156c-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd  <span class="co"># data processing, CSV file I/O (e.g. pd.read_csv)</span></span>
-<span id="7a96156c-11"><a href="#7a96156c-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="7a96156c-12"><a href="#7a96156c-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud</span>
-<span id="7a96156c-13"><a href="#7a96156c-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7a96156c-14"><a href="#7a96156c-14" aria-hidden="true" tabindex="-1"></a><span class="co"># from IPython.display import display</span></span>
-<span id="7a96156c-15"><a href="#7a96156c-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64</span>
-<span id="7a96156c-16"><a href="#7a96156c-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
-<span id="7a96156c-17"><a href="#7a96156c-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="7a96156c-18"><a href="#7a96156c-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="7a96156c-19"><a href="#7a96156c-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7a96156c-20"><a href="#7a96156c-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="7a96156c-21"><a href="#7a96156c-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
-<span id="7a96156c-22"><a href="#7a96156c-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7a96156c-23"><a href="#7a96156c-23" aria-hidden="true" tabindex="-1"></a><span class="co"># from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS as stopwords</span></span>
-<span id="7a96156c-24"><a href="#7a96156c-24" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> log_loss</span>
-<span id="7a96156c-25"><a href="#7a96156c-25" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="7a96156c-26"><a href="#7a96156c-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="7a96156c-27"><a href="#7a96156c-27" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
-<span id="7a96156c-28"><a href="#7a96156c-28" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer, CountVectorizer</span>
-<span id="7a96156c-29"><a href="#7a96156c-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> NMF, LatentDirichletAllocation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f424a034" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="f424a034"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f424a034-1"><a href="#f424a034-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="f424a034-2"><a href="#f424a034-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f424a034-3"><a href="#f424a034-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span>
+<span id="f424a034-4"><a href="#f424a034-4" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"punkt"</span>)</span>
+<span id="f424a034-5"><a href="#f424a034-5" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"genesis"</span>)</span>
+<span id="f424a034-6"><a href="#f424a034-6" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"wordnet"</span>)</span>
+<span id="f424a034-7"><a href="#f424a034-7" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"omw-1.4"</span>)</span>
+<span id="f424a034-8"><a href="#f424a034-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f424a034-9"><a href="#f424a034-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np  <span class="co"># linear algebra</span></span>
+<span id="f424a034-10"><a href="#f424a034-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd  <span class="co"># data processing, CSV file I/O (e.g. pd.read_csv)</span></span>
+<span id="f424a034-11"><a href="#f424a034-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="f424a034-12"><a href="#f424a034-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud</span>
+<span id="f424a034-13"><a href="#f424a034-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f424a034-14"><a href="#f424a034-14" aria-hidden="true" tabindex="-1"></a><span class="co"># from IPython.display import display</span></span>
+<span id="f424a034-15"><a href="#f424a034-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64</span>
+<span id="f424a034-16"><a href="#f424a034-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
+<span id="f424a034-17"><a href="#f424a034-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="f424a034-18"><a href="#f424a034-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="f424a034-19"><a href="#f424a034-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f424a034-20"><a href="#f424a034-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="f424a034-21"><a href="#f424a034-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="f424a034-22"><a href="#f424a034-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f424a034-23"><a href="#f424a034-23" aria-hidden="true" tabindex="-1"></a><span class="co"># from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS as stopwords</span></span>
+<span id="f424a034-24"><a href="#f424a034-24" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> log_loss</span>
+<span id="f424a034-25"><a href="#f424a034-25" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="f424a034-26"><a href="#f424a034-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f424a034-27"><a href="#f424a034-27" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="f424a034-28"><a href="#f424a034-28" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer, CountVectorizer</span>
+<span id="f424a034-29"><a href="#f424a034-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> NMF, LatentDirichletAllocation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to /github/home/nltk_data...
 [nltk_data]   Package stopwords is already up-to-date!
@@ -914,21 +910,21 @@ les fondements de cette technique.</p>
 <p><em>Si vous avez déjà lu la section précédente et importé les données, vous
 pouvez passer à la section suivante</em></p>
 <p>Le code suivant permet d’importer le jeu de données <code>spooky</code>:</p>
-<div id="8292cf25" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="8292cf25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8292cf25-1"><a href="#8292cf25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="8292cf25-2"><a href="#8292cf25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8292cf25-3"><a href="#8292cf25-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv"</span></span>
-<span id="8292cf25-4"><a href="#8292cf25-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="8292cf25-5"><a href="#8292cf25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8292cf25-6"><a href="#8292cf25-6" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> pd.read_csv(url, encoding<span class="op">=</span><span class="st">"latin-1"</span>)</span>
-<span id="8292cf25-7"><a href="#8292cf25-7" aria-hidden="true" tabindex="-1"></a>train.columns <span class="op">=</span> train.columns.<span class="bu">str</span>.capitalize()</span>
-<span id="8292cf25-8"><a href="#8292cf25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="8292cf25-9"><a href="#8292cf25-9" aria-hidden="true" tabindex="-1"></a>train[<span class="st">"ID"</span>] <span class="op">=</span> train[<span class="st">"Id"</span>].<span class="bu">str</span>.replace(<span class="st">"id"</span>, <span class="st">""</span>)</span>
-<span id="8292cf25-10"><a href="#8292cf25-10" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> train.set_index(<span class="st">"Id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="58bff10d" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="58bff10d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="58bff10d-1"><a href="#58bff10d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="58bff10d-2"><a href="#58bff10d-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="58bff10d-3"><a href="#58bff10d-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv"</span></span>
+<span id="58bff10d-4"><a href="#58bff10d-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="58bff10d-5"><a href="#58bff10d-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="58bff10d-6"><a href="#58bff10d-6" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> pd.read_csv(url, encoding<span class="op">=</span><span class="st">"latin-1"</span>)</span>
+<span id="58bff10d-7"><a href="#58bff10d-7" aria-hidden="true" tabindex="-1"></a>train.columns <span class="op">=</span> train.columns.<span class="bu">str</span>.capitalize()</span>
+<span id="58bff10d-8"><a href="#58bff10d-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="58bff10d-9"><a href="#58bff10d-9" aria-hidden="true" tabindex="-1"></a>train[<span class="st">"ID"</span>] <span class="op">=</span> train[<span class="st">"Id"</span>].<span class="bu">str</span>.replace(<span class="st">"id"</span>, <span class="st">""</span>)</span>
+<span id="58bff10d-10"><a href="#58bff10d-10" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> train.set_index(<span class="st">"Id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le jeu de données met ainsi en regard un auteur avec une phrase qu’il a écrite:</p>
-<div id="9c558c49" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="9c558c49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9c558c49-1"><a href="#9c558c49-1" aria-hidden="true" tabindex="-1"></a>train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e2f235ab" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="e2f235ab"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e2f235ab-1"><a href="#e2f235ab-1" aria-hidden="true" tabindex="-1"></a>train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 <div>
@@ -993,26 +989,26 @@ pouvez passer à la section suivante</em></p>
 <li>Retirer la ponctuation et les stopwords</li>
 <li>Lemmatiser le texte</li>
 </ol>
-<div id="6be22eed" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="6be22eed"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6be22eed-1"><a href="#6be22eed-1" aria-hidden="true" tabindex="-1"></a>lemma <span class="op">=</span> WordNetLemmatizer()</span>
-<span id="6be22eed-2"><a href="#6be22eed-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="6be22eed-3"><a href="#6be22eed-3" aria-hidden="true" tabindex="-1"></a>train_clean <span class="op">=</span> (</span>
-<span id="6be22eed-4"><a href="#6be22eed-4" aria-hidden="true" tabindex="-1"></a>    train.groupby([<span class="st">"ID"</span>, <span class="st">"Author"</span>])</span>
-<span id="6be22eed-5"><a href="#6be22eed-5" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> s: nltk.word_tokenize(<span class="st">" "</span>.join(s[<span class="st">"Text"</span>])))</span>
-<span id="6be22eed-6"><a href="#6be22eed-6" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> words: [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()])</span>
-<span id="6be22eed-7"><a href="#6be22eed-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="6be22eed-8"><a href="#6be22eed-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="6be22eed-9"><a href="#6be22eed-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="6be22eed-10"><a href="#6be22eed-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="6be22eed-11"><a href="#6be22eed-11" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">"english"</span>))</span>
-<span id="6be22eed-12"><a href="#6be22eed-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="6be22eed-13"><a href="#6be22eed-13" aria-hidden="true" tabindex="-1"></a>train_clean <span class="op">=</span> train_clean.<span class="bu">apply</span>(</span>
-<span id="6be22eed-14"><a href="#6be22eed-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> words: [lemma.lemmatize(w) <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> <span class="kw">not</span> w <span class="kw">in</span> stop_words]</span>
-<span id="6be22eed-15"><a href="#6be22eed-15" aria-hidden="true" tabindex="-1"></a>).reset_index(name<span class="op">=</span><span class="st">"tokenized"</span>)</span>
-<span id="6be22eed-16"><a href="#6be22eed-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="6be22eed-17"><a href="#6be22eed-17" aria-hidden="true" tabindex="-1"></a>train_clean.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ba6d5d6b" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="ba6d5d6b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ba6d5d6b-1"><a href="#ba6d5d6b-1" aria-hidden="true" tabindex="-1"></a>lemma <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="ba6d5d6b-2"><a href="#ba6d5d6b-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ba6d5d6b-3"><a href="#ba6d5d6b-3" aria-hidden="true" tabindex="-1"></a>train_clean <span class="op">=</span> (</span>
+<span id="ba6d5d6b-4"><a href="#ba6d5d6b-4" aria-hidden="true" tabindex="-1"></a>    train.groupby([<span class="st">"ID"</span>, <span class="st">"Author"</span>])</span>
+<span id="ba6d5d6b-5"><a href="#ba6d5d6b-5" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> s: nltk.word_tokenize(<span class="st">" "</span>.join(s[<span class="st">"Text"</span>])))</span>
+<span id="ba6d5d6b-6"><a href="#ba6d5d6b-6" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> words: [word <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()])</span>
+<span id="ba6d5d6b-7"><a href="#ba6d5d6b-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="ba6d5d6b-8"><a href="#ba6d5d6b-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ba6d5d6b-9"><a href="#ba6d5d6b-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="ba6d5d6b-10"><a href="#ba6d5d6b-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ba6d5d6b-11"><a href="#ba6d5d6b-11" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">"english"</span>))</span>
+<span id="ba6d5d6b-12"><a href="#ba6d5d6b-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ba6d5d6b-13"><a href="#ba6d5d6b-13" aria-hidden="true" tabindex="-1"></a>train_clean <span class="op">=</span> train_clean.<span class="bu">apply</span>(</span>
+<span id="ba6d5d6b-14"><a href="#ba6d5d6b-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> words: [lemma.lemmatize(w) <span class="cf">for</span> w <span class="kw">in</span> words <span class="cf">if</span> <span class="kw">not</span> w <span class="kw">in</span> stop_words]</span>
+<span id="ba6d5d6b-15"><a href="#ba6d5d6b-15" aria-hidden="true" tabindex="-1"></a>).reset_index(name<span class="op">=</span><span class="st">"tokenized"</span>)</span>
+<span id="ba6d5d6b-16"><a href="#ba6d5d6b-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ba6d5d6b-17"><a href="#ba6d5d6b-17" aria-hidden="true" tabindex="-1"></a>train_clean.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_5736/2725603950.py:5: DeprecationWarning:
+<pre><code>/tmp/ipykernel_5672/2725603950.py:5: DeprecationWarning:
 
 DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
 </code></pre>
@@ -1212,8 +1208,8 @@ dans un modèle de mélange.</p>
 </ul>
 <p>En fait, le principe de la LDA est de construire ces deux matrices à partir des fréquences d’apparition des mots dans le texte.</p>
 <p>On va se concentrer sur Edgar Allan Poe.</p>
-<div id="b5211f9d" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="b5211f9d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b5211f9d-1"><a href="#b5211f9d-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> train_clean[train_clean[<span class="st">"Author"</span>] <span class="op">==</span> <span class="st">"EAP"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e1e6f38a" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="e1e6f38a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e1e6f38a-1"><a href="#e1e6f38a-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> train_clean[train_clean[<span class="st">"Author"</span>] <span class="op">==</span> <span class="st">"EAP"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="entraîner-une-lda" class="level1" data-number="4">
@@ -1225,46 +1221,46 @@ Comme expliqué dans la partie <a href="#modelisation">modélisation</a> :</p>
 <li>On initialise le modèle ;</li>
 <li>On le met à jour avec la méthode <code>fit</code>.</li>
 </ol>
-<div id="de5c2e76" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="de5c2e76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="de5c2e76-1"><a href="#de5c2e76-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
-<span id="de5c2e76-2"><a href="#de5c2e76-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> LatentDirichletAllocation</span>
-<span id="de5c2e76-3"><a href="#de5c2e76-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="de5c2e76-4"><a href="#de5c2e76-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialise the count vectorizer with the English stop words</span></span>
-<span id="de5c2e76-5"><a href="#de5c2e76-5" aria-hidden="true" tabindex="-1"></a>count_vectorizer <span class="op">=</span> CountVectorizer(</span>
-<span id="de5c2e76-6"><a href="#de5c2e76-6" aria-hidden="true" tabindex="-1"></a>    stop_words<span class="op">=</span><span class="st">"english"</span></span>
-<span id="de5c2e76-7"><a href="#de5c2e76-7" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># Fit and transform the processed titles</span></span>
-<span id="de5c2e76-8"><a href="#de5c2e76-8" aria-hidden="true" tabindex="-1"></a>count_data <span class="op">=</span> count_vectorizer.fit_transform(</span>
-<span id="de5c2e76-9"><a href="#de5c2e76-9" aria-hidden="true" tabindex="-1"></a>    corpus[<span class="st">"tokenized"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="st">" "</span>.join(s))</span>
-<span id="de5c2e76-10"><a href="#de5c2e76-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="de5c2e76-11"><a href="#de5c2e76-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="de5c2e76-12"><a href="#de5c2e76-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Tweak the two parameters below</span></span>
-<span id="de5c2e76-13"><a href="#de5c2e76-13" aria-hidden="true" tabindex="-1"></a>number_topics <span class="op">=</span> <span class="dv">5</span></span>
-<span id="de5c2e76-14"><a href="#de5c2e76-14" aria-hidden="true" tabindex="-1"></a>number_words <span class="op">=</span> <span class="dv">10</span>  <span class="co"># Create and fit the LDA model</span></span>
-<span id="de5c2e76-15"><a href="#de5c2e76-15" aria-hidden="true" tabindex="-1"></a>lda <span class="op">=</span> LatentDirichletAllocation(</span>
-<span id="de5c2e76-16"><a href="#de5c2e76-16" aria-hidden="true" tabindex="-1"></a>    n_components<span class="op">=</span><span class="dv">11</span>,</span>
-<span id="de5c2e76-17"><a href="#de5c2e76-17" aria-hidden="true" tabindex="-1"></a>    max_iter<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="de5c2e76-18"><a href="#de5c2e76-18" aria-hidden="true" tabindex="-1"></a>    learning_method<span class="op">=</span><span class="st">"online"</span>,</span>
-<span id="de5c2e76-19"><a href="#de5c2e76-19" aria-hidden="true" tabindex="-1"></a>    learning_offset<span class="op">=</span><span class="fl">50.0</span>,</span>
-<span id="de5c2e76-20"><a href="#de5c2e76-20" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="de5c2e76-21"><a href="#de5c2e76-21" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="de5c2e76-22"><a href="#de5c2e76-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="de5c2e76-23"><a href="#de5c2e76-23" aria-hidden="true" tabindex="-1"></a>lda.fit(count_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b9f4c028" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="b9f4c028"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="b9f4c028-1"><a href="#b9f4c028-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
+<span id="b9f4c028-2"><a href="#b9f4c028-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> LatentDirichletAllocation</span>
+<span id="b9f4c028-3"><a href="#b9f4c028-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b9f4c028-4"><a href="#b9f4c028-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialise the count vectorizer with the English stop words</span></span>
+<span id="b9f4c028-5"><a href="#b9f4c028-5" aria-hidden="true" tabindex="-1"></a>count_vectorizer <span class="op">=</span> CountVectorizer(</span>
+<span id="b9f4c028-6"><a href="#b9f4c028-6" aria-hidden="true" tabindex="-1"></a>    stop_words<span class="op">=</span><span class="st">"english"</span></span>
+<span id="b9f4c028-7"><a href="#b9f4c028-7" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># Fit and transform the processed titles</span></span>
+<span id="b9f4c028-8"><a href="#b9f4c028-8" aria-hidden="true" tabindex="-1"></a>count_data <span class="op">=</span> count_vectorizer.fit_transform(</span>
+<span id="b9f4c028-9"><a href="#b9f4c028-9" aria-hidden="true" tabindex="-1"></a>    corpus[<span class="st">"tokenized"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="st">" "</span>.join(s))</span>
+<span id="b9f4c028-10"><a href="#b9f4c028-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="b9f4c028-11"><a href="#b9f4c028-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="b9f4c028-12"><a href="#b9f4c028-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Tweak the two parameters below</span></span>
+<span id="b9f4c028-13"><a href="#b9f4c028-13" aria-hidden="true" tabindex="-1"></a>number_topics <span class="op">=</span> <span class="dv">5</span></span>
+<span id="b9f4c028-14"><a href="#b9f4c028-14" aria-hidden="true" tabindex="-1"></a>number_words <span class="op">=</span> <span class="dv">10</span>  <span class="co"># Create and fit the LDA model</span></span>
+<span id="b9f4c028-15"><a href="#b9f4c028-15" aria-hidden="true" tabindex="-1"></a>lda <span class="op">=</span> LatentDirichletAllocation(</span>
+<span id="b9f4c028-16"><a href="#b9f4c028-16" aria-hidden="true" tabindex="-1"></a>    n_components<span class="op">=</span><span class="dv">11</span>,</span>
+<span id="b9f4c028-17"><a href="#b9f4c028-17" aria-hidden="true" tabindex="-1"></a>    max_iter<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="b9f4c028-18"><a href="#b9f4c028-18" aria-hidden="true" tabindex="-1"></a>    learning_method<span class="op">=</span><span class="st">"online"</span>,</span>
+<span id="b9f4c028-19"><a href="#b9f4c028-19" aria-hidden="true" tabindex="-1"></a>    learning_offset<span class="op">=</span><span class="fl">50.0</span>,</span>
+<span id="b9f4c028-20"><a href="#b9f4c028-20" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="b9f4c028-21"><a href="#b9f4c028-21" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="b9f4c028-22"><a href="#b9f4c028-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="b9f4c028-23"><a href="#b9f4c028-23" aria-hidden="true" tabindex="-1"></a>lda.fit(count_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="visualiser-les-résultats" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Visualiser les résultats</h1>
 <p>On peut déjà commencer par utiliser une fonction pour afficher les
 résultats :</p>
-<div id="84624b1f" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="84624b1f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="84624b1f-1"><a href="#84624b1f-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper function</span></span>
-<span id="84624b1f-2"><a href="#84624b1f-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_topics(model, count_vectorizer, n_top_words):</span>
-<span id="84624b1f-3"><a href="#84624b1f-3" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> count_vectorizer.get_feature_names_out()</span>
-<span id="84624b1f-4"><a href="#84624b1f-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> topic_idx, topic <span class="kw">in</span> <span class="bu">enumerate</span>(model.components_):</span>
-<span id="84624b1f-5"><a href="#84624b1f-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Topic #</span><span class="sc">%d</span><span class="st">:"</span> <span class="op">%</span> topic_idx)</span>
-<span id="84624b1f-6"><a href="#84624b1f-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">" "</span>.join([words[i] <span class="cf">for</span> i <span class="kw">in</span> topic.argsort()[: <span class="op">-</span>n_top_words <span class="op">-</span> <span class="dv">1</span> : <span class="op">-</span><span class="dv">1</span>]]))</span>
-<span id="84624b1f-7"><a href="#84624b1f-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="84624b1f-8"><a href="#84624b1f-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="84624b1f-9"><a href="#84624b1f-9" aria-hidden="true" tabindex="-1"></a>print_topics(lda, count_vectorizer, number_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="40a9a115" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="40a9a115"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="40a9a115-1"><a href="#40a9a115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper function</span></span>
+<span id="40a9a115-2"><a href="#40a9a115-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_topics(model, count_vectorizer, n_top_words):</span>
+<span id="40a9a115-3"><a href="#40a9a115-3" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> count_vectorizer.get_feature_names_out()</span>
+<span id="40a9a115-4"><a href="#40a9a115-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> topic_idx, topic <span class="kw">in</span> <span class="bu">enumerate</span>(model.components_):</span>
+<span id="40a9a115-5"><a href="#40a9a115-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Topic #</span><span class="sc">%d</span><span class="st">:"</span> <span class="op">%</span> topic_idx)</span>
+<span id="40a9a115-6"><a href="#40a9a115-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">" "</span>.join([words[i] <span class="cf">for</span> i <span class="kw">in</span> topic.argsort()[: <span class="op">-</span>n_top_words <span class="op">-</span> <span class="dv">1</span> : <span class="op">-</span><span class="dv">1</span>]]))</span>
+<span id="40a9a115-7"><a href="#40a9a115-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="40a9a115-8"><a href="#40a9a115-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="40a9a115-9"><a href="#40a9a115-9" aria-hidden="true" tabindex="-1"></a>print_topics(lda, count_vectorizer, number_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Topic #0:
@@ -1303,39 +1299,39 @@ eye know heart saw character far tell oh voice wall</code></pre>
 </div>
 <p>La représentation sous forme de liste de mots n’est pas la plus pratique…</p>
 <p>On peut essayer de se représenter un <em>wordcloud</em> de chaque sujet pour mieux voir si cette piste est pertinente :</p>
-<div id="e4b0e656" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="e4b0e656"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e4b0e656-1"><a href="#e4b0e656-1" aria-hidden="true" tabindex="-1"></a>tf_feature_names <span class="op">=</span> count_vectorizer.get_feature_names_out()</span>
-<span id="e4b0e656-2"><a href="#e4b0e656-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-3"><a href="#e4b0e656-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-4"><a href="#e4b0e656-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wordcloud_lda(lda, tf_feature_names):</span>
-<span id="e4b0e656-5"><a href="#e4b0e656-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-6"><a href="#e4b0e656-6" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="bu">len</span>(lda.components_) <span class="op">//</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">1</span>, <span class="dv">3</span>)</span>
-<span id="e4b0e656-7"><a href="#e4b0e656-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-8"><a href="#e4b0e656-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(lda.components_)):</span>
-<span id="e4b0e656-9"><a href="#e4b0e656-9" aria-hidden="true" tabindex="-1"></a>        corpus_lda <span class="op">=</span> lda.components_[i]</span>
-<span id="e4b0e656-10"><a href="#e4b0e656-10" aria-hidden="true" tabindex="-1"></a>        first_topic_words <span class="op">=</span> [</span>
-<span id="e4b0e656-11"><a href="#e4b0e656-11" aria-hidden="true" tabindex="-1"></a>            tf_feature_names[l] <span class="cf">for</span> l <span class="kw">in</span> corpus_lda.argsort()[: <span class="op">-</span><span class="dv">50</span> <span class="op">-</span> <span class="dv">1</span> : <span class="op">-</span><span class="dv">1</span>]</span>
-<span id="e4b0e656-12"><a href="#e4b0e656-12" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="e4b0e656-13"><a href="#e4b0e656-13" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> i <span class="op">//</span> <span class="dv">3</span></span>
-<span id="e4b0e656-14"><a href="#e4b0e656-14" aria-hidden="true" tabindex="-1"></a>        j <span class="op">=</span> i <span class="op">-</span> k <span class="op">*</span> <span class="dv">3</span></span>
-<span id="e4b0e656-15"><a href="#e4b0e656-15" aria-hidden="true" tabindex="-1"></a>        wordcloud <span class="op">=</span> WordCloud(</span>
-<span id="e4b0e656-16"><a href="#e4b0e656-16" aria-hidden="true" tabindex="-1"></a>            stopwords<span class="op">=</span>stop_words, background_color<span class="op">=</span><span class="st">"black"</span>, width<span class="op">=</span><span class="dv">2500</span>, height<span class="op">=</span><span class="dv">1800</span></span>
-<span id="e4b0e656-17"><a href="#e4b0e656-17" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="e4b0e656-18"><a href="#e4b0e656-18" aria-hidden="true" tabindex="-1"></a>        wordcloud <span class="op">=</span> wordcloud.generate(<span class="st">" "</span>.join(first_topic_words))</span>
-<span id="e4b0e656-19"><a href="#e4b0e656-19" aria-hidden="true" tabindex="-1"></a>        axs[k][j].set_title(<span class="st">"Wordcloud pour le </span><span class="ch">\n</span><span class="st">sujet </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(i))</span>
-<span id="e4b0e656-20"><a href="#e4b0e656-20" aria-hidden="true" tabindex="-1"></a>        axs[k][j].axis(<span class="st">"off"</span>)</span>
-<span id="e4b0e656-21"><a href="#e4b0e656-21" aria-hidden="true" tabindex="-1"></a>        axs[k][j].imshow(wordcloud)</span>
-<span id="e4b0e656-22"><a href="#e4b0e656-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-23"><a href="#e4b0e656-23" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="bu">len</span>(lda.components_) <span class="op">%</span> <span class="dv">3</span></span>
-<span id="e4b0e656-24"><a href="#e4b0e656-24" aria-hidden="true" tabindex="-1"></a>    [</span>
-<span id="e4b0e656-25"><a href="#e4b0e656-25" aria-hidden="true" tabindex="-1"></a>        fig.delaxes(axs[<span class="bu">len</span>(lda.components_) <span class="op">//</span> <span class="dv">3</span>, k <span class="op">-</span> <span class="dv">1</span>])</span>
-<span id="e4b0e656-26"><a href="#e4b0e656-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(r <span class="op">+</span> <span class="dv">1</span>, <span class="dv">3</span> <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="e4b0e656-27"><a href="#e4b0e656-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">!=</span> <span class="dv">0</span></span>
-<span id="e4b0e656-28"><a href="#e4b0e656-28" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="e4b0e656-29"><a href="#e4b0e656-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-30"><a href="#e4b0e656-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e4b0e656-31"><a href="#e4b0e656-31" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> wordcloud_lda(lda, tf_feature_names)</span>
-<span id="e4b0e656-32"><a href="#e4b0e656-32" aria-hidden="true" tabindex="-1"></a>wc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ac4f4cfb" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="ac4f4cfb"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="ac4f4cfb-1"><a href="#ac4f4cfb-1" aria-hidden="true" tabindex="-1"></a>tf_feature_names <span class="op">=</span> count_vectorizer.get_feature_names_out()</span>
+<span id="ac4f4cfb-2"><a href="#ac4f4cfb-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-3"><a href="#ac4f4cfb-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-4"><a href="#ac4f4cfb-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wordcloud_lda(lda, tf_feature_names):</span>
+<span id="ac4f4cfb-5"><a href="#ac4f4cfb-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-6"><a href="#ac4f4cfb-6" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="bu">len</span>(lda.components_) <span class="op">//</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">1</span>, <span class="dv">3</span>)</span>
+<span id="ac4f4cfb-7"><a href="#ac4f4cfb-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-8"><a href="#ac4f4cfb-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(lda.components_)):</span>
+<span id="ac4f4cfb-9"><a href="#ac4f4cfb-9" aria-hidden="true" tabindex="-1"></a>        corpus_lda <span class="op">=</span> lda.components_[i]</span>
+<span id="ac4f4cfb-10"><a href="#ac4f4cfb-10" aria-hidden="true" tabindex="-1"></a>        first_topic_words <span class="op">=</span> [</span>
+<span id="ac4f4cfb-11"><a href="#ac4f4cfb-11" aria-hidden="true" tabindex="-1"></a>            tf_feature_names[l] <span class="cf">for</span> l <span class="kw">in</span> corpus_lda.argsort()[: <span class="op">-</span><span class="dv">50</span> <span class="op">-</span> <span class="dv">1</span> : <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="ac4f4cfb-12"><a href="#ac4f4cfb-12" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="ac4f4cfb-13"><a href="#ac4f4cfb-13" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> i <span class="op">//</span> <span class="dv">3</span></span>
+<span id="ac4f4cfb-14"><a href="#ac4f4cfb-14" aria-hidden="true" tabindex="-1"></a>        j <span class="op">=</span> i <span class="op">-</span> k <span class="op">*</span> <span class="dv">3</span></span>
+<span id="ac4f4cfb-15"><a href="#ac4f4cfb-15" aria-hidden="true" tabindex="-1"></a>        wordcloud <span class="op">=</span> WordCloud(</span>
+<span id="ac4f4cfb-16"><a href="#ac4f4cfb-16" aria-hidden="true" tabindex="-1"></a>            stopwords<span class="op">=</span>stop_words, background_color<span class="op">=</span><span class="st">"black"</span>, width<span class="op">=</span><span class="dv">2500</span>, height<span class="op">=</span><span class="dv">1800</span></span>
+<span id="ac4f4cfb-17"><a href="#ac4f4cfb-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="ac4f4cfb-18"><a href="#ac4f4cfb-18" aria-hidden="true" tabindex="-1"></a>        wordcloud <span class="op">=</span> wordcloud.generate(<span class="st">" "</span>.join(first_topic_words))</span>
+<span id="ac4f4cfb-19"><a href="#ac4f4cfb-19" aria-hidden="true" tabindex="-1"></a>        axs[k][j].set_title(<span class="st">"Wordcloud pour le </span><span class="ch">\n</span><span class="st">sujet </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(i))</span>
+<span id="ac4f4cfb-20"><a href="#ac4f4cfb-20" aria-hidden="true" tabindex="-1"></a>        axs[k][j].axis(<span class="st">"off"</span>)</span>
+<span id="ac4f4cfb-21"><a href="#ac4f4cfb-21" aria-hidden="true" tabindex="-1"></a>        axs[k][j].imshow(wordcloud)</span>
+<span id="ac4f4cfb-22"><a href="#ac4f4cfb-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-23"><a href="#ac4f4cfb-23" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="bu">len</span>(lda.components_) <span class="op">%</span> <span class="dv">3</span></span>
+<span id="ac4f4cfb-24"><a href="#ac4f4cfb-24" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="ac4f4cfb-25"><a href="#ac4f4cfb-25" aria-hidden="true" tabindex="-1"></a>        fig.delaxes(axs[<span class="bu">len</span>(lda.components_) <span class="op">//</span> <span class="dv">3</span>, k <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="ac4f4cfb-26"><a href="#ac4f4cfb-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(r <span class="op">+</span> <span class="dv">1</span>, <span class="dv">3</span> <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="ac4f4cfb-27"><a href="#ac4f4cfb-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">!=</span> <span class="dv">0</span></span>
+<span id="ac4f4cfb-28"><a href="#ac4f4cfb-28" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="ac4f4cfb-29"><a href="#ac4f4cfb-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-30"><a href="#ac4f4cfb-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="ac4f4cfb-31"><a href="#ac4f4cfb-31" aria-hidden="true" tabindex="-1"></a>wc <span class="op">=</span> wordcloud_lda(lda, tf_feature_names)</span>
+<span id="ac4f4cfb-32"><a href="#ac4f4cfb-32" aria-hidden="true" tabindex="-1"></a>wc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1344,8 +1340,8 @@ eye know heart saw character far tell oh voice wall</code></pre>
 </div>
 </div>
 </div>
-<div id="8cfe5523" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="8cfe5523"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="8cfe5523-1"><a href="#8cfe5523-1" aria-hidden="true" tabindex="-1"></a>wc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="91be9b39" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="91be9b39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="91be9b39-1"><a href="#91be9b39-1" aria-hidden="true" tabindex="-1"></a>wc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le module <code>pyLDAvis</code> offre quelques visualisations bien pratiques lorsqu’on
 désire représenter de manière synthétique les résultats d’une LDA et observer la distribution sujet x mots.</p>
@@ -1363,14 +1359,14 @@ Windows ne supporte pas. Sur un système <code>Unix</code> (Linux, Mac OS), on p
 argument.</p>
 </div>
 </div>
-<div id="859c1c88" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="859c1c88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="859c1c88-1"><a href="#859c1c88-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install pyLDAvis #à faire en haut du notebook sur colab</span></span>
-<span id="859c1c88-2"><a href="#859c1c88-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyLDAvis</span>
-<span id="859c1c88-3"><a href="#859c1c88-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyLDAvis.sklearn</span>
-<span id="859c1c88-4"><a href="#859c1c88-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="859c1c88-5"><a href="#859c1c88-5" aria-hidden="true" tabindex="-1"></a><span class="co"># pyLDAvis.enable_notebook()</span></span>
-<span id="859c1c88-6"><a href="#859c1c88-6" aria-hidden="true" tabindex="-1"></a>vis_data <span class="op">=</span> pyLDAvis.sklearn.prepare(lda, count_data, count_vectorizer, n_jobs<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="859c1c88-7"><a href="#859c1c88-7" aria-hidden="true" tabindex="-1"></a>pyLDAvis.display(vis_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="04927749" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="04927749"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="04927749-1"><a href="#04927749-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install pyLDAvis #à faire en haut du notebook sur colab</span></span>
+<span id="04927749-2"><a href="#04927749-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyLDAvis</span>
+<span id="04927749-3"><a href="#04927749-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyLDAvis.sklearn</span>
+<span id="04927749-4"><a href="#04927749-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="04927749-5"><a href="#04927749-5" aria-hidden="true" tabindex="-1"></a><span class="co"># pyLDAvis.enable_notebook()</span></span>
+<span id="04927749-6"><a href="#04927749-6" aria-hidden="true" tabindex="-1"></a>vis_data <span class="op">=</span> pyLDAvis.sklearn.prepare(lda, count_data, count_vectorizer, n_jobs<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="04927749-7"><a href="#04927749-7" aria-hidden="true" tabindex="-1"></a>pyLDAvis.display(vis_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Chaque <strong>bulle</strong> représente un sujet. Plus la bulle est grande, plus il y a de documents qui traitent de ce sujet.</li>
@@ -1392,9 +1388,9 @@ argument.</p>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-05-08</p>
+<p>Latest built version: 2024-05-27</p>
 <p>Python version used:</p>
-<div id="3ad2397b" class="cell" data-execution_count="13">
+<div id="32d895c8" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -1439,7 +1435,7 @@ argument.</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">annotated-types</td>
-<td style="text-align: left;">0.6.0</td>
+<td style="text-align: left;">0.7.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">appdirs</td>
@@ -1771,7 +1767,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">great-tables</td>
-<td style="text-align: left;">0.5.1</td>
+<td style="text-align: left;">0.6.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">greenlet</td>
@@ -1787,7 +1783,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">htmltools</td>
-<td style="text-align: left;">0.5.1</td>
+<td style="text-align: left;">0.5.2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hvac</td>
@@ -1919,7 +1915,7 @@ argument.</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">lxml</td>
-<td style="text-align: left;">5.2.1</td>
+<td style="text-align: left;">5.2.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lz4</td>
@@ -1971,7 +1967,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mizani</td>
-<td style="text-align: left;">0.11.2</td>
+<td style="text-align: left;">0.11.4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">mlflow</td>
@@ -2119,7 +2115,7 @@ argument.</p>
 </tr>
 <tr class="even">
 <td style="text-align: left;">plotnine</td>
-<td style="text-align: left;">0.13.5</td>
+<td style="text-align: left;">0.13.6</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">pluggy</td>
@@ -2291,7 +2287,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">pyzstd</td>
-<td style="text-align: left;">0.15.10</td>
+<td style="text-align: left;">0.16.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">QtPy</td>
@@ -2371,7 +2367,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">selenium</td>
-<td style="text-align: left;">4.20.0</td>
+<td style="text-align: left;">4.21.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">setuptools</td>
@@ -2467,7 +2463,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tifffile</td>
-<td style="text-align: left;">2024.5.3</td>
+<td style="text-align: left;">2024.5.22</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tomli</td>
@@ -2483,7 +2479,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">topojson</td>
-<td style="text-align: left;">1.8</td>
+<td style="text-align: left;">1.9</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tornado</td>
@@ -2499,7 +2495,7 @@ argument.</p>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">trio</td>
-<td style="text-align: left;">0.25.0</td>
+<td style="text-align: left;">0.25.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">trio-websocket</td>
@@ -2546,74 +2542,70 @@ argument.</p>
 <td style="text-align: left;">0.3.4</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">webcolors</td>
-<td style="text-align: left;">1.13</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">webdriver-manager</td>
 <td style="text-align: left;">4.0.1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">websocket-client</td>
 <td style="text-align: left;">1.7.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Werkzeug</td>
 <td style="text-align: left;">3.0.2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wheel</td>
 <td style="text-align: left;">0.43.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">widgetsnbextension</td>
 <td style="text-align: left;">4.0.10</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wordcloud</td>
 <td style="text-align: left;">1.9.3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">wrapt</td>
 <td style="text-align: left;">1.16.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">wsproto</td>
 <td style="text-align: left;">1.2.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xgboost</td>
 <td style="text-align: left;">2.0.3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">xlrd</td>
 <td style="text-align: left;">2.0.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xyzservices</td>
 <td style="text-align: left;">2024.4.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">yarl</td>
 <td style="text-align: left;">1.9.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">yellowbrick</td>
 <td style="text-align: left;">1.5</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zict</td>
 <td style="text-align: left;">3.0.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">zipp</td>
 <td style="text-align: left;">3.17.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">zstandard</td>
 <td style="text-align: left;">0.22.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;"></td>
 </tr>
@@ -3854,7 +3846,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","loop":false,"openEffect":"zoom","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
