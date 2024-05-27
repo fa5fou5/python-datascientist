@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../content/modern-ds/elastic_approfondissement.html" rel="next">
-<link href="../../content/modern-ds/dallE.html" rel="prev">
+<link href="../../content/modern-ds/continuous_integration.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -399,10 +399,6 @@ document.addEventListener('readystatechange', function() {
  <span class="dropdown-text">Intégration continue avec Python</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../content/modern-ds/dallE.html">
- <span class="dropdown-text">Génération d’images avec Python, DALL-E et StableDiffusion</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../../content/modern-ds/s3.html">
  <span class="dropdown-text">Les nouveaux modes d’accès aux données : le format parquet et les données sur le cloud</span></a>
   </li>  
@@ -526,12 +522,6 @@ document.addEventListener('readystatechange', function() {
   <div class="sidebar-item-container"> 
   <a href="../../content/modern-ds/continuous_integration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Intégration continue avec Python</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/modern-ds/dallE.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Génération d’images avec Python, DALL-E et StableDiffusion</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -823,7 +813,7 @@ Astérix ;
 Obélix ; Tailleur de menhir ;
 Assurancetourix ; Barde</code></pre>
 <p>sera ainsi organisé naturellement sous forme tabulée par <code>Python</code></p>
-<div id="7d61dd79" class="cell" data-execution_count="1">
+<div id="3115ad37" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <div>
@@ -1052,7 +1042,7 @@ exemple issu du <a href="https://www.upsolver.com/blog/apache-parquet-why-use">b
 <p>Dans notre exemple précédent, cela donnera une information prenant
 la forme suivante (ignorez l’élément <code>pyarrow.Table</code>, nous
 reviendrons dessus) :</p>
-<div id="035ab7c8" class="cell" data-execution_count="2">
+<div id="ec7d68be" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>pyarrow.Table
 nom : string
@@ -1149,28 +1139,28 @@ enrichir d’une nouvelle variable numérique
 et que nous
 allons
 convertir en objet <code>pyarrow</code> avant de l’écrire au format <code>parquet</code>:</p>
-<div id="180ae756" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="180ae756"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="180ae756-1"><a href="#180ae756-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="180ae756-2"><a href="#180ae756-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> io <span class="im">import</span> StringIO</span>
-<span id="180ae756-3"><a href="#180ae756-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa</span>
-<span id="180ae756-4"><a href="#180ae756-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.parquet <span class="im">as</span> pq</span>
-<span id="180ae756-5"><a href="#180ae756-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="180ae756-6"><a href="#180ae756-6" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"""</span></span>
-<span id="180ae756-7"><a href="#180ae756-7" aria-hidden="true" tabindex="-1"></a><span class="st">nom;cheveux;profession</span></span>
-<span id="180ae756-8"><a href="#180ae756-8" aria-hidden="true" tabindex="-1"></a><span class="st">Astérix;blond;</span></span>
-<span id="180ae756-9"><a href="#180ae756-9" aria-hidden="true" tabindex="-1"></a><span class="st">Obélix;roux;Tailleur de menhir</span></span>
-<span id="180ae756-10"><a href="#180ae756-10" aria-hidden="true" tabindex="-1"></a><span class="st">Assurancetourix;blond;Barde</span></span>
-<span id="180ae756-11"><a href="#180ae756-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
-<span id="180ae756-12"><a href="#180ae756-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="180ae756-13"><a href="#180ae756-13" aria-hidden="true" tabindex="-1"></a>source <span class="op">=</span> StringIO(s)</span>
-<span id="180ae756-14"><a href="#180ae756-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="180ae756-15"><a href="#180ae756-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(source, sep<span class="op">=</span><span class="st">";"</span>, index_col<span class="op">=</span><span class="va">False</span>)</span>
-<span id="180ae756-16"><a href="#180ae756-16" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"taille"</span>] <span class="op">=</span> [<span class="dv">155</span>, <span class="dv">190</span>, <span class="dv">175</span>]</span>
-<span id="180ae756-17"><a href="#180ae756-17" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pa.Table.from_pandas(df)</span>
-<span id="180ae756-18"><a href="#180ae756-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="180ae756-19"><a href="#180ae756-19" aria-hidden="true" tabindex="-1"></a>table</span>
-<span id="180ae756-20"><a href="#180ae756-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="180ae756-21"><a href="#180ae756-21" aria-hidden="true" tabindex="-1"></a>pq.write_table(table, <span class="st">"example.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1d68269a" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="1d68269a"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1d68269a-1"><a href="#1d68269a-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="1d68269a-2"><a href="#1d68269a-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> io <span class="im">import</span> StringIO</span>
+<span id="1d68269a-3"><a href="#1d68269a-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa</span>
+<span id="1d68269a-4"><a href="#1d68269a-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.parquet <span class="im">as</span> pq</span>
+<span id="1d68269a-5"><a href="#1d68269a-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1d68269a-6"><a href="#1d68269a-6" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> <span class="st">"""</span></span>
+<span id="1d68269a-7"><a href="#1d68269a-7" aria-hidden="true" tabindex="-1"></a><span class="st">nom;cheveux;profession</span></span>
+<span id="1d68269a-8"><a href="#1d68269a-8" aria-hidden="true" tabindex="-1"></a><span class="st">Astérix;blond;</span></span>
+<span id="1d68269a-9"><a href="#1d68269a-9" aria-hidden="true" tabindex="-1"></a><span class="st">Obélix;roux;Tailleur de menhir</span></span>
+<span id="1d68269a-10"><a href="#1d68269a-10" aria-hidden="true" tabindex="-1"></a><span class="st">Assurancetourix;blond;Barde</span></span>
+<span id="1d68269a-11"><a href="#1d68269a-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="1d68269a-12"><a href="#1d68269a-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1d68269a-13"><a href="#1d68269a-13" aria-hidden="true" tabindex="-1"></a>source <span class="op">=</span> StringIO(s)</span>
+<span id="1d68269a-14"><a href="#1d68269a-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1d68269a-15"><a href="#1d68269a-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(source, sep<span class="op">=</span><span class="st">";"</span>, index_col<span class="op">=</span><span class="va">False</span>)</span>
+<span id="1d68269a-16"><a href="#1d68269a-16" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"taille"</span>] <span class="op">=</span> [<span class="dv">155</span>, <span class="dv">190</span>, <span class="dv">175</span>]</span>
+<span id="1d68269a-17"><a href="#1d68269a-17" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pa.Table.from_pandas(df)</span>
+<span id="1d68269a-18"><a href="#1d68269a-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1d68269a-19"><a href="#1d68269a-19" aria-hidden="true" tabindex="-1"></a>table</span>
+<span id="1d68269a-20"><a href="#1d68269a-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="1d68269a-21"><a href="#1d68269a-21" aria-hidden="true" tabindex="-1"></a>pq.write_table(table, <span class="st">"example.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell markdown">
 <div class="alert alert-warning" role="alert">
@@ -1203,19 +1193,19 @@ l’argument <code>columns</code> dans <code>parquet</code>.</p>
 <p>Ensuite, avec <code>pyarrow</code>, on pourra utiliser <code>pyarrow.compute</code> pour
 effectuer des opérations directement sur une table
 <code>Arrow</code> :</p>
-<div id="2b3dd6aa" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="2b3dd6aa"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2b3dd6aa-1"><a href="#2b3dd6aa-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.compute <span class="im">as</span> pc</span>
-<span id="2b3dd6aa-2"><a href="#2b3dd6aa-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2b3dd6aa-3"><a href="#2b3dd6aa-3" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pq.read_table(<span class="st">"example.parquet"</span>, columns<span class="op">=</span>[<span class="st">"taille"</span>, <span class="st">"cheveux"</span>])</span>
-<span id="2b3dd6aa-4"><a href="#2b3dd6aa-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="2b3dd6aa-5"><a href="#2b3dd6aa-5" aria-hidden="true" tabindex="-1"></a>table.group_by(<span class="st">"cheveux"</span>).aggregate([(<span class="st">"taille"</span>, <span class="st">"mean"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="76f20777" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="76f20777"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="76f20777-1"><a href="#76f20777-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.compute <span class="im">as</span> pc</span>
+<span id="76f20777-2"><a href="#76f20777-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76f20777-3"><a href="#76f20777-3" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pq.read_table(<span class="st">"example.parquet"</span>, columns<span class="op">=</span>[<span class="st">"taille"</span>, <span class="st">"cheveux"</span>])</span>
+<span id="76f20777-4"><a href="#76f20777-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="76f20777-5"><a href="#76f20777-5" aria-hidden="true" tabindex="-1"></a>table.group_by(<span class="st">"cheveux"</span>).aggregate([(<span class="st">"taille"</span>, <span class="st">"mean"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La manière équivalente de procéder en passant
 par l’intermédiaire de <code>pandas</code> est</p>
-<div id="912f4777" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="912f4777"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="912f4777-1"><a href="#912f4777-1" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pq.read_table(<span class="st">"example.parquet"</span>, columns<span class="op">=</span>[<span class="st">"taille"</span>, <span class="st">"cheveux"</span>])</span>
-<span id="912f4777-2"><a href="#912f4777-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="912f4777-3"><a href="#912f4777-3" aria-hidden="true" tabindex="-1"></a>table.to_pandas().groupby(<span class="st">"cheveux"</span>)[<span class="st">"taille"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e591cf96" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="e591cf96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e591cf96-1"><a href="#e591cf96-1" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> pq.read_table(<span class="st">"example.parquet"</span>, columns<span class="op">=</span>[<span class="st">"taille"</span>, <span class="st">"cheveux"</span>])</span>
+<span id="e591cf96-2"><a href="#e591cf96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="e591cf96-3"><a href="#e591cf96-3" aria-hidden="true" tabindex="-1"></a>table.to_pandas().groupby(<span class="st">"cheveux"</span>)[<span class="st">"taille"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>cheveux
 blond    165.0
@@ -1639,7 +1629,7 @@ Il est néanmoins
 beaucoup plus pratique d’utiliser le format <code>parquet</code> avec <code>arrow</code>.
 Dans un premier temps, on configure le <em>filesystem</em> avec les
 fonctionalités d’<code>Arrow</code> (cf.&nbsp;précédemment).</p>
-<div id="0e975a24" class="cell" data-execution_count="7">
+<div id="5650997d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyarrow <span class="im">import</span> fs</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>s3 <span class="op">=</span> fs.S3FileSystem(endpoint_override<span class="op">=</span><span class="st">"http://"</span> <span class="op">+</span> <span class="st">"minio.lab.sspcloud.fr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -4290,8 +4280,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <input type="hidden" id="giscus-alt-theme" value="dark">
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/modern-ds/dallE.html" class="pagination-link" aria-label="Génération d'images avec Python, DALL-E et StableDiffusion">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Génération d’images avec Python, DALL-E et StableDiffusion</span>
+      <a href="../../content/modern-ds/continuous_integration.html" class="pagination-link" aria-label="Intégration continue avec Python">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Intégration continue avec Python</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -4318,7 +4308,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
