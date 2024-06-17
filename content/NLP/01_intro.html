@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lino Galiana">
-<meta name="dcterms.date" content="2024-06-14">
+<meta name="dcterms.date" content="2024-06-17">
 <meta name="description" content="Les corpus textuels étant des objets de très grande dimension où le ratio signal/bruit est faible, il est nécessaire de mettre en oeuvre une série d’étapes de nettoyage de texte. Ce chapitre va explorer quelques méthodes classiques de nettoyage en s’appuyant sur des corpus littéraires: le Comte de Monte Cristo d’Alexandre Dumas et des auteurs fantastiques anglo-saxons (Lovecraft, Poe, Shelley).">
 
 <title>Python pour la data science - Nettoyer et structurer l’information dans les données textuelles</title>
@@ -232,7 +232,7 @@ sur des corpus littéraires: le Comte de Monte Cristo d’Alexandre Dumas et des
 <meta name="citation_publication_date" content="2023">
 <meta name="citation_cover_date" content="2023">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2024-06-14">
+<meta name="citation_online_date" content="2024-06-17">
 <meta name="citation_fulltext_html_url" content="https://pythonds.linogaliana.fr/">
 <meta name="citation_doi" content="10.5281/zenodo.8229676">
 <meta name="citation_language" content="en">
@@ -580,7 +580,7 @@ sur des corpus littéraires: le Comte de Monte Cristo d’Alexandre Dumas et des
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2024-06-14</p>
+        <p class="date">2024-06-17</p>
       </div>
     </div>
     
@@ -696,7 +696,7 @@ sur des corpus littéraires: le Comte de Monte Cristo d’Alexandre Dumas et des
 <div class="sourceCode cell-code hidden" id="cb2" data-startfrom="933" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 932;"><span id="cb2-933"><a href="#cb2-933" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span></span>
 <span id="cb2-934"><a href="#cb2-934" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;details&gt;</span></span>
 <span id="cb2-935"><a href="#cb2-935" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;summary&gt;</span></span>
-<span id="cb2-936"><a href="#cb2-936" aria-hidden="true" tabindex="-1"></a><span class="vs">Pour ouvrir la version corrigée sous forme de _notebook_</span></span>
+<span id="cb2-936"><a href="#cb2-936" aria-hidden="true" tabindex="-1"></a><span class="vs">Pour ouvrir la version corrigée sous forme de &lt;i&gt;notebook&lt;/i&gt;</span></span>
 <span id="cb2-937"><a href="#cb2-937" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/summary&gt;</span></span>
 <span id="cb2-938"><a href="#cb2-938" aria-hidden="true" tabindex="-1"></a><span class="sc">${</span><span class="fu">printBadges</span>({<span class="dt">fpath</span><span class="op">:</span> path<span class="op">,</span> <span class="dt">correction</span><span class="op">:</span> <span class="kw">true</span>})<span class="sc">}</span></span>
 <span id="cb2-939"><a href="#cb2-939" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/details&gt;</span></span>
@@ -931,38 +931,38 @@ d’autres livres du domaine public.</p>
 <p>La manière la plus simple de le récupérer
 est de télécharger avec le <em>package</em> <code>request</code> le fichier texte et le retravailler
 légèrement pour ne conserver que le corpus du livre :</p>
-<div id="3b1c9b85" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="3b1c9b85"><pre class="sourceCode python code-annotation-code code-with-copy code-annotated"><code class="sourceCode python"><span id="3b1c9b85-1"><a href="#3b1c9b85-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib <span class="im">import</span> request</span>
-<span id="3b1c9b85-2"><a href="#3b1c9b85-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-3"><a href="#3b1c9b85-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/files/17989/17989-0.txt"</span></span>
-<span id="3b1c9b85-4"><a href="#3b1c9b85-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> request.urlopen(url)</span>
-<span id="3b1c9b85-5"><a href="#3b1c9b85-5" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read().decode(<span class="st">"utf8"</span>)</span>
-<span id="3b1c9b85-6"><a href="#3b1c9b85-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-7"><a href="#3b1c9b85-7" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> raw.split(</span>
-<span id="3b1c9b85-8"><a href="#3b1c9b85-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** START OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
-<span id="3b1c9b85-9"><a href="#3b1c9b85-9" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span>].split(</span>
-<span id="3b1c9b85-10"><a href="#3b1c9b85-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** END OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
-<span id="3b1c9b85-11"><a href="#3b1c9b85-11" aria-hidden="true" tabindex="-1"></a>)[</span>
-<span id="3b1c9b85-12"><a href="#3b1c9b85-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<a class="code-annotation-anchor" data-target-cell="3b1c9b85" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="3b1c9b85-13" class="code-annotation-target"><a href="#3b1c9b85-13" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="3b1c9b85-14"><a href="#3b1c9b85-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-15"><a href="#3b1c9b85-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="3b1c9b85-16"><a href="#3b1c9b85-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-17"><a href="#3b1c9b85-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-18"><a href="#3b1c9b85-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
-<span id="3b1c9b85-19"><a href="#3b1c9b85-19" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()  <span class="co"># mettre les mots en minuscule</span></span>
-<span id="3b1c9b85-20"><a href="#3b1c9b85-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="st">" "</span>.join(text.split())</span>
-<span id="3b1c9b85-21"><a href="#3b1c9b85-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span>
-<span id="3b1c9b85-22"><a href="#3b1c9b85-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-23"><a href="#3b1c9b85-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-24"><a href="#3b1c9b85-24" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> clean_text(dumas)</span>
-<span id="3b1c9b85-25"><a href="#3b1c9b85-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3b1c9b85-26"><a href="#3b1c9b85-26" aria-hidden="true" tabindex="-1"></a>dumas[<span class="dv">10000</span>:<span class="dv">10500</span>]</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d4c45d23" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="d4c45d23"><pre class="sourceCode python code-annotation-code code-with-copy code-annotated"><code class="sourceCode python"><span id="d4c45d23-1"><a href="#d4c45d23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib <span class="im">import</span> request</span>
+<span id="d4c45d23-2"><a href="#d4c45d23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-3"><a href="#d4c45d23-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/files/17989/17989-0.txt"</span></span>
+<span id="d4c45d23-4"><a href="#d4c45d23-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> request.urlopen(url)</span>
+<span id="d4c45d23-5"><a href="#d4c45d23-5" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read().decode(<span class="st">"utf8"</span>)</span>
+<span id="d4c45d23-6"><a href="#d4c45d23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-7"><a href="#d4c45d23-7" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> raw.split(</span>
+<span id="d4c45d23-8"><a href="#d4c45d23-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** START OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
+<span id="d4c45d23-9"><a href="#d4c45d23-9" aria-hidden="true" tabindex="-1"></a>)[<span class="dv">1</span>].split(</span>
+<span id="d4c45d23-10"><a href="#d4c45d23-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"*** END OF THE PROJECT GUTENBERG EBOOK LE COMTE DE MONTE-CRISTO, TOME I ***"</span></span>
+<span id="d4c45d23-11"><a href="#d4c45d23-11" aria-hidden="true" tabindex="-1"></a>)[</span>
+<span id="d4c45d23-12"><a href="#d4c45d23-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<a class="code-annotation-anchor" data-target-cell="d4c45d23" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="d4c45d23-13" class="code-annotation-target"><a href="#d4c45d23-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="d4c45d23-14"><a href="#d4c45d23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-15"><a href="#d4c45d23-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="d4c45d23-16"><a href="#d4c45d23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-17"><a href="#d4c45d23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-18"><a href="#d4c45d23-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="d4c45d23-19"><a href="#d4c45d23-19" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()  <span class="co"># mettre les mots en minuscule</span></span>
+<span id="d4c45d23-20"><a href="#d4c45d23-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="st">" "</span>.join(text.split())</span>
+<span id="d4c45d23-21"><a href="#d4c45d23-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span>
+<span id="d4c45d23-22"><a href="#d4c45d23-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-23"><a href="#d4c45d23-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-24"><a href="#d4c45d23-24" aria-hidden="true" tabindex="-1"></a>dumas <span class="op">=</span> clean_text(dumas)</span>
+<span id="d4c45d23-25"><a href="#d4c45d23-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d4c45d23-26"><a href="#d4c45d23-26" aria-hidden="true" tabindex="-1"></a>dumas[<span class="dv">10000</span>:<span class="dv">10500</span>]</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="3b1c9b85" data-target-annotation="1">1</dt>
+<dt data-target-cell="d4c45d23" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="3b1c9b85" data-code-lines="13" data-code-annotation="1">On extrait de manière un petit peu simpliste le contenu de l’ouvrage</span>
+<span data-code-cell="d4c45d23" data-code-lines="13" data-code-annotation="1">On extrait de manière un petit peu simpliste le contenu de l’ouvrage</span>
 </dd>
 </dl>
 </div>
@@ -983,22 +983,22 @@ légèrement pour ne conserver que le corpus du livre :</p>
 <a href="https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv" class="uri">https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv</a>.</p>
 <p>Le fait d’avoir un corpus confrontant plusieurs auteurs nous permettra de comprendre la manière dont les nettoyages de données textuelles favorisent les analyses comparatives.</p>
 <p>Nous pouvons utiliser le code suivant pour lire et préparer ces données:</p>
-<div id="0b9047ad" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="0b9047ad"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="0b9047ad-1"><a href="#0b9047ad-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="0b9047ad-2"><a href="#0b9047ad-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="0b9047ad-3"><a href="#0b9047ad-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv"</span></span>
-<span id="0b9047ad-4"><a href="#0b9047ad-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Import des données</span></span>
-<span id="0b9047ad-5"><a href="#0b9047ad-5" aria-hidden="true" tabindex="-1"></a>horror <span class="op">=</span> pd.read_csv(url, encoding<span class="op">=</span><span class="st">"latin-1"</span>)</span>
-<span id="0b9047ad-6"><a href="#0b9047ad-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Majuscules aux noms des colonnes</span></span>
-<span id="0b9047ad-7"><a href="#0b9047ad-7" aria-hidden="true" tabindex="-1"></a>horror.columns <span class="op">=</span> horror.columns.<span class="bu">str</span>.capitalize()</span>
-<span id="0b9047ad-8"><a href="#0b9047ad-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Retirer le prefixe id</span></span>
-<span id="0b9047ad-9"><a href="#0b9047ad-9" aria-hidden="true" tabindex="-1"></a>horror[<span class="st">"ID"</span>] <span class="op">=</span> horror[<span class="st">"Id"</span>].<span class="bu">str</span>.replace(<span class="st">"id"</span>, <span class="st">""</span>)</span>
-<span id="0b9047ad-10"><a href="#0b9047ad-10" aria-hidden="true" tabindex="-1"></a>horror <span class="op">=</span> horror.set_index(<span class="st">"Id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9136250b" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="9136250b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9136250b-1"><a href="#9136250b-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="9136250b-2"><a href="#9136250b-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="9136250b-3"><a href="#9136250b-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/GU4243-ADS/spring2018-project1-ginnyqg/raw/master/data/spooky.csv"</span></span>
+<span id="9136250b-4"><a href="#9136250b-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Import des données</span></span>
+<span id="9136250b-5"><a href="#9136250b-5" aria-hidden="true" tabindex="-1"></a>horror <span class="op">=</span> pd.read_csv(url, encoding<span class="op">=</span><span class="st">"latin-1"</span>)</span>
+<span id="9136250b-6"><a href="#9136250b-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Majuscules aux noms des colonnes</span></span>
+<span id="9136250b-7"><a href="#9136250b-7" aria-hidden="true" tabindex="-1"></a>horror.columns <span class="op">=</span> horror.columns.<span class="bu">str</span>.capitalize()</span>
+<span id="9136250b-8"><a href="#9136250b-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Retirer le prefixe id</span></span>
+<span id="9136250b-9"><a href="#9136250b-9" aria-hidden="true" tabindex="-1"></a>horror[<span class="st">"ID"</span>] <span class="op">=</span> horror[<span class="st">"Id"</span>].<span class="bu">str</span>.replace(<span class="st">"id"</span>, <span class="st">""</span>)</span>
+<span id="9136250b-10"><a href="#9136250b-10" aria-hidden="true" tabindex="-1"></a>horror <span class="op">=</span> horror.set_index(<span class="st">"Id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceCode" id="cb5" data-include="clean_text.py"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Le jeu de données met ainsi en regard un auteur avec une phrase qu’il a écrite :</p>
-<div id="89805e10" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="89805e10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="89805e10-1"><a href="#89805e10-1" aria-hidden="true" tabindex="-1"></a>horror.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="128378f2" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="128378f2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="128378f2-1"><a href="#128378f2-1" aria-hidden="true" tabindex="-1"></a>horror.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
@@ -1060,8 +1060,8 @@ légèrement pour ne conserver que le corpus du livre :</p>
 <p>On peut se rendre compte que les extraits des 3 auteurs ne sont
 pas forcément équilibrés dans le jeu de données.
 Si on utilise ultérieurement ce corpus pour de la modélisation, il sera nécessaire de tenir compte de ce déséquilibre.</p>
-<div id="6eb632dc" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="6eb632dc"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6eb632dc-1"><a href="#6eb632dc-1" aria-hidden="true" tabindex="-1"></a>(horror.value_counts(<span class="st">"Author"</span>).plot(kind<span class="op">=</span><span class="st">"barh"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2f6c2a4b" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="2f6c2a4b"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="2f6c2a4b-1"><a href="#2f6c2a4b-1" aria-hidden="true" tabindex="-1"></a>(horror.value_counts(<span class="st">"Author"</span>).plot(kind<span class="op">=</span><span class="st">"barh"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1102,7 +1102,7 @@ de manière synthétique le nombre d’occurrences du mot <em>“fear”</em> pa
 </div>
 </div>
 <p>Le comptage obtenu devrait être le suivant</p>
-<div id="aeafe136" class="cell" data-execution_count="7">
+<div id="ee17fbc3" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 <div>
@@ -1196,10 +1196,10 @@ Figure&nbsp;3.2: Répartition du terme horror dans le corpus de nos trois auteur
 </div>
 </div>
 <p>Plutôt que d’implémenter soi-même un <em>tokenizer</em> inefficace, il est plus approprié d’en appliquer un issu d’une librairie spécialisée. Historiquement, le plus simple était de prendre le <em>tokenizer</em> de <code>NLTK</code>, la librairie historique de <em>text mining</em> en <code>Python</code>:</p>
-<div id="9c6177d1" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="9c6177d1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="9c6177d1-1"><a href="#9c6177d1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
-<span id="9c6177d1-2"><a href="#9c6177d1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="9c6177d1-3"><a href="#9c6177d1-3" aria-hidden="true" tabindex="-1"></a>word_tokenize(dumas[<span class="dv">10000</span>:<span class="dv">10500</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cfe7f0f4" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cfe7f0f4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cfe7f0f4-1"><a href="#cfe7f0f4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
+<span id="cfe7f0f4-2"><a href="#cfe7f0f4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cfe7f0f4-3"><a href="#cfe7f0f4-3" aria-hidden="true" tabindex="-1"></a>word_tokenize(dumas[<span class="dv">10000</span>:<span class="dv">10500</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comme on le voit, cette librairie ne fait pas les choses dans le détail et a quelques incohérences: <code>j'y étais</code> est séparé en 4 sèmes (<code>['j', "'", 'y', 'étais']</code>) là où <code>l'acheter</code> reste un unique sème. <code>NLTK</code> est en effet une librairie anglo-saxonne et l’algorithme de séparation n’est pas toujours adapté aux règles grammaticales françaises. Il vaut mieux dans ce cas privilégier <code>SpaCy</code>, la librairie plus récente pour faire ce type de tâche. En plus d’être très bien documentée, elle est mieux adaptée pour les langues non anglo-saxonnes. En l’occurrence, comme le montre l’<a href="https://spacy.io/usage/linguistic-features#tokenization">exemple de la documentation</a> sur les <em>tokenizers</em>, l’algorithme de séparation présente un certain raffinement</p>
 <div class="quarto-figure quarto-figure-center">
@@ -1232,38 +1232,38 @@ Figure&nbsp;3.2: Répartition du terme horror dans le corpus de nos trois auteur
 <p>A ce stade, nous n’avons encore aucune appréhension de la structure de notre corpus: nombre de mots, mots les plus représentés, etc.</p>
 <p>Pour se faire une idée de la structure de notre corpus,
 on peut commencer par compter la distribution des mots dans l’oeuvre de Dumas. Commençons par le début de l’oeuvre, à savoir les 30 000 premiers mots et comptons les mots uniques:</p>
-<div id="c2f8640f" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="c2f8640f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c2f8640f-1"><a href="#c2f8640f-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="c2f8640f-2"><a href="#c2f8640f-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c2f8640f-3"><a href="#c2f8640f-3" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> nlp(dumas[:<span class="dv">30000</span>])</span>
-<span id="c2f8640f-4"><a href="#c2f8640f-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c2f8640f-5"><a href="#c2f8640f-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract tokens, convert to lowercase and filter out punctuation and spaces</span></span>
-<span id="c2f8640f-6"><a href="#c2f8640f-6" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [</span>
-<span id="c2f8640f-7"><a href="#c2f8640f-7" aria-hidden="true" tabindex="-1"></a>    token.text.lower() <span class="cf">for</span> token <span class="kw">in</span> doc <span class="cf">if</span> <span class="kw">not</span> token.is_punct <span class="kw">and</span> <span class="kw">not</span> token.is_space</span>
-<span id="c2f8640f-8"><a href="#c2f8640f-8" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="c2f8640f-9"><a href="#c2f8640f-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="c2f8640f-10"><a href="#c2f8640f-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the frequency of each token</span></span>
-<span id="c2f8640f-11"><a href="#c2f8640f-11" aria-hidden="true" tabindex="-1"></a>token_counts <span class="op">=</span> Counter(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c40af2c6" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="c40af2c6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c40af2c6-1"><a href="#c40af2c6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="c40af2c6-2"><a href="#c40af2c6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c40af2c6-3"><a href="#c40af2c6-3" aria-hidden="true" tabindex="-1"></a>doc <span class="op">=</span> nlp(dumas[:<span class="dv">30000</span>])</span>
+<span id="c40af2c6-4"><a href="#c40af2c6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c40af2c6-5"><a href="#c40af2c6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract tokens, convert to lowercase and filter out punctuation and spaces</span></span>
+<span id="c40af2c6-6"><a href="#c40af2c6-6" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [</span>
+<span id="c40af2c6-7"><a href="#c40af2c6-7" aria-hidden="true" tabindex="-1"></a>    token.text.lower() <span class="cf">for</span> token <span class="kw">in</span> doc <span class="cf">if</span> <span class="kw">not</span> token.is_punct <span class="kw">and</span> <span class="kw">not</span> token.is_space</span>
+<span id="c40af2c6-8"><a href="#c40af2c6-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="c40af2c6-9"><a href="#c40af2c6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="c40af2c6-10"><a href="#c40af2c6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the frequency of each token</span></span>
+<span id="c40af2c6-11"><a href="#c40af2c6-11" aria-hidden="true" tabindex="-1"></a>token_counts <span class="op">=</span> Counter(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nous avons déjà de nombreux mots différents dans le début de l’oeuvre.</p>
-<div id="692c26ba" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="692c26ba"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="692c26ba-1"><a href="#692c26ba-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(token_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a0889d4d" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="a0889d4d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a0889d4d-1"><a href="#a0889d4d-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(token_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>1401</code></pre>
 </div>
 </div>
 <p>Nous voyons la haute dimensionnalité du corpus puisque nous avons près de 1500 mots différents sur les 30 000 premiers mots de l’oeuvre de Dumas.</p>
-<div id="3120b199" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="3120b199"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3120b199-1"><a href="#3120b199-1" aria-hidden="true" tabindex="-1"></a>token_count_all <span class="op">=</span> <span class="bu">list</span>(token_counts.items())</span>
-<span id="3120b199-2"><a href="#3120b199-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3120b199-3"><a href="#3120b199-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DataFrame from the list of tuples</span></span>
-<span id="3120b199-4"><a href="#3120b199-4" aria-hidden="true" tabindex="-1"></a>token_count_all <span class="op">=</span> pd.DataFrame(token_count_all, columns<span class="op">=</span>[<span class="st">"word"</span>, <span class="st">"count"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d33ceb03" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="d33ceb03"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="d33ceb03-1"><a href="#d33ceb03-1" aria-hidden="true" tabindex="-1"></a>token_count_all <span class="op">=</span> <span class="bu">list</span>(token_counts.items())</span>
+<span id="d33ceb03-2"><a href="#d33ceb03-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="d33ceb03-3"><a href="#d33ceb03-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DataFrame from the list of tuples</span></span>
+<span id="d33ceb03-4"><a href="#d33ceb03-4" aria-hidden="true" tabindex="-1"></a>token_count_all <span class="op">=</span> pd.DataFrame(token_count_all, columns<span class="op">=</span>[<span class="st">"word"</span>, <span class="st">"count"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on regarde la distribution de la fréquence des mots, exercice que nous prolongerons ultérieurement en évoquant la <a href="https://fr.wikipedia.org/wiki/Loi_de_Zipf">loi de Zipf</a>, nous pouvons voir que de nombreux mots sont unique (près de la moitié des mots), que la densité de fréquence descend vite et qu’il faudrait se concentrer un peu plus sur la queue de distribution que ne le permet la figure suivante:</p>
-<div id="a14032e4" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="a14032e4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a14032e4-1"><a href="#a14032e4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
-<span id="a14032e4-2"><a href="#a14032e4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="a14032e4-3"><a href="#a14032e4-3" aria-hidden="true" tabindex="-1"></a>(ggplot(token_count_all) <span class="op">+</span> geom_histogram(aes(x<span class="op">=</span><span class="st">"count"</span>)) <span class="op">+</span> scale_x_log10())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a1e294bd" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="a1e294bd"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a1e294bd-1"><a href="#a1e294bd-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="a1e294bd-2"><a href="#a1e294bd-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a1e294bd-3"><a href="#a1e294bd-3" aria-hidden="true" tabindex="-1"></a>(ggplot(token_count_all) <span class="op">+</span> geom_histogram(aes(x<span class="op">=</span><span class="st">"count"</span>)) <span class="op">+</span> scale_x_log10())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/mamba/lib/python3.11/site-packages/plotnine/stats/stat_bin.py:109: PlotnineWarning: 'stat_bin()' using 'bins = 42'. Pick better value with 'binwidth'.</code></pre>
 </div>
@@ -1276,63 +1276,63 @@ on peut commencer par compter la distribution des mots dans l’oeuvre de Dumas.
 </div>
 </div>
 <p>Maintenant, si on regarde les 25 mots les plus fréquents, on peut voir que ceux-ci ne sont pas très intéressants pour analyser le sens de notre document:</p>
-<div id="6ff98732" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="6ff98732"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="6ff98732-1"><a href="#6ff98732-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the tokens by frequency in descending order</span></span>
-<span id="6ff98732-2"><a href="#6ff98732-2" aria-hidden="true" tabindex="-1"></a>sorted_token_counts <span class="op">=</span> token_counts.most_common(<span class="dv">25</span>)</span>
-<span id="6ff98732-3"><a href="#6ff98732-3" aria-hidden="true" tabindex="-1"></a>sorted_token_counts <span class="op">=</span> pd.DataFrame(sorted_token_counts, columns<span class="op">=</span>[<span class="st">"word"</span>, <span class="st">"count"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f195033f" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="f195033f"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f195033f-1"><a href="#f195033f-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the tokens by frequency in descending order</span></span>
+<span id="f195033f-2"><a href="#f195033f-2" aria-hidden="true" tabindex="-1"></a>sorted_token_counts <span class="op">=</span> token_counts.most_common(<span class="dv">25</span>)</span>
+<span id="f195033f-3"><a href="#f195033f-3" aria-hidden="true" tabindex="-1"></a>sorted_token_counts <span class="op">=</span> pd.DataFrame(sorted_token_counts, columns<span class="op">=</span>[<span class="st">"word"</span>, <span class="st">"count"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6ee1af36" class="cell" data-execution_count="21">
+<div id="c1b9fa47" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_5509/3224890599.py:18: MapWithoutReturnDtypeWarning: Calling `map_elements` without specifying `return_dtype` can lead to unpredictable results. Specify `return_dtype` to silence this warning.
-/tmp/ipykernel_5509/3224890599.py:23: MapWithoutReturnDtypeWarning: Calling `map_elements` without specifying `return_dtype` can lead to unpredictable results. Specify `return_dtype` to silence this warning.</code></pre>
+<pre><code>/tmp/ipykernel_5504/3224890599.py:18: MapWithoutReturnDtypeWarning: Calling `map_elements` without specifying `return_dtype` can lead to unpredictable results. Specify `return_dtype` to silence this warning.
+/tmp/ipykernel_5504/3224890599.py:23: MapWithoutReturnDtypeWarning: Calling `map_elements` without specifying `return_dtype` can lead to unpredictable results. Specify `return_dtype` to silence this warning.</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="21">
 <div>
-<div id="rdoqovalea" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="pzleeirwlp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#rdoqovalea table {
+#pzleeirwlp table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#rdoqovalea thead, tbody, tfoot, tr, td, th { border-style: none; }
+#pzleeirwlp thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#rdoqovalea p { margin: 0; padding: 0; }
- #rdoqovalea .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #rdoqovalea .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #rdoqovalea .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #rdoqovalea .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #rdoqovalea .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #rdoqovalea .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #rdoqovalea .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #rdoqovalea .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #rdoqovalea .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #rdoqovalea .gt_column_spanner_outer:first-child { padding-left: 0; }
- #rdoqovalea .gt_column_spanner_outer:last-child { padding-right: 0; }
- #rdoqovalea .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #rdoqovalea .gt_spanner_row { border-bottom-style: hidden; }
- #rdoqovalea .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #rdoqovalea .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #rdoqovalea .gt_from_md> :first-child { margin-top: 0; }
- #rdoqovalea .gt_from_md> :last-child { margin-bottom: 0; }
- #rdoqovalea .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #rdoqovalea .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #rdoqovalea .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #rdoqovalea .gt_row_group_first td { border-top-width: 2px; }
- #rdoqovalea .gt_row_group_first th { border-top-width: 2px; }
- #rdoqovalea .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #rdoqovalea .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #rdoqovalea .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #rdoqovalea .gt_left { text-align: left; }
- #rdoqovalea .gt_center { text-align: center; }
- #rdoqovalea .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #rdoqovalea .gt_font_normal { font-weight: normal; }
- #rdoqovalea .gt_font_bold { font-weight: bold; }
- #rdoqovalea .gt_font_italic { font-style: italic; }
- #rdoqovalea .gt_super { font-size: 65%; }
- #rdoqovalea .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #rdoqovalea .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#pzleeirwlp p { margin: 0; padding: 0; }
+ #pzleeirwlp .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #pzleeirwlp .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #pzleeirwlp .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #pzleeirwlp .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #pzleeirwlp .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #pzleeirwlp .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #pzleeirwlp .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #pzleeirwlp .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #pzleeirwlp .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #pzleeirwlp .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #pzleeirwlp .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #pzleeirwlp .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #pzleeirwlp .gt_spanner_row { border-bottom-style: hidden; }
+ #pzleeirwlp .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #pzleeirwlp .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #pzleeirwlp .gt_from_md> :first-child { margin-top: 0; }
+ #pzleeirwlp .gt_from_md> :last-child { margin-bottom: 0; }
+ #pzleeirwlp .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #pzleeirwlp .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #pzleeirwlp .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #pzleeirwlp .gt_row_group_first td { border-top-width: 2px; }
+ #pzleeirwlp .gt_row_group_first th { border-top-width: 2px; }
+ #pzleeirwlp .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #pzleeirwlp .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #pzleeirwlp .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #pzleeirwlp .gt_left { text-align: left; }
+ #pzleeirwlp .gt_center { text-align: center; }
+ #pzleeirwlp .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #pzleeirwlp .gt_font_normal { font-weight: normal; }
+ #pzleeirwlp .gt_font_bold { font-weight: bold; }
+ #pzleeirwlp .gt_font_italic { font-style: italic; }
+ #pzleeirwlp .gt_super { font-size: 65%; }
+ #pzleeirwlp .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #pzleeirwlp .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 
@@ -1590,15 +1590,15 @@ on peut commencer par compter la distribution des mots dans l’oeuvre de Dumas.
 </div>
 </div>
 <p>Si on représente graphiquement ce classement</p>
-<div id="c4f79c5c" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="c4f79c5c"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="c4f79c5c-1"><a href="#c4f79c5c-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="c4f79c5c-2"><a href="#c4f79c5c-2" aria-hidden="true" tabindex="-1"></a>    ggplot(sorted_token_counts, aes(x<span class="op">=</span><span class="st">"word"</span>, y<span class="op">=</span><span class="st">"count"</span>))</span>
-<span id="c4f79c5c-3"><a href="#c4f79c5c-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(stat<span class="op">=</span><span class="st">"identity"</span>, size<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
-<span id="c4f79c5c-4"><a href="#c4f79c5c-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(limits<span class="op">=</span>sorted_token_counts.sort_values(<span class="st">"count"</span>)[<span class="st">"word"</span>].tolist())</span>
-<span id="c4f79c5c-5"><a href="#c4f79c5c-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
-<span id="c4f79c5c-6"><a href="#c4f79c5c-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
-<span id="c4f79c5c-7"><a href="#c4f79c5c-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"Word Frequency"</span>, x<span class="op">=</span><span class="st">"Word"</span>, y<span class="op">=</span><span class="st">"Count"</span>)</span>
-<span id="c4f79c5c-8"><a href="#c4f79c5c-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bb7e21e0" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="bb7e21e0"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="bb7e21e0-1"><a href="#bb7e21e0-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="bb7e21e0-2"><a href="#bb7e21e0-2" aria-hidden="true" tabindex="-1"></a>    ggplot(sorted_token_counts, aes(x<span class="op">=</span><span class="st">"word"</span>, y<span class="op">=</span><span class="st">"count"</span>))</span>
+<span id="bb7e21e0-3"><a href="#bb7e21e0-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(stat<span class="op">=</span><span class="st">"identity"</span>, size<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="bb7e21e0-4"><a href="#bb7e21e0-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(limits<span class="op">=</span>sorted_token_counts.sort_values(<span class="st">"count"</span>)[<span class="st">"word"</span>].tolist())</span>
+<span id="bb7e21e0-5"><a href="#bb7e21e0-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
+<span id="bb7e21e0-6"><a href="#bb7e21e0-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
+<span id="bb7e21e0-7"><a href="#bb7e21e0-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"Word Frequency"</span>, x<span class="op">=</span><span class="st">"Word"</span>, y<span class="op">=</span><span class="st">"Count"</span>)</span>
+<span id="bb7e21e0-8"><a href="#bb7e21e0-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1640,7 +1640,7 @@ Exemple de masque pour la question 2
 <div>
 
 </div>
-<div id="cell-fig-wordcloud-spooky" class="cell quarto-layout-panel" data-execution_count="24" data-layout-ncol="2">
+<div id="cell-fig-wordcloud-spooky" class="cell quarto-layout-panel" data-layout-ncol="2" data-execution_count="24">
 <div class="quarto-layout-row">
 <div class="cell-output cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="fig-wordcloud-spooky" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -1718,44 +1718,44 @@ liée à son rang <span class="math inline">\(n_i\)</span> dans l’ordre des fr
 \mathbb{E}\bigg( f(n_i)|n_i \bigg) = \exp(\beta_0 + \beta_1 \log(n_i))
 \]</span></p>
 <p>Les modèles linéaires généralisés (GLM) permettent de faire ce type de régression. En <code>Python</code>, ils sont disponibles par le biais du <em>package</em> <code>statsmodels</code>, dont les sorties sont très inspirées des logiciels payants spécialisés dans l’économétrie comme <code>Stata</code>.</p>
-<div id="1f6b5b83" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="1f6b5b83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="1f6b5b83-1"><a href="#1f6b5b83-1" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> pd.DataFrame(</span>
-<span id="1f6b5b83-2"><a href="#1f6b5b83-2" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="1f6b5b83-3"><a href="#1f6b5b83-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"counter"</span>: horror.groupby(<span class="st">"Author"</span>)</span>
-<span id="1f6b5b83-4"><a href="#1f6b5b83-4" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="st">" "</span>.join(s[<span class="st">"Text"</span>]).split())</span>
-<span id="1f6b5b83-5"><a href="#1f6b5b83-5" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: Counter(s))</span>
-<span id="1f6b5b83-6"><a href="#1f6b5b83-6" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: s.most_common())</span>
-<span id="1f6b5b83-7"><a href="#1f6b5b83-7" aria-hidden="true" tabindex="-1"></a>        .explode()</span>
-<span id="1f6b5b83-8"><a href="#1f6b5b83-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="1f6b5b83-9"><a href="#1f6b5b83-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="1f6b5b83-10"><a href="#1f6b5b83-10" aria-hidden="true" tabindex="-1"></a>count_words[[<span class="st">"word"</span>, <span class="st">"count"</span>]] <span class="op">=</span> pd.DataFrame(</span>
-<span id="1f6b5b83-11"><a href="#1f6b5b83-11" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"counter"</span>].tolist(), index<span class="op">=</span>count_words.index</span>
-<span id="1f6b5b83-12"><a href="#1f6b5b83-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="1f6b5b83-13"><a href="#1f6b5b83-13" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.reset_index()</span>
-<span id="1f6b5b83-14"><a href="#1f6b5b83-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="1f6b5b83-15"><a href="#1f6b5b83-15" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.assign(</span>
-<span id="1f6b5b83-16"><a href="#1f6b5b83-16" aria-hidden="true" tabindex="-1"></a>    tot_mots_auteur<span class="op">=</span><span class="kw">lambda</span> x: (x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"sum"</span>)),</span>
-<span id="1f6b5b83-17"><a href="#1f6b5b83-17" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">"count"</span>] <span class="op">/</span> x[<span class="st">"tot_mots_auteur"</span>],</span>
-<span id="1f6b5b83-18"><a href="#1f6b5b83-18" aria-hidden="true" tabindex="-1"></a>    rank<span class="op">=</span><span class="kw">lambda</span> x: x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"rank"</span>, ascending<span class="op">=</span><span class="va">False</span>),</span>
-<span id="1f6b5b83-19"><a href="#1f6b5b83-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="139ae0d9" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="139ae0d9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="139ae0d9-1"><a href="#139ae0d9-1" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> pd.DataFrame(</span>
+<span id="139ae0d9-2"><a href="#139ae0d9-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="139ae0d9-3"><a href="#139ae0d9-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"counter"</span>: horror.groupby(<span class="st">"Author"</span>)</span>
+<span id="139ae0d9-4"><a href="#139ae0d9-4" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: <span class="st">" "</span>.join(s[<span class="st">"Text"</span>]).split())</span>
+<span id="139ae0d9-5"><a href="#139ae0d9-5" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: Counter(s))</span>
+<span id="139ae0d9-6"><a href="#139ae0d9-6" aria-hidden="true" tabindex="-1"></a>        .<span class="bu">apply</span>(<span class="kw">lambda</span> s: s.most_common())</span>
+<span id="139ae0d9-7"><a href="#139ae0d9-7" aria-hidden="true" tabindex="-1"></a>        .explode()</span>
+<span id="139ae0d9-8"><a href="#139ae0d9-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="139ae0d9-9"><a href="#139ae0d9-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="139ae0d9-10"><a href="#139ae0d9-10" aria-hidden="true" tabindex="-1"></a>count_words[[<span class="st">"word"</span>, <span class="st">"count"</span>]] <span class="op">=</span> pd.DataFrame(</span>
+<span id="139ae0d9-11"><a href="#139ae0d9-11" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"counter"</span>].tolist(), index<span class="op">=</span>count_words.index</span>
+<span id="139ae0d9-12"><a href="#139ae0d9-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="139ae0d9-13"><a href="#139ae0d9-13" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.reset_index()</span>
+<span id="139ae0d9-14"><a href="#139ae0d9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="139ae0d9-15"><a href="#139ae0d9-15" aria-hidden="true" tabindex="-1"></a>count_words <span class="op">=</span> count_words.assign(</span>
+<span id="139ae0d9-16"><a href="#139ae0d9-16" aria-hidden="true" tabindex="-1"></a>    tot_mots_auteur<span class="op">=</span><span class="kw">lambda</span> x: (x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"sum"</span>)),</span>
+<span id="139ae0d9-17"><a href="#139ae0d9-17" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">"count"</span>] <span class="op">/</span> x[<span class="st">"tot_mots_auteur"</span>],</span>
+<span id="139ae0d9-18"><a href="#139ae0d9-18" aria-hidden="true" tabindex="-1"></a>    rank<span class="op">=</span><span class="kw">lambda</span> x: x.groupby(<span class="st">"Author"</span>)[<span class="st">"count"</span>].transform(<span class="st">"rank"</span>, ascending<span class="op">=</span><span class="va">False</span>),</span>
+<span id="139ae0d9-19"><a href="#139ae0d9-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_5509/4009929367.py:3: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.</code></pre>
+<pre><code>/tmp/ipykernel_5504/4009929367.py:3: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.</code></pre>
 </div>
 </div>
 <p>Commençons par représenter la relation entre la fréquence et le rang:</p>
-<div id="fb21b093" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="fb21b093"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="fb21b093-1"><a href="#fb21b093-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
-<span id="fb21b093-2"><a href="#fb21b093-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="fb21b093-3"><a href="#fb21b093-3" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> (</span>
-<span id="fb21b093-4"><a href="#fb21b093-4" aria-hidden="true" tabindex="-1"></a>    ggplot(count_words)</span>
-<span id="fb21b093-5"><a href="#fb21b093-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(y<span class="op">=</span><span class="st">"freq"</span>, x<span class="op">=</span><span class="st">"rank"</span>, color<span class="op">=</span><span class="st">"Author"</span>), alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
-<span id="fb21b093-6"><a href="#fb21b093-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_log10()</span>
-<span id="fb21b093-7"><a href="#fb21b093-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_log10()</span>
-<span id="fb21b093-8"><a href="#fb21b093-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
-<span id="fb21b093-9"><a href="#fb21b093-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="53dd84d7" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="53dd84d7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="53dd84d7-1"><a href="#53dd84d7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="53dd84d7-2"><a href="#53dd84d7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="53dd84d7-3"><a href="#53dd84d7-3" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> (</span>
+<span id="53dd84d7-4"><a href="#53dd84d7-4" aria-hidden="true" tabindex="-1"></a>    ggplot(count_words)</span>
+<span id="53dd84d7-5"><a href="#53dd84d7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(y<span class="op">=</span><span class="st">"freq"</span>, x<span class="op">=</span><span class="st">"rank"</span>, color<span class="op">=</span><span class="st">"Author"</span>), alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="53dd84d7-6"><a href="#53dd84d7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_log10()</span>
+<span id="53dd84d7-7"><a href="#53dd84d7-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_log10()</span>
+<span id="53dd84d7-8"><a href="#53dd84d7-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
+<span id="53dd84d7-9"><a href="#53dd84d7-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nous avons bien, graphiquement, une relation log-linéaire entre les deux :</p>
-<div id="90067d27" class="cell" data-execution_count="29">
+<div id="eba12be0" class="cell" data-execution_count="29">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1765,18 +1765,18 @@ liée à son rang <span class="math inline">\(n_i\)</span> dans l’ordre des fr
 </div>
 </div>
 <p>Avec <code>statsmodels</code>, vérifions plus formellement cette relation:</p>
-<div id="3e5491ff" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="3e5491ff"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="3e5491ff-1"><a href="#3e5491ff-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="3e5491ff-2"><a href="#3e5491ff-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="3e5491ff-3"><a href="#3e5491ff-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e5491ff-4"><a href="#3e5491ff-4" aria-hidden="true" tabindex="-1"></a>exog <span class="op">=</span> sm.add_constant(np.log(count_words[<span class="st">"rank"</span>].astype(<span class="bu">float</span>)))</span>
-<span id="3e5491ff-5"><a href="#3e5491ff-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e5491ff-6"><a href="#3e5491ff-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.GLM(</span>
-<span id="3e5491ff-7"><a href="#3e5491ff-7" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"freq"</span>].astype(<span class="bu">float</span>), exog, family<span class="op">=</span>sm.families.Poisson()</span>
-<span id="3e5491ff-8"><a href="#3e5491ff-8" aria-hidden="true" tabindex="-1"></a>).fit()</span>
-<span id="3e5491ff-9"><a href="#3e5491ff-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="3e5491ff-10"><a href="#3e5491ff-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher les résultats du modèle</span></span>
-<span id="3e5491ff-11"><a href="#3e5491ff-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4d0c2f7d" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="4d0c2f7d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="4d0c2f7d-1"><a href="#4d0c2f7d-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="4d0c2f7d-2"><a href="#4d0c2f7d-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="4d0c2f7d-3"><a href="#4d0c2f7d-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4d0c2f7d-4"><a href="#4d0c2f7d-4" aria-hidden="true" tabindex="-1"></a>exog <span class="op">=</span> sm.add_constant(np.log(count_words[<span class="st">"rank"</span>].astype(<span class="bu">float</span>)))</span>
+<span id="4d0c2f7d-5"><a href="#4d0c2f7d-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4d0c2f7d-6"><a href="#4d0c2f7d-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.GLM(</span>
+<span id="4d0c2f7d-7"><a href="#4d0c2f7d-7" aria-hidden="true" tabindex="-1"></a>    count_words[<span class="st">"freq"</span>].astype(<span class="bu">float</span>), exog, family<span class="op">=</span>sm.families.Poisson()</span>
+<span id="4d0c2f7d-8"><a href="#4d0c2f7d-8" aria-hidden="true" tabindex="-1"></a>).fit()</span>
+<span id="4d0c2f7d-9"><a href="#4d0c2f7d-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="4d0c2f7d-10"><a href="#4d0c2f7d-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Afficher les résultats du modèle</span></span>
+<span id="4d0c2f7d-11"><a href="#4d0c2f7d-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 Generalized Linear Model Regression Results                  
 ==============================================================================
@@ -1785,8 +1785,8 @@ Model:                            GLM   Df Residuals:                    69299
 Model Family:                 Poisson   Df Model:                            1
 Link Function:                    Log   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -23.011
-Date:                Fri, 14 Jun 2024   Deviance:                     0.065676
-Time:                        15:33:10   Pearson chi2:                   0.0656
+Date:                Mon, 17 Jun 2024   Deviance:                     0.065676
+Time:                        08:13:34   Pearson chi2:                   0.0656
 No. Iterations:                     5   Pseudo R-squ. (CS):          0.0002431
 Covariance Type:            nonrobust                                         
 ==============================================================================
@@ -1809,10 +1809,10 @@ Dit autrement, le mot le plus utilisé l’est deux fois plus que le deuxième m
 <p>Nous l’avons vu, que ce soit en Français ou Anglais,
 un certain nombre de mots de liaisons, nécessaires sur le plan grammatical mais peu porteur d’information, nous empêchent de saisir les principaux mots vecteurs d’information dans notre corpus.</p>
 <p>Il est donc nécessaire de nettoyer notre corpus en retirant ces termes. Ce travail de nettoyage va d’ailleurs au-delà d’un simple retrait de mots. C’est également l’occasion de retirer d’autres sèmes gênants, par exemple la ponctuation.</p>
-<div id="e719c228" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="e719c228"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="e719c228-1"><a href="#e719c228-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="e719c228-2"><a href="#e719c228-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="e719c228-3"><a href="#e719c228-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a361fe48" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="a361fe48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="a361fe48-1"><a href="#a361fe48-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="a361fe48-2"><a href="#a361fe48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="a361fe48-3"><a href="#a361fe48-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">"stopwords"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to /github/home/nltk_data...
 [nltk_data]   Package stopwords is already up-to-date!</code></pre>
@@ -1821,7 +1821,7 @@ un certain nombre de mots de liaisons, nécessaires sur le plan grammatical mais
 <pre><code>True</code></pre>
 </div>
 </div>
-<div id="4c658680" class="cell" data-execution_count="32">
+<div id="0a1b336b" class="cell" data-execution_count="32">
 <div class="cell-output cell-output-display" data-execution_count="32">
 <pre><code>['i',
  'me',
@@ -2004,7 +2004,7 @@ un certain nombre de mots de liaisons, nécessaires sur le plan grammatical mais
  "wouldn't"]</code></pre>
 </div>
 </div>
-<div id="93855b79" class="cell" data-execution_count="33">
+<div id="493cf6e2" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-display" data-execution_count="33">
 <pre><code>['au',
  'aux',
@@ -2165,7 +2165,7 @@ un certain nombre de mots de liaisons, nécessaires sur le plan grammatical mais
  'eussent']</code></pre>
 </div>
 </div>
-<div id="3d59e607" class="cell" data-execution_count="34">
+<div id="b0976f30" class="cell" data-execution_count="34">
 <div class="cell-output cell-output-display" data-execution_count="34">
 <pre><code>{"'d",
  "'ll",
@@ -2567,13 +2567,13 @@ télécharger celui-ci grâce aux commandes suivantes :</p>
 </div>
 </div>
 <p>Prenons cette chaine de caractère,</p>
-<div id="eb3963c2" class="cell" data-execution_count="41">
+<div id="2ba80f42" class="cell" data-execution_count="41">
 <div class="cell-output cell-output-display" data-execution_count="41">
 <pre><code>"naples. comme d'habitude, un pilote côtier partit aussitôt du port, rasa le château d'if, et alla aborder le navire entre le cap de morgion et l'île de rion. aussitôt, co"</code></pre>
 </div>
 </div>
 <p>La version racinisée est la suivante:</p>
-<div id="9339b98e" class="cell" data-execution_count="42">
+<div id="f0d47978" class="cell" data-execution_count="42">
 <div class="cell-output cell-output-display" data-execution_count="42">
 <pre><code>['napl',
  '.',
@@ -2618,13 +2618,13 @@ mais peuvent rester intelligible pour la machine. Ce choix n’est néanmoins pa
 <p>Les lemmatiseurs permettront des harmonisations plus subtiles. Ils s’appuient sur des bases de connaissance, par exemple <em>WordNet</em>, une base
 lexicographique ouverte. Par exemple, les mots <em>“women”</em>, <em>“daughters”</em>
 et <em>“leaves”</em> seront ainsi lemmatisés de la manière suivante :</p>
-<div id="72e27940" class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="72e27940"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="72e27940-1"><a href="#72e27940-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
-<span id="72e27940-2"><a href="#72e27940-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="72e27940-3"><a href="#72e27940-3" aria-hidden="true" tabindex="-1"></a>lemm <span class="op">=</span> WordNetLemmatizer()</span>
-<span id="72e27940-4"><a href="#72e27940-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="72e27940-5"><a href="#72e27940-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> [<span class="st">"women"</span>, <span class="st">"daughters"</span>, <span class="st">"leaves"</span>]:</span>
-<span id="72e27940-6"><a href="#72e27940-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"The lemmatized form of </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss"> is: </span><span class="sc">{</span>lemm<span class="sc">.</span>lemmatize(word)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f83e249d" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="f83e249d"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="f83e249d-1"><a href="#f83e249d-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="f83e249d-2"><a href="#f83e249d-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f83e249d-3"><a href="#f83e249d-3" aria-hidden="true" tabindex="-1"></a>lemm <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="f83e249d-4"><a href="#f83e249d-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="f83e249d-5"><a href="#f83e249d-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> [<span class="st">"women"</span>, <span class="st">"daughters"</span>, <span class="st">"leaves"</span>]:</span>
+<span id="f83e249d-6"><a href="#f83e249d-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"The lemmatized form of </span><span class="sc">{</span>word<span class="sc">}</span><span class="ss"> is: </span><span class="sc">{</span>lemm<span class="sc">.</span>lemmatize(word)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The lemmatized form of women is: woman
 The lemmatized form of daughters is: daughter
@@ -2637,7 +2637,7 @@ The lemmatized form of leaves is: leaf</code></pre>
 <p>Sur le modèle précédent, utiliser un <code>WordNetLemmatizer</code> sur le corpus <code>dumas[1030:1200]</code> et observer le résultat.</p>
 </div>
 </div>
-<div id="28a0473a" class="cell" data-execution_count="44">
+<div id="bbc844cc" class="cell" data-execution_count="44">
 <div class="cell-output cell-output-display" data-execution_count="44">
 <pre><code>['naples',
  '.',
@@ -2688,9 +2688,9 @@ The lemmatized form of leaves is: leaf</code></pre>
 <summary>
 <p><i class="fa-brands fa-python" aria-label="python"></i> environment files have been tested on.</p>
 </summary>
-<p>Latest built version: 2024-06-14</p>
+<p>Latest built version: 2024-06-17</p>
 <p>Python version used:</p>
-<div id="2ba376a5" class="cell" data-execution_count="46">
+<div id="3e9490f4" class="cell" data-execution_count="46">
 <div class="cell-output cell-output-display" data-execution_count="46">
 <pre><code>'3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:40:35) [GCC 12.3.0]'</code></pre>
 </div>
@@ -3583,7 +3583,7 @@ The lemmatized form of leaves is: leaf</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">pywaffle</td>
-<td style="text-align: left;">1.1.0</td>
+<td style="text-align: left;">1.1.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PyYAML</td>
@@ -4695,7 +4695,7 @@ Lino Galiana
 Galiana, Lino. 2023. <em>Python Pour La Data Science</em>. <a href="https://doi.org/10.5281/zenodo.8229676">https://doi.org/10.5281/zenodo.8229676</a>.
 </div></div></section></div></main> <!-- /main -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSB3aW5kb3cubG9jYXRpb24ucGF0aG5hbWUucmVwbGFjZShcIi5odG1sXCIsIFwiLnFtZFwiKTtcbmh0bWxgJHtwcmludEJhZGdlcyh7ZnBhdGg6IHBhdGh9KX1gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYFxuPGRldGFpbHM+XG48c3VtbWFyeT5cblBvdXIgb3V2cmlyIGxhIHZlcnNpb24gY29ycmlnw6llIHNvdXMgZm9ybWUgZGUgX25vdGVib29rX1xuPC9zdW1tYXJ5PlxuJHtwcmludEJhZGdlcyh7ZnBhdGg6IHBhdGgsIGNvcnJlY3Rpb246IHRydWV9KX1cbjwvZGV0YWlscz5cbmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZ1bmN0aW9uIHJlbWluZGVyQmFkZ2VzKHtcbiAgICBzb3VyY2VGaWxlID0gXCJjb250ZW50LzAxX3RvdG8uUm1kXCIsXG4gICAgdHlwZSA9IFsnbWQnLCAnaHRtbCddLFxuICAgIHNwbGl0ID0gbnVsbCxcbiAgICBvbnl4aWFPbmx5ID0gZmFsc2UsXG4gICAgc3NwQ2xvdWRTZXJ2aWNlID0gXCJweXRob25cIixcbiAgICBHUFUgPSBmYWxzZSxcbiAgICBjb3JyZWN0aW9uID0gZmFsc2Vcbn0gPSB7fSkge1xuICAgIGlmIChBcnJheS5pc0FycmF5KHR5cGUpKSB7XG4gICAgICAgIHR5cGUgPSB0eXBlWzBdO1xuICAgIH1cblxuICAgIGxldCBub3RlYm9vayA9IHNvdXJjZUZpbGUucmVwbGFjZSgvKC5SbWR8LnFtZCkvLCBcIi5pcHluYlwiKTtcbiAgICBpZiAoY29ycmVjdGlvbikge1xuICAgICAgICBub3RlYm9vayA9IG5vdGVib29rLnJlcGxhY2UoL2NvbnRlbnQvLCBcImNvcnJlY3Rpb25zXCIpO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIG5vdGVib29rID0gbm90ZWJvb2sucmVwbGFjZSgvY29udGVudC8sIFwibm90ZWJvb2tzXCIpO1xuICAgIH1cblxuICAgIGNvbnN0IGdpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkID0gXCJnaXRodWIvbGlub2dhbGlhbmEvcHl0aG9uLWRhdGFzY2llbnRpc3Qtbm90ZWJvb2tzXCI7XG4gICAgY29uc3QgZ2l0aHViQWxpYXMgPSBnaXRodWJSZXBvTm90ZWJvb2tzU2ltcGxpZmllZC5yZXBsYWNlKFwiZ2l0aHViXCIsIFwiZ2l0aHViLmNvbVwiKTtcbiAgICBjb25zdCBnaXRodWJSZXBvTm90ZWJvb2tzID0gYGh0dHBzOi8vJHtnaXRodWJBbGlhc31gO1xuXG4gICAgbGV0IGdpdGh1YkxpbmsgO1xuXG4gICAgaWYgKG5vdGVib29rID09PSBcIlwiKSB7XG4gICAgICAgIGdpdGh1YkxpbmsgPSBnaXRodWJSZXBvTm90ZWJvb2tzO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIGdpdGh1YkxpbmsgPSBgJHtnaXRodWJSZXBvTm90ZWJvb2tzfS9ibG9iL21haW5gO1xuICAgIH1cblxuICAgIGNvbnN0IG5vdGVib29rUmVsUGF0aCA9IGAvJHtub3RlYm9va31gO1xuICAgIGNvbnN0IFtzZWN0aW9uLCBjaGFwdGVyXSA9IG5vdGVib29rLnNwbGl0KFwiL1wiKS5zbGljZSgtMik7XG5cblxuICAgIGdpdGh1YkxpbmsgPSBgPGEgaHJlZj1cIiR7Z2l0aHViTGlua30ke25vdGVib29rUmVsUGF0aH1cIiBjbGFzcz1cImdpdGh1YlwiPjxpIGNsYXNzPVwiZmFiIGZhLWdpdGh1YlwiPjwvaT48L2E+YDtcblxuICAgIGNvbnN0IHNlY3Rpb25MYXRlc3QgPSBzZWN0aW9uLnNwbGl0KFwiL1wiKS5zbGljZSgtMSlbMF07XG4gICAgY29uc3QgY2hhcHRlck5vRXh0ZW5zaW9uID0gY2hhcHRlci5yZXBsYWNlKFwiLmlweW5iXCIsIFwiXCIpO1xuICAgIGNvbnN0IG9ueXhpYUluaXRBcmdzID0gW3NlY3Rpb25MYXRlc3QsIGNoYXB0ZXJOb0V4dGVuc2lvbl07XG5cbiAgICBpZiAoY29ycmVjdGlvbikge1xuICAgICAgICBvbnl4aWFJbml0QXJncy5wdXNoKFwiY29ycmVjdGlvblwiKTtcbiAgICB9XG5cbiAgICBjb25zdCBncHVTdWZmaXggPSBHUFUgPyBcIi1ncHVcIiA6IFwiXCI7XG5cbiAgICBjb25zdCBzc3BjbG91ZEp1cHl0ZXJMaW5rTGF1bmNoZXIgPSBgaHR0cHM6Ly9kYXRhbGFiLnNzcGNsb3VkLmZyL2xhdW5jaGVyL2lkZS9qdXB5dGVyLSR7c3NwQ2xvdWRTZXJ2aWNlfSR7Z3B1U3VmZml4fT9hdXRvTGF1bmNoPXRydWUmb255eGlhLmZyaWVuZGx5TmFtZT0lQzIlQUIke2NoYXB0ZXJOb0V4dGVuc2lvbn0lQzIlQkImaW5pdC5wZXJzb25hbEluaXQ9JUMyJUFCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGbGlub2dhbGlhbmElMkZweXRob24tZGF0YXNjaWVudGlzdCUyRm1hc3RlciUyRnNzcGNsb3VkJTJGaW5pdC1qdXB5dGVyLnNoJUMyJUJCJmluaXQucGVyc29uYWxJbml0QXJncz0lQzIlQUIke29ueXhpYUluaXRBcmdzLmpvaW4oJyUyMCcpfSVDMiVCQiZzZWN1cml0eS5hbGxvd2xpc3QuZW5hYmxlZD1mYWxzZWA7XG5cbiAgICBsZXQgc3NwY2xvdWRKdXB5dGVyTGluaztcbiAgICBpZiAodHlwZSA9PT0gXCJtZFwiKSB7XG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmsgPSBgWyFbT255eGlhXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1NTUCUyMENsb3VkLVRlc3Rlcl9hdmVjX0p1cHl0ZXItb3JhbmdlP2xvZ289SnVweXRlciZsb2dvQ29sb3I9b3JhbmdlKV0oJHtzc3BjbG91ZEp1cHl0ZXJMaW5rTGF1bmNoZXJ9KWA7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgc3NwY2xvdWRKdXB5dGVyTGluayA9IGA8YSBocmVmPVwiJHtzc3BjbG91ZEp1cHl0ZXJMaW5rTGF1bmNoZXJ9XCIgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXJcIj48aW1nIHNyYz1cImh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvU1NQJTIwQ2xvdWQtVGVzdGVyX2F2ZWNfSnVweXRlci1vcmFuZ2U/bG9nbz1KdXB5dGVyJmxvZ29Db2xvcj1vcmFuZ2VcIiBhbHQ9XCJPbnl4aWFcIj48L2E+YDtcbiAgICB9XG5cbiAgICBpZiAoc3BsaXQgPT09IDQpIHtcbiAgICAgICAgc3NwY2xvdWRKdXB5dGVyTGluayArPSAnPGJyPic7XG4gICAgfVxuXG4gICAgY29uc3Qgc3NwY2xvdWRWc2NvZGVMaW5rTGF1bmNoZXIgPSBgaHR0cHM6Ly9kYXRhbGFiLnNzcGNsb3VkLmZyL2xhdW5jaGVyL2lkZS92c2NvZGUtJHtzc3BDbG91ZFNlcnZpY2V9JHtncHVTdWZmaXh9P2F1dG9MYXVuY2g9dHJ1ZSZvbnl4aWEuZnJpZW5kbHlOYW1lPSVDMiVBQiR7Y2hhcHRlck5vRXh0ZW5zaW9ufSVDMiVCQiZpbml0LnBlcnNvbmFsSW5pdD0lQzIlQUJodHRwcyUzQSUyRiUyRnJhdy5naXRodWJ1c2VyY29udGVudC5jb20lMkZsaW5vZ2FsaWFuYSUyRnB5dGhvbi1kYXRhc2NpZW50aXN0JTJGbWFzdGVyJTJGc3NwY2xvdWQlMkZpbml0LXZzY29kZS5zaCVDMiVCQiZpbml0LnBlcnNvbmFsSW5pdEFyZ3M9JUMyJUFCJHtvbnl4aWFJbml0QXJncy5qb2luKCclMjAnKX0lQzIlQkImc2VjdXJpdHkuYWxsb3dsaXN0LmVuYWJsZWQ9ZmFsc2VgO1xuXG4gICAgbGV0IHNzcGNsb3VkVnNjb2RlTGluaztcbiAgICBpZiAodHlwZSA9PT0gXCJtZFwiKSB7XG4gICAgICAgIHNzcGNsb3VkVnNjb2RlTGluayA9IGBbIVtPbnl4aWFdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvU1NQJTIwQ2xvdWQtVGVzdGVyX2F2ZWNfVlNDb2RlLWJsdWU/bG9nbz12aXN1YWxzdHVkaW9jb2RlJmxvZ29Db2xvcj1ibHVlKV0oJHtzc3BjbG91ZFZzY29kZUxpbmtMYXVuY2hlcn0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmsgPSBgPGEgaHJlZj1cIiR7c3NwY2xvdWRWc2NvZGVMaW5rTGF1bmNoZXJ9XCIgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXJcIj48aW1nIHNyYz1cImh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvU1NQJTIwQ2xvdWQtVGVzdGVyX2F2ZWNfVlNDb2RlLWJsdWU/bG9nbz12aXN1YWxzdHVkaW9jb2RlJmxvZ29Db2xvcj1ibHVlXCIgYWx0PVwiT255eGlhXCI+PC9hPmA7XG4gICAgfVxuXG4gICAgaWYgKHNwbGl0ID09PSA1KSB7XG4gICAgICAgIHNzcGNsb3VkVnNjb2RlTGluayArPSAnPGJyPic7XG4gICAgfVxuXG4gICAgbGV0IGNvbGFiTGluaztcbiAgICBpZiAodHlwZSA9PT0gXCJtZFwiKSB7XG4gICAgICAgIGNvbGFiTGluayA9IGBbIVtPcGVuIEluIENvbGFiXShodHRwczovL2NvbGFiLnJlc2VhcmNoLmdvb2dsZS5jb20vYXNzZXRzL2NvbGFiLWJhZGdlLnN2ZyldKGh0dHA6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tLyR7Z2l0aHViUmVwb05vdGVib29rc1NpbXBsaWZpZWR9L2Jsb2IvbWFpbiR7bm90ZWJvb2tSZWxQYXRofSlgO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIGNvbGFiTGluayA9IGA8YSBocmVmPVwiaHR0cHM6Ly9jb2xhYi5yZXNlYXJjaC5nb29nbGUuY29tLyR7Z2l0aHViUmVwb05vdGVib29rc1NpbXBsaWZpZWR9L2Jsb2IvbWFpbiR7bm90ZWJvb2tSZWxQYXRofVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2NvbGFiLnJlc2VhcmNoLmdvb2dsZS5jb20vYXNzZXRzL2NvbGFiLWJhZGdlLnN2Z1wiIGFsdD1cIk9wZW4gSW4gQ29sYWJcIj48L2E+YDtcbiAgICB9XG5cbiAgICBpZiAoc3BsaXQgPT09IDcpIHtcbiAgICAgICAgY29sYWJMaW5rICs9ICc8YnI+JztcbiAgICB9XG5cbiAgICBsZXQgdnNjb2RlTGluaztcbiAgICBpZiAodHlwZSA9PT0gXCJtZFwiKSB7XG4gICAgICAgIHZzY29kZUxpbmsgPSBgWyFbZ2l0aHViZGV2XShodHRwczovL2ltZy5zaGllbGRzLmlvL3N0YXRpYy92MT9sb2dvPXZpc3VhbHN0dWRpb2NvZGUmbGFiZWw9Jm1lc3NhZ2U9T3BlbiUyMGluJTIwVmlzdWFsIFN0dWRpbyBDb2RlJmxhYmVsQ29sb3I9MmMyYzMyJmNvbG9yPTAwN2FjYyZsb2dvQ29sb3I9MDA3YWNjKV0oaHR0cHM6Ly9naXRodWIuZGV2L2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0LW5vdGVib29rcyR7bm90ZWJvb2tSZWxQYXRofSlgO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIHZzY29kZUxpbmsgPSBgPGEgaHJlZj1cImh0dHBzOi8vZ2l0aHViLmRldi9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdC1ub3RlYm9va3Mke25vdGVib29rUmVsUGF0aH1cIiB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lclwiPjxpbWcgc3JjPVwiaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9zdGF0aWMvdjE/bG9nbz12aXN1YWxzdHVkaW9jb2RlJmxhYmVsPSZtZXNzYWdlPU9wZW4lMjBpbiUyMFZpc3VhbCUyMFN0dWRpbyUyMENvZGUmbGFiZWxDb2xvcj0yYzJjMzImY29sb3I9MDA3YWNjJmxvZ29Db2xvcj0wMDdhY2NcIiBhbHQ9XCJnaXRodWJkZXZcIj48L2E+PC9wPmA7XG4gICAgfVxuXG4gICAgY29uc3QgYmFkZ2VzID0gW1xuICAgICAgICBnaXRodWJMaW5rLFxuICAgICAgICBzc3BjbG91ZFZzY29kZUxpbmssXG4gICAgICAgIHNzcGNsb3VkSnVweXRlckxpbmtcbiAgICBdO1xuXG4gICAgaWYgKCFvbnl4aWFPbmx5KSB7XG4gICAgICAgIGJhZGdlcy5wdXNoKGNvbGFiTGluayk7XG4gICAgfVxuXG4gICAgbGV0IHJlc3VsdCA9IGJhZGdlcy5qb2luKFwiXFxuXCIpO1xuXG4gICAgaWYgKHR5cGUgPT09IFwiaHRtbFwiKSB7XG4gICAgICAgIHJlc3VsdCA9IGA8cCBjbGFzcz1cImJhZGdlc1wiPiR7cmVzdWx0fTwvcD5gO1xuICAgIH1cblxuICAgIGlmIChvbnl4aWFPbmx5KSB7XG4gICAgICAgIHJlc3VsdCA9IGAke3NzcGNsb3VkSnVweXRlckxpbmt9JHtzc3BjbG91ZFZzY29kZUxpbmt9YDtcbiAgICB9XG5cbiAgICByZXR1cm4gcmVzdWx0O1xufVxuXG5cbmZ1bmN0aW9uIHByaW50QmFkZ2VzKHtcbiAgICBmcGF0aCxcbiAgICBvbnl4aWFPbmx5ID0gZmFsc2UsXG4gICAgc3BsaXQgPSA1LFxuICAgIHR5cGUgPSBcImh0bWxcIixcbiAgICBzc3BDbG91ZFNlcnZpY2UgPSBcInB5dGhvblwiLFxuICAgIEdQVSA9IGZhbHNlLFxuICAgIGNvcnJlY3Rpb24gPSBmYWxzZVxufSA9IHt9KSB7XG4gICAgY29uc3QgYmFkZ2VzID0gcmVtaW5kZXJCYWRnZXMoe1xuICAgICAgICBzb3VyY2VGaWxlOiBmcGF0aCxcbiAgICAgICAgdHlwZTogdHlwZSxcbiAgICAgICAgc3BsaXQ6IHNwbGl0LFxuICAgICAgICBvbnl4aWFPbmx5OiBvbnl4aWFPbmx5LFxuICAgICAgICBzc3BDbG91ZFNlcnZpY2U6IHNzcENsb3VkU2VydmljZSxcbiAgICAgICAgR1BVOiBHUFUsXG4gICAgICAgIGNvcnJlY3Rpb246IGNvcnJlY3Rpb25cbiAgICB9KTtcblxuICAgIHJldHVybiBiYWRnZXNcbn1cblxuLy8gRXhhbXBsZSB1c2FnZTpcbi8vIHByaW50QmFkZ2VzKHsgZnBhdGg6IFwiY29udGVudC9nZXR0aW5nLXN0YXJ0ZWQvMDVfcmFwcGVsc190eXBlcy5xbWRcIiwgb255eGlhT25seTogZmFsc2UsIHNwbGl0OiA1LCB0eXBlOiBcImh0bWxcIiwgc3NwQ2xvdWRTZXJ2aWNlOiBcInB5dGhvblwiLCBHUFU6IGZhbHNlLCBjb3JyZWN0aW9uOiBmYWxzZSB9KTtcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Im1kYENlIGZpY2hpZXIgYSDDqXTDqSBtb2RpZmnDqSBfXyR7dGFibGVfY29tbWl0Lmxlbmd0aH1fXyBmb2lzIGRlcHVpcyBzYSBjcsOpYXRpb24gbGUgJHtjcmVhdGlvbl9zdHJpbmd9IChkZXJuacOocmUgbW9kaWZpY2F0aW9uIGxlICR7bGFzdF9tb2RpZmljYXRpb25fc3RyaW5nfSlgXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJjcmVhdGlvbiA9IGQzLm1pbihcbiAgdGFibGVfY29tbWl0Lm1hcChkID0+IG5ldyBEYXRlKGQuRGF0ZSkpXG4pXG5cbmxhc3RfbW9kaWZpY2F0aW9uID0gZDMubWF4KFxuICB0YWJsZV9jb21taXQubWFwKGQgPT4gbmV3IERhdGUoZC5EYXRlKSlcbilcblxuY3JlYXRpb25fc3RyaW5nID0gY3JlYXRpb24udG9Mb2NhbGVTdHJpbmcoXCJmclwiLCB7XG4gIFwiZGF5XCI6IFwibnVtZXJpY1wiLFxuICBcIm1vbnRoXCI6IFwibG9uZ1wiLFxuICBcInllYXJcIjogXCJudW1lcmljXCJcbn0pXG5cbmxhc3RfbW9kaWZpY2F0aW9uX3N0cmluZyA9IGxhc3RfbW9kaWZpY2F0aW9uLnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgXCJtb250aFwiOiBcImxvbmdcIixcbiAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG59KVxuXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxkaXY+JHtnaXRfaGlzdG9yeV90YWJsZX08L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxkaXY+JHtnaXRfaGlzdG9yeV9wbG90fTwvZGl2PmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImdpdF9oaXN0b3J5X3RhYmxlID0gSW5wdXRzLnRhYmxlKFxuICB0YWJsZV9jb21taXQsXG4gIHtcbiAgICBmb3JtYXQ6IHtcbiAgICAgIFNIQTogeCA9PiBtZGBbJHt4fV0oJHtnaXRodWJfcmVwb30vY29tbWl0LyR7eH0pYCxcbiAgICAgIERlc2NyaXB0aW9uOiB4ID0+IG1kYCR7cmVwbGFjZVB1bGxSZXF1ZXN0UGF0dGVybih4LCBnaXRodWJfcmVwbyl9YCxcbiAgICAgIC8qRGF0ZTogeCA9PiB4LnRvTG9jYWxlU3RyaW5nKFwiZnJcIiwge1xuICAgICAgICBcIm1vbnRoXCI6IFwibnVtZXJpY1wiLFxuICAgICAgICBcImRheVwiOiBcIm51bWVyaWNcIixcbiAgICAgICAgXCJ5ZWFyXCI6IFwibnVtZXJpY1wiXG4gICAgICAgIH0pXG4gICAgICAqL1xuICAgIH1cbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC05IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZ2l0X2hpc3RvcnlfcGxvdCA9IFBsb3QucGxvdCh7XG4gIG1hcmtzOiBbXG4gICAgUGxvdC5ydWxlWShbMF0sIHtzdHJva2U6IFwicm95YWxibHVlXCJ9KSxcbiAgICBQbG90LmRvdChcbiAgICAgICAgICB0YWJsZV9jb21taXQsXG4gICAgICAgICAgUGxvdC5wb2ludGVyWCh7eDogKGQpID0+IG5ldyBEYXRlKGQuZGF0ZSksIHk6IDAsIHN0cm9rZTogXCJyZWRcIn0pKSxcbiAgICBQbG90LmRvdCh0YWJsZV9jb21taXQsIHt4OiAoZCkgPT4gbmV3IERhdGUoZC5EYXRlKSwgeTogMCwgZmlsbDogXCJyb3lhbGJsdWVcIn0pXG4gIF1cbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTEwIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZnVuY3Rpb24gcmVwbGFjZVB1bGxSZXF1ZXN0UGF0dGVybihpbnB1dFN0cmluZywgZ2l0aHViUmVwbykge1xuICAgIC8vIFVzZSBhIHJlZ3VsYXIgZXhwcmVzc2lvbiB0byBtYXRjaCB0aGUgcGF0dGVybiAjZGlnaXRcbiAgICB2YXIgcGF0dGVybiA9IC8jKFxcZCspL2c7XG5cbiAgICAvLyBSZXBsYWNlIHRoZSBwYXR0ZXJuIHdpdGggJHtnaXRodWJfcmVwb30vcHVsbC8jZGlnaXRcbiAgICB2YXIgcmVwbGFjZWRTdHJpbmcgPSBpbnB1dFN0cmluZy5yZXBsYWNlKHBhdHRlcm4sICdbIyQxXSgnICsgZ2l0aHViUmVwbyArICcvcHVsbC8kMSknKTtcblxuICAgIHJldHVybiByZXBsYWNlZFN0cmluZztcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTEiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRodWJfcmVwbyA9IFwiaHR0cHM6Ly9naXRodWIuY29tL2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0XCJcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ0YWJsZV9jb21taXQgPSB7XG5cbi8vIEdldCB0aGUgSFRNTCB0YWJsZSBieSBpdHMgY2xhc3MgbmFtZVxudmFyIHRhYmxlID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignLmNvbW1pdC10YWJsZScpO1xuXG4vLyBDaGVjayBpZiB0aGUgdGFibGUgZXhpc3RzXG5pZiAodGFibGUpIHtcbiAgICAvLyBJbml0aWFsaXplIGFuIGFycmF5IHRvIHN0b3JlIHRoZSB0YWJsZSBkYXRhXG4gICAgdmFyIGRhdGFBcnJheSA9IFtdO1xuXG4gICAgLy8gRXh0cmFjdCBoZWFkZXJzIGZyb20gdGhlIGZpcnN0IHJvd1xuICAgIHZhciBoZWFkZXJzID0gW107XG4gICAgZm9yICh2YXIgaSA9IDA7IGkgPCB0YWJsZS5yb3dzWzBdLmNlbGxzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIGhlYWRlcnMucHVzaCh0YWJsZS5yb3dzWzBdLmNlbGxzW2ldLnRleHRDb250ZW50LnRyaW0oKSk7XG4gICAgfVxuXG4gICAgLy8gSXRlcmF0ZSB0aHJvdWdoIHRoZSByb3dzLCBzdGFydGluZyBmcm9tIHRoZSBzZWNvbmQgcm93XG4gICAgZm9yICh2YXIgaSA9IDE7IGkgPCB0YWJsZS5yb3dzLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgIHZhciByb3cgPSB0YWJsZS5yb3dzW2ldO1xuICAgICAgICB2YXIgcm93RGF0YSA9IHt9O1xuXG4gICAgICAgIC8vIEl0ZXJhdGUgdGhyb3VnaCB0aGUgY2VsbHMgaW4gdGhlIHJvd1xuICAgICAgICBmb3IgKHZhciBqID0gMDsgaiA8IHJvdy5jZWxscy5sZW5ndGg7IGorKykge1xuICAgICAgICAgICAgLy8gVXNlIGhlYWRlcnMgYXMga2V5cyBhbmQgY2VsbCBjb250ZW50IGFzIHZhbHVlc1xuICAgICAgICAgICAgcm93RGF0YVtoZWFkZXJzW2pdXSA9IHJvdy5jZWxsc1tqXS50ZXh0Q29udGVudC50cmltKCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBQdXNoIHRoZSByb3dEYXRhIG9iamVjdCB0byB0aGUgZGF0YUFycmF5XG4gICAgICAgIGRhdGFBcnJheS5wdXNoKHJvd0RhdGEpO1xuICAgIH1cbiAgfVxuXG4gIHJldHVybiBkYXRhQXJyYXlcblxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuLy8gR2V0IHRoZSBlbGVtZW50IHdpdGggY2xhc3MgJ2dpdC1kZXRhaWxzJ1xue1xuICB2YXIgZ2l0RGV0YWlscyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJy5jb21taXQtdGFibGUnKTtcblxuICAvLyBDaGVjayBpZiB0aGUgZWxlbWVudCBleGlzdHNcbiAgaWYgKGdpdERldGFpbHMpIHtcbiAgICAgIC8vIEhpZGUgdGhlIGVsZW1lbnRcbiAgICAgIGdpdERldGFpbHMuc3R5bGUuZGlzcGxheSA9ICdub25lJztcbiAgfVxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlBsb3QgPSByZXF1aXJlKCdAb2JzZXJ2YWJsZWhxL3Bsb3RAMC42LjEyL2Rpc3QvcGxvdC51bWQubWluLmpzJylcbiJ9XX0=
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSB3aW5kb3cubG9jYXRpb24ucGF0aG5hbWUucmVwbGFjZShcIi5odG1sXCIsIFwiLnFtZFwiKTtcbmh0bWxgJHtwcmludEJhZGdlcyh7ZnBhdGg6IHBhdGh9KX1gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYFxuPGRldGFpbHM+XG48c3VtbWFyeT5cblBvdXIgb3V2cmlyIGxhIHZlcnNpb24gY29ycmlnw6llIHNvdXMgZm9ybWUgZGUgPGk+bm90ZWJvb2s8L2k+XG48L3N1bW1hcnk+XG4ke3ByaW50QmFkZ2VzKHtmcGF0aDogcGF0aCwgY29ycmVjdGlvbjogdHJ1ZX0pfVxuPC9kZXRhaWxzPlxuYFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZnVuY3Rpb24gcmVtaW5kZXJCYWRnZXMoe1xuICAgIHNvdXJjZUZpbGUgPSBcImNvbnRlbnQvMDFfdG90by5SbWRcIixcbiAgICB0eXBlID0gWydtZCcsICdodG1sJ10sXG4gICAgc3BsaXQgPSBudWxsLFxuICAgIG9ueXhpYU9ubHkgPSBmYWxzZSxcbiAgICBzc3BDbG91ZFNlcnZpY2UgPSBcInB5dGhvblwiLFxuICAgIEdQVSA9IGZhbHNlLFxuICAgIGNvcnJlY3Rpb24gPSBmYWxzZVxufSA9IHt9KSB7XG4gICAgaWYgKEFycmF5LmlzQXJyYXkodHlwZSkpIHtcbiAgICAgICAgdHlwZSA9IHR5cGVbMF07XG4gICAgfVxuXG4gICAgbGV0IG5vdGVib29rID0gc291cmNlRmlsZS5yZXBsYWNlKC8oLlJtZHwucW1kKS8sIFwiLmlweW5iXCIpO1xuICAgIGlmIChjb3JyZWN0aW9uKSB7XG4gICAgICAgIG5vdGVib29rID0gbm90ZWJvb2sucmVwbGFjZSgvY29udGVudC8sIFwiY29ycmVjdGlvbnNcIik7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgbm90ZWJvb2sgPSBub3RlYm9vay5yZXBsYWNlKC9jb250ZW50LywgXCJub3RlYm9va3NcIik7XG4gICAgfVxuXG4gICAgY29uc3QgZ2l0aHViUmVwb05vdGVib29rc1NpbXBsaWZpZWQgPSBcImdpdGh1Yi9saW5vZ2FsaWFuYS9weXRob24tZGF0YXNjaWVudGlzdC1ub3RlYm9va3NcIjtcbiAgICBjb25zdCBnaXRodWJBbGlhcyA9IGdpdGh1YlJlcG9Ob3RlYm9va3NTaW1wbGlmaWVkLnJlcGxhY2UoXCJnaXRodWJcIiwgXCJnaXRodWIuY29tXCIpO1xuICAgIGNvbnN0IGdpdGh1YlJlcG9Ob3RlYm9va3MgPSBgaHR0cHM6Ly8ke2dpdGh1YkFsaWFzfWA7XG5cbiAgICBsZXQgZ2l0aHViTGluayA7XG5cbiAgICBpZiAobm90ZWJvb2sgPT09IFwiXCIpIHtcbiAgICAgICAgZ2l0aHViTGluayA9IGdpdGh1YlJlcG9Ob3RlYm9va3M7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgZ2l0aHViTGluayA9IGAke2dpdGh1YlJlcG9Ob3RlYm9va3N9L2Jsb2IvbWFpbmA7XG4gICAgfVxuXG4gICAgY29uc3Qgbm90ZWJvb2tSZWxQYXRoID0gYC8ke25vdGVib29rfWA7XG4gICAgY29uc3QgW3NlY3Rpb24sIGNoYXB0ZXJdID0gbm90ZWJvb2suc3BsaXQoXCIvXCIpLnNsaWNlKC0yKTtcblxuXG4gICAgZ2l0aHViTGluayA9IGA8YSBocmVmPVwiJHtnaXRodWJMaW5rfSR7bm90ZWJvb2tSZWxQYXRofVwiIGNsYXNzPVwiZ2l0aHViXCI+PGkgY2xhc3M9XCJmYWIgZmEtZ2l0aHViXCI+PC9pPjwvYT5gO1xuXG4gICAgY29uc3Qgc2VjdGlvbkxhdGVzdCA9IHNlY3Rpb24uc3BsaXQoXCIvXCIpLnNsaWNlKC0xKVswXTtcbiAgICBjb25zdCBjaGFwdGVyTm9FeHRlbnNpb24gPSBjaGFwdGVyLnJlcGxhY2UoXCIuaXB5bmJcIiwgXCJcIik7XG4gICAgY29uc3Qgb255eGlhSW5pdEFyZ3MgPSBbc2VjdGlvbkxhdGVzdCwgY2hhcHRlck5vRXh0ZW5zaW9uXTtcblxuICAgIGlmIChjb3JyZWN0aW9uKSB7XG4gICAgICAgIG9ueXhpYUluaXRBcmdzLnB1c2goXCJjb3JyZWN0aW9uXCIpO1xuICAgIH1cblxuICAgIGNvbnN0IGdwdVN1ZmZpeCA9IEdQVSA/IFwiLWdwdVwiIDogXCJcIjtcblxuICAgIGNvbnN0IHNzcGNsb3VkSnVweXRlckxpbmtMYXVuY2hlciA9IGBodHRwczovL2RhdGFsYWIuc3NwY2xvdWQuZnIvbGF1bmNoZXIvaWRlL2p1cHl0ZXItJHtzc3BDbG91ZFNlcnZpY2V9JHtncHVTdWZmaXh9P2F1dG9MYXVuY2g9dHJ1ZSZvbnl4aWEuZnJpZW5kbHlOYW1lPSVDMiVBQiR7Y2hhcHRlck5vRXh0ZW5zaW9ufSVDMiVCQiZpbml0LnBlcnNvbmFsSW5pdD0lQzIlQUJodHRwcyUzQSUyRiUyRnJhdy5naXRodWJ1c2VyY29udGVudC5jb20lMkZsaW5vZ2FsaWFuYSUyRnB5dGhvbi1kYXRhc2NpZW50aXN0JTJGbWFzdGVyJTJGc3NwY2xvdWQlMkZpbml0LWp1cHl0ZXIuc2glQzIlQkImaW5pdC5wZXJzb25hbEluaXRBcmdzPSVDMiVBQiR7b255eGlhSW5pdEFyZ3Muam9pbignJTIwJyl9JUMyJUJCJnNlY3VyaXR5LmFsbG93bGlzdC5lbmFibGVkPWZhbHNlYDtcblxuICAgIGxldCBzc3BjbG91ZEp1cHl0ZXJMaW5rO1xuICAgIGlmICh0eXBlID09PSBcIm1kXCIpIHtcbiAgICAgICAgc3NwY2xvdWRKdXB5dGVyTGluayA9IGBbIVtPbnl4aWFdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvU1NQJTIwQ2xvdWQtVGVzdGVyX2F2ZWNfSnVweXRlci1vcmFuZ2U/bG9nbz1KdXB5dGVyJmxvZ29Db2xvcj1vcmFuZ2UpXSgke3NzcGNsb3VkSnVweXRlckxpbmtMYXVuY2hlcn0pYDtcbiAgICB9IGVsc2Uge1xuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rID0gYDxhIGhyZWY9XCIke3NzcGNsb3VkSnVweXRlckxpbmtMYXVuY2hlcn1cIiB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lclwiPjxpbWcgc3JjPVwiaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9TU1AlMjBDbG91ZC1UZXN0ZXJfYXZlY19KdXB5dGVyLW9yYW5nZT9sb2dvPUp1cHl0ZXImbG9nb0NvbG9yPW9yYW5nZVwiIGFsdD1cIk9ueXhpYVwiPjwvYT5gO1xuICAgIH1cblxuICAgIGlmIChzcGxpdCA9PT0gNCkge1xuICAgICAgICBzc3BjbG91ZEp1cHl0ZXJMaW5rICs9ICc8YnI+JztcbiAgICB9XG5cbiAgICBjb25zdCBzc3BjbG91ZFZzY29kZUxpbmtMYXVuY2hlciA9IGBodHRwczovL2RhdGFsYWIuc3NwY2xvdWQuZnIvbGF1bmNoZXIvaWRlL3ZzY29kZS0ke3NzcENsb3VkU2VydmljZX0ke2dwdVN1ZmZpeH0/YXV0b0xhdW5jaD10cnVlJm9ueXhpYS5mcmllbmRseU5hbWU9JUMyJUFCJHtjaGFwdGVyTm9FeHRlbnNpb259JUMyJUJCJmluaXQucGVyc29uYWxJbml0PSVDMiVBQmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmxpbm9nYWxpYW5hJTJGcHl0aG9uLWRhdGFzY2llbnRpc3QlMkZtYXN0ZXIlMkZzc3BjbG91ZCUyRmluaXQtdnNjb2RlLnNoJUMyJUJCJmluaXQucGVyc29uYWxJbml0QXJncz0lQzIlQUIke29ueXhpYUluaXRBcmdzLmpvaW4oJyUyMCcpfSVDMiVCQiZzZWN1cml0eS5hbGxvd2xpc3QuZW5hYmxlZD1mYWxzZWA7XG5cbiAgICBsZXQgc3NwY2xvdWRWc2NvZGVMaW5rO1xuICAgIGlmICh0eXBlID09PSBcIm1kXCIpIHtcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rID0gYFshW09ueXhpYV0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9TU1AlMjBDbG91ZC1UZXN0ZXJfYXZlY19WU0NvZGUtYmx1ZT9sb2dvPXZpc3VhbHN0dWRpb2NvZGUmbG9nb0NvbG9yPWJsdWUpXSgke3NzcGNsb3VkVnNjb2RlTGlua0xhdW5jaGVyfSlgO1xuICAgIH0gZWxzZSB7XG4gICAgICAgIHNzcGNsb3VkVnNjb2RlTGluayA9IGA8YSBocmVmPVwiJHtzc3BjbG91ZFZzY29kZUxpbmtMYXVuY2hlcn1cIiB0YXJnZXQ9XCJfYmxhbmtcIiByZWw9XCJub29wZW5lclwiPjxpbWcgc3JjPVwiaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9TU1AlMjBDbG91ZC1UZXN0ZXJfYXZlY19WU0NvZGUtYmx1ZT9sb2dvPXZpc3VhbHN0dWRpb2NvZGUmbG9nb0NvbG9yPWJsdWVcIiBhbHQ9XCJPbnl4aWFcIj48L2E+YDtcbiAgICB9XG5cbiAgICBpZiAoc3BsaXQgPT09IDUpIHtcbiAgICAgICAgc3NwY2xvdWRWc2NvZGVMaW5rICs9ICc8YnI+JztcbiAgICB9XG5cbiAgICBsZXQgY29sYWJMaW5rO1xuICAgIGlmICh0eXBlID09PSBcIm1kXCIpIHtcbiAgICAgICAgY29sYWJMaW5rID0gYFshW09wZW4gSW4gQ29sYWJdKGh0dHBzOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS9hc3NldHMvY29sYWItYmFkZ2Uuc3ZnKV0oaHR0cDovL2NvbGFiLnJlc2VhcmNoLmdvb2dsZS5jb20vJHtnaXRodWJSZXBvTm90ZWJvb2tzU2ltcGxpZmllZH0vYmxvYi9tYWluJHtub3RlYm9va1JlbFBhdGh9KWA7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgY29sYWJMaW5rID0gYDxhIGhyZWY9XCJodHRwczovL2NvbGFiLnJlc2VhcmNoLmdvb2dsZS5jb20vJHtnaXRodWJSZXBvTm90ZWJvb2tzU2ltcGxpZmllZH0vYmxvYi9tYWluJHtub3RlYm9va1JlbFBhdGh9XCIgdGFyZ2V0PVwiX2JsYW5rXCIgcmVsPVwibm9vcGVuZXJcIj48aW1nIHNyYz1cImh0dHBzOi8vY29sYWIucmVzZWFyY2guZ29vZ2xlLmNvbS9hc3NldHMvY29sYWItYmFkZ2Uuc3ZnXCIgYWx0PVwiT3BlbiBJbiBDb2xhYlwiPjwvYT5gO1xuICAgIH1cblxuICAgIGlmIChzcGxpdCA9PT0gNykge1xuICAgICAgICBjb2xhYkxpbmsgKz0gJzxicj4nO1xuICAgIH1cblxuICAgIGxldCB2c2NvZGVMaW5rO1xuICAgIGlmICh0eXBlID09PSBcIm1kXCIpIHtcbiAgICAgICAgdnNjb2RlTGluayA9IGBbIVtnaXRodWJkZXZdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vc3RhdGljL3YxP2xvZ289dmlzdWFsc3R1ZGlvY29kZSZsYWJlbD0mbWVzc2FnZT1PcGVuJTIwaW4lMjBWaXN1YWwgU3R1ZGlvIENvZGUmbGFiZWxDb2xvcj0yYzJjMzImY29sb3I9MDA3YWNjJmxvZ29Db2xvcj0wMDdhY2MpXShodHRwczovL2dpdGh1Yi5kZXYvbGlub2dhbGlhbmEvcHl0aG9uLWRhdGFzY2llbnRpc3Qtbm90ZWJvb2tzJHtub3RlYm9va1JlbFBhdGh9KWA7XG4gICAgfSBlbHNlIHtcbiAgICAgICAgdnNjb2RlTGluayA9IGA8YSBocmVmPVwiaHR0cHM6Ly9naXRodWIuZGV2L2xpbm9nYWxpYW5hL3B5dGhvbi1kYXRhc2NpZW50aXN0LW5vdGVib29rcyR7bm90ZWJvb2tSZWxQYXRofVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+PGltZyBzcmM9XCJodHRwczovL2ltZy5zaGllbGRzLmlvL3N0YXRpYy92MT9sb2dvPXZpc3VhbHN0dWRpb2NvZGUmbGFiZWw9Jm1lc3NhZ2U9T3BlbiUyMGluJTIwVmlzdWFsJTIwU3R1ZGlvJTIwQ29kZSZsYWJlbENvbG9yPTJjMmMzMiZjb2xvcj0wMDdhY2MmbG9nb0NvbG9yPTAwN2FjY1wiIGFsdD1cImdpdGh1YmRldlwiPjwvYT48L3A+YDtcbiAgICB9XG5cbiAgICBjb25zdCBiYWRnZXMgPSBbXG4gICAgICAgIGdpdGh1YkxpbmssXG4gICAgICAgIHNzcGNsb3VkVnNjb2RlTGluayxcbiAgICAgICAgc3NwY2xvdWRKdXB5dGVyTGlua1xuICAgIF07XG5cbiAgICBpZiAoIW9ueXhpYU9ubHkpIHtcbiAgICAgICAgYmFkZ2VzLnB1c2goY29sYWJMaW5rKTtcbiAgICB9XG5cbiAgICBsZXQgcmVzdWx0ID0gYmFkZ2VzLmpvaW4oXCJcXG5cIik7XG5cbiAgICBpZiAodHlwZSA9PT0gXCJodG1sXCIpIHtcbiAgICAgICAgcmVzdWx0ID0gYDxwIGNsYXNzPVwiYmFkZ2VzXCI+JHtyZXN1bHR9PC9wPmA7XG4gICAgfVxuXG4gICAgaWYgKG9ueXhpYU9ubHkpIHtcbiAgICAgICAgcmVzdWx0ID0gYCR7c3NwY2xvdWRKdXB5dGVyTGlua30ke3NzcGNsb3VkVnNjb2RlTGlua31gO1xuICAgIH1cblxuICAgIHJldHVybiByZXN1bHQ7XG59XG5cblxuZnVuY3Rpb24gcHJpbnRCYWRnZXMoe1xuICAgIGZwYXRoLFxuICAgIG9ueXhpYU9ubHkgPSBmYWxzZSxcbiAgICBzcGxpdCA9IDUsXG4gICAgdHlwZSA9IFwiaHRtbFwiLFxuICAgIHNzcENsb3VkU2VydmljZSA9IFwicHl0aG9uXCIsXG4gICAgR1BVID0gZmFsc2UsXG4gICAgY29ycmVjdGlvbiA9IGZhbHNlXG59ID0ge30pIHtcbiAgICBjb25zdCBiYWRnZXMgPSByZW1pbmRlckJhZGdlcyh7XG4gICAgICAgIHNvdXJjZUZpbGU6IGZwYXRoLFxuICAgICAgICB0eXBlOiB0eXBlLFxuICAgICAgICBzcGxpdDogc3BsaXQsXG4gICAgICAgIG9ueXhpYU9ubHk6IG9ueXhpYU9ubHksXG4gICAgICAgIHNzcENsb3VkU2VydmljZTogc3NwQ2xvdWRTZXJ2aWNlLFxuICAgICAgICBHUFU6IEdQVSxcbiAgICAgICAgY29ycmVjdGlvbjogY29ycmVjdGlvblxuICAgIH0pO1xuXG4gICAgcmV0dXJuIGJhZGdlc1xufVxuXG4vLyBFeGFtcGxlIHVzYWdlOlxuLy8gcHJpbnRCYWRnZXMoeyBmcGF0aDogXCJjb250ZW50L2dldHRpbmctc3RhcnRlZC8wNV9yYXBwZWxzX3R5cGVzLnFtZFwiLCBvbnl4aWFPbmx5OiBmYWxzZSwgc3BsaXQ6IDUsIHR5cGU6IFwiaHRtbFwiLCBzc3BDbG91ZFNlcnZpY2U6IFwicHl0aG9uXCIsIEdQVTogZmFsc2UsIGNvcnJlY3Rpb246IGZhbHNlIH0pO1xuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoibWRgQ2UgZmljaGllciBhIMOpdMOpIG1vZGlmacOpIF9fJHt0YWJsZV9jb21taXQubGVuZ3RofV9fIGZvaXMgZGVwdWlzIHNhIGNyw6lhdGlvbiBsZSAke2NyZWF0aW9uX3N0cmluZ30gKGRlcm5pw6hyZSBtb2RpZmljYXRpb24gbGUgJHtsYXN0X21vZGlmaWNhdGlvbl9zdHJpbmd9KWBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImNyZWF0aW9uID0gZDMubWluKFxuICB0YWJsZV9jb21taXQubWFwKGQgPT4gbmV3IERhdGUoZC5EYXRlKSlcbilcblxubGFzdF9tb2RpZmljYXRpb24gPSBkMy5tYXgoXG4gIHRhYmxlX2NvbW1pdC5tYXAoZCA9PiBuZXcgRGF0ZShkLkRhdGUpKVxuKVxuXG5jcmVhdGlvbl9zdHJpbmcgPSBjcmVhdGlvbi50b0xvY2FsZVN0cmluZyhcImZyXCIsIHtcbiAgXCJkYXlcIjogXCJudW1lcmljXCIsXG4gIFwibW9udGhcIjogXCJsb25nXCIsXG4gIFwieWVhclwiOiBcIm51bWVyaWNcIlxufSlcblxubGFzdF9tb2RpZmljYXRpb25fc3RyaW5nID0gbGFzdF9tb2RpZmljYXRpb24udG9Mb2NhbGVTdHJpbmcoXCJmclwiLCB7XG4gIFwiZGF5XCI6IFwibnVtZXJpY1wiLFxuICBcIm1vbnRoXCI6IFwibG9uZ1wiLFxuICBcInllYXJcIjogXCJudW1lcmljXCJcbn0pXG5cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Imh0bWxgPGRpdj4ke2dpdF9oaXN0b3J5X3RhYmxlfTwvZGl2PmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Imh0bWxgPGRpdj4ke2dpdF9oaXN0b3J5X3Bsb3R9PC9kaXY+YFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC04IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZ2l0X2hpc3RvcnlfdGFibGUgPSBJbnB1dHMudGFibGUoXG4gIHRhYmxlX2NvbW1pdCxcbiAge1xuICAgIGZvcm1hdDoge1xuICAgICAgU0hBOiB4ID0+IG1kYFske3h9XSgke2dpdGh1Yl9yZXBvfS9jb21taXQvJHt4fSlgLFxuICAgICAgRGVzY3JpcHRpb246IHggPT4gbWRgJHtyZXBsYWNlUHVsbFJlcXVlc3RQYXR0ZXJuKHgsIGdpdGh1Yl9yZXBvKX1gLFxuICAgICAgLypEYXRlOiB4ID0+IHgudG9Mb2NhbGVTdHJpbmcoXCJmclwiLCB7XG4gICAgICAgIFwibW9udGhcIjogXCJudW1lcmljXCIsXG4gICAgICAgIFwiZGF5XCI6IFwibnVtZXJpY1wiLFxuICAgICAgICBcInllYXJcIjogXCJudW1lcmljXCJcbiAgICAgICAgfSlcbiAgICAgICovXG4gICAgfVxuICB9XG4pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTkiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJnaXRfaGlzdG9yeV9wbG90ID0gUGxvdC5wbG90KHtcbiAgbWFya3M6IFtcbiAgICBQbG90LnJ1bGVZKFswXSwge3N0cm9rZTogXCJyb3lhbGJsdWVcIn0pLFxuICAgIFBsb3QuZG90KFxuICAgICAgICAgIHRhYmxlX2NvbW1pdCxcbiAgICAgICAgICBQbG90LnBvaW50ZXJYKHt4OiAoZCkgPT4gbmV3IERhdGUoZC5kYXRlKSwgeTogMCwgc3Ryb2tlOiBcInJlZFwifSkpLFxuICAgIFBsb3QuZG90KHRhYmxlX2NvbW1pdCwge3g6IChkKSA9PiBuZXcgRGF0ZShkLkRhdGUpLCB5OiAwLCBmaWxsOiBcInJveWFsYmx1ZVwifSlcbiAgXVxufSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiByZXBsYWNlUHVsbFJlcXVlc3RQYXR0ZXJuKGlucHV0U3RyaW5nLCBnaXRodWJSZXBvKSB7XG4gICAgLy8gVXNlIGEgcmVndWxhciBleHByZXNzaW9uIHRvIG1hdGNoIHRoZSBwYXR0ZXJuICNkaWdpdFxuICAgIHZhciBwYXR0ZXJuID0gLyMoXFxkKykvZztcblxuICAgIC8vIFJlcGxhY2UgdGhlIHBhdHRlcm4gd2l0aCAke2dpdGh1Yl9yZXBvfS9wdWxsLyNkaWdpdFxuICAgIHZhciByZXBsYWNlZFN0cmluZyA9IGlucHV0U3RyaW5nLnJlcGxhY2UocGF0dGVybiwgJ1sjJDFdKCcgKyBnaXRodWJSZXBvICsgJy9wdWxsLyQxKScpO1xuXG4gICAgcmV0dXJuIHJlcGxhY2VkU3RyaW5nO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImdpdGh1Yl9yZXBvID0gXCJodHRwczovL2dpdGh1Yi5jb20vbGlub2dhbGlhbmEvcHl0aG9uLWRhdGFzY2llbnRpc3RcIlxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InRhYmxlX2NvbW1pdCA9IHtcblxuLy8gR2V0IHRoZSBIVE1MIHRhYmxlIGJ5IGl0cyBjbGFzcyBuYW1lXG52YXIgdGFibGUgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcuY29tbWl0LXRhYmxlJyk7XG5cbi8vIENoZWNrIGlmIHRoZSB0YWJsZSBleGlzdHNcbmlmICh0YWJsZSkge1xuICAgIC8vIEluaXRpYWxpemUgYW4gYXJyYXkgdG8gc3RvcmUgdGhlIHRhYmxlIGRhdGFcbiAgICB2YXIgZGF0YUFycmF5ID0gW107XG5cbiAgICAvLyBFeHRyYWN0IGhlYWRlcnMgZnJvbSB0aGUgZmlyc3Qgcm93XG4gICAgdmFyIGhlYWRlcnMgPSBbXTtcbiAgICBmb3IgKHZhciBpID0gMDsgaSA8IHRhYmxlLnJvd3NbMF0uY2VsbHMubGVuZ3RoOyBpKyspIHtcbiAgICAgICAgaGVhZGVycy5wdXNoKHRhYmxlLnJvd3NbMF0uY2VsbHNbaV0udGV4dENvbnRlbnQudHJpbSgpKTtcbiAgICB9XG5cbiAgICAvLyBJdGVyYXRlIHRocm91Z2ggdGhlIHJvd3MsIHN0YXJ0aW5nIGZyb20gdGhlIHNlY29uZCByb3dcbiAgICBmb3IgKHZhciBpID0gMTsgaSA8IHRhYmxlLnJvd3MubGVuZ3RoOyBpKyspIHtcbiAgICAgICAgdmFyIHJvdyA9IHRhYmxlLnJvd3NbaV07XG4gICAgICAgIHZhciByb3dEYXRhID0ge307XG5cbiAgICAgICAgLy8gSXRlcmF0ZSB0aHJvdWdoIHRoZSBjZWxscyBpbiB0aGUgcm93XG4gICAgICAgIGZvciAodmFyIGogPSAwOyBqIDwgcm93LmNlbGxzLmxlbmd0aDsgaisrKSB7XG4gICAgICAgICAgICAvLyBVc2UgaGVhZGVycyBhcyBrZXlzIGFuZCBjZWxsIGNvbnRlbnQgYXMgdmFsdWVzXG4gICAgICAgICAgICByb3dEYXRhW2hlYWRlcnNbal1dID0gcm93LmNlbGxzW2pdLnRleHRDb250ZW50LnRyaW0oKTtcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIFB1c2ggdGhlIHJvd0RhdGEgb2JqZWN0IHRvIHRoZSBkYXRhQXJyYXlcbiAgICAgICAgZGF0YUFycmF5LnB1c2gocm93RGF0YSk7XG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIGRhdGFBcnJheVxuXG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTEzIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiXG4vLyBHZXQgdGhlIGVsZW1lbnQgd2l0aCBjbGFzcyAnZ2l0LWRldGFpbHMnXG57XG4gIHZhciBnaXREZXRhaWxzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignLmNvbW1pdC10YWJsZScpO1xuXG4gIC8vIENoZWNrIGlmIHRoZSBlbGVtZW50IGV4aXN0c1xuICBpZiAoZ2l0RGV0YWlscykge1xuICAgICAgLy8gSGlkZSB0aGUgZWxlbWVudFxuICAgICAgZ2l0RGV0YWlscy5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnO1xuICB9XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTE0IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdCA9IHJlcXVpcmUoJ0BvYnNlcnZhYmxlaHEvcGxvdEAwLjYuMTIvZGlzdC9wbG90LnVtZC5taW4uanMnKVxuIn1dfQ==
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
@@ -5292,7 +5292,7 @@ Inspiration pour la mise en forme du site <a href="https://www.andreashandel.com
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
